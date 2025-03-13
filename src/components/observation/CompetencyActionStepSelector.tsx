@@ -75,7 +75,7 @@ const CompetencyActionStepSelector = ({ onSelect, label, value }: CompetencyActi
         </Button>
       </SheetTrigger>
       <SheetContent className="w-[95%] sm:max-w-md">
-        <SheetHeader>
+        <SheetHeader className="text-left">
           <SheetTitle>Vali järgmine arengusamm</SheetTitle>
           <SheetDescription>
             Sirvige kompetentside ja arengusammude nimekirja või kasutage otsingut
@@ -97,7 +97,7 @@ const CompetencyActionStepSelector = ({ onSelect, label, value }: CompetencyActi
               <div className="space-y-3">
                 <Button 
                   variant="ghost" 
-                  className="flex items-center text-sm font-medium mb-2"
+                  className="flex items-center text-sm font-medium mb-2 justify-start"
                   onClick={handleBackToCompetencies}
                 >
                   <ArrowLeft className="h-4 w-4 mr-1" />
@@ -108,7 +108,9 @@ const CompetencyActionStepSelector = ({ onSelect, label, value }: CompetencyActi
                   .filter(comp => comp.id === selectedCompetency)
                   .map(comp => (
                     <div key={comp.id} className="space-y-2">
-                      <h3 className="font-medium text-lg mb-3 text-left">{comp.name}</h3>
+                      <h3 className="font-medium text-lg mb-3 text-left">
+                        {comp.name}
+                      </h3>
                       <div className="space-y-2 pl-1">
                         {comp.actionSteps.map((step) => (
                           <Button
@@ -117,9 +119,9 @@ const CompetencyActionStepSelector = ({ onSelect, label, value }: CompetencyActi
                             className="w-full justify-start text-left h-auto p-2 text-sm"
                             onClick={() => handleActionStepSelect(step)}
                           >
-                            <div>
-                              <div className="font-medium">{step.title}</div>
-                              <div className="text-xs text-muted-foreground">{step.description}</div>
+                            <div className="text-left w-full">
+                              <div className="font-medium text-left">{step.title}</div>
+                              <div className="text-xs text-muted-foreground text-left">{step.description}</div>
                             </div>
                           </Button>
                         ))}
@@ -133,10 +135,12 @@ const CompetencyActionStepSelector = ({ onSelect, label, value }: CompetencyActi
                   <Button
                     key={comp.id}
                     variant="ghost"
-                    className="w-full text-left h-auto py-2 px-3 text-sm hover:bg-muted flex items-start"
+                    className="w-full text-left h-auto py-2 px-3 text-sm hover:bg-muted flex items-start justify-start"
                     onClick={() => handleCompetencySelect(comp.id)}
                   >
-                    <span className="font-medium block whitespace-normal text-left">{comp.name}</span>
+                    <span className="font-medium block whitespace-normal text-left w-full">
+                      {comp.name}
+                    </span>
                   </Button>
                 ))}
               </div>
