@@ -1,7 +1,6 @@
 
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { motion } from 'framer-motion';
 
 const Hero = () => {
   const navigate = useNavigate();
@@ -18,31 +17,22 @@ const Hero = () => {
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-24">
           {/* Hero Content */}
           <div className="flex-1 text-center lg:text-left">
-            <motion.h1 
-              className="font-bold tracking-tight mb-6"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
+            <h1 
+              className="font-bold tracking-tight mb-6 animate-fade-in"
             >
               Elevate Teaching <br />
               <span className="text-primary">Through Expert Coaching</span>
-            </motion.h1>
+            </h1>
             
-            <motion.p 
-              className="text-xl mb-8 text-muted-foreground max-w-2xl mx-auto lg:mx-0"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
+            <p 
+              className="text-xl mb-8 text-muted-foreground max-w-2xl mx-auto lg:mx-0 animate-fade-in [animation-delay:100ms]"
             >
               Empower educators with personalized coaching, actionable insights, and a collaborative approach 
               to professional development.
-            </motion.p>
+            </p>
             
-            <motion.div 
-              className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
+            <div 
+              className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start animate-fade-in [animation-delay:200ms]"
             >
               <Button 
                 size="lg" 
@@ -59,13 +49,10 @@ const Hero = () => {
               >
                 Explore Features
               </Button>
-            </motion.div>
+            </div>
             
-            <motion.div 
-              className="mt-12 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-6 text-sm text-muted-foreground"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
+            <div 
+              className="mt-12 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-6 text-sm text-muted-foreground animate-fade-in [animation-delay:300ms]"
             >
               <div className="flex items-center gap-2">
                 <svg className="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -85,15 +72,12 @@ const Hero = () => {
                 </svg>
                 <span>Real-time Feedback</span>
               </div>
-            </motion.div>
+            </div>
           </div>
           
           {/* Hero Image */}
-          <motion.div 
-            className="flex-1"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.7 }}
+          <div 
+            className="flex-1 animate-fade-in [animation-delay:400ms]"
           >
             <div className="relative">
               <div className="relative z-10 glass rounded-2xl overflow-hidden shadow-xl">
@@ -108,7 +92,7 @@ const Hero = () => {
               <div className="absolute -bottom-4 -right-4 w-64 h-64 bg-blue-50 rounded-full mix-blend-multiply filter blur-2xl opacity-50"></div>
               <div className="absolute -top-4 -left-4 w-64 h-64 bg-purple-50 rounded-full mix-blend-multiply filter blur-2xl opacity-50"></div>
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
     </div>
