@@ -64,7 +64,7 @@ const AuthForm = () => {
         <CardHeader>
           <CardTitle className="text-3xl text-center">Arengusammud</CardTitle>
           <CardDescription className="text-center">
-            Tõsta õpetamiskvaliteeti ekspertjuhendamisega.
+            Aitavad õpetajal kasvada.
           </CardDescription>
         </CardHeader>
         <Tabs 
