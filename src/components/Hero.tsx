@@ -20,13 +20,13 @@ const Hero = () => {
             <h1 
               className="font-bold tracking-tight mb-6 animate-fade-in"
             >
-              Arengusammud aitavad õpetajal <span className="text-primary">kasvada</span>
+              Arengusammud aitavad õpetajal <span className="text-blue-500">kasvada</span>
             </h1>
             
             <p 
               className="text-xl mb-8 text-muted-foreground max-w-2xl mx-auto lg:mx-0 animate-fade-in [animation-delay:100ms]"
             >
-              Meil on tõenduspõhine lahendus, mis aitab õpetajal paremini jõuda iga õppijani ning toetada ennastjuhtiva õppija kujunemist.
+              Õpipartnerluse ja õpiringide kaudu saab õpetaja paremini jõuda iga õppijani ning toetada ennastjuhtiva õppija kujunemist.
             </p>
             
             <div 
