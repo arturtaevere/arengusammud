@@ -42,6 +42,14 @@ const Navbar = () => {
       .toUpperCase();
   };
 
+  // For debugging - log user details
+  useEffect(() => {
+    if (user) {
+      console.log('User in Navbar:', user);
+      console.log('Profile image:', user.profileImage);
+    }
+  }, [user]);
+
   // Conditionally set navbar styles
   const navbarClasses = `fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
     isScrolled || isAuthenticated 
@@ -132,13 +140,15 @@ const Navbar = () => {
                       {user?.profileImage ? (
                         <AvatarImage 
                           src={user.profileImage} 
-                          alt={user?.name} 
-                          fallbackSrc={`https://avatar.vercel.sh/${user?.email}.png`}
+                          alt={user?.name || 'User'}
                         />
                       ) : (
-                        <AvatarImage src={`https://avatar.vercel.sh/${user?.email}.png`} alt={user?.name} />
+                        <AvatarImage 
+                          src={`https://avatar.vercel.sh/${user?.email}.png`} 
+                          alt={user?.name || 'User'} 
+                        />
                       )}
-                      <AvatarFallback>{user?.name ? getInitials(user.name) : 'K'}</AvatarFallback>
+                      <AvatarFallback>{user?.name ? getInitials(user.name) : 'U'}</AvatarFallback>
                     </Avatar>
                   </Button>
                 </DropdownMenuTrigger>
@@ -255,13 +265,15 @@ const Navbar = () => {
                         {user?.profileImage ? (
                           <AvatarImage 
                             src={user.profileImage} 
-                            alt={user?.name} 
-                            fallbackSrc={`https://avatar.vercel.sh/${user?.email}.png`}
+                            alt={user?.name || 'User'} 
                           />
                         ) : (
-                          <AvatarImage src={`https://avatar.vercel.sh/${user?.email}.png`} alt={user?.name} />
+                          <AvatarImage 
+                            src={`https://avatar.vercel.sh/${user?.email}.png`} 
+                            alt={user?.name || 'User'} 
+                          />
                         )}
-                        <AvatarFallback>{user?.name ? getInitials(user.name) : 'K'}</AvatarFallback>
+                        <AvatarFallback>{user?.name ? getInitials(user.name) : 'U'}</AvatarFallback>
                       </Avatar>
                     </div>
                     <div className="ml-3">

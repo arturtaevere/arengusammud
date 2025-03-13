@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -10,6 +10,14 @@ import { User, Mail, ArrowLeft } from 'lucide-react';
 const Profile = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+
+  // Log user info for debugging
+  useEffect(() => {
+    if (user) {
+      console.log('User in Profile:', user);
+      console.log('Profile image path:', user.profileImage);
+    }
+  }, [user]);
 
   // Get initials for avatar fallback
   const getInitials = (name: string) => {
@@ -51,7 +59,6 @@ const Profile = () => {
                 <AvatarImage
                   src={user.profileImage}
                   alt={user.name}
-                  fallbackSrc={`https://avatar.vercel.sh/${user.email}.png`}
                 />
               ) : (
                 <AvatarImage 
