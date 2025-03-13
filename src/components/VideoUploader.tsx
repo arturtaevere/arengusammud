@@ -1,9 +1,9 @@
-
 import React, { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Upload, X, Link as LinkIcon } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Input } from '@/components/ui/input';
+import VideoPlayer from './VideoPlayer';
 
 interface VideoUploaderProps {
   onVideoUploaded: (videoUrl: string) => void;
