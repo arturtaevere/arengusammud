@@ -1,4 +1,4 @@
-
+import React from 'react';
 import { Heart, ClipboardList, Target, Users, Brain, BookCheck, BarChart, MessageSquare, Lightbulb, BookOpen } from 'lucide-react';
 import { competencies } from './competencies';
 
@@ -19,22 +19,28 @@ export const competencyIconMap = {
 
 // Convert a competency from the standard format to the format used in the Competences page
 export const convertToCompetencesPageFormat = () => {
-  return competencies.map(comp => ({
-    id: comp.id.replace('comp', ''),
-    title: comp.name,
-    description: getCompetencyDescription(comp.id),
-    count: comp.actionSteps.length,
-    icon: competencyIconMap[comp.id as keyof typeof competencyIconMap] || competencyIconMap.default
-  }));
+  return competencies.map(comp => {
+    const IconComponent = competencyIconMap[comp.id as keyof typeof competencyIconMap] || competencyIconMap.default;
+    return {
+      id: comp.id.replace('comp', ''),
+      title: comp.name,
+      description: getCompetencyDescription(comp.id),
+      count: comp.actionSteps.length,
+      icon: <IconComponent className="h-5 w-5 text-primary" />
+    };
+  });
 };
 
 // Convert a competency to the format used in dashboard
 export const convertToDashboardFormat = () => {
-  return competencies.map(comp => ({
-    id: comp.id.replace('comp', ''),
-    title: comp.name,
-    icon: competencyIconMap[comp.id as keyof typeof competencyIconMap] || competencyIconMap.default
-  }));
+  return competencies.map(comp => {
+    const IconComponent = competencyIconMap[comp.id as keyof typeof competencyIconMap] || competencyIconMap.default;
+    return {
+      id: comp.id.replace('comp', ''),
+      title: comp.name,
+      icon: <IconComponent className="h-5 w-5 text-primary" />
+    };
+  });
 };
 
 // Convert action steps to the format used in the Competences page
