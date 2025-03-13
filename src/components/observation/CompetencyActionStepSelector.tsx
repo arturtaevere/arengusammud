@@ -28,6 +28,7 @@ interface CompetencyActionStepSelectorProps {
 const CompetencyActionStepSelector = ({ onSelect, label, value }: CompetencyActionStepSelectorProps) => {
   const [search, setSearch] = useState('');
   const [sheetOpen, setSheetOpen] = useState(false);
+  const [expandedAccordionItems, setExpandedAccordionItems] = useState<string[]>([]);
 
   // Filter competencies and action steps based on search
   const filteredCompetencies = competencies.map(comp => ({
@@ -41,6 +42,17 @@ const CompetencyActionStepSelector = ({ onSelect, label, value }: CompetencyActi
   const handleActionStepSelect = (step: { id: string; title: string; description: string }) => {
     onSelect(step);
     setSheetOpen(false);
+  };
+
+  const handleAccordionChange = (value: string) => {
+    setExpandedAccordionItems(prev => {
+      // If it's already in the array, remove it, otherwise add it
+      if (prev.includes(value)) {
+        return prev.filter(item => item !== value);
+      } else {
+        return [...prev, value];
+      }
+    });
   };
 
   return (
@@ -73,10 +85,21 @@ const CompetencyActionStepSelector = ({ onSelect, label, value }: CompetencyActi
           </div>
           
           <div className="h-[70vh] overflow-y-auto">
-            <Accordion type="single" collapsible className="w-full">
+            <Accordion 
+              type="multiple" 
+              value={expandedAccordionItems}
+              onValueChange={(value) => setExpandedAccordionItems(value as string[])}
+              className="w-full"
+            >
               {filteredCompetencies.map((comp) => (
                 <AccordionItem key={comp.id} value={comp.id}>
-                  <AccordionTrigger className="text-sm font-medium">
+                  <AccordionTrigger 
+                    className="text-sm font-medium"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleAccordionChange(comp.id);
+                    }}
+                  >
                     {comp.name}
                   </AccordionTrigger>
                   <AccordionContent>
