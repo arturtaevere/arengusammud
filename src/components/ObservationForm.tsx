@@ -14,7 +14,7 @@ const ObservationForm = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { form, isSubmitting, onSubmit } = useObservationForm();
-  const [teachersInSchool, setTeachersInSchool] = useState<{ id: string, name: string }[]>([]);
+  const [teachersInSchool, setTeachersInSchool] = useState<Array<{ id: string, name: string, developmentGoal: string }>>([]);
   
   // Get teachers for the user's school
   useEffect(() => {

@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate } from 'react-router-dom';
@@ -8,7 +8,8 @@ import {
   ObservationFormValues, 
   observationFormSchema, 
   getLastObservedTeacher, 
-  saveLastObservedTeacher 
+  saveLastObservedTeacher,
+  getTeacherDevelopmentGoal
 } from './types';
 
 export const useObservationForm = () => {
@@ -21,6 +22,7 @@ export const useObservationForm = () => {
   const defaultValues: Partial<ObservationFormValues> = {
     date: new Date().toISOString().split('T')[0],
     teacherName: lastTeacher || "",
+    developmentGoal: lastTeacher ? getTeacherDevelopmentGoal(lastTeacher) : "",
   };
   
   // Form setup
@@ -28,6 +30,16 @@ export const useObservationForm = () => {
     resolver: zodResolver(observationFormSchema),
     defaultValues,
   });
+  
+  // Watch for teacher name changes to update the development goal
+  const teacherName = form.watch('teacherName');
+  
+  useEffect(() => {
+    if (teacherName) {
+      const developmentGoal = getTeacherDevelopmentGoal(teacherName);
+      form.setValue('developmentGoal', developmentGoal);
+    }
+  }, [teacherName, form]);
   
   // Form submission handler
   const onSubmit = async (data: ObservationFormValues) => {
