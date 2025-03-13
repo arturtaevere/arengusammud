@@ -31,13 +31,19 @@ const CompetencyActionStepSelector = ({ onSelect, label, value }: CompetencyActi
   const [expandedAccordionItems, setExpandedAccordionItems] = useState<string[]>([]);
 
   // Filter competencies and action steps based on search
-  const filteredCompetencies = competencies.map(comp => ({
-    ...comp,
-    actionSteps: comp.actionSteps.filter(step => 
-      step.title.toLowerCase().includes(search.toLowerCase()) || 
-      step.description.toLowerCase().includes(search.toLowerCase())
-    )
-  })).filter(comp => comp.actionSteps.length > 0 || comp.name.toLowerCase().includes(search.toLowerCase()));
+  const filteredCompetencies = search.trim() === '' 
+    ? competencies // If no search, show all competencies
+    : competencies.map(comp => ({
+        ...comp,
+        actionSteps: comp.actionSteps.filter(step => 
+          step.title.toLowerCase().includes(search.toLowerCase()) || 
+          step.description.toLowerCase().includes(search.toLowerCase())
+        )
+      })).filter(comp => comp.actionSteps.length > 0 || comp.name.toLowerCase().includes(search.toLowerCase()));
+
+  // Check if all action steps are being shown by logging their count
+  console.log('Total action steps across all competencies:', competencies.reduce((total, comp) => total + comp.actionSteps.length, 0));
+  console.log('Filtered action steps:', filteredCompetencies.reduce((total, comp) => total + comp.actionSteps.length, 0));
 
   const handleActionStepSelect = (step: { id: string; title: string; description: string }) => {
     onSelect(step);
@@ -100,7 +106,7 @@ const CompetencyActionStepSelector = ({ onSelect, label, value }: CompetencyActi
                       handleAccordionChange(comp.id);
                     }}
                   >
-                    {comp.name}
+                    {comp.name} ({comp.actionSteps.length})
                   </AccordionTrigger>
                   <AccordionContent>
                     <div className="space-y-2 pl-1">
