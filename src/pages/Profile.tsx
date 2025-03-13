@@ -106,6 +106,7 @@ const Profile = () => {
                   <AvatarImage
                     src={user.profileImage}
                     alt={user.name}
+                    fallbackSrc={`https://avatar.vercel.sh/${user.email}.png`}
                   />
                 ) : (
                   <AvatarImage 
@@ -157,7 +158,7 @@ const Profile = () => {
               </div>
             </div>
 
-            {user.role === 'teacher' && user.school && (
+            {user.school && (
               <div className="flex items-center gap-3 p-3 rounded-md border">
                 <School className="h-5 w-5 text-muted-foreground" />
                 <div>

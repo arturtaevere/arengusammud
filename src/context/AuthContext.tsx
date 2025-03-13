@@ -8,7 +8,7 @@ type User = {
   email: string;
   role: 'coach' | 'teacher';
   profileImage?: string;
-  school?: string; // Add school property
+  school?: string;
 };
 
 // Define the shape of our auth context
@@ -17,7 +17,7 @@ type AuthContextType = {
   isAuthenticated: boolean;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
-  signup: (name: string, email: string, password: string, role: 'coach' | 'teacher', school?: string) => Promise<void>; // Update signup
+  signup: (name: string, email: string, password: string, role: 'coach' | 'teacher', school?: string) => Promise<void>;
   logout: () => void;
   updateProfileImage: (imageUrl: string) => void;
 };
@@ -52,6 +52,7 @@ const MOCK_USERS = [
     password: 'password',
     role: 'coach' as const,
     profileImage: '/lovable-uploads/6eae274c-d643-4822-ae8c-ba2410af6f2a.png',
+    school: 'Arengusammud', // Adding school to coach as well
   },
   {
     id: '2',
@@ -82,9 +83,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
       
-      // Check if the user is the coach@example.com or Artur and ensure profile image is set
+      // Always ensure profile image is set for specific users
       if (parsedUser.email === 'coach@example.com' || parsedUser.email === 'artur@arengusammud.ee') {
         parsedUser.profileImage = '/lovable-uploads/6eae274c-d643-4822-ae8c-ba2410af6f2a.png';
+        
+        // Ensure school is set for Artur
+        if (parsedUser.email === 'artur@arengusammud.ee' && !parsedUser.school) {
+          parsedUser.school = 'Arengusammud';
+        }
+        
         localStorage.setItem('user', JSON.stringify(parsedUser));
       }
       
@@ -125,13 +132,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       throw new Error('Email already exists');
     }
 
-    // Create new user with school field if provided
+    // Create new user with school field for both roles
     const newUser = {
       id: Math.random().toString(36).substr(2, 9),
       name,
       email,
       role,
-      school: role === 'teacher' ? school : undefined, // Only store school for teachers
+      school, // Store school for all users now
     };
     
     setUser(newUser);
