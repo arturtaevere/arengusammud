@@ -1,11 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { ChevronRight, BookOpen, ArrowRight, Heart, ClipboardList, Target, Users, Brain, BookCheck, BarChart, MessageSquare, Lightbulb } from 'lucide-react';
+import { BookOpen, Heart, ClipboardList, Target, Users, Brain, BookCheck, BarChart, MessageSquare, Lightbulb } from 'lucide-react';
 import Navbar from '@/components/Navbar';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import CompetenceList from '@/components/competences/CompetenceList';
 
 const competences = [
   {
@@ -407,87 +403,14 @@ export default function Competences() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 gap-4 md:gap-6">
-          {competencesWithCounts.map((competence) => {
-            const IconComponent = competence.icon || BookOpen;
-            const categorySteps = actionSteps.filter(step => step.category === competence.id);
-            const isExpanded = expandedSteps[competence.id] || false;
-            
-            return (
-              <Collapsible
-                key={competence.id}
-                open={expandedCategory === competence.id}
-                onOpenChange={() => toggleCategory(competence.id)}
-                className="w-full"
-              >
-                <Card className="w-full hover:shadow-md transition-all">
-                  <CardHeader className="pb-2 cursor-pointer">
-                    <CollapsibleTrigger asChild>
-                      <div className="flex justify-between items-center w-full">
-                        <div className="flex items-start gap-3">
-                          <div className="bg-primary/10 p-2 rounded-lg">
-                            <IconComponent className="h-5 w-5 text-primary" />
-                          </div>
-                          <div>
-                            <CardTitle className="text-xl">{competence.title}</CardTitle>
-                            <CardDescription className="mt-1 text-sm">{competence.description}</CardDescription>
-                          </div>
-                        </div>
-                        <ChevronRight 
-                          className={`h-5 w-5 transition-transform ${expandedCategory === competence.id ? 'rotate-90' : ''}`}
-                        />
-                      </div>
-                    </CollapsibleTrigger>
-                  </CardHeader>
-                  
-                  <CollapsibleContent>
-                    <CardContent className="pt-4">
-                      {competence.count > 0 ? (
-                        <div className="space-y-2">
-                          {categorySteps
-                            .slice(0, isExpanded ? categorySteps.length : 3)
-                            .map(step => (
-                              <Link 
-                                key={step.id} 
-                                to={`/action-steps/${step.id}`}
-                                className="block p-3 bg-slate-50 rounded-lg border border-slate-100 hover:bg-slate-100 transition-colors"
-                              >
-                                <div className="flex justify-between items-center">
-                                  <div>
-                                    <p className="font-medium">{step.title}</p>
-                                    <p className="text-sm text-slate-500 mt-1">{step.description}</p>
-                                  </div>
-                                  <ArrowRight className="h-4 w-4 text-primary shrink-0" />
-                                </div>
-                              </Link>
-                            ))}
-                          {categorySteps.length > 3 && (
-                            <Button 
-                              variant="ghost" 
-                              className="w-full text-center text-sm text-primary hover:text-primary-foreground mt-2"
-                              onClick={(e) => toggleStepsExpansion(competence.id, e)}
-                            >
-                              {isExpanded 
-                                ? "Näita vähem" 
-                                : `+ ${categorySteps.length - 3} muud arengusammu`}
-                            </Button>
-                          )}
-                        </div>
-                      ) : (
-                        <div className="bg-slate-50 p-4 rounded-lg border border-slate-100 text-center">
-                          <BookOpen className="h-12 w-12 mx-auto text-slate-400 mb-2" />
-                          <p className="text-slate-500">
-                            Selle kategooria alla pole veel arengusamme lisatud.
-                          </p>
-                        </div>
-                      )}
-                    </CardContent>
-                  </CollapsibleContent>
-                </Card>
-              </Collapsible>
-            );
-          })}
-        </div>
+        <CompetenceList 
+          competences={competencesWithCounts}
+          actionSteps={actionSteps}
+          expandedCategory={expandedCategory}
+          expandedSteps={expandedSteps}
+          onToggleCategory={toggleCategory}
+          onToggleStepsExpansion={toggleStepsExpansion}
+        />
       </main>
     </div>
   );
