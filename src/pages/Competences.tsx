@@ -2,17 +2,17 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { ChevronRight, BookOpen, ArrowRight, Heart, ClipboardList, Target, Users, Brain, BookCheck, BarChart, MessageSquare, Lightbulb } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
-// Define the competence categories
 const competences = [
   {
     id: '1',
     title: 'Hooliva ja arengut toetava õpikeskkonna loomine',
     description: 'Meetodid ja tegevused, mis toetavad turvalise ja hooliva õpikeskkonna loomist, kus õpilased tunnevad end väärtustatuna.',
-    count: 0, // This will be updated dynamically
+    count: 0,
     icon: Heart
   },
   {
@@ -80,13 +80,12 @@ const competences = [
   },
 ];
 
-// Import action steps data
 const actionSteps = [
   {
     id: "step1",
     title: "Rakenda positiivset suhtlusviisi",
     description: "Kasuta positiivset keelt ja toetavat suhtlusviisi klassiruumis, et luua turvaline õhkkond.",
-    category: "1", // Maps to "Hooliva ja arengut toetava õpikeskkonna loomine"
+    category: "1",
     difficulty: "beginner",
     timeEstimate: "15-20 minutit päevas",
     resources: [
@@ -100,7 +99,7 @@ const actionSteps = [
     id: "step2",
     title: "Loo selged klassiruumi reeglid",
     description: "Kehtesta koos õpilastega selged reeglid, mis aitavad luua stabiilsuse ja turvatunde.",
-    category: "2", // Maps to "Kindlate ja harjumuspäraste tegevuste korraldamine klassis"
+    category: "2",
     difficulty: "beginner",
     timeEstimate: "30-45 minutit",
     resources: [
@@ -114,7 +113,7 @@ const actionSteps = [
     id: "step3",
     title: "Kasuta selgeid õpieesmärke",
     description: "Sõnasta iga tunni alguses selged õpieesmärgid, mida soovid tunni jooksul saavutada.",
-    category: "3", // Maps to "Tundide ja õppimise kavandamine õpieesmärkidest lähtuvalt"
+    category: "3",
     difficulty: "intermediate",
     timeEstimate: "10-15 minutit iga tunni kohta",
     resources: [
@@ -128,7 +127,7 @@ const actionSteps = [
     id: "step4",
     title: "Rakenda aktiivõppe meetodeid",
     description: "Kasuta tunnis erinevaid aktiivõppe meetodeid, mis kaasavad õpilasi aktiivselt õppimisse.",
-    category: "4", // Maps to "Kaasamõtlemise ja pingutamise soodustamine"
+    category: "4",
     difficulty: "intermediate",
     timeEstimate: "Läbivalt tunnis",
     resources: [
@@ -142,7 +141,7 @@ const actionSteps = [
     id: "step5",
     title: "Loo struktureeritud iseseisvad ülesanded",
     description: "Koosta selgete juhiste ja ajaraamiga iseseisvad tööd, mis arendavad õpilaste enesejuhtimist.",
-    category: "5", // Maps to "Iseseisva töö kavandamine"
+    category: "5",
     difficulty: "advanced",
     timeEstimate: "30-60 minutit ülesande kohta",
     resources: [
@@ -364,8 +363,8 @@ const actionSteps = [
 export default function Competences() {
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
   const [competencesWithCounts, setCompetencesWithCounts] = useState(competences);
+  const [expandedSteps, setExpandedSteps] = useState<Record<string, boolean>>({});
 
-  // Calculate counts for each competence category
   useEffect(() => {
     const counts = actionSteps.reduce((acc, step) => {
       if (!acc[step.category]) {
@@ -387,6 +386,15 @@ export default function Competences() {
     setExpandedCategory(expandedCategory === id ? null : id);
   };
 
+  const toggleStepsExpansion = (id: string, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setExpandedSteps(prev => ({
+      ...prev,
+      [id]: !prev[id]
+    }));
+  };
+
   return (
     <div className="min-h-screen bg-gray-50/50">
       <Navbar />
@@ -402,6 +410,9 @@ export default function Competences() {
         <div className="grid grid-cols-1 gap-4 md:gap-6">
           {competencesWithCounts.map((competence) => {
             const IconComponent = competence.icon || BookOpen;
+            const categorySteps = actionSteps.filter(step => step.category === competence.id);
+            const isExpanded = expandedSteps[competence.id] || false;
+            
             return (
               <Collapsible
                 key={competence.id}
@@ -433,9 +444,8 @@ export default function Competences() {
                     <CardContent className="pt-4">
                       {competence.count > 0 ? (
                         <div className="space-y-2">
-                          {actionSteps
-                            .filter(step => step.category === competence.id)
-                            .slice(0, 3) // Show just a preview of 3 items
+                          {categorySteps
+                            .slice(0, isExpanded ? categorySteps.length : 3)
                             .map(step => (
                               <Link 
                                 key={step.id} 
@@ -451,10 +461,16 @@ export default function Competences() {
                                 </div>
                               </Link>
                             ))}
-                          {competence.count > 3 && (
-                            <p className="text-center text-sm text-slate-500 mt-2">
-                              + {competence.count - 3} muud arengusammu
-                            </p>
+                          {categorySteps.length > 3 && (
+                            <Button 
+                              variant="ghost" 
+                              className="w-full text-center text-sm text-primary hover:text-primary-foreground mt-2"
+                              onClick={(e) => toggleStepsExpansion(competence.id, e)}
+                            >
+                              {isExpanded 
+                                ? "Näita vähem" 
+                                : `+ ${categorySteps.length - 3} muud arengusammu`}
+                            </Button>
                           )}
                         </div>
                       ) : (
@@ -476,4 +492,3 @@ export default function Competences() {
     </div>
   );
 }
-
