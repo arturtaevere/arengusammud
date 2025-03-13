@@ -1,8 +1,9 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
@@ -29,14 +30,55 @@ const observationFormSchema = z.object({
 
 type ObservationFormValues = z.infer<typeof observationFormSchema>;
 
+// Mock data for teachers
+const mockTeachers = {
+  'Arengusammud': [
+    { id: 't1', name: 'Mari Maasikas' },
+    { id: 't2', name: 'Jaan Kask' },
+    { id: 't3', name: 'Anna Lepp' },
+    { id: 't4', name: 'Peeter Kuusk' },
+  ],
+  'Järveküla Kool': [
+    { id: 't5', name: 'Tiina Tamm' },
+    { id: 't6', name: 'Mart Metsa' },
+    { id: 't7', name: 'Kati Karu' },
+  ],
+  'Kilingi-Nõmme Gümnaasium': [
+    { id: 't8', name: 'Siim Siil' },
+    { id: 't9', name: 'Liisa Lill' },
+    { id: 't10', name: 'Tõnu Tõru' },
+  ]
+};
+
+// Function to get last observed teacher from localStorage
+const getLastObservedTeacher = (): string | null => {
+  return localStorage.getItem('lastObservedTeacher');
+};
+
+// Function to save observed teacher to localStorage
+const saveLastObservedTeacher = (teacherName: string): void => {
+  localStorage.setItem('lastObservedTeacher', teacherName);
+};
+
 const ObservationForm = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [teachersInSchool, setTeachersInSchool] = useState<{ id: string, name: string }[]>([]);
+  
+  // Get teachers for the user's school
+  useEffect(() => {
+    if (user?.school && mockTeachers[user.school as keyof typeof mockTeachers]) {
+      setTeachersInSchool(mockTeachers[user.school as keyof typeof mockTeachers]);
+    }
+  }, [user]);
   
   // Default values for the form
+  const lastTeacher = getLastObservedTeacher();
   const defaultValues: Partial<ObservationFormValues> = {
     date: new Date().toISOString().split('T')[0],
+    teacherName: lastTeacher || "",
   };
   
   // Form setup
@@ -48,6 +90,9 @@ const ObservationForm = () => {
   // Form submission handler
   const onSubmit = async (data: ObservationFormValues) => {
     setIsSubmitting(true);
+    
+    // Save the selected teacher for next time
+    saveLastObservedTeacher(data.teacherName);
     
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1000));
@@ -100,9 +145,23 @@ const ObservationForm = () => {
                           Õpetaja nimi
                         </span>
                       </FormLabel>
-                      <FormControl>
-                        <Input placeholder="Mari Maasikas" {...field} />
-                      </FormControl>
+                      <Select 
+                        onValueChange={field.onChange} 
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Vali õpetaja" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {teachersInSchool.map(teacher => (
+                            <SelectItem key={teacher.id} value={teacher.name}>
+                              {teacher.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                       <FormMessage />
                     </FormItem>
                   )}
