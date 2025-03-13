@@ -139,20 +139,7 @@ const VideoUploader: React.FC<VideoUploaderProps> = ({ onVideoUploaded, existing
       ) : (
         <div className="space-y-2">
           <div className="relative">
-            <video 
-              className={`w-full rounded-lg ${isYouTubeUrl(videoPreview) ? 'hidden' : ''}`}
-              src={isYouTubeUrl(videoPreview) ? '' : videoPreview}
-              controls
-              preload="metadata"
-            >
-              Your browser does not support the video tag.
-            </video>
-            
-            {isYouTubeUrl(videoPreview) && (
-              <div className="w-full aspect-video">
-                <VideoPlayer src={videoPreview} />
-              </div>
-            )}
+            <VideoPlayer src={videoPreview} />
             
             <Button 
               variant="destructive" 
