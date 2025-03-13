@@ -53,17 +53,22 @@ const CompetencyActionStepSelector = ({ onSelect, label, value }: CompetencyActi
     setSelectedCompetency(null);
   };
 
-  const handleSheetClose = () => {
+  const handleOpenSheet = () => {
+    setSheetOpen(true);
+  };
+
+  const handleCloseSheet = () => {
     setSheetOpen(false);
     setSelectedCompetency(null);
   };
 
   return (
-    <Sheet open={sheetOpen} onOpenChange={handleSheetClose}>
+    <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
       <SheetTrigger asChild>
         <Button 
           variant="outline" 
           className="w-full justify-start text-left h-auto py-2 px-3"
+          onClick={handleOpenSheet}
         >
           <ClipboardList className="h-4 w-4 mr-2 opacity-70" />
           {value || label}
