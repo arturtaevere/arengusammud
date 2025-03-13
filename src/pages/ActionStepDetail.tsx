@@ -12,6 +12,7 @@ import VideoUploader from "@/components/VideoUploader";
 // Create a local storage key using the step ID to store video URLs
 const getVideoStorageKey = (stepId: string) => `action_step_video_${stepId}`;
 
+// Action steps data
 const actionStepsDetails = {
   "step1": {
     title: "Rakenda positiivset suhtlusviisi",
@@ -81,16 +82,17 @@ const ActionStepDetail = () => {
   const [videoUrl, setVideoUrl] = useState<string>("");
   
   useEffect(() => {
-    if (stepId && actionStepsDetails[stepId]) {
-      setStepDetails(actionStepsDetails[stepId]);
+    if (stepId && stepId in actionStepsDetails) {
+      setStepDetails(actionStepsDetails[stepId as keyof typeof actionStepsDetails]);
       
       // Check localStorage first, then fallback to the original video URL
       const savedVideoUrl = localStorage.getItem(getVideoStorageKey(stepId));
       
       if (savedVideoUrl) {
         setVideoUrl(savedVideoUrl);
-      } else if (actionStepsDetails[stepId].videoUrl && actionStepsDetails[stepId].videoUrl !== "https://example.com/video1") {
-        setVideoUrl(actionStepsDetails[stepId].videoUrl);
+      } else if (actionStepsDetails[stepId as keyof typeof actionStepsDetails].videoUrl && 
+                actionStepsDetails[stepId as keyof typeof actionStepsDetails].videoUrl !== "https://example.com/video1") {
+        setVideoUrl(actionStepsDetails[stepId as keyof typeof actionStepsDetails].videoUrl);
       }
     }
   }, [stepId]);
