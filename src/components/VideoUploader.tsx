@@ -1,3 +1,4 @@
+
 import React, { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Upload, X, Link as LinkIcon } from 'lucide-react';
@@ -8,9 +9,14 @@ import VideoPlayer from './VideoPlayer';
 interface VideoUploaderProps {
   onVideoUploaded: (videoUrl: string) => void;
   existingVideoUrl?: string;
+  hideVideoPreview?: boolean;
 }
 
-const VideoUploader: React.FC<VideoUploaderProps> = ({ onVideoUploaded, existingVideoUrl }) => {
+const VideoUploader: React.FC<VideoUploaderProps> = ({ 
+  onVideoUploaded, 
+  existingVideoUrl,
+  hideVideoPreview = false
+}) => {
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [videoPreview, setVideoPreview] = useState<string | null>(existingVideoUrl || null);
@@ -139,12 +145,12 @@ const VideoUploader: React.FC<VideoUploaderProps> = ({ onVideoUploaded, existing
       ) : (
         <div className="space-y-2">
           <div className="relative">
-            <VideoPlayer src={videoPreview} />
+            {!hideVideoPreview && <VideoPlayer src={videoPreview} />}
             
             <Button 
               variant="destructive" 
               size="icon"
-              className="absolute top-2 right-2"
+              className={`${hideVideoPreview ? "" : "absolute top-2 right-2"}`}
               onClick={clearVideo}
             >
               <X className="h-4 w-4" />

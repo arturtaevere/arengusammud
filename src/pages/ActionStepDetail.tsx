@@ -1,4 +1,3 @@
-
 import { useParams, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
@@ -9,9 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import VideoPlayer from "@/components/VideoPlayer";
 import VideoUploader from "@/components/VideoUploader";
 
-// This is placeholder data that will be replaced with real data later
 const actionStepsDetails = {
-  // First sample step with full details
   "step1": {
     title: "Rakenda positiivset suhtlusviisi",
     description: "Kasuta positiivset keelt ja toetavat suhtlusviisi klassiruumis, et luua turvaline õhkkond.",
@@ -32,7 +29,6 @@ const actionStepsDetails = {
     examples: "Positiivse suhtlusviisi kasutamine klassiruumis on oluline, et luua turvaline ja toetav õpikeskkond. Positiivne keelekasutus aitab õpilastel tunda end väärtustatuna ja motiveerib neid rohkem pingutama.\n\nNäide 1: Selle asemel, et öelda \"Ära räägi tunnis\", võiks öelda \"Palun keskendu praegu kuulamisele, sinu mõtted on teretulnud aruteluosas\".\n\nNäide 2: Selle asemel, et öelda \"See vastus on vale\", võiks öelda \"Tänan, et jagasid oma mõtteid. Proovime koos leida täpsema lahenduse\".",
     videoUrl: "https://example.com/video1"
   },
-  // Other steps with minimal details for now
   "step2": {
     title: "Loo selged klassiruumi reeglid",
     description: "Kehtesta koos õpilastega selged reeglid, mis aitavad luua stabiilsuse ja turvatunde.",
@@ -52,7 +48,6 @@ const actionStepsDetails = {
     examples: "Klassiruumi reeglite loomine on oluline samm turvalise ja produktiivse õpikeskkonna loomiseks. Reeglid peaksid olema selged, konkreetsed ja positiivselt sõnastatud.",
     videoUrl: "https://example.com/video2"
   },
-  // Sample steps from "Ennastjuhtiva õppija toetamine" competence
   "step10-1": {
     title: "Tõhusa õppimisviisi avamine",
     description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
@@ -73,7 +68,6 @@ const actionStepsDetails = {
     examples: "Õppimine on kõige tõhusam, kui see sisaldab kolme olulist etappi: planeerimine, tegutsemine ja reflekteerimine. Et õpilased saaksid ennastjuhtivaks õppijaks, on oluline, et nad mõistaksid neid etappe ja oskaksid neid teadlikult kasutada.\n\nPlaneerimine tähendab eesmärkide seadmist, vajalike ressursside kindlaksmääramist ja strateegia valimist. Tegutsemine on aktiivne õppimine, info töötlemine ja oskuste harjutamine. Reflekteerimine sisaldab õpitu analüüsimist, tugevuste ja arengukohtade määratlemist ning järgmiste sammude kavandamist.\n\nMiks see on oluline?\nÕpilase võime oma õppimist planeerida, jälgida ja hinnata on edukaks õppimiseks vajalikud ning osa õpilase metakognitiivsest regulatsioonist. Kuigi asjatundlikel õppijatel võivad need protsessid olla automaatsed, vajab enamik õppijaid ennastjuhtivaks õppijaks kujunemisel toetust. Neil on tarvis nende õpioskuste selgesõnaliseks muutmist, juhendamist ja harjutamist.\n\nKüsides enne ülesande lahendamist, tegevuse ajal ja pärast seda endalt küsimusi, saavad õpilased teha mõtestatud otsuseid. Planeerimine julgustab õpilast mõtlema õppimise eesmärkide üle ja kaaluma, kuidas ülesandele läheneda, milliseid asjakohaseid eelteadmisi kasutada ning kuidas oma jõupingutusi jaotada. Ülesande täitmisel jälgib õpilane, kuidas tal läheb ja teeb oma valikutes vajaduse korral muudatusi. Pärast ülesannet reflekteerimine võimaldab hinnata, kui tõhus oli planeerimine ja selle elluviimine ning mida järgmiseks korraks endaga kaasa võtta.\n\nNäited\nÕpetaja jagab või koostab koos õpilastega võimalikud küsimused, mida tegevuse planeerimise, jälgimise ja hindamise ajal kasutada. Kuigi mõisteid \"planeerimine\", \"jälgimine\" ja \"hindamine\" saab tutvustada üldiselt, on neid parem õpetada konkreetse sisu ja ülesandega sidudes.\n\nPindala ja ümbermõõdu tekstülesannete lahendamine matemaatikas\nPlaneerimine:\n\"Kas ma saan täielikult aru tekstülesande situatsioonist ja sellest, mida küsitakse?\";\n\"Mis on teada ja mis on tundmatu?\";\n\"Kas ma tean, millised pindala ja ümbermõõdu valemid on ülesandes kirjeldatud geomeetrilise kujundi jaoks sobilikud?\";\n\"Mis mõõtühikutega on tegu?\".\n\nJälgimine:\n\"Kas ma lahendan probleemi samm-sammult?\";\n\"Kas olen kasutanud õigeid pindala ja ümbermõõdu valemeid?\"; \n\"Kas olen arvestanud mõõtühikuid korrektselt ja kõikides arvutustes järjepidevalt?\";\n\"Kuidas saan kontrollida vahetulemuste õigsust?\".\n\nRefleksioon/hindamine:\n\"Kas minu lõplik vastus on probleemi lahendamiseks mõistlik?\";\n\"Kas see vastab sellele, mida küsiti?\";\n\"Kas ma olen oma lõplikus vastuses lisanud sobivad mõõtühikud?\";\n\"Kas on alternatiivseid meetodeid või lähenemisviise, mida võiks selle probleemi lahendamiseks kasutada, ja kuidas saan neid oma lahendusega võrrelda?\".\n\nLugemine ja küsimustele vastamine.\nPlaneerimine:\n\"Mida mul on täpselt vaja lugeda?\"\n\"Millised leheküljed?\"\n\"Kui palju mul on aega?\"\n\"Mis ma pean teada saama?\"\n\"Millistele küsimustele vastuseid ostin?\"\n\"Mida ma juba teema kohta tean?\"\n\nJälgimine:\n\"Kas ma saan aru, mida ma loen?\"\n\"Mida need sõnad tähendavad?\"\n\"Kas siin on vastused kirjas?\"\n\"Kas ma pean midagi uuesti lugema, et paremini aru saada?\"\n\"Mis on olulised sõnad, millele joon alla tõmmata?\"\n\"Mis on oluline vihikusse kirjutada?\"\n\nRefleksioon:\n\"Kas ma leidsin vajalikud vastused?\"\n\"Kas ma sain aru, mis ma tegema pean?\"\n\"Kas ma oskan oma sõnadega öelda, mida ma lugesin?\"\n\"Kas ma oskan öelda, mis oli kõige olulisem?\"\n\nSkulptuuride tegemine kunstiõpetuses\nPlaneerimine:\n\"Milliseid materjale ja tööriistu ma selle skulptuuri tegemiseks vajan?\";\n\"Kas ma olen samalaadse skulptuuri varem loonud? Mis oli tookord lihtne? Mis oli keeruline?\";\n\"Milliseid teadmisi saan koguda skulptuuridest, mida olen varem uurinud või vaadelnud?\";\n\"Kust ma skulptuuriga alustan ja milline vaatenurk või perspektiiv näitab kõige paremini minu kavandatud kunstilist väljendust?\";\n\"Kas vajan mingeid juhendeid või mõõte, et säilitada oma skulptuuris proportsioon ja tasakaal?\".\n\nJälgimine:\n\"Kas võiksin katsetada erinevaid skulptuuritehnikaid, et minu töö oleks visuaalselt atraktiivsem?\";\n\"Kas mu skulptuuri eri elemendid on proportsioonis ja kas üldine kompositsioon on hästi tasakaalus?\";\n\"Millised selle teose osad on keerulised ja kuidas neid tõhusalt lahendada?\".\n\nRefleksioon/hindamine:\n\"Kui hästi ma oma kunstilist nägemust valmis skulptuuris tabasin?\";\n\"Kas minu kasutatud skulptuuritehnikad aitasid positiivselt kaasa teose üldisele esteetikale?\";\n\"Kas valitud vaatenurk andis skulptuuri kaudu soovitud emotsioone või sõnumeid tõhusalt edasi?\".\n\nLaboratoorne töö läätsede tüüpide kohta füüsikas\nPlaneerimine:\n\"Millist konkreetset teavet või teadmisi soovin saada sellest katsest erinevat tüüpi läätsedega?\";\n\"Milliseid läätsi ja muid vahendeid on mul katse jaoks vaja?\";\n\"Milliseid muutujaid mõõdan ja kuidas saan kontrollida muid tegureid?\";\n\"Milliseid samme katses järgin ning kuidas tagan järjepidevuse ja täpsuse?\".\n\nJälgimine:\n\"Kas kogun andmeid täpselt ja järjepidevalt?\";\n\"Milliseid muutusi märkan?\".\n\nHindamine:\n\"Millised tulemused andmetest ilmnevad ja kuidas on need seotud erinevate läätsede omadustega?\";\n\"Kas oli midagi, mis võis katsetulemusi mõjutada?\";\n\"Milliseid järeldusi saan teha erinevate läätsede optiliste omaduste kohta?\".\n\nKasutatud materjal:\nMetacognition and Self-Regulated Learning, Guidance Report, EEF, 2021 link",
     videoUrl: "https://example.com/video3"
   }
-  // Other competency steps would be filled in similarly
 };
 
 const ActionStepDetail = () => {
@@ -83,10 +77,8 @@ const ActionStepDetail = () => {
   const [videoUrl, setVideoUrl] = useState<string>("");
   
   useEffect(() => {
-    // In a real application, this would be an API call or data fetch
     if (stepId && actionStepsDetails[stepId]) {
       setStepDetails(actionStepsDetails[stepId]);
-      // Set initial video URL if available
       if (actionStepsDetails[stepId].videoUrl && actionStepsDetails[stepId].videoUrl !== "https://example.com/video1") {
         setVideoUrl(actionStepsDetails[stepId].videoUrl);
       }
@@ -95,11 +87,9 @@ const ActionStepDetail = () => {
   
   const handleVideoUploaded = (url: string) => {
     setVideoUrl(url);
-    // In a real application, you would save this URL to the database
     console.log("Video URL updated:", url);
     
     if (stepDetails) {
-      // Update step details with new video URL
       setStepDetails({
         ...stepDetails,
         videoUrl: url
@@ -211,6 +201,7 @@ const ActionStepDetail = () => {
                           <VideoUploader 
                             onVideoUploaded={handleVideoUploaded} 
                             existingVideoUrl={videoUrl}
+                            hideVideoPreview={true}
                           />
                         </div>
                       </div>
