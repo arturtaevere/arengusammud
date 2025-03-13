@@ -1,3 +1,4 @@
+
 import { useParams, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
@@ -7,6 +8,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import VideoPlayer from "@/components/VideoPlayer";
 import VideoUploader from "@/components/VideoUploader";
+
+// Create a local storage key using the step ID to store video URLs
+const getVideoStorageKey = (stepId: string) => `action_step_video_${stepId}`;
 
 const actionStepsDetails = {
   "step1": {
@@ -79,7 +83,13 @@ const ActionStepDetail = () => {
   useEffect(() => {
     if (stepId && actionStepsDetails[stepId]) {
       setStepDetails(actionStepsDetails[stepId]);
-      if (actionStepsDetails[stepId].videoUrl && actionStepsDetails[stepId].videoUrl !== "https://example.com/video1") {
+      
+      // Check localStorage first, then fallback to the original video URL
+      const savedVideoUrl = localStorage.getItem(getVideoStorageKey(stepId));
+      
+      if (savedVideoUrl) {
+        setVideoUrl(savedVideoUrl);
+      } else if (actionStepsDetails[stepId].videoUrl && actionStepsDetails[stepId].videoUrl !== "https://example.com/video1") {
         setVideoUrl(actionStepsDetails[stepId].videoUrl);
       }
     }
@@ -88,6 +98,14 @@ const ActionStepDetail = () => {
   const handleVideoUploaded = (url: string) => {
     setVideoUrl(url);
     console.log("Video URL updated:", url);
+    
+    // Save to localStorage when a video is uploaded or changed
+    if (stepId && url) {
+      localStorage.setItem(getVideoStorageKey(stepId), url);
+    } else if (stepId) {
+      // If URL is empty, remove the item from localStorage
+      localStorage.removeItem(getVideoStorageKey(stepId));
+    }
     
     if (stepDetails) {
       setStepDetails({
