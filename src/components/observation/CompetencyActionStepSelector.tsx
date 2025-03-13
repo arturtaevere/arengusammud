@@ -61,6 +61,14 @@ const CompetencyActionStepSelector = ({ onSelect, label, value }: CompetencyActi
     });
   };
 
+  // Set initial expanded state for the competency with ID "comp10" (Ennastjuhtiva õppija toetamine)
+  // to make it easier for users to find the many action steps there
+  React.useEffect(() => {
+    if (expandedAccordionItems.length === 0) {
+      setExpandedAccordionItems(['comp10']);
+    }
+  }, []);
+
   return (
     <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
       <SheetTrigger asChild>
