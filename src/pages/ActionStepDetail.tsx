@@ -1,3 +1,4 @@
+
 import { useParams, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
@@ -5,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, BookOpen, CheckSquare, ListTodo, Video } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import VideoPlayer from "@/components/VideoPlayer";
+import VideoUploader from "@/components/VideoUploader";
 
 // This is placeholder data that will be replaced with real data later
 const actionStepsDetails = {
@@ -77,13 +80,32 @@ const ActionStepDetail = () => {
   const { stepId } = useParams<{ stepId: string }>();
   const [stepDetails, setStepDetails] = useState<typeof actionStepsDetails[keyof typeof actionStepsDetails] | null>(null);
   const [activeTab, setActiveTab] = useState("description");
+  const [videoUrl, setVideoUrl] = useState<string>("");
   
   useEffect(() => {
     // In a real application, this would be an API call or data fetch
     if (stepId && actionStepsDetails[stepId]) {
       setStepDetails(actionStepsDetails[stepId]);
+      // Set initial video URL if available
+      if (actionStepsDetails[stepId].videoUrl && actionStepsDetails[stepId].videoUrl !== "https://example.com/video1") {
+        setVideoUrl(actionStepsDetails[stepId].videoUrl);
+      }
     }
   }, [stepId]);
+  
+  const handleVideoUploaded = (url: string) => {
+    setVideoUrl(url);
+    // In a real application, you would save this URL to the database
+    console.log("Video URL updated:", url);
+    
+    if (stepDetails) {
+      // Update step details with new video URL
+      setStepDetails({
+        ...stepDetails,
+        videoUrl: url
+      });
+    }
+  };
   
   if (!stepDetails) {
     return (
@@ -181,13 +203,19 @@ const ActionStepDetail = () => {
                 <Card>
                   <CardContent className="pt-6">
                     <h3 className="text-lg font-medium mb-4">Video</h3>
-                    {stepDetails.videoUrl ? (
-                      <div className="aspect-video bg-slate-100 flex items-center justify-center rounded-lg">
-                        <Video className="h-12 w-12 text-slate-400" />
-                        <p className="ml-2 text-slate-500">Videoesitlus tuleb varsti...</p>
+                    
+                    {videoUrl ? (
+                      <div className="space-y-4">
+                        <VideoPlayer src={videoUrl} />
+                        <div className="mt-4">
+                          <VideoUploader 
+                            onVideoUploaded={handleVideoUploaded} 
+                            existingVideoUrl={videoUrl}
+                          />
+                        </div>
                       </div>
                     ) : (
-                      <p className="text-muted-foreground">Video pole veel saadaval.</p>
+                      <VideoUploader onVideoUploaded={handleVideoUploaded} />
                     )}
                   </CardContent>
                 </Card>
