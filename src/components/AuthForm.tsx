@@ -1,5 +1,6 @@
-import { useState } from 'react';
-import { useAuth } from '@/context/AuthContext';
+
+import { useState, useEffect } from 'react';
+import { useAuth, SCHOOLS } from '@/context/AuthContext';
 import { useToast } from '@/components/ui/use-toast';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -7,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const AuthForm = () => {
   const { login, signup, isLoading } = useAuth();
@@ -22,6 +24,16 @@ const AuthForm = () => {
   const [signupEmail, setSignupEmail] = useState('');
   const [signupPassword, setSignupPassword] = useState('');
   const [signupRole, setSignupRole] = useState<'coach' | 'teacher'>('coach');
+  const [signupSchool, setSignupSchool] = useState<string>('');
+  const [showSchoolField, setShowSchoolField] = useState(false);
+
+  // Update school field visibility based on role
+  useEffect(() => {
+    setShowSchoolField(signupRole === 'teacher');
+    if (signupRole !== 'teacher') {
+      setSignupSchool('');
+    }
+  }, [signupRole]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,8 +54,18 @@ const AuthForm = () => {
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
+    // Validate school is selected for teachers
+    if (signupRole === 'teacher' && !signupSchool) {
+      toast({
+        variant: "destructive",
+        title: "Registreerimine ebaõnnestus",
+        description: "Palun vali oma kool",
+      });
+      return;
+    }
+
     try {
-      await signup(signupName, signupEmail, signupPassword, signupRole);
+      await signup(signupName, signupEmail, signupPassword, signupRole, signupSchool);
       toast({
         title: "Konto loodud",
         description: "Tere tulemast Arengusammudesse!",
@@ -164,6 +186,27 @@ const AuthForm = () => {
                     </div>
                   </RadioGroup>
                 </div>
+
+                {showSchoolField && (
+                  <div className="space-y-2">
+                    <Label htmlFor="signup-school">Kool</Label>
+                    <Select 
+                      value={signupSchool} 
+                      onValueChange={setSignupSchool}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Vali oma kool" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {SCHOOLS.map((school) => (
+                          <SelectItem key={school} value={school}>
+                            {school}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
               </CardContent>
               <CardFooter>
                 <Button 

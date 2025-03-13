@@ -5,7 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
-import { User, Mail, ArrowLeft, Upload, Camera } from 'lucide-react';
+import { User, Mail, ArrowLeft, Upload, Camera, School } from 'lucide-react';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { Input } from '@/components/ui/input';
 
@@ -156,6 +156,16 @@ const Profile = () => {
                 <p className="font-medium">{user.email}</p>
               </div>
             </div>
+
+            {user.role === 'teacher' && user.school && (
+              <div className="flex items-center gap-3 p-3 rounded-md border">
+                <School className="h-5 w-5 text-muted-foreground" />
+                <div>
+                  <p className="text-sm text-muted-foreground">Kool</p>
+                  <p className="font-medium">{user.school}</p>
+                </div>
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>

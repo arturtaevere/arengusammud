@@ -7,7 +7,8 @@ type User = {
   name: string;
   email: string;
   role: 'coach' | 'teacher';
-  profileImage?: string; // Add profileImage property
+  profileImage?: string;
+  school?: string; // Add school property
 };
 
 // Define the shape of our auth context
@@ -16,9 +17,9 @@ type AuthContextType = {
   isAuthenticated: boolean;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
-  signup: (name: string, email: string, password: string, role: 'coach' | 'teacher') => Promise<void>;
+  signup: (name: string, email: string, password: string, role: 'coach' | 'teacher', school?: string) => Promise<void>; // Update signup
   logout: () => void;
-  updateProfileImage: (imageUrl: string) => void; // Add method to update profile image
+  updateProfileImage: (imageUrl: string) => void;
 };
 
 // Create the context with default values
@@ -34,6 +35,13 @@ const AuthContext = createContext<AuthContextType>({
 
 // Create a hook for using the context
 export const useAuth = () => useContext(AuthContext);
+
+// List of available schools
+export const SCHOOLS = [
+  'Arengusammud',
+  'Järveküla Kool',
+  'Kilingi-Nõmme Gümnaasium',
+];
 
 // Mock user data for demonstration
 const MOCK_USERS = [
@@ -51,6 +59,7 @@ const MOCK_USERS = [
     email: 'teacher@example.com',
     password: 'password',
     role: 'teacher' as const,
+    school: 'Järveküla Kool',
   },
   {
     id: '3',
@@ -58,7 +67,8 @@ const MOCK_USERS = [
     email: 'artur@arengusammud.ee',
     password: 'password',
     role: 'coach' as const,
-    profileImage: '/lovable-uploads/6eae274c-d643-4822-ae8c-ba2410af6f2a.png', // Added your profile image
+    profileImage: '/lovable-uploads/6eae274c-d643-4822-ae8c-ba2410af6f2a.png',
+    school: 'Arengusammud',
   },
 ];
 
@@ -104,7 +114,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   // Mock signup functionality
-  const signup = async (name: string, email: string, password: string, role: 'coach' | 'teacher') => {
+  const signup = async (name: string, email: string, password: string, role: 'coach' | 'teacher', school?: string) => {
     setIsLoading(true);
     
     // Simulate API call delay
@@ -115,12 +125,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       throw new Error('Email already exists');
     }
 
-    // Create new user without default profile image
+    // Create new user with school field if provided
     const newUser = {
       id: Math.random().toString(36).substr(2, 9),
       name,
       email,
       role,
+      school: role === 'teacher' ? school : undefined, // Only store school for teachers
     };
     
     setUser(newUser);
