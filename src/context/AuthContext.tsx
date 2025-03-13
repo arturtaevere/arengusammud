@@ -99,13 +99,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       throw new Error('Email already exists');
     }
 
-    // Create new user
+    // Create new user without default profile image
     const newUser = {
       id: Math.random().toString(36).substr(2, 9),
       name,
       email,
       role,
-      profileImage: '/lovable-uploads/6eae274c-d643-4822-ae8c-ba2410af6f2a.png',
     };
     
     setUser(newUser);
