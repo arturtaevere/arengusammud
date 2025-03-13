@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/components/ui/use-toast';
@@ -64,7 +63,7 @@ const AuthForm = () => {
         <CardHeader>
           <CardTitle className="text-3xl text-center">Arengusammud</CardTitle>
           <CardDescription className="text-center">
-            Aitavad õpetajal kasvada.
+            Õpipartnerlus ja õpiringid aitavad õpetajal kasvada
           </CardDescription>
         </CardHeader>
         <Tabs 
