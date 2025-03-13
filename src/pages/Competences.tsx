@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { ChevronRight, Folder, BookOpen, ArrowRight } from 'lucide-react';
+import { ChevronRight, BookOpen, ArrowRight, Heart, ClipboardList, Target, Users, Brain, BookCheck, BarChart, MessageSquare, Lightbulb } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
@@ -13,60 +13,70 @@ const competences = [
     title: 'Hooliva ja arengut toetava õpikeskkonna loomine',
     description: 'Meetodid ja tegevused, mis toetavad turvalise ja hooliva õpikeskkonna loomist, kus õpilased tunnevad end väärtustatuna.',
     count: 0, // This will be updated dynamically
+    icon: Heart
   },
   {
     id: '2',
     title: 'Kindlate ja harjumuspäraste tegevuste korraldamine klassis',
     description: 'Rutiinide ja struktuuri loomine klassiruumis, mis toetab õppimist ja vähendab segavaid tegureid.',
     count: 0,
+    icon: ClipboardList
   },
   {
     id: '3',
     title: 'Tundide ja õppimise kavandamine õpieesmärkidest lähtuvalt',
     description: 'Õppetundide planeerimine nii, et need keskenduksid selgetele ja mõõdetavatele õpieesmärkidele.',
     count: 0,
+    icon: Target
   },
   {
     id: '4',
     title: 'Kaasamõtlemise ja pingutamise soodustamine',
     description: 'Meetodid, mis innustavad õpilasi aktiivselt osalema ja keerulisemate ülesannetega pingutama.',
     count: 0,
+    icon: Users
   },
   {
     id: '5',
     title: 'Iseseisva töö kavandamine',
     description: 'Tõhusate iseseisva töö võimaluste loomine, mis arendavad õpilaste enesejuhtimisoskusi.',
     count: 0,
+    icon: Brain
   },
   {
     id: '6',
     title: 'Õppesisu meeldejääv edasiandmine õpilastele',
     description: 'Materjali esitlemise tehnikad, mis muudavad õppesisu arusaadavaks ja meeldejäävaks.',
     count: 0,
+    icon: BookCheck
   },
   {
     id: '7',
     title: 'Andmete kogumine õppematerjali omandamise kohta',
     description: 'Strateegiad õpilaste edu ja väljakutsete jälgimiseks ning hindamiseks õppimise käigus.',
     count: 0,
+    icon: BarChart
   },
   {
     id: '8',
     title: 'Tagasiside andmine õpilastele',
     description: 'Tõhusa, konkreetse ja arendava tagasiside andmine, mis toetab õpilaste arengut.',
     count: 0,
+    icon: MessageSquare
   },
   {
     id: '9',
     title: 'Õpilaste kaasamine hindamisprotsessi',
     description: 'Meetodid, mis kaasavad õpilasi hindamisse, sealhulgas enesehindamine ja kaaslaste hindamine.',
     count: 0,
+    icon: Users
   },
   {
     id: '10',
     title: 'Ennastjuhtiva õppija toetamine',
     description: 'Strateegiad õpilaste autonoomia, vastutuse ja enesejuhtimisoskuste arendamiseks.',
     count: 0,
+    icon: Lightbulb
   },
 ];
 
@@ -390,74 +400,77 @@ export default function Competences() {
         </div>
 
         <div className="grid grid-cols-1 gap-4 md:gap-6">
-          {competencesWithCounts.map((competence) => (
-            <Collapsible
-              key={competence.id}
-              open={expandedCategory === competence.id}
-              onOpenChange={() => toggleCategory(competence.id)}
-              className="w-full"
-            >
-              <Card className="w-full hover:shadow-md transition-all">
-                <CardHeader className="pb-2 cursor-pointer">
-                  <CollapsibleTrigger asChild>
-                    <div className="flex justify-between items-center w-full">
-                      <div className="flex items-start gap-3">
-                        <div className="bg-primary/10 p-2 rounded-lg">
-                          <Folder className="h-5 w-5 text-primary" />
+          {competencesWithCounts.map((competence) => {
+            const IconComponent = competence.icon || BookOpen;
+            return (
+              <Collapsible
+                key={competence.id}
+                open={expandedCategory === competence.id}
+                onOpenChange={() => toggleCategory(competence.id)}
+                className="w-full"
+              >
+                <Card className="w-full hover:shadow-md transition-all">
+                  <CardHeader className="pb-2 cursor-pointer">
+                    <CollapsibleTrigger asChild>
+                      <div className="flex justify-between items-center w-full">
+                        <div className="flex items-start gap-3">
+                          <div className="bg-primary/10 p-2 rounded-lg">
+                            <IconComponent className="h-5 w-5 text-primary" />
+                          </div>
+                          <div>
+                            <CardTitle className="text-xl">{competence.title}</CardTitle>
+                            <CardDescription className="mt-1 text-sm">{competence.description}</CardDescription>
+                          </div>
                         </div>
-                        <div>
-                          <CardTitle className="text-xl">{competence.title}</CardTitle>
-                          <CardDescription className="mt-1 text-sm">{competence.description}</CardDescription>
-                        </div>
+                        <ChevronRight 
+                          className={`h-5 w-5 transition-transform ${expandedCategory === competence.id ? 'rotate-90' : ''}`}
+                        />
                       </div>
-                      <ChevronRight 
-                        className={`h-5 w-5 transition-transform ${expandedCategory === competence.id ? 'rotate-90' : ''}`}
-                      />
-                    </div>
-                  </CollapsibleTrigger>
-                </CardHeader>
-                
-                <CollapsibleContent>
-                  <CardContent className="pt-4">
-                    {competence.count > 0 ? (
-                      <div className="space-y-2">
-                        {actionSteps
-                          .filter(step => step.category === competence.id)
-                          .slice(0, 3) // Show just a preview of 3 items
-                          .map(step => (
-                            <Link 
-                              key={step.id} 
-                              to={`/action-steps/${step.id}`}
-                              className="block p-3 bg-slate-50 rounded-lg border border-slate-100 hover:bg-slate-100 transition-colors"
-                            >
-                              <div className="flex justify-between items-center">
-                                <div>
-                                  <p className="font-medium">{step.title}</p>
-                                  <p className="text-sm text-slate-500 mt-1">{step.description}</p>
+                    </CollapsibleTrigger>
+                  </CardHeader>
+                  
+                  <CollapsibleContent>
+                    <CardContent className="pt-4">
+                      {competence.count > 0 ? (
+                        <div className="space-y-2">
+                          {actionSteps
+                            .filter(step => step.category === competence.id)
+                            .slice(0, 3) // Show just a preview of 3 items
+                            .map(step => (
+                              <Link 
+                                key={step.id} 
+                                to={`/action-steps/${step.id}`}
+                                className="block p-3 bg-slate-50 rounded-lg border border-slate-100 hover:bg-slate-100 transition-colors"
+                              >
+                                <div className="flex justify-between items-center">
+                                  <div>
+                                    <p className="font-medium">{step.title}</p>
+                                    <p className="text-sm text-slate-500 mt-1">{step.description}</p>
+                                  </div>
+                                  <ArrowRight className="h-4 w-4 text-primary shrink-0" />
                                 </div>
-                                <ArrowRight className="h-4 w-4 text-primary shrink-0" />
-                              </div>
-                            </Link>
-                          ))}
-                        {competence.count > 3 && (
-                          <p className="text-center text-sm text-slate-500 mt-2">
-                            + {competence.count - 3} muud arengusammu
+                              </Link>
+                            ))}
+                          {competence.count > 3 && (
+                            <p className="text-center text-sm text-slate-500 mt-2">
+                              + {competence.count - 3} muud arengusammu
+                            </p>
+                          )}
+                        </div>
+                      ) : (
+                        <div className="bg-slate-50 p-4 rounded-lg border border-slate-100 text-center">
+                          <BookOpen className="h-12 w-12 mx-auto text-slate-400 mb-2" />
+                          <p className="text-slate-500">
+                            Selle kategooria alla pole veel arengusamme lisatud.
                           </p>
-                        )}
-                      </div>
-                    ) : (
-                      <div className="bg-slate-50 p-4 rounded-lg border border-slate-100 text-center">
-                        <BookOpen className="h-12 w-12 mx-auto text-slate-400 mb-2" />
-                        <p className="text-slate-500">
-                          Selle kategooria alla pole veel arengusamme lisatud.
-                        </p>
-                      </div>
-                    )}
-                  </CardContent>
-                </CollapsibleContent>
-              </Card>
-            </Collapsible>
-          ))}
+                        </div>
+                      )}
+                    </CardContent>
+                  </CollapsibleContent>
+                </Card>
+              </Collapsible>
+            );
+          })}
         </div>
       </main>
     </div>
