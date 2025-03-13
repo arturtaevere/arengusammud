@@ -1,15 +1,21 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
-import { User, Mail, ArrowLeft } from 'lucide-react';
+import { User, Mail, ArrowLeft, Upload, Camera } from 'lucide-react';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
+import { Input } from '@/components/ui/input';
 
 const Profile = () => {
-  const { user } = useAuth();
+  const { user, updateProfileImage } = useAuth();
   const navigate = useNavigate();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [showUploadDialog, setShowUploadDialog] = useState(false);
 
   // Log user info for debugging
   useEffect(() => {
@@ -26,6 +32,46 @@ const Profile = () => {
       .map(part => part[0])
       .join('')
       .toUpperCase();
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      
+      // Create preview for the dialog
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        if (event.target?.result) {
+          setImagePreview(event.target.result as string);
+          setShowUploadDialog(true);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleUploadClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const confirmUpload = () => {
+    if (imagePreview) {
+      setIsUploading(true);
+      
+      // In a real app, we would upload the file to a server here
+      // For demo purposes, we'll just simulate a delay and use the preview as the image
+      setTimeout(() => {
+        updateProfileImage(imagePreview);
+        setIsUploading(false);
+        setShowUploadDialog(false);
+        setImagePreview(null);
+      }, 1000);
+    }
+  };
+
+  const cancelUpload = () => {
+    setShowUploadDialog(false);
+    setImagePreview(null);
   };
 
   if (!user) {
@@ -54,22 +100,40 @@ const Profile = () => {
         </CardHeader>
         <CardContent className="space-y-8">
           <div className="flex flex-col items-center">
-            <Avatar className="h-32 w-32 mb-4">
-              {user.profileImage ? (
-                <AvatarImage
-                  src={user.profileImage}
-                  alt={user.name}
-                />
-              ) : (
-                <AvatarImage 
-                  src={`https://avatar.vercel.sh/${user.email}.png`} 
-                  alt={user.name} 
-                />
-              )}
-              <AvatarFallback className="text-2xl">
-                {user.name ? getInitials(user.name) : 'U'}
-              </AvatarFallback>
-            </Avatar>
+            <div className="relative group">
+              <Avatar className="h-32 w-32 mb-4">
+                {user.profileImage ? (
+                  <AvatarImage
+                    src={user.profileImage}
+                    alt={user.name}
+                  />
+                ) : (
+                  <AvatarImage 
+                    src={`https://avatar.vercel.sh/${user.email}.png`} 
+                    alt={user.name} 
+                  />
+                )}
+                <AvatarFallback className="text-2xl">
+                  {user.name ? getInitials(user.name) : 'U'}
+                </AvatarFallback>
+              </Avatar>
+              
+              <Button 
+                className="absolute bottom-4 right-0 rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                size="icon"
+                onClick={handleUploadClick}
+              >
+                <Camera className="h-4 w-4" />
+              </Button>
+              
+              <input
+                type="file"
+                ref={fileInputRef}
+                className="hidden"
+                accept="image/*"
+                onChange={handleFileChange}
+              />
+            </div>
             <h2 className="text-xl font-semibold">{user.name}</h2>
             <span className="px-3 py-1 mt-2 text-sm rounded-full bg-primary/10 text-primary">
               {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
@@ -95,6 +159,37 @@ const Profile = () => {
           </div>
         </CardContent>
       </Card>
+
+      <AlertDialog open={showUploadDialog} onOpenChange={setShowUploadDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Upload Profile Picture</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will update your profile picture across the site.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          
+          {imagePreview && (
+            <div className="flex justify-center my-4">
+              <img 
+                src={imagePreview} 
+                alt="Preview" 
+                className="w-32 h-32 rounded-full object-cover"
+              />
+            </div>
+          )}
+          
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={cancelUpload}>Cancel</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={confirmUpload}
+              disabled={isUploading}
+            >
+              {isUploading ? 'Uploading...' : 'Upload'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
