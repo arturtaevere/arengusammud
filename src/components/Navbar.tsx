@@ -56,7 +56,7 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2 transition-opacity hover:opacity-80">
-            <span className="font-semibold text-xl tracking-tight">TeachSpire</span>
+            <span className="font-semibold text-xl tracking-tight">Arengusammud</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -69,7 +69,7 @@ const Navbar = () => {
                     location.pathname === '/dashboard' ? 'text-primary font-medium' : ''
                   }`}
                 >
-                  Dashboard
+                  Töölaud
                 </Link>
                 <Link 
                   to="/action-steps" 
@@ -77,7 +77,7 @@ const Navbar = () => {
                     location.pathname === '/action-steps' ? 'text-primary font-medium' : ''
                   }`}
                 >
-                  Action Steps
+                  Arengusammud
                 </Link>
                 <Link 
                   to="/observations" 
@@ -85,7 +85,7 @@ const Navbar = () => {
                     location.pathname === '/observations' ? 'text-primary font-medium' : ''
                   }`}
                 >
-                  Observations
+                  Vaatlused
                 </Link>
                 <Link 
                   to="/feedback" 
@@ -93,7 +93,7 @@ const Navbar = () => {
                     location.pathname === '/feedback' ? 'text-primary font-medium' : ''
                   }`}
                 >
-                  Feedback
+                  Tagasiside
                 </Link>
               </>
             ) : (
@@ -104,7 +104,7 @@ const Navbar = () => {
                     location.pathname === '/features' ? 'text-primary font-medium' : ''
                   }`}
                 >
-                  Features
+                  Võimalused
                 </Link>
                 <Link 
                   to="/about" 
@@ -112,7 +112,7 @@ const Navbar = () => {
                     location.pathname === '/about' ? 'text-primary font-medium' : ''
                   }`}
                 >
-                  About
+                  Meist
                 </Link>
               </>
             )}
@@ -126,7 +126,7 @@ const Navbar = () => {
                   <Button variant="ghost" className="relative h-10 w-10 rounded-full">
                     <Avatar>
                       <AvatarImage src={`https://avatar.vercel.sh/${user?.email}.png`} alt={user?.name} />
-                      <AvatarFallback>{user?.name ? getInitials(user.name) : 'U'}</AvatarFallback>
+                      <AvatarFallback>{user?.name ? getInitials(user.name) : 'K'}</AvatarFallback>
                     </Avatar>
                   </Button>
                 </DropdownMenuTrigger>
@@ -137,27 +137,27 @@ const Navbar = () => {
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
-                    <Link to="/profile">Profile</Link>
+                    <Link to="/profile">Profiil</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link to="/settings">Settings</Link>
+                    <Link to="/settings">Seaded</Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem 
                     onClick={logout}
                     className="text-red-500 focus:text-red-500 cursor-pointer"
                   >
-                    Logout
+                    Logi välja
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
               <>
                 <Link to="/auth">
-                  <Button variant="outline" className="transition-all">Login</Button>
+                  <Button variant="outline" className="transition-all">Logi sisse</Button>
                 </Link>
                 <Link to="/auth">
-                  <Button className="transition-all">Get Started</Button>
+                  <Button className="transition-all">Alusta</Button>
                 </Link>
               </>
             )}
@@ -195,7 +195,7 @@ const Navbar = () => {
                       : 'hover:bg-gray-100'
                   }`}
                 >
-                  Dashboard
+                  Töölaud
                 </Link>
                 <Link 
                   to="/action-steps" 
@@ -207,7 +207,7 @@ const Navbar = () => {
                 >
                   <div className="flex items-center">
                     <ClipboardList className="mr-2 h-5 w-5" />
-                    Action Steps
+                    Arengusammud
                   </div>
                 </Link>
                 <Link 
@@ -220,7 +220,7 @@ const Navbar = () => {
                 >
                   <div className="flex items-center">
                     <BookOpen className="mr-2 h-5 w-5" />
-                    Observations
+                    Vaatlused
                   </div>
                 </Link>
                 <Link 
@@ -233,7 +233,7 @@ const Navbar = () => {
                 >
                   <div className="flex items-center">
                     <MessageSquare className="mr-2 h-5 w-5" />
-                    Feedback
+                    Tagasiside
                   </div>
                 </Link>
                 <div className="pt-4 pb-2">
@@ -241,7 +241,7 @@ const Navbar = () => {
                     <div className="flex-shrink-0">
                       <Avatar>
                         <AvatarImage src={`https://avatar.vercel.sh/${user?.email}.png`} alt={user?.name} />
-                        <AvatarFallback>{user?.name ? getInitials(user.name) : 'U'}</AvatarFallback>
+                        <AvatarFallback>{user?.name ? getInitials(user.name) : 'K'}</AvatarFallback>
                       </Avatar>
                     </div>
                     <div className="ml-3">
@@ -254,20 +254,20 @@ const Navbar = () => {
                       to="/profile"
                       className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100 transition-colors"
                     >
-                      Profile
+                      Profiil
                     </Link>
                     <Link 
                       to="/settings"
                       className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100 transition-colors"
                     >
-                      Settings
+                      Seaded
                     </Link>
                     <Button 
                       variant="ghost" 
                       className="w-full justify-start px-3 py-2 text-base font-medium text-red-500 hover:bg-gray-100 transition-colors"
                       onClick={logout}
                     >
-                      Logout
+                      Logi välja
                     </Button>
                   </div>
                 </div>
@@ -282,7 +282,7 @@ const Navbar = () => {
                       : 'hover:bg-gray-100'
                   }`}
                 >
-                  Features
+                  Võimalused
                 </Link>
                 <Link 
                   to="/about" 
@@ -292,14 +292,14 @@ const Navbar = () => {
                       : 'hover:bg-gray-100'
                   }`}
                 >
-                  About
+                  Meist
                 </Link>
                 <div className="pt-4 space-y-2 px-3">
                   <Link to="/auth" className="w-full block">
-                    <Button variant="outline" className="w-full transition-all">Login</Button>
+                    <Button variant="outline" className="w-full transition-all">Logi sisse</Button>
                   </Link>
                   <Link to="/auth" className="w-full block">
-                    <Button className="w-full transition-all">Get Started</Button>
+                    <Button className="w-full transition-all">Alusta</Button>
                   </Link>
                 </div>
               </>

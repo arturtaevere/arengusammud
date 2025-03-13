@@ -29,14 +29,14 @@ const AuthForm = () => {
     try {
       await login(loginEmail, loginPassword);
       toast({
-        title: "Logged in successfully",
-        description: "Welcome back to TeachSpire!",
+        title: "Sisselogimine õnnestus",
+        description: "Tere tulemast tagasi Arengusammudesse!",
       });
     } catch (error) {
       toast({
         variant: "destructive",
-        title: "Login failed",
-        description: error instanceof Error ? error.message : "Something went wrong",
+        title: "Sisselogimine ebaõnnestus",
+        description: error instanceof Error ? error.message : "Midagi läks valesti",
       });
     }
   };
@@ -46,14 +46,14 @@ const AuthForm = () => {
     try {
       await signup(signupName, signupEmail, signupPassword, signupRole);
       toast({
-        title: "Account created successfully",
-        description: "Welcome to TeachSpire!",
+        title: "Konto loodud",
+        description: "Tere tulemast Arengusammudesse!",
       });
     } catch (error) {
       toast({
         variant: "destructive",
-        title: "Signup failed",
-        description: error instanceof Error ? error.message : "Something went wrong",
+        title: "Registreerimine ebaõnnestus",
+        description: error instanceof Error ? error.message : "Midagi läks valesti",
       });
     }
   };
@@ -62,9 +62,9 @@ const AuthForm = () => {
     <div className="w-full max-w-md mx-auto p-4">
       <Card className="w-full glass">
         <CardHeader>
-          <CardTitle className="text-3xl text-center">TeachSpire</CardTitle>
+          <CardTitle className="text-3xl text-center">Arengusammud</CardTitle>
           <CardDescription className="text-center">
-            Elevate your teaching with expert coaching.
+            Tõsta õpetamiskvaliteeti ekspertjuhendamisega.
           </CardDescription>
         </CardHeader>
         <Tabs 
@@ -73,26 +73,26 @@ const AuthForm = () => {
           className="w-full"
         >
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="login" className="transition-all">Log in</TabsTrigger>
-            <TabsTrigger value="signup" className="transition-all">Sign up</TabsTrigger>
+            <TabsTrigger value="login" className="transition-all">Logi sisse</TabsTrigger>
+            <TabsTrigger value="signup" className="transition-all">Registreeru</TabsTrigger>
           </TabsList>
           
           <TabsContent value="login" className="mt-4">
             <form onSubmit={handleLogin}>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="login-email">Email</Label>
+                  <Label htmlFor="login-email">E-post</Label>
                   <Input 
                     id="login-email" 
                     type="email" 
-                    placeholder="your.email@example.com" 
+                    placeholder="sinu.email@näide.ee" 
                     value={loginEmail}
                     onChange={(e) => setLoginEmail(e.target.value)}
                     required
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="login-password">Password</Label>
+                  <Label htmlFor="login-password">Parool</Label>
                   <Input 
                     id="login-password" 
                     type="password" 
@@ -108,7 +108,7 @@ const AuthForm = () => {
                   className="w-full transition-all" 
                   disabled={isLoading}
                 >
-                  {isLoading ? "Logging in..." : "Log in"}
+                  {isLoading ? "Sisselogimine..." : "Logi sisse"}
                 </Button>
               </CardFooter>
             </form>
@@ -118,28 +118,28 @@ const AuthForm = () => {
             <form onSubmit={handleSignup}>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="signup-name">Full Name</Label>
+                  <Label htmlFor="signup-name">Täisnimi</Label>
                   <Input 
                     id="signup-name" 
-                    placeholder="Your Name"
+                    placeholder="Sinu Nimi"
                     value={signupName}
                     onChange={(e) => setSignupName(e.target.value)}
                     required
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="signup-email">Email</Label>
+                  <Label htmlFor="signup-email">E-post</Label>
                   <Input 
                     id="signup-email" 
                     type="email" 
-                    placeholder="your.email@example.com"
+                    placeholder="sinu.email@näide.ee"
                     value={signupEmail}
                     onChange={(e) => setSignupEmail(e.target.value)}
                     required
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="signup-password">Password</Label>
+                  <Label htmlFor="signup-password">Parool</Label>
                   <Input 
                     id="signup-password" 
                     type="password"
@@ -149,7 +149,7 @@ const AuthForm = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>I am a</Label>
+                  <Label>Ma olen</Label>
                   <RadioGroup 
                     value={signupRole}
                     onValueChange={(value) => setSignupRole(value as 'coach' | 'teacher')}
@@ -157,11 +157,11 @@ const AuthForm = () => {
                   >
                     <div className="flex items-center space-x-2">
                       <RadioGroupItem value="coach" id="coach" />
-                      <Label htmlFor="coach">Coach</Label>
+                      <Label htmlFor="coach">Juhendaja</Label>
                     </div>
                     <div className="flex items-center space-x-2">
                       <RadioGroupItem value="teacher" id="teacher" />
-                      <Label htmlFor="teacher">Teacher</Label>
+                      <Label htmlFor="teacher">Õpetaja</Label>
                     </div>
                   </RadioGroup>
                 </div>
@@ -172,7 +172,7 @@ const AuthForm = () => {
                   className="w-full transition-all" 
                   disabled={isLoading}
                 >
-                  {isLoading ? "Creating account..." : "Create account"}
+                  {isLoading ? "Konto loomine..." : "Loo konto"}
                 </Button>
               </CardFooter>
             </form>

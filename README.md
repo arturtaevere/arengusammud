@@ -1,58 +1,59 @@
-# Welcome to your Lovable project
 
-## Project info
+# Arengusammud - Õpetajate juhendamise platvorm
+
+## Projekti info
 
 **URL**: https://lovable.dev/projects/022a3d17-b618-41e3-8e5a-044812eb92aa
 
-## How can I edit this code?
+## Kuidas seda koodi muuta?
 
-There are several ways of editing your application.
+Koodi muutmiseks on mitu võimalust.
 
-**Use Lovable**
+**Kasuta Lovable platvormi**
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/022a3d17-b618-41e3-8e5a-044812eb92aa) and start prompting.
+Külasta lihtsalt [Lovable projekti lehte](https://lovable.dev/projects/022a3d17-b618-41e3-8e5a-044812eb92aa) ja alusta küsimuste esitamist.
 
-Changes made via Lovable will be committed automatically to this repo.
+Lovable kaudu tehtud muudatused salvestatakse automaatselt sellesse koodi repositooriumisse.
 
-**Use your preferred IDE**
+**Kasuta oma IDE-d**
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+Kui soovid töötada lokaalselt, kasutades oma arenduskeskkonda, saad koodi kloonida ja muudatusi üles laadida. Üles laaditud muudatused kajastuvad ka Lovable keskkonnas.
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+Ainus nõue on Node.js ja npm-i olemasolu - [paigalda nvm-iga](https://github.com/nvm-sh/nvm#installing-and-updating)
 
-Follow these steps:
+Järgi neid samme:
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
+# Samm 1: Klooni repositoorium kasutades projekti Git URL-i.
 git clone <YOUR_GIT_URL>
 
-# Step 2: Navigate to the project directory.
+# Samm 2: Liigu projekti kausta.
 cd <YOUR_PROJECT_NAME>
 
-# Step 3: Install the necessary dependencies.
+# Samm 3: Paigalda vajalikud sõltuvused.
 npm i
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Samm 4: Käivita arendusserver automaatse taaslaadimise ja kohese eelvaatega.
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+**Muuda faili otse GitHubis**
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+- Navigeeri soovitud faili(de) juurde.
+- Klõpsa "Edit" (muuda) nuppu (pliiatsi ikoon) failivaate ülaosas.
+- Tee oma muudatused ja salvesta.
 
-**Use GitHub Codespaces**
+**Kasuta GitHub Codespaces**
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+- Navigeeri oma repositooriumi põhilehele.
+- Klõpsa "Code" (koodi) nupule (roheline nupp) üleval paremal.
+- Vali "Codespaces" vahekaart.
+- Klõpsa "New codespace" uue Codespace keskkonna käivitamiseks.
+- Muuda faile otse Codespace'is ja salvesta muudatused, kui oled valmis.
 
-## What technologies are used for this project?
+## Milliseid tehnoloogiaid see projekt kasutab?
 
-This project is built with .
+See projekt on ehitatud kasutades järgmisi tehnoloogiaid:
 
 - Vite
 - TypeScript
@@ -60,10 +61,10 @@ This project is built with .
 - shadcn-ui
 - Tailwind CSS
 
-## How can I deploy this project?
+## Kuidas saab seda projekti juurutada?
 
-Simply open [Lovable](https://lovable.dev/projects/022a3d17-b618-41e3-8e5a-044812eb92aa) and click on Share -> Publish.
+Ava lihtsalt [Lovable](https://lovable.dev/projects/022a3d17-b618-41e3-8e5a-044812eb92aa) ja klõpsa Share -> Publish.
 
-## I want to use a custom domain - is that possible?
+## Kas ma saan kasutada oma domeeni?
 
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+Me ei toeta veel kohandatud domeene. Kui soovid juurutada oma projekti oma domeeni all, soovitame kasutada Netlify't. Külasta meie dokumentatsiooni täpsema teabe saamiseks: [Kohandatud domeenid](https://docs.lovable.dev/tips-tricks/custom-domain/)

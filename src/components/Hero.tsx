@@ -20,15 +20,15 @@ const Hero = () => {
             <h1 
               className="font-bold tracking-tight mb-6 animate-fade-in"
             >
-              Elevate Teaching <br />
-              <span className="text-primary">Through Expert Coaching</span>
+              Tõsta õpetamise kvaliteeti <br />
+              <span className="text-primary">läbi ekspertjuhendamise</span>
             </h1>
             
             <p 
               className="text-xl mb-8 text-muted-foreground max-w-2xl mx-auto lg:mx-0 animate-fade-in [animation-delay:100ms]"
             >
-              Empower educators with personalized coaching, actionable insights, and a collaborative approach 
-              to professional development.
+              Võimesta õpetajaid personaalse juhendamise, praktiliste nõuannete ja koostööl põhineva 
+              professionaalse arengu lähenemisega.
             </p>
             
             <div 
@@ -39,7 +39,7 @@ const Hero = () => {
                 className="text-lg transition-all duration-300 hover:scale-105"
                 onClick={() => navigate('/auth')}
               >
-                Get Started
+                Alusta
               </Button>
               <Button 
                 variant="outline" 
@@ -47,7 +47,7 @@ const Hero = () => {
                 className="text-lg transition-all duration-300 hover:scale-105"
                 onClick={() => navigate('/features')}
               >
-                Explore Features
+                Vaata võimalusi
               </Button>
             </div>
             
@@ -58,19 +58,19 @@ const Hero = () => {
                 <svg className="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
-                <span>Personalized Coaching</span>
+                <span>Personaalne juhendamine</span>
               </div>
               <div className="flex items-center gap-2">
                 <svg className="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
-                <span>Actionable Steps</span>
+                <span>Praktilised sammud</span>
               </div>
               <div className="flex items-center gap-2">
                 <svg className="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
-                <span>Real-time Feedback</span>
+                <span>Kohene tagasiside</span>
               </div>
             </div>
           </div>
@@ -83,7 +83,7 @@ const Hero = () => {
               <div className="relative z-10 glass rounded-2xl overflow-hidden shadow-xl">
                 <img 
                   src="https://images.unsplash.com/photo-1544717305-2782549b5136?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
-                  alt="Teacher coaching session" 
+                  alt="Õpetaja juhendamissessioon" 
                   className="w-full h-full object-cover"
                 />
               </div>

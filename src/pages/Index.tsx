@@ -30,41 +30,41 @@ const Index = () => {
       <section className="py-20 px-4">
         <div className="container mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4">Transforming Teacher Development</h2>
+            <h2 className="text-4xl font-bold mb-4">Õpetajate arengu toetamine</h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Our platform provides a structured approach to coaching that helps teachers grow through actionable steps and real-time feedback.
+              Meie platvorm pakub struktureeritud lähenemist juhendamisele, mis aitab õpetajatel areneda läbi praktiliste sammude ja kohese tagasiside.
             </p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <FeatureCard
-              title="Action Steps Library"
-              description="Browse our extensive library of research-backed teaching strategies organized by competency areas."
+              title="Arengumeetodite kogumik"
+              description="Sirvi meie laialdast valikkut teaduspõhiseid õpetamisvõtteid, mis on organiseeritud pädevusvaldkondade kaupa."
               icon={<ClipboardList className="h-6 w-6" />}
             />
             <FeatureCard
-              title="Lesson Observations"
-              description="Conduct structured observations to gather evidence of teaching practices in real classroom settings."
+              title="Tundide vaatlused"
+              description="Vii läbi struktureeritud vaatlusi, et koguda tõendeid õpetamispraktikate kohta reaalses klassiruumis."
               icon={<BookOpen className="h-6 w-6" />}
             />
             <FeatureCard
-              title="Structured Feedback"
-              description="Provide specific, actionable feedback that helps teachers improve their practice."
+              title="Struktureeritud tagasiside"
+              description="Paku konkreetset, praktilist tagasisidet, mis aitab õpetajatel oma praktikat täiustada."
               icon={<MessageSquare className="h-6 w-6" />}
             />
             <FeatureCard
-              title="Progress Tracking"
-              description="Monitor implementation of action steps and track improvement over time."
+              title="Edusammude jälgimine"
+              description="Jälgi arengumeetodite rakendamist ja paranemine aja jooksul."
               icon={<RefreshCw className="h-6 w-6" />}
             />
             <FeatureCard
-              title="Coaching Frameworks"
-              description="Access proven coaching frameworks that guide the development process."
+              title="Juhendamisraamistikud"
+              description="Kasuta tõestatud juhendamisraamistikke, mis suunavad arengut."
               icon={<BookCheck className="h-6 w-6" />}
             />
             <FeatureCard
-              title="Collaborative Learning"
-              description="Connect teachers with coaches for a supportive professional learning experience."
+              title="Koostöine õppimine"
+              description="Ühenda õpetajad juhendajatega toetavaks professionaalseks õppimiskogemuseks."
               icon={<Users className="h-6 w-6" />}
             />
           </div>
@@ -75,9 +75,9 @@ const Index = () => {
       <section className="py-20 bg-primary/5">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Ready to elevate teaching excellence?</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Valmis tõstma õpetamiskvaliteeti?</h2>
             <p className="text-xl text-muted-foreground mb-8">
-              Join thousands of schools transforming their professional development with TeachSpire.
+              Liitu tuhandete koolidega, kes muudavad oma professionaalset arengut Arengusammude abil.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button 
@@ -85,7 +85,7 @@ const Index = () => {
                 className="text-lg transition-all duration-300 hover:scale-105"
                 onClick={() => navigate('/auth')}
               >
-                Get Started Free
+                Alusta tasuta
               </Button>
               <Button 
                 variant="outline" 
@@ -93,7 +93,7 @@ const Index = () => {
                 className="text-lg transition-all duration-300 hover:scale-105"
                 onClick={() => navigate('/features')}
               >
-                Learn More
+                Rohkem infot
               </Button>
             </div>
           </div>
@@ -105,37 +105,37 @@ const Index = () => {
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="mb-6 md:mb-0">
-              <div className="font-semibold text-xl">TeachSpire</div>
-              <p className="text-muted-foreground mt-2">Elevating teaching through expert coaching</p>
+              <div className="font-semibold text-xl">Arengusammud</div>
+              <p className="text-muted-foreground mt-2">Õpetamise kvaliteedi tõstmine läbi ekspertjuhendamise</p>
             </div>
             <div className="flex space-x-8">
               <div className="space-y-4">
-                <h3 className="font-medium">Product</h3>
+                <h3 className="font-medium">Toode</h3>
                 <ul className="space-y-2">
-                  <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">Features</a></li>
-                  <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">Pricing</a></li>
-                  <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">Case Studies</a></li>
+                  <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">Võimalused</a></li>
+                  <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">Hinnad</a></li>
+                  <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">Näidislood</a></li>
                 </ul>
               </div>
               <div className="space-y-4">
-                <h3 className="font-medium">Company</h3>
+                <h3 className="font-medium">Ettevõte</h3>
                 <ul className="space-y-2">
-                  <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">About</a></li>
-                  <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">Blog</a></li>
-                  <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">Contact</a></li>
+                  <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">Meist</a></li>
+                  <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">Blogi</a></li>
+                  <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">Kontakt</a></li>
                 </ul>
               </div>
               <div className="space-y-4">
-                <h3 className="font-medium">Legal</h3>
+                <h3 className="font-medium">Õiguslik</h3>
                 <ul className="space-y-2">
-                  <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">Privacy</a></li>
-                  <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">Terms</a></li>
+                  <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">Privaatsus</a></li>
+                  <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">Tingimused</a></li>
                 </ul>
               </div>
             </div>
           </div>
           <div className="border-t border-gray-200 mt-12 pt-8 text-center text-muted-foreground">
-            <p>&copy; {new Date().getFullYear()} TeachSpire. All rights reserved.</p>
+            <p>&copy; {new Date().getFullYear()} Arengusammud. Kõik õigused kaitstud.</p>
           </div>
         </div>
       </footer>

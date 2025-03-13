@@ -37,15 +37,15 @@ const Dashboard = () => {
   };
   
   const recentObservations = [
-    { id: '1', teacher: 'Jane Smith', date: '2023-05-15', subject: 'Mathematics' },
-    { id: '2', teacher: 'Alex Johnson', date: '2023-05-10', subject: 'Science' },
-    { id: '3', teacher: 'Maria Garcia', date: '2023-05-05', subject: 'English' },
+    { id: '1', teacher: 'Jane Smith', date: '2023-05-15', subject: 'Matemaatika' },
+    { id: '2', teacher: 'Alex Johnson', date: '2023-05-10', subject: 'Loodusõpetus' },
+    { id: '3', teacher: 'Maria Garcia', date: '2023-05-05', subject: 'Eesti keel' },
   ];
   
   const upcomingActionSteps = [
-    { id: '1', title: 'Implement Think-Pair-Share', dueDate: '2023-05-20', category: 'Student Engagement' },
-    { id: '2', title: 'Use Exit Tickets for Assessment', dueDate: '2023-05-22', category: 'Assessment' },
-    { id: '3', title: 'Differentiate Instruction', dueDate: '2023-05-25', category: 'Differentiation' },
+    { id: '1', title: 'Rakenda mõtle-paarilisega-jaga meetodit', dueDate: '2023-05-20', category: 'Õpilaste kaasamine' },
+    { id: '2', title: 'Kasuta väljumispileteid hindamiseks', dueDate: '2023-05-22', category: 'Hindamine' },
+    { id: '3', title: 'Diferentseeri õpetamist', dueDate: '2023-05-25', category: 'Diferentseerimine' },
   ];
 
   return (
@@ -54,9 +54,9 @@ const Dashboard = () => {
       
       <main className="container mx-auto px-4 py-24">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Welcome back, {user?.name?.split(' ')[0]}</h1>
+          <h1 className="text-3xl font-bold mb-2">Tere tulemast tagasi, {user?.name?.split(' ')[0]}</h1>
           <p className="text-muted-foreground">
-            Here's an overview of your coaching activities and progress.
+            Siin on ülevaade sinu juhendamistegevustest ja progressist.
           </p>
         </div>
         
@@ -66,18 +66,18 @@ const Dashboard = () => {
             <CardHeader className="pb-2">
               <CardTitle className="text-lg font-medium flex items-center">
                 <ClipboardList className="mr-2 h-5 w-5 text-primary" />
-                Action Steps
+                Arengusammud
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex justify-between items-center">
                 <div>
                   <p className="text-3xl font-bold">{stats.actionStepsAssigned}</p>
-                  <p className="text-sm text-muted-foreground">Assigned</p>
+                  <p className="text-sm text-muted-foreground">Määratud</p>
                 </div>
                 <div className="text-right">
                   <p className="text-3xl font-bold text-green-500">{stats.actionStepsCompleted}</p>
-                  <p className="text-sm text-muted-foreground">Completed</p>
+                  <p className="text-sm text-muted-foreground">Lõpetatud</p>
                 </div>
               </div>
               <div className="mt-4 h-2 bg-gray-100 rounded-full">
@@ -93,16 +93,16 @@ const Dashboard = () => {
             <CardHeader className="pb-2">
               <CardTitle className="text-lg font-medium flex items-center">
                 <BookOpen className="mr-2 h-5 w-5 text-primary" />
-                Observations
+                Vaatlused
               </CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-3xl font-bold">{stats.observationsCount}</p>
-              <p className="text-sm text-muted-foreground">Total conducted</p>
+              <p className="text-sm text-muted-foreground">Kokku läbi viidud</p>
               <div className="mt-4">
                 <Button variant="outline" size="sm" className="w-full" onClick={() => navigate('/observations/new')}>
                   <Plus className="mr-2 h-4 w-4" />
-                  New Observation
+                  Uus vaatlus
                 </Button>
               </div>
             </CardContent>
@@ -112,16 +112,16 @@ const Dashboard = () => {
             <CardHeader className="pb-2">
               <CardTitle className="text-lg font-medium flex items-center">
                 <MessageSquare className="mr-2 h-5 w-5 text-primary" />
-                Feedback
+                Tagasiside
               </CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-3xl font-bold">{stats.feedbackCount}</p>
-              <p className="text-sm text-muted-foreground">Pieces of feedback</p>
+              <p className="text-sm text-muted-foreground">Tagasiside ühikud</p>
               <div className="mt-4">
                 <Button variant="outline" size="sm" className="w-full" onClick={() => navigate('/feedback/new')}>
                   <Plus className="mr-2 h-4 w-4" />
-                  Give Feedback
+                  Anna tagasisidet
                 </Button>
               </div>
             </CardContent>
@@ -139,10 +139,10 @@ const Dashboard = () => {
                 <p className="text-3xl font-bold">58%</p>
                 <p className="text-sm text-green-500 mb-1">+12%</p>
               </div>
-              <p className="text-sm text-muted-foreground">Overall improvement</p>
+              <p className="text-sm text-muted-foreground">Üldine paranemine</p>
               <div className="mt-4">
                 <Button variant="outline" size="sm" className="w-full" onClick={() => navigate('/progress')}>
-                  View Details
+                  Vaata detaile
                 </Button>
               </div>
             </CardContent>
@@ -155,15 +155,15 @@ const Dashboard = () => {
             <CardHeader>
               <div className="flex justify-between items-center">
                 <div>
-                  <CardTitle>Recent Observations</CardTitle>
-                  <CardDescription>Your latest lesson observations</CardDescription>
+                  <CardTitle>Hiljutised vaatlused</CardTitle>
+                  <CardDescription>Sinu viimased tunnivaatlused</CardDescription>
                 </div>
                 <Button 
                   variant="outline" 
                   size="sm"
                   onClick={() => navigate('/observations')}
                 >
-                  View All
+                  Vaata kõiki
                 </Button>
               </div>
             </CardHeader>
@@ -193,7 +193,7 @@ const Dashboard = () => {
                           className="text-primary text-xs"
                           onClick={() => navigate(`/observations/${observation.id}`)}
                         >
-                          View Details
+                          Vaata detaile
                         </Button>
                       </div>
                     </div>
@@ -201,10 +201,10 @@ const Dashboard = () => {
                 </div>
               ) : (
                 <div className="text-center py-8">
-                  <p className="text-muted-foreground mb-4">No observations recorded yet</p>
+                  <p className="text-muted-foreground mb-4">Ühtegi vaatlust pole veel salvestatud</p>
                   <Button onClick={() => navigate('/observations/new')}>
                     <Plus className="mr-2 h-4 w-4" />
-                    New Observation
+                    Uus vaatlus
                   </Button>
                 </div>
               )}
@@ -216,15 +216,15 @@ const Dashboard = () => {
             <CardHeader>
               <div className="flex justify-between items-center">
                 <div>
-                  <CardTitle>Upcoming Action Steps</CardTitle>
-                  <CardDescription>Next steps to implement</CardDescription>
+                  <CardTitle>Tulevased arengusammud</CardTitle>
+                  <CardDescription>Järgmised rakendatavad sammud</CardDescription>
                 </div>
                 <Button 
                   variant="outline" 
                   size="sm"
                   onClick={() => navigate('/action-steps')}
                 >
-                  View All
+                  Vaata kõiki
                 </Button>
               </div>
             </CardHeader>
@@ -250,7 +250,7 @@ const Dashboard = () => {
                       <div className="text-right">
                         <div className="text-sm flex items-center text-amber-500">
                           <Clock className="h-3 w-3 mr-1" />
-                          Due: {step.dueDate}
+                          Tähtaeg: {step.dueDate}
                         </div>
                         <div className="flex mt-1">
                           <Button 
@@ -259,7 +259,7 @@ const Dashboard = () => {
                             className="text-green-500 text-xs"
                           >
                             <CheckCircle className="h-3 w-3 mr-1" />
-                            Mark Complete
+                            Märgi lõpetatuks
                           </Button>
                         </div>
                       </div>
@@ -268,10 +268,10 @@ const Dashboard = () => {
                 </div>
               ) : (
                 <div className="text-center py-8">
-                  <p className="text-muted-foreground mb-4">No upcoming action steps</p>
+                  <p className="text-muted-foreground mb-4">Pole ühtegi tulevast arengusammu</p>
                   <Button onClick={() => navigate('/action-steps')}>
                     <Plus className="mr-2 h-4 w-4" />
-                    Browse Action Steps
+                    Sirvi arengusamme
                   </Button>
                 </div>
               )}
@@ -282,8 +282,8 @@ const Dashboard = () => {
         {/* Quick Actions */}
         <Card>
           <CardHeader>
-            <CardTitle>Quick Actions</CardTitle>
-            <CardDescription>Things you can do right now</CardDescription>
+            <CardTitle>Kiired tegevused</CardTitle>
+            <CardDescription>Tegevused, mida saad kohe teha</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
@@ -293,7 +293,7 @@ const Dashboard = () => {
                 onClick={() => navigate('/observations/new')}
               >
                 <BookOpen className="h-8 w-8 mb-2 text-primary" />
-                <span className="text-sm font-medium">Conduct Observation</span>
+                <span className="text-sm font-medium">Vii läbi vaatlus</span>
               </Button>
               
               <Button 
@@ -302,7 +302,7 @@ const Dashboard = () => {
                 onClick={() => navigate('/feedback/new')}
               >
                 <MessageSquare className="h-8 w-8 mb-2 text-primary" />
-                <span className="text-sm font-medium">Provide Feedback</span>
+                <span className="text-sm font-medium">Anna tagasisidet</span>
               </Button>
               
               <Button 
@@ -311,7 +311,7 @@ const Dashboard = () => {
                 onClick={() => navigate('/action-steps')}
               >
                 <ClipboardList className="h-8 w-8 mb-2 text-primary" />
-                <span className="text-sm font-medium">Browse Action Steps</span>
+                <span className="text-sm font-medium">Sirvi arengusamme</span>
               </Button>
               
               <Button 
@@ -320,7 +320,7 @@ const Dashboard = () => {
                 onClick={() => navigate('/teachers')}
               >
                 <Users className="h-8 w-8 mb-2 text-primary" />
-                <span className="text-sm font-medium">Manage Teachers</span>
+                <span className="text-sm font-medium">Halda õpetajaid</span>
               </Button>
             </div>
           </CardContent>

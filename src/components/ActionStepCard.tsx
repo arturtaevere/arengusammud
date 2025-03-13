@@ -48,6 +48,20 @@ const ActionStepCard = ({
     }
   };
 
+  // Translate difficulty
+  const translateDifficulty = (difficulty: string) => {
+    switch (difficulty) {
+      case 'beginner':
+        return 'algaja';
+      case 'intermediate':
+        return 'keskmine';
+      case 'advanced':
+        return 'edasijõudnu';
+      default:
+        return difficulty;
+    }
+  };
+
   return (
     <Card className={cn("overflow-hidden transition-all", 
       isCompleted ? "border-green-200 bg-green-50/30" : "hover:shadow-md",
@@ -63,7 +77,7 @@ const ActionStepCard = ({
             >
               {title}
             </CardTitle>
-            <CardDescription className="mt-1">{timeEstimate} estimated</CardDescription>
+            <CardDescription className="mt-1">Hinnanguline aeg: {timeEstimate}</CardDescription>
           </div>
           <Button
             variant="ghost"
@@ -73,7 +87,7 @@ const ActionStepCard = ({
               "transition-all h-9 w-9 rounded-full",
               isSaved ? "text-yellow-500 hover:text-yellow-600" : "text-muted-foreground"
             )}
-            aria-label={isSaved ? "Unsave action step" : "Save action step"}
+            aria-label={isSaved ? "Eemalda salvestatud arengusammudest" : "Salvesta arengusamm"}
           >
             <Bookmark className={cn("h-5 w-5", isSaved ? "fill-current" : "")} />
           </Button>
@@ -83,7 +97,7 @@ const ActionStepCard = ({
             {category}
           </Badge>
           <Badge variant="outline" className={cn("text-xs font-normal", getDifficultyColor())}>
-            {difficulty}
+            {translateDifficulty(difficulty)}
           </Badge>
         </div>
       </CardHeader>
@@ -94,7 +108,7 @@ const ActionStepCard = ({
         
         {resources.length > 0 && (
           <div className="mt-4">
-            <h4 className="text-sm font-medium mb-2">Resources</h4>
+            <h4 className="text-sm font-medium mb-2">Materjalid</h4>
             <ul className="space-y-1">
               {resources.map((resource, index) => (
                 <li key={index} className="text-sm">
@@ -123,7 +137,7 @@ const ActionStepCard = ({
           onClick={() => setIsCompleted(!isCompleted)}
         >
           <CheckCircle className={cn("mr-2 h-4 w-4", isCompleted ? "text-green-500" : "")} />
-          {isCompleted ? "Mark as Incomplete" : "Mark as Complete"}
+          {isCompleted ? "Märgi mitte lõpetatuks" : "Märgi lõpetatuks"}
         </Button>
       </CardFooter>
     </Card>
