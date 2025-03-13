@@ -19,7 +19,7 @@ interface CompetenceCardProps {
   id: string;
   title: string;
   description: string;
-  icon: React.ElementType;
+  icon: React.ReactNode; // Changed from React.ElementType to React.ReactNode
   count: number;
   isExpanded: boolean;
   isStepsExpanded: boolean;
@@ -32,7 +32,7 @@ const CompetenceCard = ({
   id,
   title,
   description,
-  icon: IconComponent,
+  icon,
   count,
   isExpanded,
   isStepsExpanded,
@@ -52,7 +52,7 @@ const CompetenceCard = ({
             <div className="flex justify-between items-center w-full">
               <div className="flex items-start gap-3">
                 <div className="bg-primary/10 p-2 rounded-lg">
-                  <IconComponent className="h-5 w-5 text-primary" />
+                  {icon}
                 </div>
                 <div>
                   <CardTitle className="text-xl">{title}</CardTitle>
