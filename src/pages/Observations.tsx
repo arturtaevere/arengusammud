@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import Navbar from '@/components/Navbar';
 import { Button } from '@/components/ui/button';
@@ -7,7 +8,7 @@ import { Separator } from '@/components/ui/separator';
 import { Plus, Filter, List, Grid, BookOpen, MessageSquare, ClipboardCheck, Check } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import ObservationForm from '@/components/ObservationForm';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/hooks/use-toast';
 
 const Observations = () => {
   const { toast } = useToast();
@@ -205,4 +206,52 @@ const Observations = () => {
                         </div>
                         <Link to={`/observations/${observation.id}`}>
                           <Button variant="outline" size="sm">Vaata</Button>
-                       
+                        </Link>
+                      </div>
+                    </CardFooter>
+                  </Card>
+                ))}
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="feedback">
+              <div className="grid gap-4">
+                {feedbacks.map((feedback) => (
+                  <Card key={feedback.id} className="transition-all hover:shadow-md">
+                    <CardHeader className="pb-2">
+                      <div className="flex justify-between">
+                        <CardTitle className="text-lg">{feedback.teacher}</CardTitle>
+                        <span className={`text-xs px-2 py-1 rounded-full ${
+                          feedback.type === 'Kiitus'
+                            ? 'bg-green-100 text-green-800'
+                            : feedback.type === 'Soovitus'
+                              ? 'bg-blue-100 text-blue-800'
+                              : 'bg-purple-100 text-purple-800'
+                        }`}>
+                          {feedback.type}
+                        </span>
+                      </div>
+                      <CardDescription>{feedback.subject} • {feedback.date}</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-sm">{feedback.preview}</p>
+                    </CardContent>
+                    <CardFooter>
+                      <div className="flex justify-end w-full">
+                        <Link to={`/feedback/${feedback.id}`}>
+                          <Button variant="outline" size="sm">Vaata</Button>
+                        </Link>
+                      </div>
+                    </CardFooter>
+                  </Card>
+                ))}
+              </div>
+            </TabsContent>
+          </Tabs>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default Observations;
