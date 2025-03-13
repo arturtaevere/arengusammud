@@ -7,7 +7,7 @@ interface Competence {
   title: string;
   description: string;
   count: number;
-  icon: React.ElementType;
+  icon: React.ReactNode; // Changed from React.ElementType to React.ReactNode
 }
 
 interface ActionStep {
