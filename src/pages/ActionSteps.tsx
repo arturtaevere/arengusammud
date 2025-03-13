@@ -210,7 +210,7 @@ const ActionSteps = () => {
                   </div>
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Kõik tasemed</SelectItem>
+                  <SelectItem value="all">Kõik tasemed</SelectItem>
                   <SelectItem value="beginner">Algaja</SelectItem>
                   <SelectItem value="intermediate">Keskmine</SelectItem>
                   <SelectItem value="advanced">Edasijõudnu</SelectItem>
