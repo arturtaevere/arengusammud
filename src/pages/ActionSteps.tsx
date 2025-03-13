@@ -83,7 +83,48 @@ const actionSteps = [
       },
     ],
   },
-  // Placeholder for more action steps
+  {
+    id: "step3",
+    title: "Kasuta selgeid õpieesmärke",
+    description: "Sõnasta iga tunni alguses selged õpieesmärgid, mida soovid tunni jooksul saavutada.",
+    category: "3", // Maps to "Tundide ja õppimise kavandamine õpieesmärkidest lähtuvalt"
+    difficulty: "intermediate" as const,
+    timeEstimate: "10-15 minutit iga tunni kohta",
+    resources: [
+      {
+        title: "Efektiivsete õpieesmärkide seadmine",
+        url: "https://example.com/learning-objectives",
+      },
+    ],
+  },
+  {
+    id: "step4",
+    title: "Rakenda aktiivõppe meetodeid",
+    description: "Kasuta tunnis erinevaid aktiivõppe meetodeid, mis kaasavad õpilasi aktiivselt õppimisse.",
+    category: "4", // Maps to "Kaasamõtlemise ja pingutamise soodustamine"
+    difficulty: "intermediate" as const,
+    timeEstimate: "Läbivalt tunnis",
+    resources: [
+      {
+        title: "Aktiivsed õppemeetodid",
+        url: "https://example.com/active-learning",
+      },
+    ],
+  },
+  {
+    id: "step5",
+    title: "Loo struktureeritud iseseisvad ülesanded",
+    description: "Koosta selgete juhiste ja ajaraamiga iseseisvad tööd, mis arendavad õpilaste enesejuhtimist.",
+    category: "5", // Maps to "Iseseisva töö kavandamine"
+    difficulty: "advanced" as const,
+    timeEstimate: "30-60 minutit ülesande kohta",
+    resources: [
+      {
+        title: "Iseseisva töö kavandamise põhimõtted",
+        url: "https://example.com/independent-work",
+      },
+    ],
+  },
 ];
 
 const ActionSteps = () => {
