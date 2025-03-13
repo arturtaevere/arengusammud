@@ -108,7 +108,7 @@ const CompetencyActionStepSelector = ({ onSelect, label, value }: CompetencyActi
                   .filter(comp => comp.id === selectedCompetency)
                   .map(comp => (
                     <div key={comp.id} className="space-y-2">
-                      <h3 className="font-medium text-lg mb-3">{comp.name} ({comp.actionSteps.length})</h3>
+                      <h3 className="font-medium text-lg mb-3">{comp.name}</h3>
                       <div className="space-y-2 pl-1">
                         {comp.actionSteps.map((step) => (
                           <Button
@@ -136,7 +136,7 @@ const CompetencyActionStepSelector = ({ onSelect, label, value }: CompetencyActi
                     className="w-full justify-between text-left h-auto p-4 text-sm hover:bg-muted"
                     onClick={() => handleCompetencySelect(comp.id)}
                   >
-                    <span className="font-medium">{comp.name} ({comp.actionSteps.length})</span>
+                    <span className="font-medium">{comp.name}</span>
                     <ChevronRight className="h-4 w-4 text-muted-foreground" />
                   </Button>
                 ))}
