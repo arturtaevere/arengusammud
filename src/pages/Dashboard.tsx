@@ -1,4 +1,3 @@
-
 import { useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
@@ -122,7 +121,7 @@ const Dashboard = () => {
         </div>
         
         <div className="mb-10">
-          <h2 className="text-2xl font-bold mb-4">Sammud</h2>
+          <h2 className="text-2xl font-bold mb-4">Õpieesmärgid</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3">
             {competences.map((competence) => (
               <Link key={competence.id} to={`/action-steps?category=${competence.id}`}>
@@ -406,4 +405,3 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
-
