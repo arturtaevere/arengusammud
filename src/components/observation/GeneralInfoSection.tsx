@@ -10,7 +10,7 @@ import { ObservationFormValues } from './types';
 
 interface GeneralInfoSectionProps {
   form: UseFormReturn<ObservationFormValues>;
-  teachersInSchool: { id: string, name: string, developmentGoal?: string }[];
+  teachersInSchool: { id: string, name: string, developmentGoal?: string, actionStep?: string }[];
 }
 
 const GeneralInfoSection = ({ form, teachersInSchool }: GeneralInfoSectionProps) => {
@@ -118,12 +118,13 @@ const GeneralInfoSection = ({ form, teachersInSchool }: GeneralInfoSectionProps)
               <FormControl>
                 <Textarea 
                   placeholder="Õpetaja ja juhendaja valitud arengusamm..." 
-                  className="min-h-[100px]"
-                  {...field} 
+                  className="min-h-[100px] bg-gray-50"
+                  {...field}
+                  readOnly
                 />
               </FormControl>
               <FormDescription>
-                Kirjeldage arengusammu, mille õpetaja ja juhendaja on eelnevalt valinud
+                Arengusamm, mille õpetaja ja juhendaja on eelnevalt valinud, täidetakse automaatselt
               </FormDescription>
               <FormMessage />
             </FormItem>

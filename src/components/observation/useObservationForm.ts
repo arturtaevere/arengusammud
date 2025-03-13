@@ -9,7 +9,8 @@ import {
   observationFormSchema, 
   getLastObservedTeacher, 
   saveLastObservedTeacher,
-  getTeacherDevelopmentGoal
+  getTeacherDevelopmentGoal,
+  getTeacherActionStep
 } from './types';
 
 export const useObservationForm = () => {
@@ -23,6 +24,7 @@ export const useObservationForm = () => {
     date: new Date().toISOString().split('T')[0],
     teacherName: lastTeacher || "",
     developmentGoal: lastTeacher ? getTeacherDevelopmentGoal(lastTeacher) : "",
+    actionStep: lastTeacher ? getTeacherActionStep(lastTeacher) : "",
   };
   
   // Form setup
@@ -31,13 +33,16 @@ export const useObservationForm = () => {
     defaultValues,
   });
   
-  // Watch for teacher name changes to update the development goal
+  // Watch for teacher name changes to update the development goal and action step
   const teacherName = form.watch('teacherName');
   
   useEffect(() => {
     if (teacherName) {
       const developmentGoal = getTeacherDevelopmentGoal(teacherName);
+      const actionStep = getTeacherActionStep(teacherName);
+      
       form.setValue('developmentGoal', developmentGoal);
+      form.setValue('actionStep', actionStep);
     }
   }, [teacherName, form]);
   
