@@ -26,8 +26,7 @@ const Hero = () => {
             <p 
               className="text-xl mb-8 text-muted-foreground max-w-2xl mx-auto lg:mx-0 animate-fade-in [animation-delay:100ms]"
             >
-              Võimesta õpetajaid personaalse juhendamise, praktiliste nõuannete ja koostööl põhineva 
-              professionaalse arengu lähenemisega.
+              Meil on tõenduspõhine lahendus, mis aitab õpetajal paremini jõuda iga õppijani ning toetada ennastjuhtiva õppija kujunemist.
             </p>
             
             <div 
