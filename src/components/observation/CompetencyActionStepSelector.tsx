@@ -53,18 +53,8 @@ const CompetencyActionStepSelector = ({ onSelect, label, value }: CompetencyActi
   };
 
   const handleAccordionChange = (value: string) => {
-    setExpandedAccordionItems(prev => {
-      // If it's already in the array, remove it, otherwise add it
-      if (prev.includes(value)) {
-        return prev.filter(item => item !== value);
-      } else {
-        return [...prev, value];
-      }
-    });
-  };
-
-  const handleCompetencySelect = (competencyId: string) => {
-    setSelectedCompetency(competencyId);
+    // When an accordion item is clicked, we set it as the selected competency
+    setSelectedCompetency(value);
   };
 
   const handleBackToCompetencies = () => {
@@ -124,7 +114,7 @@ const CompetencyActionStepSelector = ({ onSelect, label, value }: CompetencyActi
                   .filter(comp => comp.id === selectedCompetency)
                   .map(comp => (
                     <div key={comp.id} className="space-y-2">
-                      <h3 className="font-medium text-base">{comp.name} ({comp.actionSteps.length})</h3>
+                      <h3 className="font-medium text-lg mb-3">{comp.name} ({comp.actionSteps.length})</h3>
                       <div className="space-y-2 pl-1">
                         {comp.actionSteps.map((step) => (
                           <Button
@@ -163,29 +153,19 @@ const CompetencyActionStepSelector = ({ onSelect, label, value }: CompetencyActi
                     </AccordionTrigger>
                     <AccordionContent>
                       <div className="space-y-2 pl-1">
-                        {comp.actionSteps.length > 10 ? (
+                        {comp.actionSteps.map((step) => (
                           <Button
-                            variant="outline"
-                            className="w-full justify-center text-center h-auto p-2 text-sm"
-                            onClick={() => handleCompetencySelect(comp.id)}
+                            key={step.id}
+                            variant="ghost"
+                            className="w-full justify-start text-left h-auto p-2 text-sm"
+                            onClick={() => handleActionStepSelect(step)}
                           >
-                            Näita kõiki {comp.actionSteps.length} arengusammu
+                            <div>
+                              <div className="font-medium">{step.title}</div>
+                              <div className="text-xs text-muted-foreground">{step.description}</div>
+                            </div>
                           </Button>
-                        ) : (
-                          comp.actionSteps.map((step) => (
-                            <Button
-                              key={step.id}
-                              variant="ghost"
-                              className="w-full justify-start text-left h-auto p-2 text-sm"
-                              onClick={() => handleActionStepSelect(step)}
-                            >
-                              <div>
-                                <div className="font-medium">{step.title}</div>
-                                <div className="text-xs text-muted-foreground">{step.description}</div>
-                              </div>
-                            </Button>
-                          ))
-                        )}
+                        ))}
                       </div>
                     </AccordionContent>
                   </AccordionItem>

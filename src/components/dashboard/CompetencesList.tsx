@@ -5,7 +5,7 @@ import { convertToDashboardFormat } from '../observation/competencyAdapter';
 export interface Competence {
   id: string;
   title: string;
-  icon: React.ElementType;
+  icon: ReactNode;
 }
 
 // Use the adapter to generate the competences list from the central data source
