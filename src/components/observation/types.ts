@@ -85,11 +85,11 @@ export const mockTeachers = {
   ]
 };
 
-// Competencies and action steps data
+// Updated competencies to match the "Õpieesmärgid" page
 export const competencies = [
   {
     id: 'comp1',
-    name: 'Õpikeskkonna kujundamine',
+    name: 'Hooliva ja arengut toetava õpikeskkonna loomine',
     actionSteps: [
       {
         id: 'as1',
@@ -105,145 +105,160 @@ export const competencies = [
   },
   {
     id: 'comp2',
-    name: 'Õppimist toetav hindamine',
+    name: 'Kindlate ja harjumuspäraste tegevuste korraldamine klassis',
     actionSteps: [
       {
         id: 'as3',
-        title: 'Kujundava hindamise rakendamine',
-        description: 'Kasutada kujundavat hindamist pidevalt ja süsteemselt õppeprotsessi toetamiseks.'
+        title: 'Tunni struktuuri loomine',
+        description: 'Luua selge ja korduv tunni struktuur, mis toetab õppimist ja vähendab segavaid tegureid.'
       },
       {
         id: 'as4',
-        title: 'Enesehindamise oskuste arendamine',
-        description: 'Õpetada õpilastele oma töö analüüsimist ja hindamist.'
+        title: 'Üleminekute haldamine',
+        description: 'Efektiivsed strateegiad ühelt tegevuselt teisele üleminekuks.'
       }
     ]
   },
   {
     id: 'comp3',
-    name: 'Digipädevuste arendamine',
+    name: 'Tundide ja õppimise kavandamine õpieesmärkidest lähtuvalt',
     actionSteps: [
       {
         id: 'as5',
-        title: 'Digitaalsete õppematerjalide kasutamine',
-        description: 'Integreerida digitaalseid õppematerjale ja -vahendeid igapäevasesse õppetöösse.'
+        title: 'Selgete õpieesmärkide seadmine',
+        description: 'Mõõdetavate ja saavutatavate õpieesmärkide sõnastamine.'
       },
       {
         id: 'as6',
-        title: 'Õpilaste digipädevuste arendamine',
-        description: 'Toetada õpilasi digitaalsete oskuste omandamisel läbi praktiliste ülesannete.'
+        title: 'Hindamise joondamine eesmärkidega',
+        description: 'Tagada, et hindamisviisid mõõdaksid seatud õpieesmärkide saavutamist.'
       }
     ]
   },
   {
     id: 'comp4',
-    name: 'Koostöö ja kaasamine',
+    name: 'Kaasamõtlemise ja pingutamise soodustamine',
     actionSteps: [
       {
         id: 'as7',
-        title: 'Rühmatöö meetodite rakendamine',
-        description: 'Kasutada erinevaid rühmatöö meetodeid, et arendada õpilaste koostööoskusi.'
+        title: 'Õpilaste aktiivne kaasamine',
+        description: 'Strateegiad, mis tagavad kõigi õpilaste vaimse hõivatuse ja kaasatuse.'
       },
       {
         id: 'as8',
-        title: 'Vanemate kaasamine õppeprotsessi',
-        description: 'Luua süsteem vanemate regulaarseks kaasamiseks õpilase arengu toetamisse.'
+        title: 'Väljakutseid pakkuvate ülesannete loomine',
+        description: 'Ülesannete diferentseerimine ja pingutust nõudvate elementide lisamine.'
       }
     ]
   },
   {
     id: 'comp5',
-    name: 'Õpilaste motivatsiooni toetamine',
+    name: 'Iseseisva töö kavandamine',
     actionSteps: [
       {
         id: 'as9',
-        title: 'Sisemise motivatsiooni toetamine',
-        description: 'Luua tingimused ja tegevused, mis toetavad õpilaste sisemist motivatsiooni.'
+        title: 'Iseseisva töö juhendite loomine',
+        description: 'Selgete ja detailsete juhendite koostamine iseseisvaks tööks.'
       },
       {
         id: 'as10',
-        title: 'Eduelamuse pakkumine kõigile õpilastele',
-        description: 'Kujundada õppeülesanded nii, et kõik õpilased saaksid kogeda edu ja arengut.'
+        title: 'Iseseisva õppimise oskuste arendamine',
+        description: 'Õpilaste toetamine enesejuhtimise ja iseseisva õppimise oskuste omandamisel.'
       }
     ]
   },
   {
     id: 'comp6',
-    name: 'Õppemeetodite mitmekesisus',
+    name: 'Õppesisu meeldejääv edasiandmine õpilastele',
     actionSteps: [
       {
         id: 'as11',
-        title: 'Aktiivõppe meetodite rakendamine',
-        description: 'Kasutada regulaarselt erinevaid aktiivõppe meetodeid õpilaste kaasamiseks.'
+        title: 'Mitmekesiste esitlusviiside kasutamine',
+        description: 'Erinevate esitlusviiside ja -vahendite kasutamine õppesisu edastamiseks.'
       },
       {
         id: 'as12',
-        title: 'Projektõppe läbiviimine',
-        description: 'Korraldada vähemalt kord õppeperioodis projektõppe vormis õppetegevusi.'
+        title: 'Keeruliste kontseptsioonide lihtsustamine',
+        description: 'Abstraktsete või keeruliste mõistete selgitamine arusaadavalt ja seostamine õpilastele tuttavaga.'
       }
     ]
   },
   {
     id: 'comp7',
-    name: 'Eneseanalüüs ja -areng',
+    name: 'Andmete kogumine õppematerjali omandamise kohta',
     actionSteps: [
       {
         id: 'as13',
-        title: 'Regulaarne refleksioon',
-        description: 'Pidada õpetamispraktikat analüüsivat päevikut ning teha sellest järeldusi.'
+        title: 'Diagnostiliste hindamismeetodite kasutamine',
+        description: 'Õpilaste eelteadmiste ja oskuste kaardistamine.'
       },
       {
         id: 'as14',
-        title: 'Kolleegidelt tagasiside küsimine',
-        description: 'Kutsuda regulaarselt kolleege tunde vaatlema ja tagasisidet andma.'
+        title: 'Õppeprotsessi jälgimine',
+        description: 'Jooksvate andmete kogumine õpilaste edu ja väljakutsete kohta õppimise käigus.'
       }
     ]
   },
   {
     id: 'comp8',
-    name: 'Kaasav haridus',
+    name: 'Tagasiside andmine õpilastele',
     actionSteps: [
       {
         id: 'as15',
-        title: 'Individuaalsete õpivajaduste toetamine',
-        description: 'Kohandada õppematerjale ja -meetodeid vastavalt õpilaste individuaalsetele vajadustele.'
+        title: 'Konkreetse ja konstruktiivse tagasiside andmine',
+        description: 'Spetsiifilise ja edasiviiva tagasiside pakkumine õpilastele.'
       },
       {
         id: 'as16',
-        title: 'HEV õpilaste kaasamine',
-        description: 'Rakendada meetodeid, mis toetavad hariduslike erivajadustega õpilaste kaasamist tavaklassi.'
+        title: 'Õigeaegse tagasiside andmine',
+        description: 'Tagasiside andmine õigel ajal, et toetada õppimist ja arengut.'
       }
     ]
   },
   {
     id: 'comp9',
-    name: 'Ainetevaheline lõiming',
+    name: 'Õpilaste kaasamine hindamisprotsessi',
     actionSteps: [
       {
         id: 'as17',
-        title: 'Ainetevaheliste seoste loomine',
-        description: 'Tuua õppetöös esile erinevate ainete vahelisi seoseid ja praktilisi rakendusi.'
+        title: 'Enesehindamise juhendamine',
+        description: 'Õpilaste oma töö analüüsimise ja hindamise oskuste arendamine.'
       },
       {
         id: 'as18',
-        title: 'Koostöö teiste aineõpetajatega',
-        description: 'Planeerida ja viia läbi lõimitud õppeprojekte koostöös teiste aineõpetajatega.'
+        title: 'Vastastikuse hindamise rakendamine',
+        description: 'Õpilaste üksteise töö konstruktiivse hindamise korraldamine.'
       }
     ]
   },
   {
     id: 'comp10',
-    name: 'Õppimiskultuuri arendamine',
+    name: 'Ennastjuhtiva õppija toetamine',
     actionSteps: [
       {
         id: 'as19',
-        title: 'Uurimusliku õppe rakendamine',
-        description: 'Julgustada õpilasi iseseisvalt uurima, avastama ja järeldusi tegema.'
+        title: 'Tõhusa õppimisviisi avamine',
+        description: 'Selgitan õpilastele, et tõhusad õopijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.'
       },
       {
         id: 'as20',
-        title: 'Vigadest õppimise kultuuri loomine',
-        description: 'Kujundada klassiruumis keskkond, kus vigu nähakse õppimisvõimalustena, mitte läbikukkumistena.'
+        title: 'Emotsionaalsete pingete äratundmine',
+        description: 'Õpetan õpilasi ära tundma oma emotsionaalseid pingeid õppimisel ja nendega toime tulema.'
+      },
+      {
+        id: 'as21',
+        title: 'Emotsionaalsete pingete maandamine',
+        description: 'Õpetan õpilastele tehnikaid, mis aitavad emotsionaalsete pingetega toime tulla.'
+      },
+      {
+        id: 'as22',
+        title: 'Abi küsimise õpetamine',
+        description: 'Õpetan õpilasi abi küsima ja juhendama neid, kuidas ja kellelt abi küsida.'
+      },
+      {
+        id: 'as23',
+        title: 'Õpilastele valikute pakkumine',
+        description: 'Pakun õpilastele valikuvõimalusi, et nad saaksid oma õppimist ise juhtida.'
       }
     ]
   }
