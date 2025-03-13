@@ -20,8 +20,7 @@ const Hero = () => {
             <h1 
               className="font-bold tracking-tight mb-6 animate-fade-in"
             >
-              Arengusammud aitavad õpetajal kasvada <br />
-              <span className="text-primary">läbi ekspertjuhendamise</span>
+              Arengusammud aitavad õpetajal <span className="text-primary">kasvada</span>
             </h1>
             
             <p 
