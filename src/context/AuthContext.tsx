@@ -52,7 +52,7 @@ const MOCK_USERS = [
     password: 'password',
     role: 'coach' as const,
     profileImage: '/lovable-uploads/6eae274c-d643-4822-ae8c-ba2410af6f2a.png',
-    school: 'Arengusammud', // Adding school to coach as well
+    school: 'Arengusammud',
   },
   {
     id: '2',
@@ -81,21 +81,45 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
-      const parsedUser = JSON.parse(storedUser);
-      
-      // Always ensure profile image is set for specific users
-      if (parsedUser.email === 'coach@example.com' || parsedUser.email === 'artur@arengusammud.ee') {
-        parsedUser.profileImage = '/lovable-uploads/6eae274c-d643-4822-ae8c-ba2410af6f2a.png';
+      try {
+        const parsedUser = JSON.parse(storedUser);
         
-        // Ensure school is set for Artur
-        if (parsedUser.email === 'artur@arengusammud.ee' && !parsedUser.school) {
-          parsedUser.school = 'Arengusammud';
+        // Find the user in MOCK_USERS to ensure we have all properties
+        const mockUser = MOCK_USERS.find(u => u.email === parsedUser.email);
+        
+        if (mockUser) {
+          // Use the profile image from the mock user if available
+          if (mockUser.profileImage && !parsedUser.profileImage) {
+            parsedUser.profileImage = mockUser.profileImage;
+          }
+          
+          // Set the school if it's missing
+          if (mockUser.school && !parsedUser.school) {
+            parsedUser.school = mockUser.school;
+          }
+          
+          // Update localStorage with the enhanced user data
+          localStorage.setItem('user', JSON.stringify(parsedUser));
         }
         
-        localStorage.setItem('user', JSON.stringify(parsedUser));
+        // Set consistent profile images for specific users
+        if (parsedUser.email === 'coach@example.com' || parsedUser.email === 'artur@arengusammud.ee') {
+          parsedUser.profileImage = '/lovable-uploads/6eae274c-d643-4822-ae8c-ba2410af6f2a.png';
+          
+          // Ensure school is set for Artur
+          if (parsedUser.email === 'artur@arengusammud.ee') {
+            parsedUser.school = 'Arengusammud';
+          }
+          
+          localStorage.setItem('user', JSON.stringify(parsedUser));
+        }
+        
+        setUser(parsedUser);
+      } catch (error) {
+        // Handle parsing error gracefully
+        console.error("Error parsing user from localStorage:", error);
+        localStorage.removeItem('user');
       }
-      
-      setUser(parsedUser);
     }
     setIsLoading(false);
   }, []);
