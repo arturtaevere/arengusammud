@@ -136,7 +136,7 @@ const Dashboard = () => {
               </Link>
             ))}
           </div>
-          <h2 className="text-2xl font-bold mt-6 text-center">Töölaud</h2>
+          <h2 className="text-2xl font-bold mt-6">Töölaud</h2>
         </div>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
