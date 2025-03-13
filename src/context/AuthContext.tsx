@@ -88,8 +88,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const mockUser = MOCK_USERS.find(u => u.email === parsedUser.email);
         
         if (mockUser) {
-          // Use the profile image from the mock user if available
-          if (mockUser.profileImage && !parsedUser.profileImage) {
+          // Always set the profile image from the mock user if it exists
+          if (mockUser.profileImage) {
             parsedUser.profileImage = mockUser.profileImage;
           }
           
@@ -99,18 +99,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           }
           
           // Update localStorage with the enhanced user data
-          localStorage.setItem('user', JSON.stringify(parsedUser));
-        }
-        
-        // Set consistent profile images for specific users
-        if (parsedUser.email === 'coach@example.com' || parsedUser.email === 'artur@arengusammud.ee') {
-          parsedUser.profileImage = '/lovable-uploads/6eae274c-d643-4822-ae8c-ba2410af6f2a.png';
-          
-          // Ensure school is set for Artur
-          if (parsedUser.email === 'artur@arengusammud.ee') {
-            parsedUser.school = 'Arengusammud';
-          }
-          
           localStorage.setItem('user', JSON.stringify(parsedUser));
         }
         
@@ -138,6 +126,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       throw new Error('Invalid credentials');
     }
     
+    // Copy all properties EXCEPT password to userWithoutPassword
     const { password: _, ...userWithoutPassword } = foundUser;
     setUser(userWithoutPassword);
     localStorage.setItem('user', JSON.stringify(userWithoutPassword));
