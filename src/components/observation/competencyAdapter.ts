@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Heart, ClipboardList, Target, Users, Brain, BookCheck, BarChart, MessageSquare, Lightbulb, BookOpen } from 'lucide-react';
 import { competencies } from './competencies';
@@ -26,7 +27,7 @@ export const convertToCompetencesPageFormat = () => {
       title: comp.name,
       description: getCompetencyDescription(comp.id),
       count: comp.actionSteps.length,
-      icon: <IconComponent className="h-5 w-5 text-primary" />
+      icon: React.createElement(IconComponent, { className: "h-5 w-5 text-primary" })
     };
   });
 };
@@ -38,7 +39,7 @@ export const convertToDashboardFormat = () => {
     return {
       id: comp.id.replace('comp', ''),
       title: comp.name,
-      icon: <IconComponent className="h-5 w-5 text-primary" />
+      icon: React.createElement(IconComponent, { className: "h-5 w-5 text-primary" })
     };
   });
 };
