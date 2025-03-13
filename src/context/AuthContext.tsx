@@ -88,10 +88,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const mockUser = MOCK_USERS.find(u => u.email === parsedUser.email);
         
         if (mockUser) {
-          // Always set the profile image from the mock user if it exists
-          if (mockUser.profileImage) {
-            parsedUser.profileImage = mockUser.profileImage;
-          }
+          // Always apply the profile image from the mock user data
+          parsedUser.profileImage = mockUser.profileImage;
           
           // Set the school if it's missing
           if (mockUser.school && !parsedUser.school) {
@@ -102,6 +100,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           localStorage.setItem('user', JSON.stringify(parsedUser));
         }
         
+        // Ensure the user has all the required properties
+        console.log('Setting user with profile image:', parsedUser.profileImage);
         setUser(parsedUser);
       } catch (error) {
         // Handle parsing error gracefully
@@ -128,6 +128,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     
     // Copy all properties EXCEPT password to userWithoutPassword
     const { password: _, ...userWithoutPassword } = foundUser;
+    
+    // Log the profile image during login for debugging
+    console.log('Login: Using profile image:', userWithoutPassword.profileImage);
+    
     setUser(userWithoutPassword);
     localStorage.setItem('user', JSON.stringify(userWithoutPassword));
     setIsLoading(false);
@@ -163,6 +167,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const updateProfileImage = (imageUrl: string) => {
     if (user) {
       const updatedUser = { ...user, profileImage: imageUrl };
+      console.log('Updating profile image to:', imageUrl);
       setUser(updatedUser);
       localStorage.setItem('user', JSON.stringify(updatedUser));
     }
