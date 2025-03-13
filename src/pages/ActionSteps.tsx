@@ -127,21 +127,16 @@ const actionSteps = [
   {
     id: "step10-1",
     title: "Tõhusa õppimisviisi avamine",
-    description: "Tutvusta õpilastele erinevaid efektiivseid õppimismeetodeid ja -strateegiaid.",
+    description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
     category: "10",
     difficulty: "intermediate" as const,
     timeEstimate: "45-60 minutit",
-    resources: [
-      {
-        title: "Tõhusad õppimisstrateegiad",
-        url: "https://example.com/learning-strategies",
-      },
-    ],
+    resources: [],
   },
   {
     id: "step10-2",
     title: "Emotsionaalsete pingete äratundmine",
-    description: "Õpeta õpilasi ära tundma emotsionaalseid pingeid, mis võivad õppimist takistada.",
+    description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
     category: "10",
     difficulty: "intermediate" as const,
     timeEstimate: "30-45 minutit",
@@ -150,7 +145,7 @@ const actionSteps = [
   {
     id: "step10-3",
     title: "Emotsionaalsete pingete maandamine",
-    description: "Tutvusta õpilastele tehnikaid, mis aitavad emotsionaalseid pingeid leevendada.",
+    description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
     category: "10",
     difficulty: "intermediate" as const,
     timeEstimate: "30-45 minutit",
@@ -159,7 +154,7 @@ const actionSteps = [
   {
     id: "step10-4",
     title: "Abi küsimise õpetamine",
-    description: "Õpeta õpilasi abi küsima, kui nad on õppimisel tupikusse jõudnud.",
+    description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
     category: "10",
     difficulty: "beginner" as const,
     timeEstimate: "20-30 minutit",
@@ -168,7 +163,7 @@ const actionSteps = [
   {
     id: "step10-5",
     title: "Õpilastele valikute pakkumine",
-    description: "Paku õpilastele valikuvõimalusi, et arendada nende otsustusoskust ja iseseisvust.",
+    description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
     category: "10",
     difficulty: "beginner" as const,
     timeEstimate: "15-30 minutit",
@@ -177,7 +172,7 @@ const actionSteps = [
   {
     id: "step10-6",
     title: "Tunniks häälestumine",
-    description: "Õpeta õpilastele, kuidas end vaimselt tunniks ette valmistada.",
+    description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
     category: "10",
     difficulty: "beginner" as const,
     timeEstimate: "10-15 minutit",
@@ -186,7 +181,7 @@ const actionSteps = [
   {
     id: "step10-7",
     title: "Õpilaste jõupingutuste suunamine",
-    description: "Aita õpilastel oma jõupingutusi efektiivselt suunata õpieesmärkide saavutamiseks.",
+    description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
     category: "10",
     difficulty: "intermediate" as const,
     timeEstimate: "Läbivalt tunnis",
@@ -195,7 +190,7 @@ const actionSteps = [
   {
     id: "step10-8",
     title: "Innustavate eesmärkide seadmine",
-    description: "Õpeta õpilasi seadma motiveerivaid ja saavutatavaid õpieesmärke.",
+    description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
     category: "10",
     difficulty: "intermediate" as const,
     timeEstimate: "30-45 minutit",
@@ -204,7 +199,7 @@ const actionSteps = [
   {
     id: "step10-9",
     title: "Tegevuskava loomine",
-    description: "Juhenda õpilasi looma konkreetseid tegevuskavasid eesmärkide saavutamiseks.",
+    description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
     category: "10",
     difficulty: "intermediate" as const,
     timeEstimate: "45-60 minutit",
@@ -213,7 +208,7 @@ const actionSteps = [
   {
     id: "step10-10",
     title: "Tuleviku visualiseerimine",
-    description: "Õpeta õpilasi visualiseerima oma edu ja eesmärkide saavutamist.",
+    description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
     category: "10",
     difficulty: "advanced" as const,
     timeEstimate: "30-45 minutit",
@@ -222,7 +217,7 @@ const actionSteps = [
   {
     id: "step10-11",
     title: "Küsimuste esitamine loetu kohta",
-    description: "Õpeta õpilasi esitama täpsustavaid ja analüütilisi küsimusi loetu kohta.",
+    description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
     category: "10",
     difficulty: "intermediate" as const,
     timeEstimate: "15-30 minutit",
@@ -231,7 +226,7 @@ const actionSteps = [
   {
     id: "step10-12",
     title: "Mõtlemise suunamine läbi võrdluste",
-    description: "Juhenda õpilasi kasutama võrdlusi sügavama mõistmise saavutamiseks.",
+    description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
     category: "10",
     difficulty: "advanced" as const,
     timeEstimate: "20-30 minutit",
@@ -240,7 +235,7 @@ const actionSteps = [
   {
     id: "step10-13",
     title: "Teema kokku võtmine õpilaste jaoks",
-    description: "Õpeta õpilastele teemasid iseseisvalt kokku võtma ja olulisimat välja tooma.",
+    description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
     category: "10",
     difficulty: "intermediate" as const,
     timeEstimate: "15-20 minutit",
@@ -249,7 +244,7 @@ const actionSteps = [
   {
     id: "step10-14",
     title: "Olulise meeldejätmine",
-    description: "Tutvusta õpilastele mnemotehnilisi võtteid ja olulise info meeldejätmise strateegiaid.",
+    description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
     category: "10",
     difficulty: "intermediate" as const,
     timeEstimate: "30-45 minutit",
@@ -258,7 +253,7 @@ const actionSteps = [
   {
     id: "step10-15",
     title: "Läbimõeldud harjutamine",
-    description: "Õpeta õpilasi teadlikult ja eesmärgipäraselt harjutama.",
+    description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
     category: "10",
     difficulty: "intermediate" as const,
     timeEstimate: "Läbivalt tunnis",
@@ -267,7 +262,7 @@ const actionSteps = [
   {
     id: "step10-16",
     title: "Tegevuskava loomine iseseisvaks tööks",
-    description: "Juhenda õpilasi looma iseseisvaks tööks struktuuri ja ajakava.",
+    description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
     category: "10",
     difficulty: "intermediate" as const,
     timeEstimate: "30-45 minutit",
@@ -276,7 +271,7 @@ const actionSteps = [
   {
     id: "step10-17",
     title: "Abivahenditest järk-järgult loobumine",
-    description: "Õpeta õpilastele järk-järgult vähem toetuma välistele abivahenditele.",
+    description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
     category: "10",
     difficulty: "advanced" as const,
     timeEstimate: "Pikema aja jooksul",
@@ -285,7 +280,7 @@ const actionSteps = [
   {
     id: "step10-18",
     title: "Õpitu kasutamine uues kontekstis",
-    description: "Juhenda õpilaste rakendama õpitud teadmisi ja oskusi uutes olukordades.",
+    description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
     category: "10",
     difficulty: "advanced" as const,
     timeEstimate: "45-60 minutit",
@@ -294,7 +289,7 @@ const actionSteps = [
   {
     id: "step10-19",
     title: "Enesehindamise õpetamine",
-    description: "Õpeta õpilasi oma tööd ja arengut objektiivselt hindama.",
+    description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
     category: "10",
     difficulty: "intermediate" as const,
     timeEstimate: "30-45 minutit",
@@ -303,7 +298,7 @@ const actionSteps = [
   {
     id: "step10-20",
     title: "Enese arengu jälgimise võimaldamine",
-    description: "Paku õpilastele vahendeid ja strateegiaid oma arengu jälgimiseks.",
+    description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
     category: "10",
     difficulty: "intermediate" as const,
     timeEstimate: "20-30 minutit + järjepidev kasutamine",
@@ -312,7 +307,7 @@ const actionSteps = [
   {
     id: "step10-21",
     title: "Õpilaste ajakasutuse jälgimine",
-    description: "Õpeta õpilastele oma ajakasutust jälgima ja analüüsima.",
+    description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
     category: "10",
     difficulty: "intermediate" as const,
     timeEstimate: "15-30 minutit + järjepidev kasutamine",
@@ -321,7 +316,7 @@ const actionSteps = [
   {
     id: "step10-22",
     title: "Enese tööde parandamine",
-    description: "Juhenda õpilaste ise oma töödes vigu leidma ja parandama.",
+    description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
     category: "10",
     difficulty: "advanced" as const,
     timeEstimate: "30-45 minutit",
@@ -330,7 +325,7 @@ const actionSteps = [
   {
     id: "step10-23",
     title: "Reflekteerimise õpetamine",
-    description: "Õpeta õpilasi reflekteerima oma õppimisprotsessi ja arengut.",
+    description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
     category: "10",
     difficulty: "advanced" as const,
     timeEstimate: "30-45 minutit",
