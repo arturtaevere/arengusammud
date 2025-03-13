@@ -1,3 +1,4 @@
+
 import React, { createContext, useState, useContext, useEffect } from 'react';
 
 // Define the shape of our user object
@@ -57,6 +58,7 @@ const MOCK_USERS = [
     email: 'artur@arengusammud.ee',
     password: 'password',
     role: 'coach' as const,
+    profileImage: '/lovable-uploads/6eae274c-d643-4822-ae8c-ba2410af6f2a.png', // Added your profile image
   },
 ];
 
@@ -70,8 +72,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
       
-      // Check if the user is the coach@example.com and ensure profile image is set
-      if (parsedUser.email === 'coach@example.com') {
+      // Check if the user is the coach@example.com or Artur and ensure profile image is set
+      if (parsedUser.email === 'coach@example.com' || parsedUser.email === 'artur@arengusammud.ee') {
         parsedUser.profileImage = '/lovable-uploads/6eae274c-d643-4822-ae8c-ba2410af6f2a.png';
         localStorage.setItem('user', JSON.stringify(parsedUser));
       }
