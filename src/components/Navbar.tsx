@@ -76,15 +76,6 @@ const Navbar = () => {
             {isAuthenticated ? (
               <>
                 <Link 
-                  to="/dashboard" 
-                  className={`transition-all hover:text-primary flex items-center ${
-                    location.pathname === '/dashboard' ? 'text-primary font-medium' : ''
-                  }`}
-                >
-                  <LayoutDashboard className="mr-2 h-5 w-5" />
-                  Töölaud
-                </Link>
-                <Link 
                   to="/competences" 
                   className={`transition-all hover:text-primary flex items-center ${
                     location.pathname === '/competences' ? 'text-primary font-medium' : ''
@@ -101,6 +92,15 @@ const Navbar = () => {
                 >
                   <ClipboardList className="mr-2 h-5 w-5" />
                   Vaatlused ja tagasiside
+                </Link>
+                <Link 
+                  to="/dashboard" 
+                  className={`transition-all hover:text-primary flex items-center ${
+                    location.pathname === '/dashboard' ? 'text-primary font-medium' : ''
+                  }`}
+                >
+                  <LayoutDashboard className="mr-2 h-5 w-5" />
+                  Töölaud
                 </Link>
               </>
             ) : (
@@ -205,19 +205,6 @@ const Navbar = () => {
             {isAuthenticated ? (
               <>
                 <Link 
-                  to="/dashboard" 
-                  className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
-                    location.pathname === '/dashboard' 
-                      ? 'bg-primary text-primary-foreground' 
-                      : 'hover:bg-gray-100'
-                  }`}
-                >
-                  <div className="flex items-center">
-                    <LayoutDashboard className="mr-2 h-5 w-5" />
-                    Töölaud
-                  </div>
-                </Link>
-                <Link 
                   to="/competences" 
                   className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
                     location.pathname === '/competences' 
@@ -241,6 +228,19 @@ const Navbar = () => {
                   <div className="flex items-center">
                     <ClipboardList className="mr-2 h-5 w-5" />
                     Vaatlused ja tagasiside
+                  </div>
+                </Link>
+                <Link 
+                  to="/dashboard" 
+                  className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
+                    location.pathname === '/dashboard' 
+                      ? 'bg-primary text-primary-foreground' 
+                      : 'hover:bg-gray-100'
+                  }`}
+                >
+                  <div className="flex items-center">
+                    <LayoutDashboard className="mr-2 h-5 w-5" />
+                    Töölaud
                   </div>
                 </Link>
                 <div className="pt-4 pb-2">
