@@ -1,8 +1,7 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Plus, MessageSquare } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Plus } from 'lucide-react';
 
 interface ObservationHeaderProps {
   onNewObservation: () => void;
@@ -20,12 +19,6 @@ const ObservationHeader = ({ onNewObservation }: ObservationHeaderProps) => {
           <Plus className="mr-2 h-4 w-4" />
           Uus vaatlus
         </Button>
-        <Link to="/feedback/new">
-          <Button variant="outline">
-            <MessageSquare className="mr-2 h-4 w-4" />
-            Anna tagasisidet
-          </Button>
-        </Link>
       </div>
     </div>
   );
