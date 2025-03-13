@@ -1,4 +1,3 @@
-
 import { useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
@@ -137,7 +136,7 @@ const Dashboard = () => {
               </Link>
             ))}
           </div>
-          <h3 className="text-xl font-semibold text-center mt-6 text-muted-foreground">Töölaud</h3>
+          <h2 className="text-2xl font-bold mt-6 text-center">Töölaud</h2>
         </div>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
