@@ -1,4 +1,3 @@
-
 import React, { createContext, useState, useContext, useEffect } from 'react';
 
 // Define the shape of our user object
@@ -51,6 +50,13 @@ const MOCK_USERS = [
     email: 'teacher@example.com',
     password: 'password',
     role: 'teacher' as const,
+  },
+  {
+    id: '3',
+    name: 'Artur',
+    email: 'artur@arengusammud.ee',
+    password: 'password',
+    role: 'coach' as const,
   },
 ];
 
