@@ -12,6 +12,8 @@ import Competences from "./pages/Competences";
 import ActionSteps from "./pages/ActionSteps";
 import ActionStepDetail from "./pages/ActionStepDetail";
 import Profile from "./pages/Profile";
+import Observations from "./pages/Observations";
+import NewFeedback from "./pages/NewFeedback";
 import { AuthProvider } from "./context/AuthContext";
 
 const queryClient = new QueryClient();
@@ -31,9 +33,11 @@ const App = () => (
             <Route path="/action-steps" element={<ActionSteps />} />
             <Route path="/action-steps/:stepId" element={<ActionStepDetail />} />
             <Route path="/profile" element={<Profile />} />
-            <Route path="/observations" element={<Dashboard />} /> {/* Temporarily redirecting to Dashboard */}
-            <Route path="/observations/:id" element={<Dashboard />} /> {/* Temporarily redirecting to Dashboard */}
-            <Route path="/observations/new" element={<Dashboard />} /> {/* Temporarily redirecting to Dashboard */}
+            <Route path="/observations" element={<Observations />} />
+            <Route path="/observations/:id" element={<Dashboard />} /> {/* Will implement later */}
+            <Route path="/observations/new" element={<Dashboard />} /> {/* Will implement later */}
+            <Route path="/feedback/new" element={<NewFeedback />} />
+            <Route path="/feedback/:id" element={<Dashboard />} /> {/* Will implement later */}
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
