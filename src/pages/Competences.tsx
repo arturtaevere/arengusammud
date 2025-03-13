@@ -385,7 +385,7 @@ export default function Competences() {
       
       <main className="container mx-auto px-4 py-24">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Pädevuste kategooriad</h1>
+          <h1 className="text-3xl font-bold mb-2">Õpieesmärgid</h1>
           <p className="text-muted-foreground">
             Siit leiad erinevatesse kategooriatesse jaotatud arengusammud, mis aitavad õpetamisoskusi arendada.
           </p>
