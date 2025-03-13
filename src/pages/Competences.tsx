@@ -1,8 +1,5 @@
-
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ChevronRight, Folder, BookOpen } from 'lucide-react';
 import Navbar from '@/components/Navbar';
@@ -400,9 +397,9 @@ export default function Competences() {
               className="w-full"
             >
               <Card className="w-full hover:shadow-md transition-all">
-                <CardHeader className="pb-2">
+                <CardHeader className="pb-2 cursor-pointer">
                   <CollapsibleTrigger asChild>
-                    <div className="flex justify-between items-center cursor-pointer">
+                    <div className="flex justify-between items-center w-full">
                       <div className="flex items-start gap-3">
                         <div className="bg-primary/10 p-2 rounded-lg">
                           <Folder className="h-5 w-5 text-primary" />
@@ -441,29 +438,13 @@ export default function Competences() {
                     ) : (
                       <div className="bg-slate-50 p-4 rounded-lg border border-slate-100 text-center">
                         <BookOpen className="h-12 w-12 mx-auto text-slate-400 mb-2" />
-                        <p className="text-slate-500 mb-4">
+                        <p className="text-slate-500">
                           Selle kategooria alla pole veel arengusamme lisatud.
                         </p>
-                        <Button variant="outline" size="sm" asChild>
-                          <Link to={`/action-steps?category=${competence.id}`}>
-                            Sirvi arengusamme
-                          </Link>
-                        </Button>
                       </div>
                     )}
                   </CardContent>
                 </CollapsibleContent>
-                
-                <CardFooter className="flex justify-between border-t pt-4">
-                  <Badge variant="outline" className="bg-primary/5">
-                    {competence.count} arengusammu
-                  </Badge>
-                  <Button variant="ghost" size="sm" asChild>
-                    <Link to={`/action-steps?category=${competence.id}`}>
-                      Vaata täpsemalt <ChevronRight className="ml-1 h-4 w-4" />
-                    </Link>
-                  </Button>
-                </CardFooter>
               </Card>
             </Collapsible>
           ))}
@@ -472,3 +453,4 @@ export default function Competences() {
     </div>
   );
 }
+
