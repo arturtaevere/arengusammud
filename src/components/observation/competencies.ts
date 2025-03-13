@@ -173,6 +173,96 @@ export const competencies = [
         id: 'as23',
         title: 'Õpilastele valikute pakkumine',
         description: 'Pakun õpilastele valikuvõimalusi, et nad saaksid oma õppimist ise juhtida.'
+      },
+      {
+        id: 'as24',
+        title: 'Tunniks häälestumine',
+        description: 'Õpetan õpilastele, kuidas end õppimiseks häälestada ja keskenduda.'
+      },
+      {
+        id: 'as25',
+        title: 'Õpilaste jõupingutuste suunamine',
+        description: 'Suunan õpilaste jõupingutusi nii, et nad kasutaksid tõhusaid õpistrateegiaid.'
+      },
+      {
+        id: 'as26',
+        title: 'Innustavate eesmärkide seadmine',
+        description: 'Aitan õpilastel seada eesmärke, mis on väljakutsuvad, kuid saavutatavad.'
+      },
+      {
+        id: 'as27',
+        title: 'Tegevuskava loomine',
+        description: 'Õpetan õpilasi looma tegevuskava, mis aitab neil seatud eesmärke saavutada.'
+      },
+      {
+        id: 'as28',
+        title: 'Tuleviku visualiseerimine',
+        description: 'Õpetan õpilasi visualiseerima oma tuleviku edu ja kasutama seda motivatsiooniallikana.'
+      },
+      {
+        id: 'as29',
+        title: 'Küsimuste esitamine loetu kohta',
+        description: 'Õpetan õpilasi esitama endile küsimusi loetud teksti kohta, et seda paremini mõista.'
+      },
+      {
+        id: 'as30',
+        title: 'Mõtlemise suunamine läbi võrdluste',
+        description: 'Õpetan õpilasi kasutama võrdlusi, et leida seoseid uue ja juba teadaoleva info vahel.'
+      },
+      {
+        id: 'as31',
+        title: 'Teema kokku võtmine õpilaste jaoks',
+        description: 'Õpetan õpilasi teema olulisi aspekte kokku võtma oma sõnadega.'
+      },
+      {
+        id: 'as32',
+        title: 'Olulise meeldejätmine',
+        description: 'Õpetan õpilastele mnemotehnilisi võtteid, mis aitavad neil olulist infot meeles pidada.'
+      },
+      {
+        id: 'as33',
+        title: 'Läbimõeldud harjutamine',
+        description: 'Õpetan õpilasi harjutama sihipäraselt, keskendudes konkreetsetele aspektidele.'
+      },
+      {
+        id: 'as34',
+        title: 'Tegevuskava loomine iseseisvaks tööks',
+        description: 'Õpetan õpilasi looma tegevuskava, mis aitab neil iseseisvalt õppida.'
+      },
+      {
+        id: 'as35',
+        title: 'Abivahenditest järk-järgult loobumine',
+        description: 'Õpetan õpilasi järk-järgult loobuma abivahenditest, et saavutada suurem iseseisvus.'
+      },
+      {
+        id: 'as36',
+        title: 'Õpitu kasutamine uues kontekstis',
+        description: 'Õpetan õpilasi kasutama õpitut uutes olukordades, et kinnistada teadmisi.'
+      },
+      {
+        id: 'as37',
+        title: 'Enesehindamise õpetamine',
+        description: 'Õpetan õpilasi oma tööd hindama ja reflekteerima oma õppimise üle.'
+      },
+      {
+        id: 'as38',
+        title: 'Enese arengu jälgimise võimaldamine',
+        description: 'Suunan õpilasi jälgima oma arengut ja märkama edusamme.'
+      },
+      {
+        id: 'as39',
+        title: 'Õpilaste ajakasutuse jälgimine',
+        description: 'Õpetan õpilasi oma aega tõhusalt planeerima ja jälgima oma ajakasutust.'
+      },
+      {
+        id: 'as40',
+        title: 'Enese tööde parandamine',
+        description: 'Õpetan õpilasi oma tööd analüüsima ja parandusi tegema.'
+      },
+      {
+        id: 'as41',
+        title: 'Reflekteerimise õpetamine',
+        description: 'Õpetan õpilasi reflekteerima oma õppimise üle ja tegema järeldusi.'
       }
     ]
   }
@@ -202,4 +292,27 @@ export const getActionStepById = (id: string) => {
     }
   }
   return null;
+};
+
+// Helper to get competency by id
+export const getCompetencyById = (id: string) => {
+  return competencies.find(comp => comp.id === id) || null;
+};
+
+// Helper to get icon key for a competency
+export const getCompetencyIconKey = (id: string) => {
+  const competencyIconMap: Record<string, string> = {
+    comp1: 'Heart',
+    comp2: 'ClipboardList',
+    comp3: 'Target',
+    comp4: 'Users',
+    comp5: 'Brain',
+    comp6: 'BookCheck',
+    comp7: 'BarChart',
+    comp8: 'MessageSquare',
+    comp9: 'Users',
+    comp10: 'Lightbulb'
+  };
+  
+  return competencyIconMap[id] || 'BookOpen';
 };
