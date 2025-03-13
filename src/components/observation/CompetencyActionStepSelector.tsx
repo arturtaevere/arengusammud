@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/accordion";
 import { competencies } from './competencies';
 import { Input } from '@/components/ui/input';
-import { Search, ClipboardList } from 'lucide-react';
+import { Search, ClipboardList, ArrowLeft } from 'lucide-react';
 
 interface CompetencyActionStepSelectorProps {
   onSelect: (actionStep: { id: string; title: string; description: string }) => void;
@@ -29,6 +29,7 @@ const CompetencyActionStepSelector = ({ onSelect, label, value }: CompetencyActi
   const [search, setSearch] = useState('');
   const [sheetOpen, setSheetOpen] = useState(false);
   const [expandedAccordionItems, setExpandedAccordionItems] = useState<string[]>([]);
+  const [selectedCompetency, setSelectedCompetency] = useState<string | null>(null);
 
   // Filter competencies and action steps based on search
   const filteredCompetencies = search.trim() === '' 
@@ -48,6 +49,7 @@ const CompetencyActionStepSelector = ({ onSelect, label, value }: CompetencyActi
   const handleActionStepSelect = (step: { id: string; title: string; description: string }) => {
     onSelect(step);
     setSheetOpen(false);
+    setSelectedCompetency(null);
   };
 
   const handleAccordionChange = (value: string) => {
@@ -61,9 +63,17 @@ const CompetencyActionStepSelector = ({ onSelect, label, value }: CompetencyActi
     });
   };
 
+  const handleCompetencySelect = (competencyId: string) => {
+    setSelectedCompetency(competencyId);
+  };
+
+  const handleBackToCompetencies = () => {
+    setSelectedCompetency(null);
+  };
+
   // Set initial expanded state for the competency with ID "comp10" (Ennastjuhtiva õppija toetamine)
   // to make it easier for users to find the many action steps there
-  React.useEffect(() => {
+  useEffect(() => {
     if (expandedAccordionItems.length === 0) {
       setExpandedAccordionItems(['comp10']);
     }
@@ -99,43 +109,89 @@ const CompetencyActionStepSelector = ({ onSelect, label, value }: CompetencyActi
           </div>
           
           <div className="h-[70vh] overflow-y-auto">
-            <Accordion 
-              type="multiple" 
-              value={expandedAccordionItems}
-              onValueChange={(value) => setExpandedAccordionItems(value as string[])}
-              className="w-full"
-            >
-              {filteredCompetencies.map((comp) => (
-                <AccordionItem key={comp.id} value={comp.id}>
-                  <AccordionTrigger 
-                    className="text-sm font-medium"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleAccordionChange(comp.id);
-                    }}
-                  >
-                    {comp.name} ({comp.actionSteps.length})
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    <div className="space-y-2 pl-1">
-                      {comp.actionSteps.map((step) => (
-                        <Button
-                          key={step.id}
-                          variant="ghost"
-                          className="w-full justify-start text-left h-auto p-2 text-sm"
-                          onClick={() => handleActionStepSelect(step)}
-                        >
-                          <div>
-                            <div className="font-medium">{step.title}</div>
-                            <div className="text-xs text-muted-foreground">{step.description}</div>
-                          </div>
-                        </Button>
-                      ))}
+            {selectedCompetency ? (
+              <div className="space-y-3">
+                <Button 
+                  variant="ghost" 
+                  className="flex items-center text-sm font-medium mb-2"
+                  onClick={handleBackToCompetencies}
+                >
+                  <ArrowLeft className="h-4 w-4 mr-1" />
+                  Tagasi kompetentside juurde
+                </Button>
+
+                {competencies
+                  .filter(comp => comp.id === selectedCompetency)
+                  .map(comp => (
+                    <div key={comp.id} className="space-y-2">
+                      <h3 className="font-medium text-base">{comp.name} ({comp.actionSteps.length})</h3>
+                      <div className="space-y-2 pl-1">
+                        {comp.actionSteps.map((step) => (
+                          <Button
+                            key={step.id}
+                            variant="ghost"
+                            className="w-full justify-start text-left h-auto p-2 text-sm"
+                            onClick={() => handleActionStepSelect(step)}
+                          >
+                            <div>
+                              <div className="font-medium">{step.title}</div>
+                              <div className="text-xs text-muted-foreground">{step.description}</div>
+                            </div>
+                          </Button>
+                        ))}
+                      </div>
                     </div>
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
+                  ))}
+              </div>
+            ) : (
+              <Accordion 
+                type="multiple" 
+                value={expandedAccordionItems}
+                onValueChange={(value) => setExpandedAccordionItems(value as string[])}
+                className="w-full"
+              >
+                {filteredCompetencies.map((comp) => (
+                  <AccordionItem key={comp.id} value={comp.id}>
+                    <AccordionTrigger 
+                      className="text-sm font-medium"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleAccordionChange(comp.id);
+                      }}
+                    >
+                      {comp.name} ({comp.actionSteps.length})
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <div className="space-y-2 pl-1">
+                        {comp.actionSteps.length > 10 ? (
+                          <Button
+                            variant="outline"
+                            className="w-full justify-center text-center h-auto p-2 text-sm"
+                            onClick={() => handleCompetencySelect(comp.id)}
+                          >
+                            Näita kõiki {comp.actionSteps.length} arengusammu
+                          </Button>
+                        ) : (
+                          comp.actionSteps.map((step) => (
+                            <Button
+                              key={step.id}
+                              variant="ghost"
+                              className="w-full justify-start text-left h-auto p-2 text-sm"
+                              onClick={() => handleActionStepSelect(step)}
+                            >
+                              <div>
+                                <div className="font-medium">{step.title}</div>
+                                <div className="text-xs text-muted-foreground">{step.description}</div>
+                              </div>
+                            </Button>
+                          ))
+                        )}
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+            )}
           </div>
         </div>
       </SheetContent>
