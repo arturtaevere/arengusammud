@@ -2,13 +2,11 @@
 import React, { useState } from 'react';
 import Navbar from '@/components/Navbar';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Separator } from '@/components/ui/separator';
-import { Plus, Filter, List, Grid, BookOpen, MessageSquare, ClipboardCheck, Check } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Check } from 'lucide-react';
 import ObservationForm from '@/components/ObservationForm';
 import { useToast } from '@/hooks/use-toast';
+import ObservationHeader from '@/components/observations/ObservationHeader';
+import ObservationTabs from '@/components/observations/ObservationTabs';
 
 const Observations = () => {
   const { toast } = useToast();
@@ -90,7 +88,7 @@ const Observations = () => {
     toast({
       title: "Tagasiside antud",
       description: "Õpetajale on saadetud tagasiside",
-      variant: "default", // Changed from "success" to "default" to fix the type error
+      variant: "default",
     });
     setShowForm(false);
   };
@@ -99,24 +97,7 @@ const Observations = () => {
     <div className="min-h-screen bg-gray-50">
       <Navbar />
       <div className="container mx-auto pt-24 pb-12 px-4">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
-          <div>
-            <h2 className="text-2xl font-bold">Vaatlused ja tagasiside</h2>
-            <p className="text-gray-600 mt-1">Õppetöö vaatlused ja tagasiside</p>
-          </div>
-          <div className="flex gap-2 mt-4 md:mt-0">
-            <Button onClick={handleNewObservation}>
-              <Plus className="mr-2 h-4 w-4" />
-              Uus vaatlus
-            </Button>
-            <Link to="/feedback/new">
-              <Button variant="outline">
-                <MessageSquare className="mr-2 h-4 w-4" />
-                Anna tagasisidet
-              </Button>
-            </Link>
-          </div>
-        </div>
+        <ObservationHeader onNewObservation={handleNewObservation} />
 
         {showForm ? (
           <div className="mb-8">
@@ -129,125 +110,12 @@ const Observations = () => {
             </div>
           </div>
         ) : (
-          <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="mb-8">
-            <TabsList className="mb-6">
-              <TabsTrigger value="observations">
-                <ClipboardCheck className="mr-2 h-4 w-4" />
-                Vaatlused
-              </TabsTrigger>
-              <TabsTrigger value="feedback">
-                <MessageSquare className="mr-2 h-4 w-4" />
-                Tagasiside
-              </TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="observations">
-              <div className="flex justify-between items-center mb-4">
-                <div className="flex gap-2">
-                  <Button variant="outline" size="sm">
-                    <Filter className="mr-2 h-4 w-4" />
-                    Filtreeri
-                  </Button>
-                  <div className="border rounded-md flex divide-x">
-                    <Button variant="ghost" size="sm" className="rounded-r-none">
-                      <List className="h-4 w-4" />
-                    </Button>
-                    <Button variant="ghost" size="sm" className="rounded-l-none">
-                      <Grid className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-                <div className="text-sm text-gray-500">
-                  Kokku: {observations.length} vaatlust
-                </div>
-              </div>
-              
-              <div className="grid gap-4">
-                {observations.map((observation) => (
-                  <Card key={observation.id} className="transition-all hover:shadow-md">
-                    <CardHeader className="pb-2">
-                      <div className="flex justify-between">
-                        <CardTitle className="text-lg">{observation.teacher}</CardTitle>
-                        <span className={`text-xs px-2 py-1 rounded-full ${
-                          observation.status === 'Lõpetatud' 
-                            ? 'bg-green-100 text-green-800' 
-                            : observation.status === 'Vaadeldud' 
-                              ? 'bg-blue-100 text-blue-800' 
-                              : 'bg-orange-100 text-orange-800'
-                        }`}>
-                          {observation.status}
-                        </span>
-                      </div>
-                      <CardDescription>{observation.subject} • {observation.date}</CardDescription>
-                    </CardHeader>
-                    <CardContent className="pb-2">
-                      <div className="flex flex-wrap gap-1 text-xs">
-                        {observation.competences.map((competence, i) => (
-                          <span key={i} className="bg-gray-100 px-2 py-1 rounded-full">
-                            {competence}
-                          </span>
-                        ))}
-                      </div>
-                    </CardContent>
-                    <CardFooter>
-                      <div className="flex justify-between items-center w-full">
-                        <div className="flex items-center text-xs text-gray-500">
-                          {observation.hasFeedback ? (
-                            <span className="flex items-center text-green-600">
-                              <MessageSquare className="mr-1 h-3 w-3" />
-                              Tagasiside antud
-                            </span>
-                          ) : (
-                            <span className="flex items-center text-gray-500">
-                              <MessageSquare className="mr-1 h-3 w-3" />
-                              Tagasiside puudub
-                            </span>
-                          )}
-                        </div>
-                        <Link to={`/observations/${observation.id}`}>
-                          <Button variant="outline" size="sm">Vaata</Button>
-                        </Link>
-                      </div>
-                    </CardFooter>
-                  </Card>
-                ))}
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="feedback">
-              <div className="grid gap-4">
-                {feedbacks.map((feedback) => (
-                  <Card key={feedback.id} className="transition-all hover:shadow-md">
-                    <CardHeader className="pb-2">
-                      <div className="flex justify-between">
-                        <CardTitle className="text-lg">{feedback.teacher}</CardTitle>
-                        <span className={`text-xs px-2 py-1 rounded-full ${
-                          feedback.type === 'Kiitus'
-                            ? 'bg-green-100 text-green-800'
-                            : feedback.type === 'Soovitus'
-                              ? 'bg-blue-100 text-blue-800'
-                              : 'bg-purple-100 text-purple-800'
-                        }`}>
-                          {feedback.type}
-                        </span>
-                      </div>
-                      <CardDescription>{feedback.subject} • {feedback.date}</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-sm">{feedback.preview}</p>
-                    </CardContent>
-                    <CardFooter>
-                      <div className="flex justify-end w-full">
-                        <Link to={`/feedback/${feedback.id}`}>
-                          <Button variant="outline" size="sm">Vaata</Button>
-                        </Link>
-                      </div>
-                    </CardFooter>
-                  </Card>
-                ))}
-              </div>
-            </TabsContent>
-          </Tabs>
+          <ObservationTabs 
+            observations={observations} 
+            feedbacks={feedbacks} 
+            activeTab={activeTab} 
+            onTabChange={setActiveTab} 
+          />
         )}
       </div>
     </div>
