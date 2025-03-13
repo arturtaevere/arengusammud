@@ -1,9 +1,10 @@
-
 import { useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import Navbar from '@/components/Navbar';
 import { 
   ClipboardList, 
@@ -14,21 +15,81 @@ import {
   Plus,
   CheckCircle,
   Clock,
-  Users
+  Users,
+  CheckSquare,
+  Target,
+  GraduationCap,
+  Book,
+  PuzzlePiece,
+  Layers,
+  Activity,
+  ClipboardCheck,
+  Lightbulb
 } from 'lucide-react';
+
+const competences = [
+  {
+    id: '1',
+    title: 'Hooliva ja arengut toetava õpikeskkonna loomine',
+    icon: <CheckSquare className="h-5 w-5" />,
+  },
+  {
+    id: '2',
+    title: 'Kindlate ja harjumuspäraste tegevuste korraldamine klassis',
+    icon: <Layers className="h-5 w-5" />,
+  },
+  {
+    id: '3',
+    title: 'Tundide ja õppimise kavandamine õpieesmärkidest lähtuvalt',
+    icon: <Target className="h-5 w-5" />,
+  },
+  {
+    id: '4',
+    title: 'Kaasamõtlemise ja pingutamise soodustamine',
+    icon: <Lightbulb className="h-5 w-5" />,
+  },
+  {
+    id: '5',
+    title: 'Iseseisva töö kavandamine',
+    icon: <ClipboardCheck className="h-5 w-5" />,
+  },
+  {
+    id: '6',
+    title: 'Õppesisu meeldejääv edasiandmine õpilastele',
+    icon: <Book className="h-5 w-5" />,
+  },
+  {
+    id: '7',
+    title: 'Andmete kogumine õppematerjali omandamise kohta',
+    icon: <Activity className="h-5 w-5" />,
+  },
+  {
+    id: '8',
+    title: 'Tagasiside andmine õpilastele',
+    icon: <MessageSquare className="h-5 w-5" />,
+  },
+  {
+    id: '9',
+    title: 'Õpilaste kaasamine hindamisprotsessi',
+    icon: <Users className="h-5 w-5" />,
+  },
+  {
+    id: '10',
+    title: 'Ennastjuhtiva õppija toetamine',
+    icon: <GraduationCap className="h-5 w-5" />,
+  },
+];
 
 const Dashboard = () => {
   const { user, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   
-  // Redirect unauthenticated users to login
   useEffect(() => {
     if (!isAuthenticated) {
       navigate('/auth');
     }
   }, [isAuthenticated, navigate]);
 
-  // Mock data
   const stats = {
     actionStepsAssigned: 12,
     actionStepsCompleted: 7,
@@ -60,7 +121,24 @@ const Dashboard = () => {
           </p>
         </div>
         
-        {/* Stats Cards */}
+        <div className="mb-10">
+          <h2 className="text-2xl font-bold mb-4">Sammud</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3">
+            {competences.map((competence) => (
+              <Link key={competence.id} to={`/action-steps?category=${competence.id}`}>
+                <Card className="h-full hover:shadow-md transition-all border-l-4 border-l-primary">
+                  <CardContent className="p-4 flex items-center">
+                    <div className="mr-3 bg-primary/10 p-2 rounded-md">
+                      {competence.icon}
+                    </div>
+                    <p className="font-medium text-sm line-clamp-2">{competence.title}</p>
+                  </CardContent>
+                </Card>
+              </Link>
+            ))}
+          </div>
+        </div>
+        
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
           <Card className="hover:shadow-md transition-all">
             <CardHeader className="pb-2">
@@ -150,7 +228,6 @@ const Dashboard = () => {
         </div>
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-          {/* Recent Observations */}
           <Card>
             <CardHeader>
               <div className="flex justify-between items-center">
@@ -211,7 +288,6 @@ const Dashboard = () => {
             </CardContent>
           </Card>
           
-          {/* Upcoming Action Steps */}
           <Card>
             <CardHeader>
               <div className="flex justify-between items-center">
@@ -279,7 +355,6 @@ const Dashboard = () => {
           </Card>
         </div>
         
-        {/* Quick Actions */}
         <Card>
           <CardHeader>
             <CardTitle>Kiired tegevused</CardTitle>
@@ -331,3 +406,4 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+

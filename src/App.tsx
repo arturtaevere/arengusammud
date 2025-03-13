@@ -27,6 +27,9 @@ const App = () => (
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/competences" element={<Competences />} />
             <Route path="/action-steps" element={<ActionSteps />} />
+            <Route path="/observations" element={<Dashboard />} /> {/* Temporarily redirecting to Dashboard */}
+            <Route path="/observations/:id" element={<Dashboard />} /> {/* Temporarily redirecting to Dashboard */}
+            <Route path="/observations/new" element={<Dashboard />} /> {/* Temporarily redirecting to Dashboard */}
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
