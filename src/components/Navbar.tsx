@@ -11,7 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import { BookOpen, ClipboardList, MessageSquare, Menu, X } from 'lucide-react';
+import { BookOpen, ClipboardList, LayoutDashboard, Menu, X } from 'lucide-react';
 
 const Navbar = () => {
   const { user, isAuthenticated, logout } = useAuth();
@@ -77,35 +77,30 @@ const Navbar = () => {
               <>
                 <Link 
                   to="/dashboard" 
-                  className={`transition-all hover:text-primary ${
+                  className={`transition-all hover:text-primary flex items-center ${
                     location.pathname === '/dashboard' ? 'text-primary font-medium' : ''
                   }`}
                 >
+                  <LayoutDashboard className="mr-2 h-5 w-5" />
                   Töölaud
                 </Link>
                 <Link 
-                  to="/action-steps" 
-                  className={`transition-all hover:text-primary ${
-                    location.pathname === '/action-steps' ? 'text-primary font-medium' : ''
+                  to="/competences" 
+                  className={`transition-all hover:text-primary flex items-center ${
+                    location.pathname === '/competences' ? 'text-primary font-medium' : ''
                   }`}
                 >
-                  Arengusammud
+                  <BookOpen className="mr-2 h-5 w-5" />
+                  Õpieesmärgid
                 </Link>
                 <Link 
                   to="/observations" 
-                  className={`transition-all hover:text-primary ${
-                    location.pathname === '/observations' ? 'text-primary font-medium' : ''
+                  className={`transition-all hover:text-primary flex items-center ${
+                    location.pathname.includes('/observations') ? 'text-primary font-medium' : ''
                   }`}
                 >
-                  Vaatlused
-                </Link>
-                <Link 
-                  to="/feedback" 
-                  className={`transition-all hover:text-primary ${
-                    location.pathname === '/feedback' ? 'text-primary font-medium' : ''
-                  }`}
-                >
-                  Tagasiside
+                  <ClipboardList className="mr-2 h-5 w-5" />
+                  Vaatlused ja tagasiside
                 </Link>
               </>
             ) : (
@@ -217,45 +212,35 @@ const Navbar = () => {
                       : 'hover:bg-gray-100'
                   }`}
                 >
-                  Töölaud
-                </Link>
-                <Link 
-                  to="/action-steps" 
-                  className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
-                    location.pathname === '/action-steps' 
-                      ? 'bg-primary text-primary-foreground' 
-                      : 'hover:bg-gray-100'
-                  }`}
-                >
                   <div className="flex items-center">
-                    <ClipboardList className="mr-2 h-5 w-5" />
-                    Arengusammud
+                    <LayoutDashboard className="mr-2 h-5 w-5" />
+                    Töölaud
                   </div>
                 </Link>
                 <Link 
-                  to="/observations" 
+                  to="/competences" 
                   className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
-                    location.pathname === '/observations' 
+                    location.pathname === '/competences' 
                       ? 'bg-primary text-primary-foreground' 
                       : 'hover:bg-gray-100'
                   }`}
                 >
                   <div className="flex items-center">
                     <BookOpen className="mr-2 h-5 w-5" />
-                    Vaatlused
+                    Õpieesmärgid
                   </div>
                 </Link>
                 <Link 
-                  to="/feedback" 
+                  to="/observations" 
                   className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
-                    location.pathname === '/feedback' 
+                    location.pathname.includes('/observations') 
                       ? 'bg-primary text-primary-foreground' 
                       : 'hover:bg-gray-100'
                   }`}
                 >
                   <div className="flex items-center">
-                    <MessageSquare className="mr-2 h-5 w-5" />
-                    Tagasiside
+                    <ClipboardList className="mr-2 h-5 w-5" />
+                    Vaatlused ja tagasiside
                   </div>
                 </Link>
                 <div className="pt-4 pb-2">
