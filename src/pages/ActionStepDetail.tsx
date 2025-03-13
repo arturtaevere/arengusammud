@@ -129,7 +129,7 @@ const ActionStepDetail = () => {
           <div className="text-center">
             <h1 className="text-2xl font-bold mb-4">Arengusammu ei leitud</h1>
             <Button asChild>
-              <Link to="/action-steps">Tagasi arengusammude juurde</Link>
+              <Link to="/competences">Tagasi õpieesmärkide juurde</Link>
             </Button>
           </div>
         </main>
@@ -144,9 +144,9 @@ const ActionStepDetail = () => {
       <main className="container mx-auto px-4 py-24">
         <div className="mb-6">
           <Button variant="ghost" size="sm" asChild className="mb-4">
-            <Link to="/action-steps">
+            <Link to="/competences">
               <ArrowLeft className="h-4 w-4 mr-1" />
-              Tagasi arengusammude juurde
+              Tagasi õpieesmärkide juurde
             </Link>
           </Button>
           
