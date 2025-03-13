@@ -10,7 +10,8 @@ import {
   getLastObservedTeacher, 
   saveLastObservedTeacher,
   getTeacherDevelopmentGoal,
-  getTeacherActionStep
+  getTeacherActionStep,
+  getAllActionSteps
 } from './types';
 
 export const useObservationForm = () => {
@@ -67,9 +68,13 @@ export const useObservationForm = () => {
     navigate('/observations');
   };
   
+  // Get all action steps for the selection
+  const actionSteps = getAllActionSteps();
+  
   return {
     form,
     isSubmitting,
     onSubmit,
+    actionSteps,
   };
 };

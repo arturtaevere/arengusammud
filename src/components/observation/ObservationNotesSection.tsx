@@ -9,6 +9,7 @@ import { UseFormReturn } from 'react-hook-form';
 import { ObservationFormValues } from './types';
 import { Save } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import CompetencyActionStepSelector from './CompetencyActionStepSelector';
 
 interface ObservationNotesSectionProps {
   form: UseFormReturn<ObservationFormValues>;
@@ -141,11 +142,20 @@ const ObservationNotesSection = ({ form, isSubmitting }: ObservationNotesSection
                 </span>
               </FormLabel>
               <FormControl>
-                <Textarea 
-                  placeholder="Milline võiks olla järgmine arengusamm..." 
-                  className="min-h-[100px]"
-                  {...field} 
-                />
+                <>
+                  <CompetencyActionStepSelector
+                    label="Vali järgmine arengusamm..."
+                    value={field.value}
+                    onSelect={(step) => {
+                      field.onChange(`${step.title}: ${step.description}`);
+                    }}
+                  />
+                  <Textarea 
+                    placeholder="Milline võiks olla järgmine arengusamm..." 
+                    className="min-h-[100px] mt-2"
+                    {...field} 
+                  />
+                </>
               </FormControl>
               <FormDescription>
                 Pakkuge välja konkreetne järgmine arengusamm õpetajale
