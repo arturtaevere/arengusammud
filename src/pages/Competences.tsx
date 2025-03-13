@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { ChevronRight, Folder, BookOpen } from 'lucide-react';
+import { ChevronRight, Folder, BookOpen, ArrowRight } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
@@ -424,10 +425,19 @@ export default function Competences() {
                           .filter(step => step.category === competence.id)
                           .slice(0, 3) // Show just a preview of 3 items
                           .map(step => (
-                            <div key={step.id} className="p-3 bg-slate-50 rounded-lg border border-slate-100">
-                              <p className="font-medium">{step.title}</p>
-                              <p className="text-sm text-slate-500 mt-1">{step.description}</p>
-                            </div>
+                            <Link 
+                              key={step.id} 
+                              to={`/action-steps/${step.id}`}
+                              className="block p-3 bg-slate-50 rounded-lg border border-slate-100 hover:bg-slate-100 transition-colors"
+                            >
+                              <div className="flex justify-between items-center">
+                                <div>
+                                  <p className="font-medium">{step.title}</p>
+                                  <p className="text-sm text-slate-500 mt-1">{step.description}</p>
+                                </div>
+                                <ArrowRight className="h-4 w-4 text-primary shrink-0" />
+                              </div>
+                            </Link>
                           ))}
                         {competence.count > 3 && (
                           <p className="text-center text-sm text-slate-500 mt-2">
