@@ -90,7 +90,7 @@ const Observations = () => {
     toast({
       title: "Tagasiside antud",
       description: "Õpetajale on saadetud tagasiside",
-      variant: "success",
+      variant: "default", // Changed from "success" to "default" to fix the type error
     });
     setShowForm(false);
   };
