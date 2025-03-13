@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Bookmark, CheckCircle } from 'lucide-react';
+import { Bookmark } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface ActionStepCardProps {
@@ -31,7 +31,6 @@ const ActionStepCard = ({
   saved = false,
   className,
 }: ActionStepCardProps) => {
-  const [isCompleted, setIsCompleted] = useState(completed);
   const [isSaved, setIsSaved] = useState(saved);
 
   // Get difficulty badge color
@@ -63,18 +62,11 @@ const ActionStepCard = ({
   };
 
   return (
-    <Card className={cn("overflow-hidden transition-all", 
-      isCompleted ? "border-green-200 bg-green-50/30" : "hover:shadow-md",
-      className
-    )}>
+    <Card className={cn("overflow-hidden transition-all hover:shadow-md", className)}>
       <CardHeader className="pb-2">
         <div className="flex justify-between items-start">
           <div>
-            <CardTitle 
-              className={cn("transition-colors", 
-                isCompleted ? "line-through text-muted-foreground" : ""
-              )}
-            >
+            <CardTitle className="text-lg font-medium">
               {title}
             </CardTitle>
           </div>
@@ -93,21 +85,10 @@ const ActionStepCard = ({
         </div>
       </CardHeader>
       <CardContent>
-        <p className={cn("text-sm", isCompleted ? "text-muted-foreground" : "")}>
+        <p className="text-sm">
           {description}
         </p>
       </CardContent>
-      <Button 
-        variant={isCompleted ? "outline" : "default"}
-        className={cn(
-          "w-full transition-all m-4",
-          isCompleted ? "hover:bg-red-100 hover:text-red-700 hover:border-red-200" : ""
-        )}
-        onClick={() => setIsCompleted(!isCompleted)}
-      >
-        <CheckCircle className={cn("mr-2 h-4 w-4", isCompleted ? "text-green-500" : "")} />
-        {isCompleted ? "Märgi mitte lõpetatuks" : "Märgi lõpetatuks"}
-      </Button>
     </Card>
   );
 };

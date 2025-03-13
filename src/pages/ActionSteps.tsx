@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import ActionStepCard from "@/components/ActionStepCard";
@@ -426,9 +427,9 @@ const ActionSteps = () => {
           </div>
         </div>
         
-        {/* Action Steps Grid */}
+        {/* Action Steps List (changed from grid to flex column) */}
         {filteredSteps.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="flex flex-col space-y-4">
             {filteredSteps.map((step) => (
               <ActionStepCard
                 key={step.id}
