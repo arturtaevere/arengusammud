@@ -20,6 +20,15 @@ const extractYouTubeId = (url: string): string | null => {
 };
 
 const VideoPlayer: React.FC<VideoPlayerProps> = ({ src, title }) => {
+  // Check if src is empty or invalid
+  if (!src) {
+    return (
+      <div className="w-full rounded-lg bg-gray-100 flex items-center justify-center aspect-video">
+        <p className="text-muted-foreground">Video puudub</p>
+      </div>
+    );
+  }
+
   // Check if the source is a YouTube URL
   if (isYouTubeUrl(src)) {
     const videoId = extractYouTubeId(src);
