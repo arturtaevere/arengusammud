@@ -1,15 +1,18 @@
 
-import React from 'react';
-import Navbar from '@/components/Navbar';
-import FeedbackForm from '@/components/FeedbackForm';
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const NewFeedback = () => {
+  const navigate = useNavigate();
+  
+  useEffect(() => {
+    // Redirect to the observations page
+    navigate('/observations');
+  }, [navigate]);
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Navbar />
-      <div className="container mx-auto pt-24 pb-12">
-        <FeedbackForm />
-      </div>
+    <div className="min-h-screen flex items-center justify-center">
+      <p>Redirecting...</p>
     </div>
   );
 };
