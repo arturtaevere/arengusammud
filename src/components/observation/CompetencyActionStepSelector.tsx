@@ -15,7 +15,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { competencies } from './types';
+import { competencies } from './competencies';
 import { Input } from '@/components/ui/input';
 import { Search, ClipboardList } from 'lucide-react';
 
