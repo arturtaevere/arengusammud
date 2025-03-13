@@ -308,10 +308,10 @@ const Dashboard = () => {
               <Button 
                 variant="outline" 
                 className="h-auto py-6 flex flex-col items-center justify-center text-center"
-                onClick={() => navigate('/action-steps')}
+                onClick={() => navigate('/competences')}
               >
                 <ClipboardList className="h-8 w-8 mb-2 text-primary" />
-                <span className="text-sm font-medium">Sirvi arengusamme</span>
+                <span className="text-sm font-medium">Sirvi pädevusi</span>
               </Button>
               
               <Button 
