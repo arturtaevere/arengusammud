@@ -10,7 +10,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Input } from '@/components/ui/input';
-import { Search, ClipboardList, ArrowLeft, ChevronRight } from 'lucide-react';
+import { Search, ClipboardList, ArrowLeft } from 'lucide-react';
 import { competencies } from './competencies';
 
 interface CompetencyActionStepSelectorProps {
@@ -133,11 +133,10 @@ const CompetencyActionStepSelector = ({ onSelect, label, value }: CompetencyActi
                   <Button
                     key={comp.id}
                     variant="ghost"
-                    className="w-full justify-between text-left h-auto py-2 px-4 text-sm hover:bg-muted flex-wrap"
+                    className="w-full text-left h-auto py-2 px-3 text-sm hover:bg-muted"
                     onClick={() => handleCompetencySelect(comp.id)}
                   >
-                    <span className="font-medium text-left pr-2">{comp.name}</span>
-                    <ChevronRight className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                    <span className="font-medium block whitespace-normal text-left">{comp.name}</span>
                   </Button>
                 ))}
               </div>
