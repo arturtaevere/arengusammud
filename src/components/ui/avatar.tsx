@@ -1,3 +1,4 @@
+
 import * as React from "react"
 import * as AvatarPrimitive from "@radix-ui/react-avatar"
 
@@ -20,12 +21,20 @@ Avatar.displayName = AvatarPrimitive.Root.displayName
 
 const AvatarImage = React.forwardRef<
   React.ElementRef<typeof AvatarPrimitive.Image>,
-  React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Image>
->(({ className, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Image> & {
+    fallbackSrc?: string; // Add fallback source option
+  }
+>(({ className, fallbackSrc, ...props }, ref) => (
   <AvatarPrimitive.Image
     ref={ref}
-    className={cn("aspect-square h-full w-full", className)}
+    className={cn("aspect-square h-full w-full object-cover", className)}
     {...props}
+    onError={(e) => {
+      // If fallbackSrc is provided and image fails to load, use the fallback
+      if (fallbackSrc) {
+        e.currentTarget.src = fallbackSrc;
+      }
+    }}
   />
 ))
 AvatarImage.displayName = AvatarPrimitive.Image.displayName

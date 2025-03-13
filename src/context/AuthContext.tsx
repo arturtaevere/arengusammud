@@ -7,6 +7,7 @@ type User = {
   name: string;
   email: string;
   role: 'coach' | 'teacher';
+  profileImage?: string; // Add profileImage property
 };
 
 // Define the shape of our auth context
@@ -17,6 +18,7 @@ type AuthContextType = {
   login: (email: string, password: string) => Promise<void>;
   signup: (name: string, email: string, password: string, role: 'coach' | 'teacher') => Promise<void>;
   logout: () => void;
+  updateProfileImage: (imageUrl: string) => void; // Add method to update profile image
 };
 
 // Create the context with default values
@@ -27,6 +29,7 @@ const AuthContext = createContext<AuthContextType>({
   login: async () => {},
   signup: async () => {},
   logout: () => {},
+  updateProfileImage: () => {},
 });
 
 // Create a hook for using the context
@@ -40,6 +43,7 @@ const MOCK_USERS = [
     email: 'coach@example.com',
     password: 'password',
     role: 'coach' as const,
+    profileImage: '/lovable-uploads/6eae274c-d643-4822-ae8c-ba2410af6f2a.png',
   },
   {
     id: '2',
@@ -101,11 +105,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       name,
       email,
       role,
+      profileImage: '/lovable-uploads/6eae274c-d643-4822-ae8c-ba2410af6f2a.png',
     };
     
     setUser(newUser);
     localStorage.setItem('user', JSON.stringify(newUser));
     setIsLoading(false);
+  };
+
+  // Method to update profile image
+  const updateProfileImage = (imageUrl: string) => {
+    if (user) {
+      const updatedUser = { ...user, profileImage: imageUrl };
+      setUser(updatedUser);
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+    }
   };
 
   // Logout functionality
@@ -123,6 +137,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         login,
         signup,
         logout,
+        updateProfileImage,
       }}
     >
       {children}

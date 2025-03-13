@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
@@ -130,7 +129,15 @@ const Navbar = () => {
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="relative h-10 w-10 rounded-full">
                     <Avatar>
-                      <AvatarImage src={`https://avatar.vercel.sh/${user?.email}.png`} alt={user?.name} />
+                      {user?.profileImage ? (
+                        <AvatarImage 
+                          src={user.profileImage} 
+                          alt={user?.name} 
+                          fallbackSrc={`https://avatar.vercel.sh/${user?.email}.png`}
+                        />
+                      ) : (
+                        <AvatarImage src={`https://avatar.vercel.sh/${user?.email}.png`} alt={user?.name} />
+                      )}
                       <AvatarFallback>{user?.name ? getInitials(user.name) : 'K'}</AvatarFallback>
                     </Avatar>
                   </Button>
@@ -245,7 +252,15 @@ const Navbar = () => {
                   <div className="flex items-center px-3">
                     <div className="flex-shrink-0">
                       <Avatar>
-                        <AvatarImage src={`https://avatar.vercel.sh/${user?.email}.png`} alt={user?.name} />
+                        {user?.profileImage ? (
+                          <AvatarImage 
+                            src={user.profileImage} 
+                            alt={user?.name} 
+                            fallbackSrc={`https://avatar.vercel.sh/${user?.email}.png`}
+                          />
+                        ) : (
+                          <AvatarImage src={`https://avatar.vercel.sh/${user?.email}.png`} alt={user?.name} />
+                        )}
                         <AvatarFallback>{user?.name ? getInitials(user.name) : 'K'}</AvatarFallback>
                       </Avatar>
                     </div>
