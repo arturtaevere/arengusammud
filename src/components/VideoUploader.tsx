@@ -1,8 +1,9 @@
 
 import React, { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
-import { Upload, X } from 'lucide-react';
+import { Upload, X, Link as LinkIcon } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Input } from '@/components/ui/input';
 
 interface VideoUploaderProps {
   onVideoUploaded: (videoUrl: string) => void;
@@ -13,9 +14,15 @@ const VideoUploader: React.FC<VideoUploaderProps> = ({ onVideoUploaded, existing
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [videoPreview, setVideoPreview] = useState<string | null>(existingVideoUrl || null);
+  const [showUrlInput, setShowUrlInput] = useState(false);
+  const [youtubeUrl, setYoutubeUrl] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB max size
+
+  const isYouTubeUrl = (url: string): boolean => {
+    return url.includes('youtube.com') || url.includes('youtu.be');
+  };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setError(null);
@@ -39,12 +46,39 @@ const VideoUploader: React.FC<VideoUploaderProps> = ({ onVideoUploaded, existing
     }
   };
 
+  const handleYoutubeUrlSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+
+    if (!youtubeUrl.trim()) {
+      setError('Palun sisesta YouTube video URL');
+      return;
+    }
+
+    if (!isYouTubeUrl(youtubeUrl)) {
+      setError('Palun sisesta kehtiv YouTube URL');
+      return;
+    }
+
+    setVideoPreview(youtubeUrl);
+    onVideoUploaded(youtubeUrl);
+    setShowUrlInput(false);
+    setYoutubeUrl('');
+  };
+
   const clearVideo = () => {
     setVideoPreview(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
     onVideoUploaded('');
+    setShowUrlInput(false);
+    setYoutubeUrl('');
+  };
+
+  const toggleUrlInput = () => {
+    setShowUrlInput(!showUrlInput);
+    setError(null);
   };
 
   return (
@@ -56,7 +90,7 @@ const VideoUploader: React.FC<VideoUploaderProps> = ({ onVideoUploaded, existing
       )}
       
       {!videoPreview ? (
-        <div className="space-y-2">
+        <div className="space-y-4">
           <input
             type="file"
             ref={fileInputRef}
@@ -64,29 +98,62 @@ const VideoUploader: React.FC<VideoUploaderProps> = ({ onVideoUploaded, existing
             accept="video/*"
             onChange={handleFileChange}
           />
-          <Button 
-            onClick={() => fileInputRef.current?.click()}
-            disabled={isUploading}
-            className="w-full"
-          >
-            <Upload className="mr-2 h-4 w-4" />
-            {isUploading ? 'Üleslaadimine...' : 'Lae üles video'}
-          </Button>
+          
+          <div className="flex flex-col sm:flex-row gap-2">
+            <Button 
+              onClick={() => fileInputRef.current?.click()}
+              disabled={isUploading}
+              className="flex-1"
+            >
+              <Upload className="mr-2 h-4 w-4" />
+              {isUploading ? 'Üleslaadimine...' : 'Lae üles video'}
+            </Button>
+            
+            <Button 
+              variant="outline" 
+              onClick={toggleUrlInput}
+              className="flex-1"
+            >
+              <LinkIcon className="mr-2 h-4 w-4" />
+              Lisa YouTube video
+            </Button>
+          </div>
+          
+          {showUrlInput && (
+            <form onSubmit={handleYoutubeUrlSubmit} className="flex gap-2">
+              <Input
+                type="text"
+                placeholder="https://www.youtube.com/watch?v=..."
+                value={youtubeUrl}
+                onChange={(e) => setYoutubeUrl(e.target.value)}
+                className="flex-1"
+              />
+              <Button type="submit">Lisa</Button>
+            </form>
+          )}
+          
           <p className="text-xs text-muted-foreground text-center">
-            Maksimaalne failisuurus: 100MB. Toetatud formaadid: MP4, WebM, Ogg
+            Maksimaalne failisuurus: 100MB. Toetatud formaadid: MP4, WebM, Ogg või YouTube URL
           </p>
         </div>
       ) : (
         <div className="space-y-2">
           <div className="relative">
             <video 
-              className="w-full rounded-lg"
-              src={videoPreview}
+              className={`w-full rounded-lg ${isYouTubeUrl(videoPreview) ? 'hidden' : ''}`}
+              src={isYouTubeUrl(videoPreview) ? '' : videoPreview}
               controls
               preload="metadata"
             >
               Your browser does not support the video tag.
             </video>
+            
+            {isYouTubeUrl(videoPreview) && (
+              <div className="w-full aspect-video">
+                <VideoPlayer src={videoPreview} />
+              </div>
+            )}
+            
             <Button 
               variant="destructive" 
               size="icon"
