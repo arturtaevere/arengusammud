@@ -21,26 +21,32 @@ export default function Competences() {
     const loadData = () => {
       setIsLoading(true);
       try {
+        // Check if there's any imported data
+        const importedData = CSVImportService.getImportedData();
+        console.log('Imported data from storage:', Object.keys(importedData).length, 'items');
+        
         // Get all action steps, including imported ones
         const allActionSteps = convertActionStepsToCompetencesPageFormat();
         console.log('All action steps count:', allActionSteps.length);
         
         if (allActionSteps.length === 0) {
           console.log('No action steps found! Check imported data.');
-          // Try to access raw imported data to verify it exists
-          const rawImported = CSVImportService.getImportedData();
-          console.log('Raw imported data keys:', Object.keys(rawImported));
+          toast({
+            title: "Ei leitud arengusamme",
+            description: "Palun impordi arengusammud CSV failist",
+            variant: "destructive"
+          });
         }
         
         setActionSteps(allActionSteps);
         
-        // Update competence counts based on all action steps
+        // Update competence counts based on action steps
         const updatedCompetences = competencesWithCounts.map(comp => {
           // Make sure we're using the same category ID format when filtering
           const categorySteps = allActionSteps.filter(step => {
             const matches = step.category === comp.id;
             if (matches) {
-              console.log(`Found a step for category ${comp.id}:`, step);
+              console.log(`Found a step for category ${comp.id}:`, step.title);
             }
             return matches;
           });
@@ -100,6 +106,11 @@ export default function Competences() {
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
               <p className="text-muted-foreground">Laadin andmeid...</p>
             </div>
+          </div>
+        ) : actionSteps.length === 0 ? (
+          <div className="bg-muted p-8 rounded-lg text-center">
+            <p className="text-muted-foreground mb-4">Ühtegi arengusammu pole leitud.</p>
+            <p className="text-sm">Mine arengusammu detailvaatesse ja importi arengusammud CSV failist.</p>
           </div>
         ) : (
           <CompetenceList 

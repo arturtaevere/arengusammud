@@ -34,8 +34,15 @@ export const convertActionStepsToCompetencesPageFormat = () => {
   const importedActionSteps = CSVImportService.getImportedData();
   console.log('Raw imported data from storage:', importedActionSteps);
   
+  if (Object.keys(importedActionSteps).length === 0) {
+    console.log('No imported action steps found in storage');
+    return [];
+  }
+  
   // Convert imported action steps
   const importedSteps = Object.entries(importedActionSteps).map(([id, details]) => {
+    console.log(`Processing action step ${id} with category: ${details.category}`);
+    
     // Make sure we're using the category without the 'comp' prefix to match the expected format
     let categoryId = details.category;
     
@@ -44,7 +51,7 @@ export const convertActionStepsToCompetencesPageFormat = () => {
       const numericMatch = categoryId.match(/(\d+)/);
       if (numericMatch) {
         categoryId = numericMatch[1];
-        console.log(`Found numeric category: ${categoryId} from original: ${details.category}`);
+        console.log(`Extracted numeric category: ${categoryId} from original: ${details.category}`);
       } else if (categoryId.startsWith('comp')) {
         categoryId = categoryId.replace('comp', '');
         console.log(`Removed 'comp' prefix: ${categoryId} from original: ${details.category}`);
@@ -56,8 +63,8 @@ export const convertActionStepsToCompetencesPageFormat = () => {
       
     return {
       id: id,
-      title: details.title,
-      description: details.description,
+      title: details.title || 'Untitled',
+      description: details.description || '',
       category: categoryId,
       difficulty: details.difficulty || 'beginner',
       timeEstimate: details.timeEstimate || '15 min',
@@ -65,7 +72,7 @@ export const convertActionStepsToCompetencesPageFormat = () => {
     };
   });
   
-  console.log('Imported steps with correct categories:', importedSteps);
+  console.log('Processed steps with formatted categories:', importedSteps);
   
   // Return only imported action steps
   return importedSteps;
