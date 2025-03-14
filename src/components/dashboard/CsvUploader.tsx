@@ -133,6 +133,11 @@ const CsvUploader = ({ onUploadComplete }: CsvUploaderProps) => {
           Sammu kirjeldus;Kirjeldus<br />
           Edukriteerium;Kriteerium 1<br />
           Edukriteerium;Kriteerium 2<br />
+          ...<br />
+          Harjutusülesanne;Ülesanne 1<br />
+          Harjutusülesanne;Ülesanne 2<br />
+          ...<br />
+          Õpieesmärk;Uus kategooria<br />
           ...
         </p>
       </div>
