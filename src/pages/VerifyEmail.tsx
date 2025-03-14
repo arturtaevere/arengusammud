@@ -29,7 +29,13 @@ const VerifyEmail = () => {
         try {
           const success = await verifyEmail(id, token);
           setVerificationStatus(success ? 'success' : 'error');
+          
+          // If verification is successful, clear the pending email
+          if (success) {
+            console.log('Email verification successful');
+          }
         } catch (error) {
+          console.error('Error during verification:', error);
           setVerificationStatus('error');
         } finally {
           setVerifying(false);
@@ -46,6 +52,9 @@ const VerifyEmail = () => {
     setResending(true);
     try {
       await resendVerificationEmail(email);
+      console.log(`Verification email resent to ${email}`);
+    } catch (error) {
+      console.error('Error resending verification email:', error);
     } finally {
       setResending(false);
     }

@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useToast } from '@/components/ui/use-toast';
 import { User, UserWithPassword } from './types';
 import { USER_STORAGE_KEY, USERS_STORAGE_KEY, VERIFICATION_TOKENS_KEY } from './constants';
@@ -8,6 +8,27 @@ export const useAuthActions = () => {
   const [users, setUsers] = useState<UserWithPassword[]>([]);
   const [verificationTokens, setVerificationTokens] = useState<Record<string, string>>({});
   const { toast } = useToast();
+
+  // Load initial data from localStorage
+  useEffect(() => {
+    const storedUsers = localStorage.getItem(USERS_STORAGE_KEY);
+    if (storedUsers) {
+      try {
+        setUsers(JSON.parse(storedUsers));
+      } catch (error) {
+        console.error('Error parsing users:', error);
+      }
+    }
+
+    const storedTokens = localStorage.getItem(VERIFICATION_TOKENS_KEY);
+    if (storedTokens) {
+      try {
+        setVerificationTokens(JSON.parse(storedTokens));
+      } catch (error) {
+        console.error('Error parsing tokens:', error);
+      }
+    }
+  }, []);
 
   const saveUsers = (updatedUsers: UserWithPassword[]) => {
     localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(updatedUsers));
@@ -28,6 +49,9 @@ export const useAuthActions = () => {
 
   const verifyEmail = async (userId: string, token: string) => {
     await new Promise(resolve => setTimeout(resolve, 800));
+    
+    console.log(`Trying to verify userId: ${userId} with token: ${token}`);
+    console.log('Available tokens:', verificationTokens);
     
     if (verificationTokens[userId] === token) {
       const updatedUsers = users.map(u => {
@@ -72,6 +96,9 @@ export const useAuthActions = () => {
         title: "Kinnitusmeil saadetud",
         description: "Uus kinnitusmeil on saadetud. Palun kontrolli oma postkasti.",
       });
+      
+      // For development: Show verification link directly in UI
+      alert(`DEV MODE: Use this verification link: ${window.location.origin}/verify-email?id=${foundUser.id}&token=${token}`);
     } else {
       toast({
         variant: "destructive",
@@ -102,6 +129,10 @@ export const useAuthActions = () => {
       const token = generateVerificationToken(foundUser.id);
       console.log(`Verification token for ${foundUser.email}: ${token}`);
       console.log(`Verification link: ${window.location.origin}/verify-email?id=${foundUser.id}&token=${token}`);
+      
+      // For development: Show verification link directly in UI
+      alert(`DEV MODE: Use this verification link: ${window.location.origin}/verify-email?id=${foundUser.id}&token=${token}`);
+      
       throw new Error('E-posti aadress pole kinnitatud. Palun kontrolli oma postkasti kinnituslingi jaoks.');
     }
     

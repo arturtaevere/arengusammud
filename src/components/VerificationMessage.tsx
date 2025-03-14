@@ -39,9 +39,12 @@ const VerificationMessage = ({ email }: VerificationMessageProps) => {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <p className="text-center text-muted-foreground">
+        <p className="text-center text-muted-foreground mb-4">
           Palun kontrolli oma postkasti ja kliki kirjas oleval kinnituslinkil.
           Kui sa ei leia meie kirja, kontrolli ka rämpsposti kausta.
+        </p>
+        <p className="text-center text-sm text-muted-foreground">
+          <em>Arendusrežiimis: Verifitseerimislink kuvatakse brauseri konsoolis (F12) ja hüpikaknas.</em>
         </p>
       </CardContent>
       <CardFooter className="flex flex-col space-y-2">
