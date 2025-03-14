@@ -1,5 +1,6 @@
+
 // Add the necessary code here without modifying the existing functionality
-import { competenciesData, getCompetenceTitle } from "@/data/competencesData";
+import { competences, getCompetenceTitle } from "@/data/competencesData";
 import { ActionStepsService } from "@/services/ActionStepsService";
 import { CSVImportService } from "@/services/csvImport";
 import { ActionStepDetailsCollection } from "@/services/actionStepDetails/types";
@@ -9,11 +10,11 @@ import { generateId } from "@/services/csvImport/utils";
  * Convert competence data to format needed for CompetencesPage
  */
 export const convertToCompetencesPageFormat = () => {
-  return competenciesData.map((competence) => ({
+  return competences.map((competence) => ({
     id: competence.id,
     title: competence.title,
-    description: competence.description,
-    icon: competence.icon,
+    description: competence.description || '', // Add fallback for missing description
+    icon: competence.icon || '', // Add fallback for missing icon
     count: 0 // Will be populated with actual counts later
   }));
 };
@@ -37,8 +38,8 @@ export const convertActionStepsToCompetencesPageFormat = () => {
     let categoryId = data.category;
     
     // If category is a title, try to find the ID
-    competenciesData.forEach(comp => {
-      if (comp.title.toLowerCase() === data.category.toLowerCase()) {
+    competences.forEach(comp => {
+      if (comp.title && comp.title.toLowerCase() === data.category.toLowerCase()) {
         categoryId = comp.id;
       }
     });
@@ -57,4 +58,13 @@ export const convertActionStepsToCompetencesPageFormat = () => {
   
   console.log('Converted imported action steps:', result.length);
   return result;
+};
+
+/**
+ * Create a stub for convertToDashboardFormat to fix the export issue
+ */
+export const convertToDashboardFormat = () => {
+  // This is a placeholder to satisfy the import in competencyAdapter.ts
+  // Implement the actual functionality as needed
+  return [];
 };
