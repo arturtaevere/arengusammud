@@ -19,7 +19,6 @@ const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // Check if window has been scrolled
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
@@ -28,12 +27,10 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close mobile menu on route change
   useEffect(() => {
     setMobileMenuOpen(false);
   }, [location.pathname]);
 
-  // Get initials for avatar
   const getInitials = (name: string) => {
     return name
       .split(' ')
@@ -42,7 +39,6 @@ const Navbar = () => {
       .toUpperCase();
   };
 
-  // For debugging - log user details
   useEffect(() => {
     if (user) {
       console.log('User in Navbar:', user);
@@ -50,7 +46,6 @@ const Navbar = () => {
     }
   }, [user]);
 
-  // Conditionally set navbar styles
   const navbarClasses = `fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
     isScrolled || isAuthenticated 
       ? 'py-2 glass shadow-sm' 
@@ -61,7 +56,6 @@ const Navbar = () => {
     <header className={navbarClasses}>
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          {/* Logo */}
           <Link to="/" className="flex items-center space-x-2 transition-opacity hover:opacity-80">
             <img 
               src="/lovable-uploads/89481257-304f-4313-93a8-76b507d1a8ee.png" 
@@ -71,7 +65,6 @@ const Navbar = () => {
             <span className="font-semibold text-xl tracking-tight">Arengusammud</span>
           </Link>
 
-          {/* Desktop Navigation */}
           <nav className="hidden md:flex space-x-8">
             {isAuthenticated ? (
               <>
@@ -82,7 +75,7 @@ const Navbar = () => {
                   }`}
                 >
                   <BookOpen className="mr-2 h-5 w-5" />
-                  Õpieesmärgid
+                  Sisu
                 </Link>
                 <Link 
                   to="/observations" 
@@ -125,7 +118,6 @@ const Navbar = () => {
             )}
           </nav>
 
-          {/* Auth Buttons / User Menu */}
           <div className="hidden md:flex items-center space-x-4">
             {isAuthenticated ? (
               <DropdownMenu>
@@ -180,7 +172,6 @@ const Navbar = () => {
             )}
           </div>
 
-          {/* Mobile Menu Button */}
           <div className="md:hidden">
             <Button 
               variant="ghost" 
@@ -198,7 +189,6 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Menu */}
       {mobileMenuOpen && (
         <div className="md:hidden glass animate-fade-in">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
@@ -214,7 +204,7 @@ const Navbar = () => {
                 >
                   <div className="flex items-center">
                     <BookOpen className="mr-2 h-5 w-5" />
-                    Õpieesmärgid
+                    Sisu
                   </div>
                 </Link>
                 <Link 
@@ -242,7 +232,7 @@ const Navbar = () => {
                     <LayoutDashboard className="mr-2 h-5 w-5" />
                     Töölaud
                   </div>
-                </Link>
+                </div>
                 <div className="pt-4 pb-2">
                   <div className="flex items-center px-3">
                     <div className="flex-shrink-0">
