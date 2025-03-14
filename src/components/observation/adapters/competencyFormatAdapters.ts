@@ -7,13 +7,16 @@ import { actionSteps } from '@/data/actionStepsData';
 // Convert a competency from the standard format to the format used in the Competences page
 export const convertToCompetencesPageFormat = () => {
   return competencies.map(comp => {
+    // Get the proper category ID by removing 'comp' prefix
+    const categoryId = comp.id.replace('comp', '');
+    
     // Find action steps for this competency
     const stepsForCompetency = actionSteps.filter(
-      step => step.category === comp.id.replace('comp', '')
+      step => step.category === categoryId
     );
     
     return {
-      id: comp.id.replace('comp', ''),
+      id: categoryId,
       title: comp.name,
       description: getCompetencyDescription(comp.id),
       count: stepsForCompetency.length,
@@ -40,6 +43,7 @@ export const convertActionStepsToCompetencesPageFormat = () => {
   // First check if we have action steps from the data module
   if (actionSteps && actionSteps.length > 0) {
     console.log("Using action steps from data module:", actionSteps.length);
+    
     // Map through each action step and ensure it has all required properties
     return actionSteps.map(step => ({
       id: step.id,

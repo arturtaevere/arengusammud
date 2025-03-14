@@ -19,8 +19,9 @@ export default function Competences() {
 
   // Debug logging to check data
   console.log("Action steps from data module:", actionSteps);
-  console.log("Competences page action steps data:", actionStepsData);
-  console.log("Number of action steps:", actionStepsData.length);
+  console.log("Original action steps count:", actionSteps.length);
+  console.log("Converted action steps data:", actionStepsData);
+  console.log("Number of action steps after conversion:", actionStepsData.length);
   
   useEffect(() => {
     // Make sure we're getting fresh data
@@ -43,6 +44,13 @@ export default function Competences() {
 
   const toggleCategory = (id: string) => {
     setExpandedCategory(expandedCategory === id ? null : id);
+    
+    // Log for debugging
+    console.log(`Toggling category ${id}`);
+    if (expandedCategory !== id) {
+      const categorySteps = actionStepsData.filter(step => step.category === id);
+      console.log(`Category ${id} has ${categorySteps.length} steps:`, categorySteps);
+    }
   };
 
   const toggleStepsExpansion = (id: string, e: React.MouseEvent) => {
