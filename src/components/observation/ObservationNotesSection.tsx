@@ -1,4 +1,3 @@
-
 import { FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
@@ -22,10 +21,6 @@ const ObservationNotesSection = ({ form, isSubmitting }: ObservationNotesSection
   
   const actionStepValue = form.watch('nextActionStep');
   
-  const handleChangeActionStep = () => {
-    setSheetOpen(true);
-  };
-  
   return (
     <Card>
       <CardHeader>
@@ -35,12 +30,12 @@ const ObservationNotesSection = ({ form, isSubmitting }: ObservationNotesSection
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-0 overflow-hidden">
           <FormField
             control={form.control}
             name="teacherNotes"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="md:pr-1">
                 <FormLabel>
                   <span className="flex items-center">
                     <MessageSquare className="h-4 w-4 mr-2" />
@@ -63,7 +58,7 @@ const ObservationNotesSection = ({ form, isSubmitting }: ObservationNotesSection
             control={form.control}
             name="studentNotes"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="md:pl-1">
                 <FormLabel>
                   <span className="flex items-center">
                     <MessageSquare className="h-4 w-4 mr-2" />
@@ -161,7 +156,7 @@ const ObservationNotesSection = ({ form, isSubmitting }: ObservationNotesSection
                     type="button"
                     variant="outline"
                     size="sm"
-                    onClick={handleChangeActionStep}
+                    onClick={() => setSheetOpen(true)}
                   >
                     <ArrowLeftRight className="h-4 w-4 mr-2" />
                     Vali uus samm
@@ -193,7 +188,6 @@ const ObservationNotesSection = ({ form, isSubmitting }: ObservationNotesSection
         </Button>
       </CardFooter>
 
-      {/* Action step selector directly integrated */}
       <CompetencyActionStepSelector
         label="Vali järgmine arengusamm..."
         value={actionStepValue}
