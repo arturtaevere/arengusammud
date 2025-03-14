@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { BookOpen, ClipboardList, LayoutDashboard } from 'lucide-react';
+import { BookOpen, ClipboardList, LayoutDashboard, Users } from 'lucide-react';
 
 interface MobileMenuProps {
   getInitials: (name: string) => string;
@@ -12,6 +12,7 @@ interface MobileMenuProps {
 const MobileMenu = ({ getInitials }: MobileMenuProps) => {
   const { user, logout } = useAuth();
   const location = useLocation();
+  const isCoach = user?.role === 'coach';
 
   return (
     <div className="md:hidden glass animate-fade-in">
@@ -57,6 +58,21 @@ const MobileMenu = ({ getInitials }: MobileMenuProps) => {
                 Töölaud
               </div>
             </Link>
+            {isCoach && (
+              <Link 
+                to="/admin" 
+                className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
+                  location.pathname === '/admin' 
+                    ? 'bg-primary text-primary-foreground' 
+                    : 'hover:bg-gray-100'
+                }`}
+              >
+                <div className="flex items-center">
+                  <Users className="mr-2 h-5 w-5" />
+                  Haldus
+                </div>
+              </Link>
+            )}
             <div className="pt-4 pb-2">
               <div className="flex items-center px-3">
                 <div className="flex-shrink-0">

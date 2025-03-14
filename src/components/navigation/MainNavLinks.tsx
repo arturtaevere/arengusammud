@@ -1,39 +1,61 @@
 
 import { Link, useLocation } from 'react-router-dom';
-import { BookOpen, ClipboardList, LayoutDashboard } from 'lucide-react';
+import { BookOpen, ClipboardList, LayoutDashboard, Users } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
 
 const MainNavLinks = () => {
   const location = useLocation();
-  
+  const { user } = useAuth();
+  const isCoach = user?.role === 'coach';
+
   return (
-    <nav className="hidden md:flex space-x-8">
+    <nav className="hidden md:flex items-center space-x-8">
       <Link 
         to="/competences" 
-        className={`transition-all hover:text-primary flex items-center ${
-          location.pathname === '/competences' || location.pathname === '/action-steps' || location.pathname.includes('/action-steps/') ? 'text-primary font-medium' : ''
+        className={`flex items-center transition-colors ${
+          location.pathname === '/competences' || location.pathname === '/action-steps' || location.pathname.includes('/action-steps/') 
+            ? 'text-primary font-medium' 
+            : 'text-foreground/70 hover:text-foreground'
         }`}
       >
-        <BookOpen className="mr-2 h-5 w-5" />
-        Sisu
+        <BookOpen className="mr-2 h-4 w-4" />
+        <span>Sisu</span>
       </Link>
       <Link 
         to="/observations" 
-        className={`transition-all hover:text-primary flex items-center ${
-          location.pathname.includes('/observations') ? 'text-primary font-medium' : ''
+        className={`flex items-center transition-colors ${
+          location.pathname.includes('/observations') 
+            ? 'text-primary font-medium' 
+            : 'text-foreground/70 hover:text-foreground'
         }`}
       >
-        <ClipboardList className="mr-2 h-5 w-5" />
-        Vaatlused ja tagasiside
+        <ClipboardList className="mr-2 h-4 w-4" />
+        <span>Vaatlused</span>
       </Link>
       <Link 
         to="/dashboard" 
-        className={`transition-all hover:text-primary flex items-center ${
-          location.pathname === '/dashboard' ? 'text-primary font-medium' : ''
+        className={`flex items-center transition-colors ${
+          location.pathname === '/dashboard' 
+            ? 'text-primary font-medium' 
+            : 'text-foreground/70 hover:text-foreground'
         }`}
       >
-        <LayoutDashboard className="mr-2 h-5 w-5" />
-        Töölaud
+        <LayoutDashboard className="mr-2 h-4 w-4" />
+        <span>Töölaud</span>
       </Link>
+      {isCoach && (
+        <Link 
+          to="/admin" 
+          className={`flex items-center transition-colors ${
+            location.pathname === '/admin' 
+              ? 'text-primary font-medium' 
+              : 'text-foreground/70 hover:text-foreground'
+          }`}
+        >
+          <Users className="mr-2 h-4 w-4" />
+          <span>Haldus</span>
+        </Link>
+      )}
     </nav>
   );
 };

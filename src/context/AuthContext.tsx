@@ -1,5 +1,6 @@
 
 import React, { createContext, useState, useContext, useEffect } from 'react';
+import { useToast } from '@/components/ui/use-toast';
 
 // Define the shape of our user object
 type User = {
@@ -9,6 +10,7 @@ type User = {
   role: 'coach' | 'teacher';
   profileImage?: string;
   school?: string;
+  createdAt: string;
 };
 
 // Define the shape of our auth context
@@ -20,6 +22,7 @@ type AuthContextType = {
   signup: (name: string, email: string, password: string, role: 'coach' | 'teacher', school?: string) => Promise<void>;
   logout: () => void;
   updateProfileImage: (imageUrl: string) => void;
+  getAllUsers: () => User[];
 };
 
 // Create the context with default values
@@ -31,6 +34,7 @@ const AuthContext = createContext<AuthContextType>({
   signup: async () => {},
   logout: () => {},
   updateProfileImage: () => {},
+  getAllUsers: () => [],
 });
 
 // Create a hook for using the context
@@ -41,10 +45,13 @@ export const SCHOOLS = [
   'Arengusammud',
   'Järveküla Kool',
   'Kilingi-Nõmme Gümnaasium',
+  'Tartu Kesklinna Kool',
+  'Tallinna Reaalkool',
+  'Pärnu Koidula Gümnaasium',
 ];
 
-// Mock user data for demonstration
-const MOCK_USERS = [
+// Initial test users
+const INITIAL_USERS = [
   {
     id: '1',
     name: 'Jane Smith',
@@ -53,6 +60,7 @@ const MOCK_USERS = [
     role: 'coach' as const,
     profileImage: '/lovable-uploads/6eae274c-d643-4822-ae8c-ba2410af6f2a.png',
     school: 'Arengusammud',
+    createdAt: new Date(2023, 4, 15).toISOString(),
   },
   {
     id: '2',
@@ -61,6 +69,7 @@ const MOCK_USERS = [
     password: 'password',
     role: 'teacher' as const,
     school: 'Järveküla Kool',
+    createdAt: new Date(2023, 5, 20).toISOString(),
   },
   {
     id: '3',
@@ -70,97 +79,167 @@ const MOCK_USERS = [
     role: 'coach' as const,
     profileImage: '/lovable-uploads/6eae274c-d643-4822-ae8c-ba2410af6f2a.png',
     school: 'Arengusammud',
+    createdAt: new Date(2023, 6, 10).toISOString(),
+  },
+  {
+    id: '4',
+    name: 'Maarja Raud',
+    email: 'maarja@kesklinnakool.ee',
+    password: 'password',
+    role: 'teacher' as const,
+    school: 'Tartu Kesklinna Kool',
+    createdAt: new Date(2023, 7, 5).toISOString(),
+  },
+  {
+    id: '5',
+    name: 'Tiit Mets',
+    email: 'tiit@reaalkool.ee',
+    password: 'password',
+    role: 'teacher' as const,
+    school: 'Tallinna Reaalkool',
+    createdAt: new Date(2023, 8, 12).toISOString(),
   },
 ];
+
+// Local storage key for users
+const USERS_STORAGE_KEY = 'arengusammud_users';
+// Local storage key for current user
+const USER_STORAGE_KEY = 'user';
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [users, setUsers] = useState<Array<User & { password: string }>>([]);
+  const { toast } = useToast();
+
+  // Initialize users from localStorage or use the initial test users
+  useEffect(() => {
+    const initializeUsers = () => {
+      const storedUsers = localStorage.getItem(USERS_STORAGE_KEY);
+      
+      if (storedUsers) {
+        try {
+          const parsedUsers = JSON.parse(storedUsers);
+          setUsers(parsedUsers);
+          console.log(`Loaded ${parsedUsers.length} users from localStorage`);
+        } catch (error) {
+          console.error("Error parsing users from localStorage:", error);
+          setUsers(INITIAL_USERS);
+          localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(INITIAL_USERS));
+        }
+      } else {
+        // First time: initialize with test users
+        console.log("Initializing with test users");
+        setUsers(INITIAL_USERS);
+        localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(INITIAL_USERS));
+      }
+    };
+
+    initializeUsers();
+  }, []);
 
   // Check if user is already logged in on mount
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
+    const storedUser = localStorage.getItem(USER_STORAGE_KEY);
     if (storedUser) {
       try {
         const parsedUser = JSON.parse(storedUser);
         
-        // Find the user in MOCK_USERS to ensure we have all properties
-        const mockUser = MOCK_USERS.find(u => u.email === parsedUser.email);
-        
-        if (mockUser) {
-          // Always apply the profile image from the mock user data
-          parsedUser.profileImage = mockUser.profileImage;
-          
-          // Set the school if it's missing
-          if (mockUser.school && !parsedUser.school) {
-            parsedUser.school = mockUser.school;
-          }
-          
-          // Update localStorage with the enhanced user data
-          localStorage.setItem('user', JSON.stringify(parsedUser));
-        }
-        
-        // Ensure the user has all the required properties
-        console.log('Setting user with profile image:', parsedUser.profileImage);
+        // Set the user
         setUser(parsedUser);
+        console.log('User logged in:', parsedUser.name);
       } catch (error) {
         // Handle parsing error gracefully
         console.error("Error parsing user from localStorage:", error);
-        localStorage.removeItem('user');
+        localStorage.removeItem(USER_STORAGE_KEY);
       }
     }
     setIsLoading(false);
   }, []);
 
-  // Mock login functionality
+  // Helper to save users to localStorage
+  const saveUsers = (updatedUsers: Array<User & { password: string }>) => {
+    localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(updatedUsers));
+    setUsers(updatedUsers);
+  };
+
+  // Get all users (without passwords)
+  const getAllUsers = () => {
+    return users.map(({ password, ...user }) => user);
+  };
+
+  // Login functionality
   const login = async (email: string, password: string) => {
     setIsLoading(true);
     
     // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise(resolve => setTimeout(resolve, 800));
     
-    const foundUser = MOCK_USERS.find(u => u.email === email && u.password === password);
+    const foundUser = users.find(u => u.email.toLowerCase() === email.toLowerCase() && u.password === password);
     
     if (!foundUser) {
       setIsLoading(false);
-      throw new Error('Invalid credentials');
+      throw new Error('Vale e-post või parool');
     }
     
-    // Copy all properties EXCEPT password to userWithoutPassword
+    // Copy all properties EXCEPT password
     const { password: _, ...userWithoutPassword } = foundUser;
     
-    // Log the profile image during login for debugging
-    console.log('Login: Using profile image:', userWithoutPassword.profileImage);
-    
     setUser(userWithoutPassword);
-    localStorage.setItem('user', JSON.stringify(userWithoutPassword));
+    localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(userWithoutPassword));
     setIsLoading(false);
+
+    toast({
+      title: "Sisselogimine õnnestus",
+      description: `Tere tulemast, ${userWithoutPassword.name}!`,
+    });
   };
 
-  // Mock signup functionality
+  // Signup functionality
   const signup = async (name: string, email: string, password: string, role: 'coach' | 'teacher', school?: string) => {
     setIsLoading(true);
     
     // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise(resolve => setTimeout(resolve, 800));
     
-    if (MOCK_USERS.some(u => u.email === email)) {
+    // Check if email already exists
+    if (users.some(u => u.email.toLowerCase() === email.toLowerCase())) {
       setIsLoading(false);
-      throw new Error('Email already exists');
+      throw new Error('Selle e-posti aadressiga kasutaja on juba olemas');
     }
 
-    // Create new user with school field for both roles
+    // Validate school for teachers
+    if (role === 'teacher' && !school) {
+      setIsLoading(false);
+      throw new Error('Õpetaja peab valima kooli');
+    }
+
+    // Create new user
     const newUser = {
       id: Math.random().toString(36).substr(2, 9),
       name,
       email,
+      password,
       role,
-      school, // Store school for all users now
+      school,
+      createdAt: new Date().toISOString(),
     };
     
-    setUser(newUser);
-    localStorage.setItem('user', JSON.stringify(newUser));
+    // Add user to the users array
+    const updatedUsers = [...users, newUser];
+    saveUsers(updatedUsers);
+    
+    // Log in the new user
+    const { password: _, ...userWithoutPassword } = newUser;
+    setUser(userWithoutPassword);
+    localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(userWithoutPassword));
+    
     setIsLoading(false);
+
+    toast({
+      title: "Registreerimine õnnestus",
+      description: `Tere tulemast, ${name}!`,
+    });
   };
 
   // Method to update profile image
@@ -168,15 +247,37 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (user) {
       const updatedUser = { ...user, profileImage: imageUrl };
       console.log('Updating profile image to:', imageUrl);
+      
+      // Update current user
       setUser(updatedUser);
-      localStorage.setItem('user', JSON.stringify(updatedUser));
+      localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(updatedUser));
+      
+      // Update in users array
+      const updatedUsers = users.map(u => {
+        if (u.id === user.id) {
+          return { ...u, profileImage: imageUrl };
+        }
+        return u;
+      });
+      
+      saveUsers(updatedUsers);
+      
+      toast({
+        title: "Profiilipilt uuendatud",
+        description: "Sinu profiilipilt on edukalt uuendatud.",
+      });
     }
   };
 
   // Logout functionality
   const logout = () => {
     setUser(null);
-    localStorage.removeItem('user');
+    localStorage.removeItem(USER_STORAGE_KEY);
+    
+    toast({
+      title: "Väljalogimine õnnestus",
+      description: "Oled edukalt välja logitud.",
+    });
   };
 
   return (
@@ -189,6 +290,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         signup,
         logout,
         updateProfileImage,
+        getAllUsers,
       }}
     >
       {children}

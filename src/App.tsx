@@ -13,6 +13,7 @@ import ActionSteps from "./pages/ActionSteps";
 import ActionStepDetail from "./pages/ActionStepDetail";
 import Profile from "./pages/Profile";
 import Observations from "./pages/Observations";
+import Admin from "./pages/Admin";
 import { AuthProvider } from "./context/AuthContext";
 
 const queryClient = new QueryClient();
@@ -32,6 +33,7 @@ const App = () => (
             <Route path="/action-steps" element={<ActionSteps />} />
             <Route path="/action-steps/:stepId" element={<ActionStepDetail />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/admin" element={<Admin />} />
             <Route path="/observations" element={<Observations />} />
             <Route path="/observations/:id" element={<Dashboard />} /> {/* Will implement later */}
             <Route path="/observations/new" element={<Observations />} />
