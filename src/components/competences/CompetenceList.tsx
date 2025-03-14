@@ -15,7 +15,7 @@ interface ActionStep {
   title: string;
   description: string;
   category: string;
-  difficulty: string;
+  difficulty?: string;
   timeEstimate: string;
   resources: { title: string; url: string }[];
 }
@@ -37,10 +37,14 @@ const CompetenceList = ({
   onToggleCategory,
   onToggleStepsExpansion
 }: CompetenceListProps) => {
+  // Debug logging for diagnostics
+  console.log("CompetenceList received action steps:", actionSteps.length);
+  
   return (
     <div className="grid grid-cols-1 gap-4 md:gap-6">
       {competences.map((competence) => {
         const categorySteps = actionSteps.filter(step => step.category === competence.id);
+        console.log(`Filtering steps for category ${competence.id} (${competence.title}):`, categorySteps.length);
         const isStepsExpanded = expandedSteps[competence.id] || false;
         
         return (

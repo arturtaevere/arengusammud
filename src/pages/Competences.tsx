@@ -19,16 +19,19 @@ export default function Competences() {
 
   // Debug logging to check data
   console.log("Action steps from data module:", actionSteps);
-  console.log("Converted action steps:", actionStepsData);
+  console.log("Competences page action steps data:", actionStepsData);
+  console.log("Number of action steps:", actionStepsData.length);
   
   useEffect(() => {
     // Make sure we're getting fresh data
     const steps = convertActionStepsToCompetencesPageFormat();
+    console.log("Steps from converter:", steps);
     setActionStepsData(steps);
     
     // Update competence counts based on actual action steps
     const updatedCompetences = convertToCompetencesPageFormat().map(comp => {
       const stepsCount = steps.filter(step => step.category === comp.id).length;
+      console.log(`Competence ${comp.id} (${comp.title}) has ${stepsCount} steps`);
       return {
         ...comp,
         count: stepsCount

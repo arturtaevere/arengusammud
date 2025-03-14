@@ -28,6 +28,9 @@ const ActionStepsList = ({
   isExpanded, 
   onToggleExpansion 
 }: ActionStepsListProps) => {
+  // Add debugging to see if steps are being passed correctly
+  console.log(`ActionStepsList for competence ${competenceId} received ${steps?.length || 0} steps`);
+  
   if (!steps || steps.length === 0) {
     return (
       <div className="bg-slate-50 p-4 rounded-lg border border-slate-100 text-center">

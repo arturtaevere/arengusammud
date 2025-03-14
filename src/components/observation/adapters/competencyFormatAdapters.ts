@@ -40,6 +40,7 @@ export const convertActionStepsToCompetencesPageFormat = () => {
   // First check if we have action steps from the data module
   if (actionSteps && actionSteps.length > 0) {
     console.log("Using action steps from data module:", actionSteps.length);
+    // Map through each action step and ensure it has all required properties
     return actionSteps.map(step => ({
       id: step.id,
       title: step.title,
