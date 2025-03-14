@@ -32,21 +32,35 @@ export const convertToDashboardFormat = () => {
 export const convertActionStepsToCompetencesPageFormat = () => {
   // Get imported action steps only
   const importedActionSteps = CSVImportService.getImportedData();
+  console.log('Raw imported data from storage:', importedActionSteps);
   
   // Convert imported action steps
   const importedSteps = Object.entries(importedActionSteps).map(([id, details]) => {
     // Make sure we're using the category without the 'comp' prefix to match the expected format
-    const categoryId = details.category.startsWith('comp') 
-      ? details.category.replace('comp', '') 
-      : details.category;
+    let categoryId = details.category;
+    
+    if (typeof categoryId === 'string') {
+      // First try to extract a numeric part if the category is something like "comp1" or "1"
+      const numericMatch = categoryId.match(/(\d+)/);
+      if (numericMatch) {
+        categoryId = numericMatch[1];
+        console.log(`Found numeric category: ${categoryId} from original: ${details.category}`);
+      } else if (categoryId.startsWith('comp')) {
+        categoryId = categoryId.replace('comp', '');
+        console.log(`Removed 'comp' prefix: ${categoryId} from original: ${details.category}`);
+      }
+    } else {
+      console.log(`Category is not a string: ${typeof categoryId}`);
+      categoryId = '1'; // Default to category 1 if we can't determine the category
+    }
       
     return {
       id: id,
       title: details.title,
       description: details.description,
       category: categoryId,
-      difficulty: details.difficulty,
-      timeEstimate: details.timeEstimate,
+      difficulty: details.difficulty || 'beginner',
+      timeEstimate: details.timeEstimate || '15 min',
       resources: []
     };
   });
