@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
@@ -11,7 +10,7 @@ import { format } from 'date-fns';
 import { et } from 'date-fns/locale';
 import { Badge } from '@/components/ui/badge';
 import { SCHOOLS } from '@/context/AuthContext';
-import { Filter } from 'lucide-react';
+import { Filter, Trash2 } from 'lucide-react';
 import { 
   Select,
   SelectContent,
@@ -20,6 +19,18 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { useToast } from '@/components/ui/use-toast';
 
 type User = {
   id: string;
@@ -32,15 +43,16 @@ type User = {
 };
 
 const Admin = () => {
-  const { user, isAuthenticated, getAllUsers } = useAuth();
+  const { user, isAuthenticated, getAllUsers, deleteUserByEmail } = useAuth();
   const navigate = useNavigate();
   const [users, setUsers] = useState<User[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
   const [filterRole, setFilterRole] = useState<string>('all');
   const [filterSchool, setFilterSchool] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState<string>('');
+  const [userToDelete, setUserToDelete] = useState<string | null>(null);
+  const { toast } = useToast();
 
-  // Check if user is authenticated and is a coach
   useEffect(() => {
     if (!isAuthenticated) {
       navigate('/auth');
@@ -49,7 +61,6 @@ const Admin = () => {
     }
   }, [isAuthenticated, user, navigate]);
 
-  // Load users
   useEffect(() => {
     if (isAuthenticated && user?.role === 'coach') {
       const allUsers = getAllUsers();
@@ -58,21 +69,17 @@ const Admin = () => {
     }
   }, [isAuthenticated, user, getAllUsers]);
 
-  // Apply filters and search
   useEffect(() => {
     let result = users;
     
-    // Filter by role
     if (filterRole !== 'all') {
       result = result.filter(user => user.role === filterRole);
     }
     
-    // Filter by school
     if (filterSchool !== 'all') {
       result = result.filter(user => user.school === filterSchool);
     }
     
-    // Search by name or email
     if (searchTerm) {
       const term = searchTerm.toLowerCase();
       result = result.filter(
@@ -85,7 +92,6 @@ const Admin = () => {
     setFilteredUsers(result);
   }, [users, filterRole, filterSchool, searchTerm]);
 
-  // Format date
   const formatDate = (dateString: string) => {
     try {
       return format(new Date(dateString), 'd. MMM yyyy', { locale: et });
@@ -94,13 +100,24 @@ const Admin = () => {
     }
   };
 
-  // Get initials for avatar
   const getInitials = (name: string) => {
     return name
       .split(' ')
       .map(part => part[0])
       .join('')
       .toUpperCase();
+  };
+
+  const handleDeleteUser = async () => {
+    if (userToDelete) {
+      const success = await deleteUserByEmail(userToDelete);
+      if (success) {
+        const allUsers = getAllUsers();
+        setUsers(allUsers);
+        setFilteredUsers(allUsers);
+      }
+      setUserToDelete(null);
+    }
   };
 
   if (!isAuthenticated || user?.role !== 'coach') {
@@ -182,6 +199,7 @@ const Admin = () => {
                   <TableHead>Roll</TableHead>
                   <TableHead>Kool</TableHead>
                   <TableHead>Liitumiskuupäev</TableHead>
+                  <TableHead>Tegevused</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -214,11 +232,44 @@ const Admin = () => {
                       </TableCell>
                       <TableCell>{user.school || 'N/A'}</TableCell>
                       <TableCell>{formatDate(user.createdAt)}</TableCell>
+                      <TableCell>
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button 
+                              variant="ghost" 
+                              size="icon"
+                              onClick={() => setUserToDelete(user.email)}
+                            >
+                              <Trash2 className="h-4 w-4 text-red-500" />
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Kas olete kindel?</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                See tegevus kustutab kasutaja <span className="font-bold">{user.name}</span> ({user.email}) jäädavalt.
+                                Seda toimingut ei saa tagasi võtta.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel onClick={() => setUserToDelete(null)}>
+                                Tühista
+                              </AlertDialogCancel>
+                              <AlertDialogAction
+                                onClick={handleDeleteUser}
+                                className="bg-red-500 hover:bg-red-600"
+                              >
+                                Kustuta
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      </TableCell>
                     </TableRow>
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={4} className="text-center py-8">
+                    <TableCell colSpan={5} className="text-center py-8">
                       Kasutajaid ei leitud
                     </TableCell>
                   </TableRow>

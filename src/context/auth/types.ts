@@ -25,6 +25,7 @@ export type AuthContextType = {
   resendVerificationEmail: (email: string) => Promise<void>;
   pendingVerificationEmail: string | null;
   setPendingVerificationEmail: (email: string | null) => void;
+  deleteUserByEmail: (email: string) => Promise<boolean>;
 };
 
 // User with password (for internal use)
