@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from '@/components/ui/button';
 import { Mail, ArrowRight, Loader2 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 type VerificationMessageProps = {
   email: string;
@@ -13,6 +13,23 @@ type VerificationMessageProps = {
 const VerificationMessage = ({ email }: VerificationMessageProps) => {
   const { resendVerificationEmail, setPendingVerificationEmail } = useAuth();
   const [resending, setResending] = useState(false);
+  const [verificationUrl, setVerificationUrl] = useState<string | null>(null);
+  
+  // Listen for verification URL in console logs
+  useEffect(() => {
+    const originalConsoleLog = console.log;
+    console.log = function(...args) {
+      originalConsoleLog.apply(console, args);
+      // Check if this is a verification link log
+      if (typeof args[0] === 'string' && args[0].includes('Verification link:') && args[1]) {
+        setVerificationUrl(args[1]);
+      }
+    };
+    
+    return () => {
+      console.log = originalConsoleLog;
+    };
+  }, []);
   
   const handleResend = async () => {
     setResending(true);
@@ -43,9 +60,18 @@ const VerificationMessage = ({ email }: VerificationMessageProps) => {
           Palun kontrolli oma postkasti ja kliki kirjas oleval kinnituslinkil.
           Kui sa ei leia meie kirja, kontrolli ka rämpsposti kausta.
         </p>
-        <p className="text-center text-sm text-muted-foreground">
+        <p className="text-center text-sm text-muted-foreground mb-2">
           <em>Arendusrežiimis: Verifitseerimislink kuvatakse brauseri konsoolis (F12) ja hüpikaknas.</em>
         </p>
+        
+        {verificationUrl && (
+          <div className="mt-4 p-3 bg-muted/50 rounded-md">
+            <p className="text-sm font-medium mb-2">Arendusrežiimi link:</p>
+            <Link to={verificationUrl} className="text-sm break-all text-primary hover:underline">
+              {verificationUrl}
+            </Link>
+          </div>
+        )}
       </CardContent>
       <CardFooter className="flex flex-col space-y-2">
         <Button 

@@ -9,7 +9,7 @@ import { Mail, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 
 const VerifyEmail = () => {
   const [searchParams] = useSearchParams();
-  const { verifyEmail, resendVerificationEmail, pendingVerificationEmail } = useAuth();
+  const { verifyEmail, resendVerificationEmail, pendingVerificationEmail, setPendingVerificationEmail } = useAuth();
   const navigate = useNavigate();
   
   const [verifying, setVerifying] = useState(false);
@@ -27,12 +27,15 @@ const VerifyEmail = () => {
         setVerifying(true);
         setVerificationStatus('verifying');
         try {
+          console.log(`Starting verification process with id: ${id}, token: ${token}`);
           const success = await verifyEmail(id, token);
+          console.log(`Verification result: ${success ? 'success' : 'failure'}`);
           setVerificationStatus(success ? 'success' : 'error');
           
           // If verification is successful, clear the pending email
           if (success) {
-            console.log('Email verification successful');
+            console.log('Email verification successful, clearing pending email');
+            setPendingVerificationEmail(null);
           }
         } catch (error) {
           console.error('Error during verification:', error);
@@ -44,7 +47,7 @@ const VerifyEmail = () => {
     };
     
     verifyEmailToken();
-  }, [searchParams, verifyEmail]);
+  }, [searchParams, verifyEmail, setPendingVerificationEmail]);
   
   const handleResendVerification = async () => {
     if (!email.trim()) return;

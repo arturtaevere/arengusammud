@@ -41,30 +41,52 @@ export const useAuthActions = () => {
   };
 
   const generateVerificationToken = (userId: string) => {
+    // Generate a more reliable token
     const token = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-    const updatedTokens = { ...verificationTokens, [userId]: token };
-    saveVerificationTokens(updatedTokens);
+    console.log(`Generated new token for userId ${userId}: ${token}`);
+    
+    // Store token in localStorage BEFORE updating state to ensure it's saved immediately
+    const currentTokens = JSON.parse(localStorage.getItem(VERIFICATION_TOKENS_KEY) || '{}');
+    const updatedTokens = { ...currentTokens, [userId]: token };
+    localStorage.setItem(VERIFICATION_TOKENS_KEY, JSON.stringify(updatedTokens));
+    
+    // Update state
+    setVerificationTokens(updatedTokens);
     return token;
   };
 
   const verifyEmail = async (userId: string, token: string) => {
     await new Promise(resolve => setTimeout(resolve, 800));
     
-    console.log(`Trying to verify userId: ${userId} with token: ${token}`);
-    console.log('Available tokens:', verificationTokens);
+    // Get the most up-to-date tokens from localStorage
+    const currentTokens = JSON.parse(localStorage.getItem(VERIFICATION_TOKENS_KEY) || '{}');
     
-    if (verificationTokens[userId] === token) {
-      const updatedUsers = users.map(u => {
+    console.log(`Trying to verify userId: ${userId} with token: ${token}`);
+    console.log('Available tokens from localStorage:', currentTokens);
+    console.log('Available tokens from state:', verificationTokens);
+    
+    // Check against the tokens from localStorage
+    if (currentTokens[userId] === token) {
+      // Get the most up-to-date users
+      const currentUsers = JSON.parse(localStorage.getItem(USERS_STORAGE_KEY) || '[]');
+      
+      // Update the user's emailVerified status
+      const updatedUsers = currentUsers.map((u: UserWithPassword) => {
         if (u.id === userId) {
+          console.log(`Marking user ${u.email} as verified`);
           return { ...u, emailVerified: true };
         }
         return u;
       });
       
-      saveUsers(updatedUsers);
+      // Save the updated users
+      localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(updatedUsers));
+      setUsers(updatedUsers);
       
-      const { [userId]: _, ...restTokens } = verificationTokens;
-      saveVerificationTokens(restTokens);
+      // Remove the used token
+      const { [userId]: _, ...restTokens } = currentTokens;
+      localStorage.setItem(VERIFICATION_TOKENS_KEY, JSON.stringify(restTokens));
+      setVerificationTokens(restTokens);
       
       toast({
         title: "Email kinnitatud",
@@ -86,11 +108,16 @@ export const useAuthActions = () => {
   const resendVerificationEmail = async (email: string) => {
     await new Promise(resolve => setTimeout(resolve, 800));
     
-    const foundUser = users.find(u => u.email.toLowerCase() === email.toLowerCase());
+    // Use the most up-to-date users from localStorage
+    const currentUsers = JSON.parse(localStorage.getItem(USERS_STORAGE_KEY) || '[]');
+    const foundUser = currentUsers.find((u: UserWithPassword) => u.email.toLowerCase() === email.toLowerCase());
+    
     if (foundUser && !foundUser.emailVerified) {
       const token = generateVerificationToken(foundUser.id);
+      const verificationLink = `${window.location.origin}/verify-email?id=${foundUser.id}&token=${token}`;
+      
       console.log(`New verification token for ${foundUser.email}: ${token}`);
-      console.log(`Verification link: ${window.location.origin}/verify-email?id=${foundUser.id}&token=${token}`);
+      console.log(`Verification link: ${verificationLink}`);
       
       toast({
         title: "Kinnitusmeil saadetud",
@@ -98,7 +125,7 @@ export const useAuthActions = () => {
       });
       
       // For development: Show verification link directly in UI
-      alert(`DEV MODE: Use this verification link: ${window.location.origin}/verify-email?id=${foundUser.id}&token=${token}`);
+      alert(`DEV MODE: Use this verification link: ${verificationLink}`);
     } else {
       toast({
         variant: "destructive",
@@ -115,7 +142,9 @@ export const useAuthActions = () => {
   const login = async (email: string, password: string) => {
     await new Promise(resolve => setTimeout(resolve, 800));
     
-    const foundUser = users.find(u => u.email.toLowerCase() === email.toLowerCase());
+    // Get the most up-to-date users from localStorage
+    const currentUsers = JSON.parse(localStorage.getItem(USERS_STORAGE_KEY) || '[]');
+    const foundUser = currentUsers.find((u: UserWithPassword) => u.email.toLowerCase() === email.toLowerCase());
     
     if (!foundUser) {
       throw new Error('Vale e-post või parool');
@@ -127,11 +156,13 @@ export const useAuthActions = () => {
 
     if (!foundUser.emailVerified) {
       const token = generateVerificationToken(foundUser.id);
+      const verificationLink = `${window.location.origin}/verify-email?id=${foundUser.id}&token=${token}`;
+      
       console.log(`Verification token for ${foundUser.email}: ${token}`);
-      console.log(`Verification link: ${window.location.origin}/verify-email?id=${foundUser.id}&token=${token}`);
+      console.log(`Verification link: ${verificationLink}`);
       
       // For development: Show verification link directly in UI
-      alert(`DEV MODE: Use this verification link: ${window.location.origin}/verify-email?id=${foundUser.id}&token=${token}`);
+      alert(`DEV MODE: Use this verification link: ${verificationLink}`);
       
       throw new Error('E-posti aadress pole kinnitatud. Palun kontrolli oma postkasti kinnituslingi jaoks.');
     }
