@@ -1,14 +1,11 @@
 
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import CompetenceList from '@/components/competences/CompetenceList';
 import { 
   convertToCompetencesPageFormat, 
   convertActionStepsToCompetencesPageFormat 
 } from '@/components/observation/competencyAdapter';
-import { Button } from '@/components/ui/button';
-import { Plus } from 'lucide-react';
 import { actionSteps } from '@/data/actionStepsData';
 import { ActionStep } from '@/data/action-steps/types';
 
@@ -90,19 +87,11 @@ export default function Competences() {
       <Navbar />
       
       <main className="container mx-auto px-4 py-24">
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="text-3xl font-bold mb-2">Õpieesmärgid</h1>
-            <p className="text-muted-foreground">
-              Siit leiad erinevatesse kategooriatesse jaotatud arengusammud, mis aitavad õpetamisoskusi arendada.
-            </p>
-          </div>
-          <Link to="/action-steps">
-            <Button className="flex items-center gap-2">
-              <Plus className="h-4 w-4" />
-              Kõik arengusammud
-            </Button>
-          </Link>
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold mb-2">Õpieesmärgid</h1>
+          <p className="text-muted-foreground">
+            Siit leiad erinevatesse kategooriatesse jaotatud arengusammud, mis aitavad õpetamisoskusi arendada.
+          </p>
         </div>
 
         {isLoading && (
