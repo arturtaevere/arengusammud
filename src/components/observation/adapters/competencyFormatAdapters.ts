@@ -1,3 +1,4 @@
+
 // Add the necessary code here without modifying the existing functionality
 import { competences, getCompetenceTitle } from "@/data/competencesData";
 import { ActionStepsService } from "@/services/ActionStepsService";
@@ -59,10 +60,31 @@ export const convertActionStepsToCompetencesPageFormat = () => {
 };
 
 /**
- * Create a stub for convertToDashboardFormat to fix the export issue
+ * Convert competence data to format needed for Dashboard
  */
 export const convertToDashboardFormat = () => {
-  // This is a placeholder to satisfy the import in competencyAdapter.ts
-  // Implement the actual functionality as needed
-  return [];
+  // Import necessary icons for the dashboard display
+  import { BookOpen, ClipboardCheck, Clock, Compass, FileText, 
+    Layers, MessageCircle, Users, BarChart, Brain } from 'lucide-react';
+  
+  // Map of competence IDs to icons
+  const iconMap = {
+    '1': <BookOpen className="h-5 w-5 text-primary" />,
+    '2': <ClipboardCheck className="h-5 w-5 text-primary" />,
+    '3': <Clock className="h-5 w-5 text-primary" />,
+    '4': <Compass className="h-5 w-5 text-primary" />,
+    '5': <FileText className="h-5 w-5 text-primary" />,
+    '6': <Layers className="h-5 w-5 text-primary" />,
+    '7': <MessageCircle className="h-5 w-5 text-primary" />,
+    '8': <Users className="h-5 w-5 text-primary" />,
+    '9': <BarChart className="h-5 w-5 text-primary" />,
+    '10': <Brain className="h-5 w-5 text-primary" />
+  };
+  
+  // Convert competences to the format needed for the dashboard
+  return competences.map((competence) => ({
+    id: competence.id,
+    title: competence.title,
+    icon: iconMap[competence.id as keyof typeof iconMap] || <BookOpen className="h-5 w-5 text-primary" />
+  }));
 };
