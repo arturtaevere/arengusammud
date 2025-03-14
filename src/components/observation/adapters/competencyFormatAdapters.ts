@@ -52,7 +52,8 @@ export const convertActionStepsToCompetencesPageFormat = () => {
       category: step.category,
       difficulty: step.difficulty || getDifficultyForActionStep(step.id),
       timeEstimate: step.timeEstimate || getTimeEstimateForActionStep(step.id),
-      resources: step.resources || []
+      resources: step.resources || [],
+      practiceTasks: step.practiceTasks || []
     }));
   }
   
@@ -66,7 +67,8 @@ export const convertActionStepsToCompetencesPageFormat = () => {
       category: comp.id.replace('comp', ''),
       difficulty: getDifficultyForActionStep(step.id),
       timeEstimate: getTimeEstimateForActionStep(step.id),
-      resources: []
+      resources: [],
+      practiceTasks: []
     }))
   );
 };

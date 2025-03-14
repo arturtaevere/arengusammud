@@ -8,6 +8,7 @@ export interface ActionStep {
   difficulty?: string; // Added difficulty property as optional
   timeEstimate: string;
   resources: { title: string; url: string }[];
+  practiceTasks?: string[]; // Added optional practice tasks array
 }
 
 export interface Competence {
