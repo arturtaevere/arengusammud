@@ -7,7 +7,6 @@ import {
   SheetDescription,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
 } from "@/components/ui/sheet";
 import { Input } from '@/components/ui/input';
 import { Search, ClipboardList, ArrowLeft } from 'lucide-react';
@@ -17,12 +16,37 @@ interface CompetencyActionStepSelectorProps {
   onSelect: (actionStep: { id: string; title: string; description: string }) => void;
   label: string;
   value?: string;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
-const CompetencyActionStepSelector = ({ onSelect, label, value }: CompetencyActionStepSelectorProps) => {
+const CompetencyActionStepSelector = ({ onSelect, label, value, open, onOpenChange }: CompetencyActionStepSelectorProps) => {
   const [search, setSearch] = useState('');
-  const [sheetOpen, setSheetOpen] = useState(false);
   const [selectedCompetency, setSelectedCompetency] = useState<string | null>(null);
+  
+  // Control the sheet state
+  const [internalOpen, setInternalOpen] = useState(false);
+  
+  // Sync internal state with external control if provided
+  useEffect(() => {
+    if (open !== undefined) {
+      setInternalOpen(open);
+    }
+  }, [open]);
+
+  // Handle internal state changes and propagate them if needed
+  const handleOpenChange = (newOpen: boolean) => {
+    setInternalOpen(newOpen);
+    if (onOpenChange) {
+      onOpenChange(newOpen);
+    }
+
+    // Reset search and selection when closing
+    if (!newOpen) {
+      setSearch('');
+      setSelectedCompetency(null);
+    }
+  };
 
   // Filter competencies and action steps based on search
   const filteredCompetencies = search.trim() === '' 
@@ -41,7 +65,7 @@ const CompetencyActionStepSelector = ({ onSelect, label, value }: CompetencyActi
 
   const handleActionStepSelect = (step: { id: string; title: string; description: string }) => {
     onSelect(step);
-    setSheetOpen(false);
+    handleOpenChange(false);
     setSelectedCompetency(null);
   };
 
@@ -53,27 +77,8 @@ const CompetencyActionStepSelector = ({ onSelect, label, value }: CompetencyActi
     setSelectedCompetency(null);
   };
 
-  const handleOpenSheet = () => {
-    setSheetOpen(true);
-  };
-
-  const handleCloseSheet = () => {
-    setSheetOpen(false);
-    setSelectedCompetency(null);
-  };
-
   return (
-    <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
-      <SheetTrigger asChild>
-        <Button 
-          variant="outline" 
-          className="w-full justify-start text-left h-auto py-2 px-3"
-          onClick={handleOpenSheet}
-        >
-          <ClipboardList className="h-4 w-4 mr-2 opacity-70" />
-          {value || label}
-        </Button>
-      </SheetTrigger>
+    <Sheet open={internalOpen} onOpenChange={handleOpenChange}>
       <SheetContent className="w-[95%] sm:max-w-md">
         <SheetHeader className="text-left">
           <SheetTitle>Vali järgmine arengusamm</SheetTitle>

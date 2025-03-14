@@ -18,12 +18,12 @@ interface ObservationNotesSectionProps {
 
 const ObservationNotesSection = ({ form, isSubmitting }: ObservationNotesSectionProps) => {
   const navigate = useNavigate();
-  const [choosingNewActionStep, setChoosingNewActionStep] = useState(false);
+  const [sheetOpen, setSheetOpen] = useState(false);
   
   const actionStepValue = form.watch('nextActionStep');
   
   const handleChangeActionStep = () => {
-    setChoosingNewActionStep(true);
+    setSheetOpen(true);
   };
   
   return (
@@ -149,39 +149,24 @@ const ObservationNotesSection = ({ form, isSubmitting }: ObservationNotesSection
                 </span>
               </FormLabel>
               <div className="space-y-2">
-                {choosingNewActionStep ? (
-                  <FormControl>
-                    <CompetencyActionStepSelector
-                      label="Vali järgmine arengusamm..."
-                      value={field.value}
-                      onSelect={(step) => {
-                        field.onChange(`${step.title}: ${step.description}`);
-                        setChoosingNewActionStep(false);
-                      }}
-                    />
-                  </FormControl>
-                ) : (
-                  <>
-                    <FormControl>
-                      <Textarea 
-                        placeholder="Milline võiks olla järgmine arengusamm..." 
-                        className="min-h-[120px]"
-                        {...field} 
-                      />
-                    </FormControl>
-                    <div className="flex gap-2 mt-2">
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={handleChangeActionStep}
-                      >
-                        <ArrowLeftRight className="h-4 w-4 mr-2" />
-                        Vali uus samm
-                      </Button>
-                    </div>
-                  </>
-                )}
+                <FormControl>
+                  <Textarea 
+                    placeholder="Milline võiks olla järgmine arengusamm..." 
+                    className="min-h-[120px]"
+                    {...field} 
+                  />
+                </FormControl>
+                <div className="flex gap-2 mt-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={handleChangeActionStep}
+                  >
+                    <ArrowLeftRight className="h-4 w-4 mr-2" />
+                    Vali uus samm
+                  </Button>
+                </div>
               </div>
               <FormDescription>
                 Pakkuge välja konkreetne järgmine arengusamm õpetajale
@@ -207,6 +192,18 @@ const ObservationNotesSection = ({ form, isSubmitting }: ObservationNotesSection
           {isSubmitting ? "Salvestamine..." : "Salvesta vaatlus"}
         </Button>
       </CardFooter>
+
+      {/* Action step selector directly integrated */}
+      <CompetencyActionStepSelector
+        label="Vali järgmine arengusamm..."
+        value={actionStepValue}
+        open={sheetOpen}
+        onOpenChange={setSheetOpen}
+        onSelect={(step) => {
+          form.setValue('nextActionStep', `${step.title}: ${step.description}`);
+          setSheetOpen(false);
+        }}
+      />
     </Card>
   );
 };
