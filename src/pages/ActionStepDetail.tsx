@@ -1,4 +1,3 @@
-
 import { useParams, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
@@ -23,7 +22,6 @@ type ActionStepDetailType = {
   description: string;
   category: string;
   difficulty: DifficultyLevel;
-  timeEstimate: string;
   reason: string;
   successCriteria: string[];
   practiceTask: string[];
@@ -38,7 +36,6 @@ const actionStepsDetails: Record<string, ActionStepDetailType> = {
     description: "Kasuta positiivset keelt ja toetavat suhtlusviisi klassiruumis, et luua turvaline õhkkond.",
     category: "1",
     difficulty: "beginner",
-    timeEstimate: "15-20 minutit päevas",
     reason: "Positiivne suhtlusviis aitab luua turvalise õpikeskkonna, kus õpilased tunnevad end väärtustatuna. See edendab usaldust õpetaja ja õpilaste vahel ning julgustab õpilasi aktiivselt õppimisprotsessis osalema. Uuringud näitavad, et positiivne keskkond soodustab õpilaste akadeemilist edukust ja sotsiaal-emotsionaalset arengut.",
     successCriteria: [
       "Kasutan õpilastega suheldes positiivset ja julgustavat keelt.",
@@ -59,7 +56,6 @@ const actionStepsDetails: Record<string, ActionStepDetailType> = {
     description: "Kehtesta koos õpilastega selged reeglid, mis aitavad luua stabiilsuse ja turvatunde.",
     category: "2",
     difficulty: "beginner",
-    timeEstimate: "30-45 minutit",
     reason: "Selged reeglid loovad klassiruumis struktuuri ja ennustatavust, mis on kriitiliselt olulised turvalise õpikeskkonna jaoks. Kui õpilased teavad, mida neilt oodatakse, tunnevad nad end turvalisemalt ja saavad keskenduda õppimisele. Õpilaste kaasamine reeglite loomisse suurendab nende pühendumust ja vastutustunnet reeglite järgimise osas.",
     successCriteria: [
       "Loon õpilastega koos klassireeglid, mis on selgelt sõnastatud.",
@@ -79,7 +75,6 @@ const actionStepsDetails: Record<string, ActionStepDetailType> = {
     description: "Annan märku",
     category: "1",
     difficulty: "beginner",
-    timeEstimate: "20-30 minutit",
     reason: "Iga õpilase väärtustamine loob kaasava ja toetava õpikeskkonna, kus kõik õpilased tunnevad end oodatuna ja austatuna. See aitab luua usalduslikku suhet õpetaja ja õpilaste vahel, mis on oluline eeldus efektiivseks õppimiseks. Õpilased õpivad paremini, kui nad tunnevad, et neid hinnatakse kui indiviide.",
     successCriteria: [
       "Lugupidav suhtumine: suhtun austusega erineva tausta",
@@ -103,7 +98,6 @@ const actionStepsDetails: Record<string, ActionStepDetailType> = {
     description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
     category: "10",
     difficulty: "intermediate",
-    timeEstimate: "45-60 minutit",
     reason: "Õpilased, kes mõistavad õppimise protsessi ja selle etappe, suudavad paremini oma õppimist juhtida. Kolmeetapiline protsess (planeerimine, tegutsemine, reflekteerimine) aitab õpilastel kujuneda ennastjuhtivateks õppijateks, kes võtavad vastutuse oma õppimise eest. See arendab metakognitiivseid oskusi, mis on vajalikud elukestvaks õppimiseks ja akadeemiliseks eduks.",
     successCriteria: [
       "Õpilased mõistavad õppimise kolme põhietappi: planeerimine, tegutsemine, reflekteerimine.",
@@ -164,7 +158,6 @@ const ActionStepDetail = () => {
           description: foundStep.description,
           category: foundStep.category,
           difficulty: (foundStep.difficulty as DifficultyLevel) || "beginner",
-          timeEstimate: foundStep.timeEstimate,
           reason: "Põhjendus pole veel lisatud.",
           successCriteria: foundStep.resources?.map(r => r.title) || [],
           practiceTask: foundStep.practiceTasks || [],

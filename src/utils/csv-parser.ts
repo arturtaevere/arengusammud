@@ -49,7 +49,7 @@ export const parseActionStepsCsv = (csvContent: string): Partial<ActionStep>[] =
               title: 'Edukriteerium',
               url: criteria
             })),
-            timeEstimate: currentExercises.join(', ')
+            practiceTasks: currentExercises
           });
         }
         
@@ -87,7 +87,7 @@ export const parseActionStepsCsv = (csvContent: string): Partial<ActionStep>[] =
         title: 'Edukriteerium',
         url: criteria
       })),
-      timeEstimate: currentExercises.join(', ')
+      practiceTasks: currentExercises
     });
   }
 

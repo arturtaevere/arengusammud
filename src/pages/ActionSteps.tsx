@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import Navbar from "@/components/Navbar";
@@ -16,8 +17,9 @@ const ActionSteps = () => {
   
   const currentCategory = competences.find(c => c.id === categoryFilter)?.title || "Kõik arengusammud";
 
+  // Use the correct type for actionSteps
   const { filteredSteps } = useActionSteps(
-    actionSteps as ActionStep[], 
+    actionSteps, 
     categoryFilter, 
     searchTerm
   );

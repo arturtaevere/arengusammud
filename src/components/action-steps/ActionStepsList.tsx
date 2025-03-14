@@ -13,7 +13,6 @@ interface ActionStep {
   title: string;
   description: string;
   category: string;
-  timeEstimate: string;
   resources: { title: string; url: string }[];
 }
 
@@ -59,7 +58,6 @@ const ActionStepsList = ({
           title={step.title}
           description={step.description}
           category={competences.find(c => c.id === step.category)?.title || ""}
-          timeEstimate={step.timeEstimate}
           resources={step.resources}
         />
       ))}

@@ -1,6 +1,6 @@
 
 import { competencies } from '../data/competenciesData';
-import { getCompetencyDescription, getDifficultyForActionStep, getTimeEstimateForActionStep } from './competencyMetadata';
+import { getCompetencyDescription, getDifficultyForActionStep } from './competencyMetadata';
 import { getIconComponent } from './competencyIcons';
 import { actionSteps } from '@/data/actionStepsData';
 import { ActionStep } from '@/data/action-steps/types';
