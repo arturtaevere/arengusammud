@@ -1,71 +1,43 @@
-// Add the necessary code here without modifying the existing functionality
-import { competences, getCompetenceTitle } from "@/data/competencesData";
-import { ActionStepsService } from "@/services/ActionStepsService";
-import { CSVImportService } from "@/services/csvImport";
-import { ActionStepDetailsCollection } from "@/services/actionStepDetails/types";
-import { generateId } from "@/services/csvImport/utils";
 
-/**
- * Convert competence data to format needed for CompetencesPage
- */
+import { competencies } from '../data/competenciesData';
+import { getCompetencyDescription, getDifficultyForActionStep, getTimeEstimateForActionStep } from './competencyMetadata';
+import { getIconComponent } from './competencyIcons';
+
+// Convert a competency from the standard format to the format used in the Competences page
 export const convertToCompetencesPageFormat = () => {
-  return competences.map((competence) => ({
-    id: competence.id,
-    title: competence.title,
-    description: '', // Using empty string as fallback since description doesn't exist in the type
-    icon: '', // Using empty string as fallback since icon doesn't exist in the type
-    count: 0 // Will be populated with actual counts later
-  }));
-};
-
-/**
- * Convert action steps to format needed for CompetencesPage
- */
-export const convertActionStepsToCompetencesPageFormat = () => {
-  // Get imported data
-  const importedData = CSVImportService.getImportedData();
-  console.log('Raw imported data from storage:', importedData);
-  
-  if (!importedData || Object.keys(importedData).length === 0) {
-    console.log('No imported action steps found in storage');
-    return []; // Return empty array if no imported data
-  }
-  
-  // Format imported data for the competences page
-  const result = Object.entries(importedData).map(([id, data]) => {
-    // Map category string to category ID when possible
-    let categoryId = data.category;
-    
-    // If category is a title, try to find the ID
-    competences.forEach(comp => {
-      if (comp.title && comp.title.toLowerCase() === data.category.toLowerCase()) {
-        categoryId = comp.id;
-      }
-    });
-    
+  return competencies.map(comp => {
     return {
-      id: id,
-      title: data.title,
-      description: data.description || '',
-      category: categoryId,
-      difficulty: data.difficulty || 'beginner',
-      successCriteria: data.successCriteria || [],
-      // Other fields as needed
+      id: comp.id.replace('comp', ''),
+      title: comp.name,
+      description: getCompetencyDescription(comp.id),
+      count: comp.actionSteps.length,
+      icon: getIconComponent(comp.id)
     };
   });
-  
-  console.log('Converted imported action steps:', result.length);
-  return result;
 };
 
-/**
- * Convert competence data to format needed for Dashboard
- */
+// Convert a competency to the format used in dashboard
 export const convertToDashboardFormat = () => {
-  // Return a simple format that doesn't include React components
-  return competences.map((competence) => ({
-    id: competence.id,
-    title: competence.title,
-    iconType: competence.id // Just pass the ID for icon mapping in the component
-  }));
+  return competencies.map(comp => {
+    return {
+      id: comp.id.replace('comp', ''),
+      title: comp.name,
+      icon: getIconComponent(comp.id)
+    };
+  });
+};
+
+// Convert action steps to the format used in the Competences page
+export const convertActionStepsToCompetencesPageFormat = () => {
+  return competencies.flatMap(comp => 
+    comp.actionSteps.map(step => ({
+      id: step.id,
+      title: step.title,
+      description: step.description,
+      category: comp.id.replace('comp', ''),
+      difficulty: getDifficultyForActionStep(step.id),
+      timeEstimate: getTimeEstimateForActionStep(step.id),
+      resources: []
+    }))
+  );
 };
