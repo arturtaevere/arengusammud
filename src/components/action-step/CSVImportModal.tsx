@@ -162,8 +162,12 @@ const CSVImportModal: React.FC<CSVImportModalProps> = ({
               <ul className="list-disc pl-5 space-y-1">
                 <li>Esimene rida peab sisaldama väljade pealkirju</li>
                 <li>Vajalikud väljad: id, title, description, category</li>
-                <li>Soovituslikud väljad: difficulty, timeEstimate, successCriteria, practiceTask</li>
-                <li>Mitmeosaliste väljade (successCriteria, practiceTask) väärtused eralda semikooloniga (;)</li>
+                <li>Soovituslikud väljad: difficulty, timeEstimate, reason, examples, videoUrl</li>
+                <li>Edukriteeriumid ja harjutusülesanded saab lisada eraldi ridadel:</li>
+                <ul className="list-disc pl-5 space-y-1">
+                  <li>Edukriteeriumid: igal real "Edukriteerium: [kriteerium]"</li>
+                  <li>Harjutusülesanded: igal real "Harjutusülesanne: [ülesanne]"</li>
+                </ul>
               </ul>
             </div>
           </div>
