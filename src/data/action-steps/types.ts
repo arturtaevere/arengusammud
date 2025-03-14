@@ -5,7 +5,7 @@ export interface ActionStep {
   title: string;
   description: string;
   category: string;
-  difficulty?: "beginner" | "intermediate" | "advanced"; // Added difficulty property as optional with strict types
+  difficulty: "beginner" | "intermediate" | "advanced"; // Changed from optional to required with strict types
   timeEstimate: string;
   resources: { title: string; url: string }[];
   practiceTasks?: string[]; // Added optional practice tasks array

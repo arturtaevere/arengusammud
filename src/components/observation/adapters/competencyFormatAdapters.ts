@@ -55,15 +55,17 @@ export const convertActionStepsToCompetencesPageFormat = (): ActionStep[] => {
     
     // Map through each action step and ensure it has all required properties
     return actionSteps.map(step => {
-      // Get difficulty from step or fallback to the computed one, ensuring it's properly validated
-      const stepDifficulty = step.difficulty ? validateDifficulty(step.difficulty) : getDifficultyForActionStep(step.id);
+      // Get difficulty from step or compute it, then validate
+      const difficulty = step.difficulty ? 
+        validateDifficulty(step.difficulty as string) : 
+        validateDifficulty(getDifficultyForActionStep(step.id));
       
       return {
         id: step.id,
         title: step.title,
         description: step.description,
         category: step.category,
-        difficulty: stepDifficulty,
+        difficulty: difficulty,
         timeEstimate: step.timeEstimate || getTimeEstimateForActionStep(step.id),
         resources: step.resources || [],
         practiceTasks: step.practiceTasks || []
@@ -75,15 +77,15 @@ export const convertActionStepsToCompetencesPageFormat = (): ActionStep[] => {
   console.log("No action steps in data module, using competencies data");
   return competencies.flatMap(comp => 
     comp.actionSteps.map(step => {
-      // Ensure difficulty is properly validated
-      const computedDifficulty = getDifficultyForActionStep(step.id);
+      // Calculate and validate difficulty
+      const difficulty = validateDifficulty(getDifficultyForActionStep(step.id));
       
       return {
         id: step.id,
         title: step.title,
         description: step.description,
         category: comp.id.replace('comp', ''),
-        difficulty: computedDifficulty,
+        difficulty: difficulty,
         timeEstimate: getTimeEstimateForActionStep(step.id),
         resources: [],
         practiceTasks: []
