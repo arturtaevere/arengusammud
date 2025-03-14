@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { BookOpen, Plus } from 'lucide-react';
+import { BookOpen } from 'lucide-react';
 import ActionStepItem from './ActionStepItem';
 import { Link } from 'react-router-dom';
 import { ActionStep } from '@/data/action-steps/types';
@@ -47,7 +47,7 @@ const ActionStepsList = ({
       ))}
       
       {steps.length > 3 && (
-        <div className="flex justify-between mt-2">
+        <div className="mt-2">
           <Button 
             variant="ghost" 
             className="text-sm text-primary hover:text-primary-foreground"
@@ -57,13 +57,6 @@ const ActionStepsList = ({
               ? "Näita vähem" 
               : `+ ${steps.length - 3} muud arengusammu`}
           </Button>
-          
-          <Link to={`/action-steps?category=${competenceId}`}>
-            <Button variant="outline" size="sm" className="flex items-center gap-1">
-              <Plus className="h-3 w-3" />
-              Kõik sammud
-            </Button>
-          </Link>
         </div>
       )}
     </div>
