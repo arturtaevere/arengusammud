@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
@@ -232,7 +233,7 @@ const Navbar = () => {
                     <LayoutDashboard className="mr-2 h-5 w-5" />
                     Töölaud
                   </div>
-                </div>
+                </Link>
                 <div className="pt-4 pb-2">
                   <div className="flex items-center px-3">
                     <div className="flex-shrink-0">
