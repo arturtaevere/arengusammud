@@ -15,64 +15,47 @@ export const AuthContext = createContext<AuthContextType>({
   logout: () => {},
   updateProfileImage: () => {},
   getAllUsers: () => [],
-  verifyEmail: async () => false,
-  resendVerificationEmail: async () => false,
-  pendingVerificationEmail: null,
-  setPendingVerificationEmail: () => {},
   deleteUserByEmail: async () => false,
 });
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [pendingVerificationEmail, setPendingVerificationEmail] = useState<string | null>(null);
   
   // Custom hooks for auth functionality
   const {
     users,
     setUsers,
-    verificationTokens,
-    setVerificationTokens,
     login,
     signup,
     updateProfileImage,
     getAllUsers,
-    verifyEmail,
-    resendVerificationEmail,
     deleteUserByEmail
   } = useAuthActions();
 
-  // Initialize auth state
+  // Initialize auth state (simplified)
   useAuthInit(
     setUser,
     setUsers,
-    setVerificationTokens,
-    setIsLoading,
-    setPendingVerificationEmail
+    setIsLoading
   );
 
-  // Handle user login
+  // Handle user login (simplified)
   const handleLogin = async (email: string, password: string) => {
     setIsLoading(true);
     try {
       const loggedInUser = await login(email, password);
       setUser(loggedInUser);
-    } catch (error) {
-      if (error instanceof Error && error.message.includes('E-posti aadress pole kinnitatud')) {
-        setPendingVerificationEmail(email);
-      }
-      throw error;
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Handle user signup
+  // Handle user signup (simplified)
   const handleSignup = async (name: string, email: string, password: string, role: 'coach' | 'teacher', school?: string) => {
     setIsLoading(true);
     try {
-      const newEmail = await signup(name, email, password, role, school);
-      setPendingVerificationEmail(newEmail);
+      await signup(name, email, password, role, school);
     } finally {
       setIsLoading(false);
     }
@@ -105,10 +88,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         logout: handleLogout,
         updateProfileImage: handleUpdateProfileImage,
         getAllUsers,
-        verifyEmail,
-        resendVerificationEmail,
-        pendingVerificationEmail,
-        setPendingVerificationEmail,
         deleteUserByEmail,
       }}
     >

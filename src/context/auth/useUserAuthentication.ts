@@ -3,12 +3,10 @@ import { useState } from 'react';
 import { useToast } from '@/components/ui/use-toast';
 import { User, UserWithPassword } from './types';
 import { USER_STORAGE_KEY, USERS_STORAGE_KEY } from './constants';
-import { useTokenManagement } from './useTokenManagement';
 
 export const useUserAuthentication = () => {
   const [users, setUsers] = useState<UserWithPassword[]>([]);
   const { toast } = useToast();
-  const { generateVerificationToken } = useTokenManagement();
 
   const saveUsers = (updatedUsers: UserWithPassword[]) => {
     localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(updatedUsers));
@@ -29,22 +27,8 @@ export const useUserAuthentication = () => {
     if (foundUser.password !== password) {
       throw new Error('Vale e-post või parool');
     }
-
-    if (!foundUser.emailVerified) {
-      console.log(`User ${foundUser.email} not verified, sending verification email`);
-      
-      const token = generateVerificationToken(foundUser.id);
-      const verificationLink = `${window.location.origin}/verify-email?id=${foundUser.id}&token=${token}`;
-      
-      console.log(`Verification token for ${foundUser.email}: ${token}`);
-      console.log(`Verification link: ${verificationLink}`);
-      
-      // For development: Show verification link directly 
-      alert(`DEV MODE: Use this verification link: ${verificationLink}`);
-      
-      throw new Error('E-posti aadress pole kinnitatud. Palun kontrolli oma postkasti kinnituslingi jaoks.');
-    }
     
+    // No longer checking emailVerified flag
     const { password: _, ...userWithoutPassword } = foundUser;
     
     localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(userWithoutPassword));
@@ -77,26 +61,16 @@ export const useUserAuthentication = () => {
       role,
       school,
       createdAt: new Date().toISOString(),
-      emailVerified: false,
+      emailVerified: true, // Set to true by default to skip verification
     };
     
     const updatedUsers = [...users, newUser];
     saveUsers(updatedUsers);
     
-    const token = generateVerificationToken(userId);
-    const verificationLink = `${window.location.origin}/verify-email?id=${userId}&token=${token}`;
-    
-    console.log(`New user created: ${email}, ID: ${userId}`);
-    console.log(`Verification token: ${token}`);
-    console.log(`Verification link: ${verificationLink}`);
-    
     toast({
       title: "Registreerimine õnnestus",
-      description: "Kinnitusmeil on saadetud. Palun kontrolli oma postkasti.",
+      description: "Konto on loodud. Võid nüüd sisse logida.",
     });
-    
-    // For development
-    alert(`DEV MODE: Use this verification link: ${verificationLink}`);
     
     return email;
   };

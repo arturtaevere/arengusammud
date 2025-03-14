@@ -25,9 +25,5 @@ export interface AuthContextType {
   logout: () => void;
   updateProfileImage: (imageUrl: string) => void;
   getAllUsers: () => User[];
-  verifyEmail: (userId: string, token: string) => Promise<boolean>;
-  resendVerificationEmail: (email: string) => Promise<boolean>;
-  pendingVerificationEmail: string | null;
-  setPendingVerificationEmail: React.Dispatch<React.SetStateAction<string | null>>;
   deleteUserByEmail: (email: string) => Promise<boolean>;
 }
