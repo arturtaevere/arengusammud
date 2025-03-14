@@ -1,4 +1,3 @@
-
 // This is placeholder data, will be replaced with real data later
 export interface ActionStep {
   id: string;
@@ -293,35 +292,3 @@ export const actionSteps: ActionStep[] = [
     resources: [],
   },
 ];
-
-// Helper function to filter action steps
-export const filterActionSteps = (
-  steps: ActionStep[], 
-  categoryFilter: string, 
-  searchTerm: string, 
-  difficultyFilter: string
-): ActionStep[] => {
-  let result = [...steps];
-  
-  // Apply category filter
-  if (categoryFilter) {
-    result = result.filter(step => step.category === categoryFilter);
-  }
-  
-  // Apply search term
-  if (searchTerm) {
-    const lowercaseSearchTerm = searchTerm.toLowerCase();
-    result = result.filter(
-      step => 
-        step.title.toLowerCase().includes(lowercaseSearchTerm) || 
-        step.description.toLowerCase().includes(lowercaseSearchTerm)
-    );
-  }
-  
-  // Apply difficulty filter
-  if (difficultyFilter && difficultyFilter !== 'all') {
-    result = result.filter(step => step.difficulty === difficultyFilter);
-  }
-  
-  return result;
-};

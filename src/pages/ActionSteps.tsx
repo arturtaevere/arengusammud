@@ -2,12 +2,12 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import Navbar from "@/components/Navbar";
-import { actionSteps, filterActionSteps } from "@/data/actionStepsData";
-import { competences, getCompetenceTitle } from "@/data/competencesData";
+import { getCompetenceTitle } from "@/data/competencesData";
 import ActionStepsHeader from "@/components/action-steps/ActionStepsHeader";
 import ActionStepsFilters from "@/components/action-steps/ActionStepsFilters";
 import ActionStepsList from "@/components/action-steps/ActionStepsList";
 import ActionStepsEmptyState from "@/components/action-steps/ActionStepsEmptyState";
+import { ActionStepsService } from "@/services/ActionStepsService";
 
 const ActionSteps = () => {
   const [searchParams] = useSearchParams();
@@ -15,14 +15,18 @@ const ActionSteps = () => {
   
   const [searchTerm, setSearchTerm] = useState("");
   const [difficultyFilter, setDifficultyFilter] = useState("");
-  const [filteredSteps, setFilteredSteps] = useState(actionSteps);
+  const [filteredSteps, setFilteredSteps] = useState(ActionStepsService.getAllActionSteps());
   
   // Get current category title
   const currentCategory = getCompetenceTitle(categoryFilter) || "Kõik arengusammud";
 
   // Apply filters
   useEffect(() => {
-    const filtered = filterActionSteps(actionSteps, categoryFilter, searchTerm, difficultyFilter);
+    const filtered = ActionStepsService.filterActionSteps(
+      categoryFilter, 
+      searchTerm, 
+      difficultyFilter
+    );
     setFilteredSteps(filtered);
   }, [categoryFilter, searchTerm, difficultyFilter]);
 

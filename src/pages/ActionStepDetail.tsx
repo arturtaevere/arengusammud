@@ -4,10 +4,10 @@ import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
-import { getActionStepDetailById } from "@/components/observation/data/competencyHelpers";
 import ActionStepDetails from "@/components/action-step/ActionStepDetails";
 import ActionStepNotFound from "@/components/action-step/ActionStepNotFound";
-import { actionStepsDetails, getVideoStorageKey, ActionStepDetails as ActionStepDetailsType } from "@/services/actionStepService";
+import { ActionStepsService } from "@/services/ActionStepsService";
+import { ActionStepDetails as ActionStepDetailsType } from "@/services/actionStepData";
 
 const ActionStepDetail = () => {
   const { stepId } = useParams<{ stepId: string }>();
@@ -16,24 +16,12 @@ const ActionStepDetail = () => {
   
   useEffect(() => {
     if (stepId) {
-      // Use our helper to map URL IDs to data IDs
-      const dataStepId = getActionStepDetailById(stepId);
+      const details = ActionStepsService.getActionStepDetails(stepId);
+      setStepDetails(details);
       
-      if (dataStepId && dataStepId in actionStepsDetails) {
-        const details = actionStepsDetails[dataStepId as keyof typeof actionStepsDetails];
-        setStepDetails(details);
-        
-        // Try to get from localStorage first
-        const savedVideoUrl = localStorage.getItem(getVideoStorageKey(dataStepId));
-        
-        if (savedVideoUrl) {
-          setVideoUrl(savedVideoUrl);
-        } else if (details.videoUrl && details.videoUrl !== "https://example.com/video1" && details.videoUrl !== "https://example.com/video2") {
-          // Set the default video URL if it's a real URL (not example placeholder)
-          setVideoUrl(details.videoUrl);
-          // Also save real URLs to localStorage for future visits
-          localStorage.setItem(getVideoStorageKey(dataStepId), details.videoUrl);
-        }
+      const savedVideoUrl = ActionStepsService.getVideoUrl(stepId);
+      if (savedVideoUrl) {
+        setVideoUrl(savedVideoUrl);
       }
     }
   }, [stepId]);
@@ -43,11 +31,8 @@ const ActionStepDetail = () => {
     console.log("Video URL updated:", url);
     
     // Save to localStorage when a video is uploaded or changed
-    if (stepId && url) {
-      localStorage.setItem(getVideoStorageKey(stepId), url);
-    } else if (stepId) {
-      // If URL is empty, remove the item from localStorage
-      localStorage.removeItem(getVideoStorageKey(stepId));
+    if (stepId) {
+      ActionStepsService.saveVideoUrl(stepId, url);
     }
     
     if (stepDetails) {
