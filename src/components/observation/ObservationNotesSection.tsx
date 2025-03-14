@@ -3,13 +3,13 @@ import { FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessa
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { MessageSquare, ThumbsUp, Lightbulb, ArrowRight } from 'lucide-react';
+import { MessageSquare, ThumbsUp, Lightbulb, ArrowRight, Save, PenLine, ArrowLeftRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { UseFormReturn } from 'react-hook-form';
 import { ObservationFormValues } from './types';
-import { Save } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import CompetencyActionStepSelector from './CompetencyActionStepSelector';
+import { useState } from 'react';
 
 interface ObservationNotesSectionProps {
   form: UseFormReturn<ObservationFormValues>;
@@ -18,6 +18,18 @@ interface ObservationNotesSectionProps {
 
 const ObservationNotesSection = ({ form, isSubmitting }: ObservationNotesSectionProps) => {
   const navigate = useNavigate();
+  const [isEditingActionStep, setIsEditingActionStep] = useState(false);
+  const [choosingNewActionStep, setChoosingNewActionStep] = useState(false);
+  
+  const actionStepValue = form.watch('nextActionStep');
+  
+  const handleEditActionStep = () => {
+    setIsEditingActionStep(true);
+  };
+  
+  const handleChangeActionStep = () => {
+    setChoosingNewActionStep(true);
+  };
   
   return (
     <Card>
@@ -141,22 +153,52 @@ const ObservationNotesSection = ({ form, isSubmitting }: ObservationNotesSection
                   Järgmine võimalik arengusamm
                 </span>
               </FormLabel>
-              <FormControl>
-                <>
-                  <CompetencyActionStepSelector
-                    label="Vali järgmine arengusamm..."
-                    value={field.value}
-                    onSelect={(step) => {
-                      field.onChange(`${step.title}: ${step.description}`);
-                    }}
-                  />
-                  <Textarea 
-                    placeholder="Milline võiks olla järgmine arengusamm..." 
-                    className="min-h-[100px] mt-2"
-                    {...field} 
-                  />
-                </>
-              </FormControl>
+              <div className="space-y-2">
+                {choosingNewActionStep ? (
+                  <FormControl>
+                    <CompetencyActionStepSelector
+                      label="Vali järgmine arengusamm..."
+                      value={field.value}
+                      onSelect={(step) => {
+                        field.onChange(`${step.title}: ${step.description}`);
+                        setChoosingNewActionStep(false);
+                      }}
+                    />
+                  </FormControl>
+                ) : (
+                  <>
+                    <FormControl>
+                      <Textarea 
+                        placeholder="Milline võiks olla järgmine arengusamm..." 
+                        className="min-h-[120px]"
+                        {...field} 
+                        readOnly={!isEditingActionStep}
+                      />
+                    </FormControl>
+                    <div className="flex gap-2 mt-2">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={handleEditActionStep}
+                        className={isEditingActionStep ? "bg-blue-50" : ""}
+                      >
+                        <PenLine className="h-4 w-4 mr-2" />
+                        Täienda seda sammu
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={handleChangeActionStep}
+                      >
+                        <ArrowLeftRight className="h-4 w-4 mr-2" />
+                        Vaheta sammu
+                      </Button>
+                    </div>
+                  </>
+                )}
+              </div>
               <FormDescription>
                 Pakkuge välja konkreetne järgmine arengusamm õpetajale
               </FormDescription>
