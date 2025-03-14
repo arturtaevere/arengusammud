@@ -3,6 +3,7 @@ import { ActionStep, actionSteps } from "@/data/actionStepsData";
 import { actionStepsDetails, ActionStepDetails } from "@/services/actionStepData";
 import { getCompetenceTitle } from "@/data/competencesData";
 import { getActionStepDetailById } from "@/components/observation/data/competencyHelpers";
+import { CSVImportService } from "@/services/csvImportService";
 
 // Local storage utils
 export const getVideoStorageKey = (stepId: string) => `action_step_video_${stepId}`;
@@ -22,11 +23,22 @@ export class ActionStepsService {
    * Get action step details by ID
    */
   static getActionStepDetails(stepId: string): ActionStepDetails | null {
+    // First check imported data
+    const importedData = CSVImportService.getImportedData();
+    
     // Use our helper to map URL IDs to data IDs
     const dataStepId = getActionStepDetailById(stepId);
     
-    if (dataStepId && dataStepId in actionStepsDetails) {
-      return actionStepsDetails[dataStepId as keyof typeof actionStepsDetails];
+    if (dataStepId) {
+      // Check imported data first
+      if (dataStepId in importedData) {
+        return importedData[dataStepId];
+      }
+      
+      // Then check built-in data
+      if (dataStepId in actionStepsDetails) {
+        return actionStepsDetails[dataStepId as keyof typeof actionStepsDetails];
+      }
     }
     
     return null;

@@ -1,75 +1,108 @@
 
-import { useParams, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { ArrowLeft, Upload } from "lucide-react";
 import ActionStepDetails from "@/components/action-step/ActionStepDetails";
 import ActionStepNotFound from "@/components/action-step/ActionStepNotFound";
 import { ActionStepsService } from "@/services/ActionStepsService";
-import { ActionStepDetails as ActionStepDetailsType } from "@/services/actionStepData";
+import VideoUploader from "@/components/VideoUploader";
+import { toast } from "@/components/ui/use-toast";
+import CSVImportModal from "@/components/action-step/CSVImportModal";
 
 const ActionStepDetail = () => {
   const { stepId } = useParams<{ stepId: string }>();
-  const [stepDetails, setStepDetails] = useState<ActionStepDetailsType | null>(null);
+  const navigate = useNavigate();
   const [videoUrl, setVideoUrl] = useState<string>("");
+  const [showImportModal, setShowImportModal] = useState(false);
   
   useEffect(() => {
-    if (stepId) {
-      const details = ActionStepsService.getActionStepDetails(stepId);
-      setStepDetails(details);
-      
-      const savedVideoUrl = ActionStepsService.getVideoUrl(stepId);
-      if (savedVideoUrl) {
-        setVideoUrl(savedVideoUrl);
-      }
-    }
+    if (!stepId) return;
+    
+    // Get video URL for this step
+    const storedVideoUrl = ActionStepsService.getVideoUrl(stepId);
+    setVideoUrl(storedVideoUrl);
   }, [stepId]);
-  
+
+  // Handle video upload
   const handleVideoUploaded = (url: string) => {
+    if (!stepId) return;
+    
+    ActionStepsService.saveVideoUrl(stepId, url);
     setVideoUrl(url);
-    console.log("Video URL updated:", url);
     
-    // Save to localStorage when a video is uploaded or changed
-    if (stepId) {
-      ActionStepsService.saveVideoUrl(stepId, url);
-    }
-    
-    if (stepDetails) {
-      setStepDetails({
-        ...stepDetails,
-        videoUrl: url
-      });
-    }
+    toast({
+      title: url ? "Video lisatud" : "Video eemaldatud",
+      description: url ? "Video on edukalt lisatud" : "Video on eemaldatud",
+    });
   };
+
+  // Get action step details
+  const actionStepDetails = stepId ? ActionStepsService.getActionStepDetails(stepId) : null;
   
-  if (!stepDetails) {
+  // Handle import success
+  const handleImportSuccess = () => {
+    // Reload the current page to reflect new data
+    window.location.reload();
+  };
+
+  if (!stepId) {
     return <ActionStepNotFound />;
   }
-  
+
   return (
-    <div className="min-h-screen bg-gray-50/50">
+    <div className="min-h-screen bg-background">
       <Navbar />
       
       <main className="container mx-auto px-4 py-24">
-        <div className="mb-6">
-          <Button variant="ghost" size="sm" asChild className="mb-4">
-            <Link to="/competences">
-              <ArrowLeft className="h-4 w-4 mr-1" />
-              Tagasi õpieesmärkide juurde
-            </Link>
+        <div className="flex justify-between items-center mb-6">
+          <Button
+            variant="outline"
+            onClick={() => navigate(-1)}
+            className="mb-4"
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Tagasi
           </Button>
           
-          <h1 className="text-3xl font-bold mb-2">{stepDetails?.title}</h1>
-          <p className="text-muted-foreground mb-6">{stepDetails?.description}</p>
-          
-          <ActionStepDetails
-            stepDetails={stepDetails}
-            videoUrl={videoUrl}
-            onVideoUploaded={handleVideoUploaded}
-          />
+          <Button
+            variant="outline"
+            onClick={() => setShowImportModal(true)}
+          >
+            <Upload className="mr-2 h-4 w-4" />
+            Impordi CSV
+          </Button>
         </div>
+        
+        {actionStepDetails ? (
+          <>
+            <ScrollArea className="h-[calc(100vh-250px)] pr-4">
+              <ActionStepDetails 
+                details={actionStepDetails}
+                videoUrl={videoUrl}
+              />
+            </ScrollArea>
+            
+            <div className="mt-8 mb-20">
+              <h3 className="text-lg font-semibold mb-4">Lisa või asenda video</h3>
+              <VideoUploader 
+                onVideoUploaded={handleVideoUploaded}
+                existingVideoUrl={videoUrl}
+              />
+            </div>
+          </>
+        ) : (
+          <ActionStepNotFound />
+        )}
       </main>
+      
+      <CSVImportModal 
+        open={showImportModal}
+        onOpenChange={setShowImportModal}
+        onImportSuccess={handleImportSuccess}
+      />
     </div>
   );
 };
