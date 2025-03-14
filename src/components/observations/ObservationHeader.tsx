@@ -12,7 +12,6 @@ const ObservationHeader = ({ onNewObservation }: ObservationHeaderProps) => {
     <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
       <div>
         <h2 className="text-2xl font-bold">Vaatlused ja tagasiside</h2>
-        <p className="text-gray-600 mt-1">Õppetöö vaatlused ja tagasiside</p>
       </div>
       <div className="flex gap-2 mt-4 md:mt-0">
         <Button onClick={onNewObservation}>
@@ -25,3 +24,4 @@ const ObservationHeader = ({ onNewObservation }: ObservationHeaderProps) => {
 };
 
 export default ObservationHeader;
+
