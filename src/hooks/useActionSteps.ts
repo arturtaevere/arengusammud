@@ -6,7 +6,7 @@ interface ActionStep {
   title: string;
   description: string;
   category: string;
-  difficulty: string;
+  difficulty: 'beginner' | 'intermediate' | 'advanced';
   timeEstimate: string;
   resources: { title: string; url: string }[];
 }

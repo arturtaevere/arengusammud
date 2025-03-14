@@ -1,4 +1,5 @@
-// Define action steps data
+
+// Define action steps data with a strongly typed difficulty field
 export const actionSteps = [
   {
     id: "step1",
