@@ -4,7 +4,6 @@ import { ActionStepsService } from "@/services/ActionStepsService";
 import { CSVImportService } from "@/services/csvImport";
 import { ActionStepDetailsCollection } from "@/services/actionStepDetails/types";
 import { generateId } from "@/services/csvImport/utils";
-import { ReactNode } from "react";
 
 /**
  * Convert competence data to format needed for CompetencesPage
@@ -63,13 +62,10 @@ export const convertActionStepsToCompetencesPageFormat = () => {
  * Convert competence data to format needed for Dashboard
  */
 export const convertToDashboardFormat = () => {
-  // Note: Instead of trying to include JSX directly here, just define the icon 
-  // mapping as a return structure that the component can use
+  // Return a simple format that doesn't include React components
   return competences.map((competence) => ({
     id: competence.id,
     title: competence.title,
-    // We're not including the actual icon components here
-    // The dashboard component will handle icon mapping
-    iconType: competence.id // Just pass the ID for icon mapping
+    iconType: competence.id // Just pass the ID for icon mapping in the component
   }));
 };
