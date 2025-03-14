@@ -1,4 +1,3 @@
-
 // Add the necessary code here without modifying the existing functionality
 import { competences, getCompetenceTitle } from "@/data/competencesData";
 import { ActionStepsService } from "@/services/ActionStepsService";
@@ -13,8 +12,8 @@ export const convertToCompetencesPageFormat = () => {
   return competences.map((competence) => ({
     id: competence.id,
     title: competence.title,
-    description: competence.description || '', // Add fallback for missing description
-    icon: competence.icon || '', // Add fallback for missing icon
+    description: '', // Using empty string as fallback since description doesn't exist in the type
+    icon: '', // Using empty string as fallback since icon doesn't exist in the type
     count: 0 // Will be populated with actual counts later
   }));
 };
@@ -51,7 +50,6 @@ export const convertActionStepsToCompetencesPageFormat = () => {
       category: categoryId,
       difficulty: data.difficulty || 'beginner',
       successCriteria: data.successCriteria || [],
-      resources: data.resources || [],
       // Other fields as needed
     };
   });
