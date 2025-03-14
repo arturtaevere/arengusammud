@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ChevronRight } from 'lucide-react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import ActionStepsList from './ActionStepsList';
@@ -47,7 +47,6 @@ const CompetenceCard = ({
                 </div>
                 <div>
                   <CardTitle className="text-xl">{title}</CardTitle>
-                  <CardDescription className="mt-1 text-sm">{description}</CardDescription>
                 </div>
               </div>
               <ChevronRight 
