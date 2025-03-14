@@ -1,3 +1,4 @@
+
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
@@ -7,8 +8,7 @@ import StatsCards from '@/components/dashboard/StatsCards';
 import RecentObservations from '@/components/dashboard/RecentObservations';
 import ActionStepsCard from '@/components/dashboard/ActionStepsCard';
 import QuickActions from '@/components/dashboard/QuickActions';
-import { competences } from '@/components/dashboard/CompetencesList';
-import { Plus } from 'lucide-react';
+import { competencesList } from '@/components/dashboard/CompetencesList';
 
 const Dashboard = () => {
   const { user, isAuthenticated } = useAuth();
@@ -51,7 +51,7 @@ const Dashboard = () => {
           </p>
         </div>
         
-        <CompetencesGrid competences={competences} />
+        <CompetencesGrid competences={competencesList} />
         
         <StatsCards stats={stats} />
         

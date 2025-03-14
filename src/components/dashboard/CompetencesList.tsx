@@ -33,5 +33,5 @@ export const competencesList: Competence[] = competencesData.map(comp => {
   };
 });
 
-// Export renamed to avoid naming conflicts
+// We'll export it twice to maintain compatibility with existing imports
 export const competences = competencesList;
