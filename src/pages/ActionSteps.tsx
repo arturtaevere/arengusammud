@@ -14,7 +14,6 @@ interface ActionStep {
   title: string;
   description: string;
   category: string;
-  difficulty: 'beginner' | 'intermediate' | 'advanced';
   timeEstimate: string;
   resources: { title: string; url: string }[];
 }
@@ -24,7 +23,6 @@ const ActionSteps = () => {
   const categoryFilter = searchParams.get("category") || "";
   
   const [searchTerm, setSearchTerm] = useState("");
-  const [difficultyFilter, setDifficultyFilter] = useState("");
   
   // Get current category title
   const currentCategory = competences.find(c => c.id === categoryFilter)?.title || "Kõik arengusammud";
@@ -33,8 +31,7 @@ const ActionSteps = () => {
   const { filteredSteps } = useActionSteps(
     actionSteps as ActionStep[], 
     categoryFilter, 
-    searchTerm, 
-    difficultyFilter
+    searchTerm
   );
 
   return (
@@ -47,8 +44,6 @@ const ActionSteps = () => {
         <ActionStepsFilters 
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
-          difficultyFilter={difficultyFilter}
-          setDifficultyFilter={setDifficultyFilter}
         />
         
         <ActionStepsList 
@@ -56,7 +51,6 @@ const ActionSteps = () => {
           competences={competences}
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
-          setDifficultyFilter={setDifficultyFilter}
         />
       </main>
     </div>

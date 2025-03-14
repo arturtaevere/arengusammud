@@ -13,7 +13,6 @@ interface ActionStep {
   title: string;
   description: string;
   category: string;
-  difficulty: 'beginner' | 'intermediate' | 'advanced';
   timeEstimate: string;
   resources: { title: string; url: string }[];
 }
@@ -23,15 +22,13 @@ interface ActionStepsListProps {
   competences: Competence[];
   searchTerm: string;
   setSearchTerm: (value: string) => void;
-  setDifficultyFilter: (value: string) => void;
 }
 
 const ActionStepsList = ({ 
   filteredSteps, 
   competences, 
   searchTerm, 
-  setSearchTerm, 
-  setDifficultyFilter 
+  setSearchTerm
 }: ActionStepsListProps) => {
   if (filteredSteps.length === 0) {
     return (
@@ -39,13 +36,12 @@ const ActionStepsList = ({
         <Search className="h-12 w-12 mx-auto text-slate-400 mb-2" />
         <h3 className="text-lg font-medium mb-1">Ühtegi arengusammu ei leitud</h3>
         <p className="text-muted-foreground mb-4">
-          Proovi muuta otsingut või filtreerimist, et näha rohkem tulemusi.
+          Proovi muuta otsingut, et näha rohkem tulemusi.
         </p>
         <Button 
           variant="outline" 
           onClick={() => {
             setSearchTerm("");
-            setDifficultyFilter("");
           }}
         >
           Tühista filtrid
@@ -63,7 +59,6 @@ const ActionStepsList = ({
           title={step.title}
           description={step.description}
           category={competences.find(c => c.id === step.category)?.title || ""}
-          difficulty={step.difficulty}
           timeEstimate={step.timeEstimate}
           resources={step.resources}
         />

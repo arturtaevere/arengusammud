@@ -6,7 +6,6 @@ interface ActionStep {
   title: string;
   description: string;
   category: string;
-  difficulty: 'beginner' | 'intermediate' | 'advanced';
   timeEstimate: string;
   resources: { title: string; url: string }[];
 }
@@ -14,8 +13,7 @@ interface ActionStep {
 export const useActionSteps = (
   actionSteps: ActionStep[],
   categoryFilter: string,
-  searchTerm: string,
-  difficultyFilter: string
+  searchTerm: string
 ) => {
   const [filteredSteps, setFilteredSteps] = useState<ActionStep[]>(actionSteps);
 
@@ -37,13 +35,8 @@ export const useActionSteps = (
       );
     }
     
-    // Apply difficulty filter
-    if (difficultyFilter && difficultyFilter !== 'all') {
-      result = result.filter(step => step.difficulty === difficultyFilter);
-    }
-    
     setFilteredSteps(result);
-  }, [categoryFilter, searchTerm, difficultyFilter, actionSteps]);
+  }, [categoryFilter, searchTerm, actionSteps]);
 
   return { filteredSteps };
 };

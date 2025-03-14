@@ -2,7 +2,6 @@
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Bookmark } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Link } from 'react-router-dom';
@@ -12,7 +11,6 @@ interface ActionStepCardProps {
   title: string;
   description: string;
   category: string;
-  difficulty: 'beginner' | 'intermediate' | 'advanced';
   timeEstimate: string;
   resources?: { title: string; url: string }[];
   completed?: boolean;
@@ -25,7 +23,6 @@ const ActionStepCard = ({
   title,
   description,
   category,
-  difficulty,
   timeEstimate,
   resources = [],
   completed = false,
@@ -33,34 +30,6 @@ const ActionStepCard = ({
   className,
 }: ActionStepCardProps) => {
   const [isSaved, setIsSaved] = useState(saved);
-
-  // Get difficulty badge color
-  const getDifficultyColor = () => {
-    switch (difficulty) {
-      case 'beginner':
-        return 'bg-green-100 text-green-800';
-      case 'intermediate':
-        return 'bg-blue-100 text-blue-800';
-      case 'advanced':
-        return 'bg-purple-100 text-purple-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
-    }
-  };
-
-  // Translate difficulty
-  const translateDifficulty = (difficulty: string) => {
-    switch (difficulty) {
-      case 'beginner':
-        return 'algaja';
-      case 'intermediate':
-        return 'keskmine';
-      case 'advanced':
-        return 'edasijõudnu';
-      default:
-        return difficulty;
-    }
-  };
 
   return (
     <Card className={cn("overflow-hidden transition-all hover:shadow-md cursor-pointer", className)}>
