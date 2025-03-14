@@ -1,14 +1,6 @@
 
 import { useState, useEffect } from 'react';
-
-interface ActionStep {
-  id: string;
-  title: string;
-  description: string;
-  category: string;
-  timeEstimate: string;
-  resources: { title: string; url: string }[];
-}
+import { ActionStep } from '@/data/action-steps/types';
 
 export const useActionSteps = (
   actionSteps: ActionStep[],
