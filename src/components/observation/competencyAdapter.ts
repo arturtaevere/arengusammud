@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Heart, ClipboardList, Target, Users, Brain, BookCheck, BarChart, MessageSquare, Lightbulb, BookOpen } from 'lucide-react';
-import { competencies } from './competencies';
+import { competencies } from './data/competenciesData';
 
 // Map competency IDs to their respective icons
 export const competencyIconMap = {

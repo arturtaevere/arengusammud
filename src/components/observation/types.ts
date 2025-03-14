@@ -1,7 +1,7 @@
 
 import { observationFormSchema, ObservationFormValues } from './schemas';
 import { mockTeachers, getTeacherDevelopmentGoal, getTeacherActionStep } from './mockTeachers';
-import { competencies, getAllActionSteps, getActionStepById } from './competencies';
+import { competencies, getAllActionSteps, getActionStepById, getCompetencyById } from './competencies';
 import { getLastObservedTeacher, saveLastObservedTeacher } from './localStorage';
 
 // Re-export everything for backward compatibility
@@ -14,7 +14,8 @@ export {
   getLastObservedTeacher,
   saveLastObservedTeacher,
   getAllActionSteps,
-  getActionStepById
+  getActionStepById,
+  getCompetencyById
 };
 
 export type { ObservationFormValues };
