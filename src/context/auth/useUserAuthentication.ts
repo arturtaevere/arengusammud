@@ -21,11 +21,13 @@ export const useUserAuthentication = () => {
     
     // Convert any 'coach' role users to 'juht'
     const updatedUsers = currentUsers.map((u: UserWithPassword) => {
+      // Use string literals instead of role type references
+      // This solves the type checking issue while still performing the conversion
       if (u.role === 'coach') {
-        return {...u, role: 'juht'};
+        return {...u, role: 'juht' as const};
       }
       if (u.role === 'teacher') {
-        return {...u, role: 'õpetaja'};
+        return {...u, role: 'õpetaja' as const};
       }
       return u;
     });
