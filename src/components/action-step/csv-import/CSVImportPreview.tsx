@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { ActionStepDetailsCollection } from '@/services/actionStepDetails/types';
 import { Card, CardContent } from '@/components/ui/card';
 import PreviewEmptyState from './PreviewEmptyState';
@@ -11,19 +11,32 @@ interface CSVImportPreviewProps {
 }
 
 const CSVImportPreview: React.FC<CSVImportPreviewProps> = ({ parsedData }) => {
+  const [showAllEntries, setShowAllEntries] = useState(false);
+  
   if (!parsedData || Object.keys(parsedData).length === 0) {
     return <PreviewEmptyState />;
   }
 
-  // Get up to 5 entries to display as preview
-  const previewEntries = Object.entries(parsedData).slice(0, 5);
   const totalEntries = Object.keys(parsedData).length;
+  const previewLimit = 5;
+  
+  // Get entries to display - either all or just the preview amount
+  const entriesToShow = showAllEntries 
+    ? Object.entries(parsedData)
+    : Object.entries(parsedData).slice(0, previewLimit);
+  
+  const toggleShowAll = () => setShowAllEntries(!showAllEntries);
   
   return (
     <Card>
-      <PreviewHeader totalEntries={totalEntries} shownEntries={5} />
+      <PreviewHeader 
+        totalEntries={totalEntries} 
+        shownEntries={previewLimit} 
+        showAll={showAllEntries}
+        onToggleShowAll={toggleShowAll}
+      />
       <CardContent className="p-0">
-        <PreviewTable entries={previewEntries} />
+        <PreviewTable entries={entriesToShow} />
       </CardContent>
     </Card>
   );
