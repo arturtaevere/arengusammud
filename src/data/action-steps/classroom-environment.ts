@@ -1,3 +1,4 @@
+
 import { ActionStep } from './types';
 
 // Steps for categories 1-2 (classroom environment & routines)
@@ -493,4 +494,9 @@ export const classroomEnvironmentSteps: ActionStep[] = [
     ],
     practiceTasks: [
       "Valige välja mõni klass, kellele õpetaja tundi annab",
-      "Käige läbi valdkonnad, kus õpilased saaksid teha valikuid ja edendada autonoomiat, arvestades õpieesmärke (näiteks: eri õ
+      "Käige läbi valdkonnad, kus õpilased saaksid teha valikuid ja edendada autonoomiat, arvestades õpieesmärke (näiteks: eri õppemeetodid, töövahendid, tööks kuluv aeg, töö tegemise koht, lisaküsimused, iseseisvad tööd, rühmatööd, tööde esitlusviis, abivahendid jne)",
+      "Plaanige ette, milliseid valikuid õpilastele tulevases tunnis pakkuda, mida soovite sellega saavutada ning kuidas valikute pakkumist õpilastele tutvustada ja toetada",
+      "Harjutage õpilastele valikute pakkumist ning hinnake seda edukriteeriumide alusel"
+    ],
+  },
+];
