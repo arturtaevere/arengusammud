@@ -19,7 +19,6 @@ const ActionStepItem = ({ id, title, description }: ActionStepItemProps) => {
       <div className="flex justify-between items-center">
         <div>
           <p className="font-medium">{title}</p>
-          <p className="text-sm text-slate-500 mt-1">{description}</p>
         </div>
         <ArrowRight className="h-4 w-4 text-primary shrink-0" />
       </div>
