@@ -2,7 +2,7 @@
 import React from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Filter, List, Grid, MessageSquare, CheckCircle2 } from 'lucide-react';
+import { MessageSquare, CheckCircle2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 
@@ -34,21 +34,7 @@ const ObservationsList = ({ observations, onFeedbackGiven }: ObservationsListPro
 
   return (
     <div className="grid gap-4">
-      <div className="flex justify-between items-center mb-4">
-        <div className="flex gap-2">
-          <Button variant="outline" size="sm">
-            <Filter className="mr-2 h-4 w-4" />
-            Filtreeri
-          </Button>
-          <div className="border rounded-md flex divide-x">
-            <Button variant="ghost" size="sm" className="rounded-r-none">
-              <List className="h-4 w-4" />
-            </Button>
-            <Button variant="ghost" size="sm" className="rounded-l-none">
-              <Grid className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
+      <div className="flex justify-end items-center mb-4">
         <div className="text-sm text-gray-500">
           Kokku: {observations.length} vaatlust
         </div>
