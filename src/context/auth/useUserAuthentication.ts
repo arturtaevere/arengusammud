@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useToast } from '@/components/ui/use-toast';
 import { User, UserWithPassword } from './types';
@@ -21,12 +20,11 @@ export const useUserAuthentication = () => {
     
     // Convert any 'coach' role users to 'juht'
     const updatedUsers = currentUsers.map((u: UserWithPassword) => {
-      // Use string literals instead of role type references
-      // This solves the type checking issue while still performing the conversion
-      if (u.role === 'coach') {
+      // Use type assertions to fix the type comparison issues
+      if (u.role === 'coach' as any) {
         return {...u, role: 'juht' as const};
       }
-      if (u.role === 'teacher') {
+      if (u.role === 'teacher' as any) {
         return {...u, role: 'õpetaja' as const};
       }
       return u;
