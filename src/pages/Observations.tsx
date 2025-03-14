@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import Navbar from '@/components/Navbar';
 import { Button } from '@/components/ui/button';
-import { Check, ClipboardCheck, MessageSquare } from 'lucide-react';
+import { Check } from 'lucide-react';
 import ObservationForm from '@/components/ObservationForm';
 import { useToast } from '@/hooks/use-toast';
 import ObservationHeader from '@/components/observations/ObservationHeader';
@@ -10,10 +10,9 @@ import ObservationTabs from '@/components/observations/ObservationTabs';
 
 const Observations = () => {
   const { toast } = useToast();
-  const [activeTab, setActiveTab] = useState('observations');
   const [showForm, setShowForm] = useState(false);
   
-  const observations = [
+  const [observations, setObservations] = useState([
     {
       id: 'obs1',
       teacher: 'Maria Tamm',
@@ -50,7 +49,7 @@ const Observations = () => {
       hasFeedback: false,
       competences: ['Eneseanalüüs', 'Õpikeskkonna kujundamine']
     }
-  ];
+  ]);
 
   const feedbacks = [
     {
@@ -80,7 +79,6 @@ const Observations = () => {
   ];
 
   const handleNewObservation = () => {
-    setActiveTab('observations');
     setShowForm(true);
   };
 
@@ -93,9 +91,14 @@ const Observations = () => {
     setShowForm(false);
   };
 
-  // Add toggle buttons for switching between observations and feedback
-  const handleToggleTab = (tab: string) => {
-    setActiveTab(tab);
+  const handleFeedbackGiven = (id: string) => {
+    setObservations(prevObservations => 
+      prevObservations.map(obs => 
+        obs.id === id 
+          ? { ...obs, hasFeedback: true, status: 'Lõpetatud' } 
+          : obs
+      )
+    );
   };
 
   return (
@@ -103,27 +106,6 @@ const Observations = () => {
       <Navbar />
       <div className="container mx-auto pt-24 pb-12 px-4">
         <ObservationHeader onNewObservation={handleNewObservation} />
-
-        {!showForm && (
-          <div className="flex gap-4 mb-4">
-            <Button 
-              variant={activeTab === "observations" ? "default" : "outline"} 
-              onClick={() => handleToggleTab("observations")}
-              className="mb-2"
-            >
-              <ClipboardCheck className="mr-2 h-4 w-4" />
-              Vaatlused
-            </Button>
-            <Button 
-              variant={activeTab === "feedback" ? "default" : "outline"} 
-              onClick={() => handleToggleTab("feedback")}
-              className="mb-2"
-            >
-              <MessageSquare className="mr-2 h-4 w-4" />
-              Tagasiside
-            </Button>
-          </div>
-        )}
 
         {showForm ? (
           <div className="mb-8">
@@ -139,8 +121,7 @@ const Observations = () => {
           <ObservationTabs 
             observations={observations} 
             feedbacks={feedbacks} 
-            activeTab={activeTab} 
-            onTabChange={setActiveTab} 
+            onFeedbackGiven={handleFeedbackGiven} 
           />
         )}
       </div>

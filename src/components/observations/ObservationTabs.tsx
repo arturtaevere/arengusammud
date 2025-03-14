@@ -1,43 +1,21 @@
 
 import React from 'react';
-import { TabsContent } from '@/components/ui/tabs';
 import ObservationsList from './ObservationsList';
-import FeedbackList from './FeedbackList';
-
-interface Observation {
-  id: string;
-  teacher: string;
-  subject: string;
-  date: string;
-  status: string;
-  hasFeedback: boolean;
-  competences: string[];
-}
-
-interface Feedback {
-  id: string;
-  teacher: string;
-  subject: string;
-  date: string;
-  type: string;
-  preview: string;
-}
+import { Observation, Feedback } from './types';
 
 interface ObservationTabsProps {
   observations: Observation[];
   feedbacks: Feedback[];
-  activeTab: string;
-  onTabChange: (value: string) => void;
+  onFeedbackGiven: (id: string) => void;
 }
 
-const ObservationTabs = ({ observations, feedbacks, activeTab, onTabChange }: ObservationTabsProps) => {
+const ObservationTabs = ({ observations, onFeedbackGiven }: ObservationTabsProps) => {
   return (
     <div className="mb-8">
-      {activeTab === "observations" ? (
-        <ObservationsList observations={observations} />
-      ) : (
-        <FeedbackList feedbacks={feedbacks} />
-      )}
+      <ObservationsList 
+        observations={observations} 
+        onFeedbackGiven={onFeedbackGiven} 
+      />
     </div>
   );
 };

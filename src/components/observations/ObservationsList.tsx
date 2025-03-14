@@ -2,8 +2,9 @@
 import React from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Filter, List, Grid, MessageSquare } from 'lucide-react';
+import { Filter, List, Grid, MessageSquare, CheckCircle2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useToast } from '@/hooks/use-toast';
 
 interface Observation {
   id: string;
@@ -17,9 +18,20 @@ interface Observation {
 
 interface ObservationsListProps {
   observations: Observation[];
+  onFeedbackGiven: (id: string) => void;
 }
 
-const ObservationsList = ({ observations }: ObservationsListProps) => {
+const ObservationsList = ({ observations, onFeedbackGiven }: ObservationsListProps) => {
+  const { toast } = useToast();
+
+  const handleFeedbackGiven = (id: string) => {
+    onFeedbackGiven(id);
+    toast({
+      title: "Tagasiside antud",
+      description: "Õpetajale on saadetud tagasiside",
+    });
+  };
+
   return (
     <div className="grid gap-4">
       <div className="flex justify-between items-center mb-4">
@@ -74,7 +86,7 @@ const ObservationsList = ({ observations }: ObservationsListProps) => {
                 <div className="flex items-center text-xs text-gray-500">
                   {observation.hasFeedback ? (
                     <span className="flex items-center text-green-600">
-                      <MessageSquare className="mr-1 h-3 w-3" />
+                      <CheckCircle2 className="mr-1 h-3 w-3" />
                       Tagasiside antud
                     </span>
                   ) : (
@@ -84,9 +96,21 @@ const ObservationsList = ({ observations }: ObservationsListProps) => {
                     </span>
                   )}
                 </div>
-                <Link to={`/observations/${observation.id}`}>
-                  <Button variant="outline" size="sm">Vaata</Button>
-                </Link>
+                <div className="flex gap-2">
+                  {!observation.hasFeedback && (
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      className="text-xs"
+                      onClick={() => handleFeedbackGiven(observation.id)}
+                    >
+                      Tagasiside antud
+                    </Button>
+                  )}
+                  <Link to={`/observations/${observation.id}`}>
+                    <Button variant="outline" size="sm">Vaata</Button>
+                  </Link>
+                </div>
               </div>
             </CardFooter>
           </Card>
