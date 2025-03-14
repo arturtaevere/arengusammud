@@ -16,7 +16,7 @@ export const AuthContext = createContext<AuthContextType>({
   updateProfileImage: () => {},
   getAllUsers: () => [],
   verifyEmail: async () => false,
-  resendVerificationEmail: async () => {},
+  resendVerificationEmail: async () => false,
   pendingVerificationEmail: null,
   setPendingVerificationEmail: () => {},
   deleteUserByEmail: async () => false,

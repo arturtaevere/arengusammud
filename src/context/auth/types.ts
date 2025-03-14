@@ -1,18 +1,22 @@
 
-// Define the shape of our user object
+// Define User types
 export type User = {
   id: string;
   name: string;
   email: string;
   role: 'coach' | 'teacher';
-  profileImage?: string;
   school?: string;
   createdAt: string;
   emailVerified: boolean;
+  profileImage?: string;
 };
 
-// Define the shape of our auth context
-export type AuthContextType = {
+export type UserWithPassword = User & {
+  password: string;
+};
+
+// Define Auth Context type
+export interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
@@ -22,11 +26,8 @@ export type AuthContextType = {
   updateProfileImage: (imageUrl: string) => void;
   getAllUsers: () => User[];
   verifyEmail: (userId: string, token: string) => Promise<boolean>;
-  resendVerificationEmail: (email: string) => Promise<void>;
+  resendVerificationEmail: (email: string) => Promise<boolean>;
   pendingVerificationEmail: string | null;
-  setPendingVerificationEmail: (email: string | null) => void;
+  setPendingVerificationEmail: React.Dispatch<React.SetStateAction<string | null>>;
   deleteUserByEmail: (email: string) => Promise<boolean>;
-};
-
-// User with password (for internal use)
-export type UserWithPassword = User & { password: string };
+}
