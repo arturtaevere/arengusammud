@@ -14,13 +14,30 @@ import { actionSteps } from "@/data/actionStepsData";
 // Create a local storage key using the step ID to store video URLs
 const getVideoStorageKey = (stepId: string) => `action_step_video_${stepId}`;
 
+// Define a strict type for the difficulty levels
+type DifficultyLevel = "beginner" | "intermediate" | "advanced";
+
+// Define the type for actionStepDetails
+type ActionStepDetailType = {
+  title: string;
+  description: string;
+  category: string;
+  difficulty: DifficultyLevel;
+  timeEstimate: string;
+  reason: string;
+  successCriteria: string[];
+  practiceTask: string[];
+  examples: string;
+  videoUrl: string;
+};
+
 // Action steps data
-const actionStepsDetails = {
+const actionStepsDetails: Record<string, ActionStepDetailType> = {
   "step1": {
     title: "Rakenda positiivset suhtlusviisi",
     description: "Kasuta positiivset keelt ja toetavat suhtlusviisi klassiruumis, et luua turvaline õhkkond.",
     category: "1",
-    difficulty: "beginner" as const,
+    difficulty: "beginner",
     timeEstimate: "15-20 minutit päevas",
     reason: "Positiivne suhtlusviis aitab luua turvalise õpikeskkonna, kus õpilased tunnevad end väärtustatuna. See edendab usaldust õpetaja ja õpilaste vahel ning julgustab õpilasi aktiivselt õppimisprotsessis osalema. Uuringud näitavad, et positiivne keskkond soodustab õpilaste akadeemilist edukust ja sotsiaal-emotsionaalset arengut.",
     successCriteria: [
@@ -41,7 +58,7 @@ const actionStepsDetails = {
     title: "Loo selged klassiruumi reeglid",
     description: "Kehtesta koos õpilastega selged reeglid, mis aitavad luua stabiilsuse ja turvatunde.",
     category: "2",
-    difficulty: "beginner" as const,
+    difficulty: "beginner",
     timeEstimate: "30-45 minutit",
     reason: "Selged reeglid loovad klassiruumis struktuuri ja ennustatavust, mis on kriitiliselt olulised turvalise õpikeskkonna jaoks. Kui õpilased teavad, mida neilt oodatakse, tunnevad nad end turvalisemalt ja saavad keskenduda õppimisele. Õpilaste kaasamine reeglite loomisse suurendab nende pühendumust ja vastutustunnet reeglite järgimise osas.",
     successCriteria: [
@@ -61,7 +78,7 @@ const actionStepsDetails = {
     title: "Iga õpilase väärtustamine",
     description: "Annan märku",
     category: "1",
-    difficulty: "beginner" as const,
+    difficulty: "beginner",
     timeEstimate: "20-30 minutit",
     reason: "Iga õpilase väärtustamine loob kaasava ja toetava õpikeskkonna, kus kõik õpilased tunnevad end oodatuna ja austatuna. See aitab luua usalduslikku suhet õpetaja ja õpilaste vahel, mis on oluline eeldus efektiivseks õppimiseks. Õpilased õpivad paremini, kui nad tunnevad, et neid hinnatakse kui indiviide.",
     successCriteria: [
@@ -85,7 +102,7 @@ const actionStepsDetails = {
     title: "Tõhusa õppimisviisi avamine",
     description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
     category: "10",
-    difficulty: "intermediate" as const,
+    difficulty: "intermediate",
     timeEstimate: "45-60 minutit",
     reason: "Õpilased, kes mõistavad õppimise protsessi ja selle etappe, suudavad paremini oma õppimist juhtida. Kolmeetapiline protsess (planeerimine, tegutsemine, reflekteerimine) aitab õpilastel kujuneda ennastjuhtivateks õppijateks, kes võtavad vastutuse oma õppimise eest. See arendab metakognitiivseid oskusi, mis on vajalikud elukestvaks õppimiseks ja akadeemiliseks eduks.",
     successCriteria: [
@@ -107,7 +124,7 @@ const actionStepsDetails = {
 
 const ActionStepDetail = () => {
   const { stepId } = useParams<{ stepId: string }>();
-  const [stepDetails, setStepDetails] = useState<typeof actionStepsDetails[keyof typeof actionStepsDetails] | null>(null);
+  const [stepDetails, setStepDetails] = useState<ActionStepDetailType | null>(null);
   const [activeTab, setActiveTab] = useState("description");
   const [videoUrl, setVideoUrl] = useState<string>("");
   
@@ -118,7 +135,7 @@ const ActionStepDetail = () => {
       // First check if it's in our hardcoded action steps details
       if (stepId in actionStepsDetails) {
         console.log("Found step in actionStepsDetails");
-        const details = actionStepsDetails[stepId as keyof typeof actionStepsDetails];
+        const details = actionStepsDetails[stepId];
         setStepDetails(details);
         
         // Try to get from localStorage first
@@ -142,11 +159,11 @@ const ActionStepDetail = () => {
       if (foundStep) {
         console.log("Found step in actionSteps data:", foundStep);
         // Create a compatible step details object from the found step
-        const compatibleDetails = {
+        const compatibleDetails: ActionStepDetailType = {
           title: foundStep.title,
           description: foundStep.description,
           category: foundStep.category,
-          difficulty: (foundStep.difficulty || "beginner") as const,
+          difficulty: (foundStep.difficulty as DifficultyLevel) || "beginner",
           timeEstimate: foundStep.timeEstimate,
           reason: "Põhjendus pole veel lisatud.",
           successCriteria: foundStep.resources?.map(r => r.title) || [],
@@ -170,7 +187,7 @@ const ActionStepDetail = () => {
       
       if (dataStepId && dataStepId in actionStepsDetails) {
         console.log("Found step via helper:", dataStepId);
-        const details = actionStepsDetails[dataStepId as keyof typeof actionStepsDetails];
+        const details = actionStepsDetails[dataStepId];
         setStepDetails(details);
         
         // Try to get from localStorage first
