@@ -1,10 +1,10 @@
-
 // Add the necessary code here without modifying the existing functionality
 import { competences, getCompetenceTitle } from "@/data/competencesData";
 import { ActionStepsService } from "@/services/ActionStepsService";
 import { CSVImportService } from "@/services/csvImport";
 import { ActionStepDetailsCollection } from "@/services/actionStepDetails/types";
 import { generateId } from "@/services/csvImport/utils";
+import { ReactNode } from "react";
 
 /**
  * Convert competence data to format needed for CompetencesPage
@@ -63,28 +63,13 @@ export const convertActionStepsToCompetencesPageFormat = () => {
  * Convert competence data to format needed for Dashboard
  */
 export const convertToDashboardFormat = () => {
-  // Import necessary icons for the dashboard display
-  import { BookOpen, ClipboardCheck, Clock, Compass, FileText, 
-    Layers, MessageCircle, Users, BarChart, Brain } from 'lucide-react';
-  
-  // Map of competence IDs to icons
-  const iconMap = {
-    '1': <BookOpen className="h-5 w-5 text-primary" />,
-    '2': <ClipboardCheck className="h-5 w-5 text-primary" />,
-    '3': <Clock className="h-5 w-5 text-primary" />,
-    '4': <Compass className="h-5 w-5 text-primary" />,
-    '5': <FileText className="h-5 w-5 text-primary" />,
-    '6': <Layers className="h-5 w-5 text-primary" />,
-    '7': <MessageCircle className="h-5 w-5 text-primary" />,
-    '8': <Users className="h-5 w-5 text-primary" />,
-    '9': <BarChart className="h-5 w-5 text-primary" />,
-    '10': <Brain className="h-5 w-5 text-primary" />
-  };
-  
-  // Convert competences to the format needed for the dashboard
+  // Note: Instead of trying to include JSX directly here, just define the icon 
+  // mapping as a return structure that the component can use
   return competences.map((competence) => ({
     id: competence.id,
     title: competence.title,
-    icon: iconMap[competence.id as keyof typeof iconMap] || <BookOpen className="h-5 w-5 text-primary" />
+    // We're not including the actual icon components here
+    // The dashboard component will handle icon mapping
+    iconType: competence.id // Just pass the ID for icon mapping
   }));
 };
