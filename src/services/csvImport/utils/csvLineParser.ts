@@ -1,6 +1,6 @@
 
 /**
- * Utility functions for CSV parsing and processing
+ * Utility functions for parsing CSV lines and handling delimiters
  */
 
 /**
@@ -36,17 +36,6 @@ export const parseCSVLine = (line: string, delimiter: string = ','): string[] =>
   result.push(currentValue.trim());
   
   return result;
-};
-
-/**
- * Generate a simple ID from a title
- */
-export const generateId = (title: string): string => {
-  return 'step-' + title
-    .toLowerCase()
-    .replace(/[^\w\s]/g, '')  // Remove non-alphanumeric characters
-    .replace(/\s+/g, '-')     // Replace spaces with hyphens
-    .substring(0, 20);        // Limit length
 };
 
 /**
