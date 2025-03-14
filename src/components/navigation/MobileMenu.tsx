@@ -21,7 +21,7 @@ const MobileMenu = ({ getInitials }: MobileMenuProps) => {
             <Link 
               to="/competences" 
               className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
-                location.pathname === '/competences' 
+                location.pathname === '/competences' || location.pathname === '/action-steps' || location.pathname.includes('/action-steps/') 
                   ? 'bg-primary text-primary-foreground' 
                   : 'hover:bg-gray-100'
               }`}

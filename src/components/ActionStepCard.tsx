@@ -2,9 +2,10 @@
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Bookmark } from 'lucide-react';
+import { Bookmark, Clock, Tag } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Link } from 'react-router-dom';
+import { Badge } from '@/components/ui/badge';
 
 interface ActionStepCardProps {
   id: string;
@@ -32,14 +33,20 @@ const ActionStepCard = ({
   const [isSaved, setIsSaved] = useState(saved);
 
   return (
-    <Card className={cn("overflow-hidden transition-all hover:shadow-md cursor-pointer", className)}>
-      <Link to={`/action-steps/${id}`} className="block">
+    <Card className={cn("overflow-hidden transition-all hover:shadow-md", className)}>
+      <Link to={`/action-steps/${id}`} className="block cursor-pointer">
         <CardHeader className="pb-2">
           <div className="flex justify-between items-start">
             <div>
               <CardTitle className="text-lg font-medium">
                 {title}
               </CardTitle>
+              {category && (
+                <Badge variant="outline" className="mt-1 font-normal">
+                  <Tag className="h-3 w-3 mr-1" />
+                  {category}
+                </Badge>
+              )}
             </div>
             <Button
               variant="ghost"
@@ -60,9 +67,15 @@ const ActionStepCard = ({
           </div>
         </CardHeader>
         <CardContent>
-          <p className="text-sm">
+          <p className="text-sm mb-3">
             {description}
           </p>
+          {timeEstimate && (
+            <div className="flex items-center text-xs text-muted-foreground">
+              <Clock className="h-3 w-3 mr-1" />
+              {timeEstimate}
+            </div>
+          )}
         </CardContent>
       </Link>
     </Card>

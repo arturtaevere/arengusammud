@@ -10,7 +10,7 @@ const MainNavLinks = () => {
       <Link 
         to="/competences" 
         className={`transition-all hover:text-primary flex items-center ${
-          location.pathname === '/competences' ? 'text-primary font-medium' : ''
+          location.pathname === '/competences' || location.pathname === '/action-steps' || location.pathname.includes('/action-steps/') ? 'text-primary font-medium' : ''
         }`}
       >
         <BookOpen className="mr-2 h-5 w-5" />
