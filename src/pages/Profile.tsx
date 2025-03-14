@@ -144,7 +144,7 @@ const Profile = () => {
               </div>
               <h2 className="text-xl font-semibold">{user.name}</h2>
               <span className="px-3 py-1 mt-2 text-sm rounded-full bg-primary/10 text-primary">
-                {user.role === 'coach' ? 'Juhendaja' : 'Õpetaja'}
+                {user.role === 'juht' ? 'Juhendaja' : 'Õpetaja'}
               </span>
             </div>
 

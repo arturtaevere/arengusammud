@@ -24,6 +24,9 @@ export const useUserAuthentication = () => {
       if (u.role === 'coach') {
         return {...u, role: 'juht'};
       }
+      if (u.role === 'teacher') {
+        return {...u, role: 'õpetaja'};
+      }
       return u;
     });
     

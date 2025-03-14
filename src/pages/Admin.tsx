@@ -5,16 +5,7 @@ import { useAuth } from '@/context/AuthContext';
 import Navbar from '@/components/Navbar';
 import { useToast } from '@/components/ui/use-toast';
 import { FilterCard, UserTable } from '@/components/admin';
-
-type User = {
-  id: string;
-  name: string;
-  email: string;
-  role: 'juht' | 'õpetaja';
-  profileImage?: string;
-  school?: string;
-  createdAt: string;
-};
+import { User } from '@/context/auth/types';
 
 const Admin = () => {
   const { user, isAuthenticated, getAllUsers, deleteUserByEmail } = useAuth();

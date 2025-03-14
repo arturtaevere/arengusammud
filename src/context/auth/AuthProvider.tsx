@@ -60,7 +60,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   // Handle user signup (simplified)
-  const handleSignup = async (name: string, email: string, password: string, role: 'coach' | 'teacher', school?: string) => {
+  const handleSignup = async (name: string, email: string, password: string, role: 'juht' | 'õpetaja', school?: string) => {
     setIsLoading(true);
     try {
       await signup(name, email, password, role, school);

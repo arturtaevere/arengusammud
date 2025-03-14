@@ -53,8 +53,8 @@ const FilterCard = ({
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Kõik rollid</SelectItem>
-                <SelectItem value="coach">Juhendaja</SelectItem>
-                <SelectItem value="teacher">Õpetaja</SelectItem>
+                <SelectItem value="juht">Juhendaja</SelectItem>
+                <SelectItem value="õpetaja">Õpetaja</SelectItem>
               </SelectContent>
             </Select>
           </div>

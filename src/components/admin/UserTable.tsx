@@ -10,16 +10,7 @@ import {
 } from '@/components/ui/table';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import UserTableRow from './UserTableRow';
-
-type User = {
-  id: string;
-  name: string;
-  email: string;
-  role: 'coach' | 'teacher';
-  profileImage?: string;
-  school?: string;
-  createdAt: string;
-};
+import { User } from '@/context/auth/types';
 
 interface UserTableProps {
   users: User[];
