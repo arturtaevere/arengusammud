@@ -10,7 +10,7 @@ type User = {
   id: string;
   name: string;
   email: string;
-  role: 'coach' | 'teacher';
+  role: 'juht' | 'õpetaja';
   profileImage?: string;
   school?: string;
   createdAt: string;
@@ -29,13 +29,13 @@ const Admin = () => {
   useEffect(() => {
     if (!isAuthenticated) {
       navigate('/auth');
-    } else if (user?.role !== 'coach') {
+    } else if (user?.role !== 'juht') {
       navigate('/dashboard');
     }
   }, [isAuthenticated, user, navigate]);
 
   useEffect(() => {
-    if (isAuthenticated && user?.role === 'coach') {
+    if (isAuthenticated && user?.role === 'juht') {
       const allUsers = getAllUsers();
       setUsers(allUsers);
       setFilteredUsers(allUsers);
@@ -74,7 +74,7 @@ const Admin = () => {
     }
   };
 
-  if (!isAuthenticated || user?.role !== 'coach') {
+  if (!isAuthenticated || user?.role !== 'juht') {
     return null;
   }
 

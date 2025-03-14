@@ -26,7 +26,7 @@ type User = {
   id: string;
   name: string;
   email: string;
-  role: 'coach' | 'teacher';
+  role: 'juht' | 'õpetaja';
   profileImage?: string;
   school?: string;
   createdAt: string;
@@ -76,8 +76,8 @@ const UserTableRow = ({ user, onDeleteUser }: UserTableRowProps) => {
         </div>
       </TableCell>
       <TableCell>
-        <Badge variant={user.role === 'coach' ? 'default' : 'secondary'}>
-          {user.role === 'coach' ? 'Juhendaja' : 'Õpetaja'}
+        <Badge variant={user.role === 'juht' ? 'default' : 'secondary'}>
+          {user.role === 'juht' ? 'Juht' : 'Õpetaja'}
         </Badge>
       </TableCell>
       <TableCell>{user.school || 'N/A'}</TableCell>

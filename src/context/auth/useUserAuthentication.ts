@@ -18,7 +18,21 @@ export const useUserAuthentication = () => {
     
     // Get the most up-to-date users from localStorage
     const currentUsers = JSON.parse(localStorage.getItem(USERS_STORAGE_KEY) || '[]');
-    const foundUser = currentUsers.find((u: UserWithPassword) => u.email.toLowerCase() === email.toLowerCase());
+    
+    // Convert any 'coach' role users to 'juht'
+    const updatedUsers = currentUsers.map((u: UserWithPassword) => {
+      if (u.role === 'coach') {
+        return {...u, role: 'juht'};
+      }
+      return u;
+    });
+    
+    // Save the updated users with the new roles
+    if (JSON.stringify(updatedUsers) !== JSON.stringify(currentUsers)) {
+      localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(updatedUsers));
+    }
+    
+    const foundUser = updatedUsers.find((u: UserWithPassword) => u.email.toLowerCase() === email.toLowerCase());
     
     if (!foundUser) {
       throw new Error('Vale e-post või parool');
@@ -41,14 +55,14 @@ export const useUserAuthentication = () => {
     return userWithoutPassword;
   };
 
-  const signup = async (name: string, email: string, password: string, role: 'coach' | 'teacher', school?: string) => {
+  const signup = async (name: string, email: string, password: string, role: 'juht' | 'õpetaja', school?: string) => {
     await new Promise(resolve => setTimeout(resolve, 800));
     
     if (users.some(u => u.email.toLowerCase() === email.toLowerCase())) {
       throw new Error('Selle e-posti aadressiga kasutaja on juba olemas');
     }
 
-    if (role === 'teacher' && !school) {
+    if (role === 'õpetaja' && !school) {
       throw new Error('Õpetaja peab valima kooli');
     }
 

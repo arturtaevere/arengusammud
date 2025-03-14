@@ -22,7 +22,7 @@ const SignupForm = () => {
       name: '',
       email: '',
       password: '',
-      role: 'teacher',
+      role: 'õpetaja',
       school: '',
     },
   });
@@ -112,12 +112,12 @@ const SignupForm = () => {
                     className="flex space-x-4"
                   >
                     <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="coach" id="coach" />
-                      <Label htmlFor="coach">Juhendaja</Label>
+                      <RadioGroupItem value="juht" id="juht" />
+                      <Label htmlFor="juht">Juht</Label>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="teacher" id="teacher" />
-                      <Label htmlFor="teacher">Õpetaja</Label>
+                      <RadioGroupItem value="õpetaja" id="õpetaja" />
+                      <Label htmlFor="õpetaja">Õpetaja</Label>
                     </div>
                   </RadioGroup>
                 </FormControl>
@@ -126,7 +126,7 @@ const SignupForm = () => {
             )}
           />
 
-          {role === 'teacher' && (
+          {role === 'õpetaja' && (
             <FormField
               control={form.control}
               name="school"
