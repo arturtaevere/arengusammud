@@ -37,14 +37,6 @@ export const convertToDashboardFormat = () => {
   });
 };
 
-// Helper function to ensure difficulty is one of the allowed values
-const validateDifficulty = (difficulty: string | undefined): "beginner" | "intermediate" | "advanced" => {
-  if (difficulty === "beginner" || difficulty === "intermediate" || difficulty === "advanced") {
-    return difficulty;
-  }
-  return "beginner"; // Default to beginner if not valid
-};
-
 // Convert action steps to the format used in the Competences page
 export const convertActionStepsToCompetencesPageFormat = (): ActionStep[] => {
   console.log("Converting action steps, source length:", actionSteps.length);
@@ -55,17 +47,12 @@ export const convertActionStepsToCompetencesPageFormat = (): ActionStep[] => {
     
     // Map through each action step and ensure it has all required properties
     return actionSteps.map(step => {
-      // Get difficulty from step or compute it, then validate
-      const difficulty = step.difficulty ? 
-        validateDifficulty(step.difficulty as string) : 
-        validateDifficulty(getDifficultyForActionStep(step.id));
-      
       return {
         id: step.id,
         title: step.title,
         description: step.description,
         category: step.category,
-        difficulty: difficulty,
+        difficulty: step.difficulty || getDifficultyForActionStep(step.id),
         timeEstimate: step.timeEstimate || getTimeEstimateForActionStep(step.id),
         resources: step.resources || [],
         practiceTasks: step.practiceTasks || []
@@ -77,15 +64,12 @@ export const convertActionStepsToCompetencesPageFormat = (): ActionStep[] => {
   console.log("No action steps in data module, using competencies data");
   return competencies.flatMap(comp => 
     comp.actionSteps.map(step => {
-      // Calculate and validate difficulty
-      const difficulty = validateDifficulty(getDifficultyForActionStep(step.id));
-      
       return {
         id: step.id,
         title: step.title,
         description: step.description,
         category: comp.id.replace('comp', ''),
-        difficulty: difficulty,
+        difficulty: getDifficultyForActionStep(step.id),
         timeEstimate: getTimeEstimateForActionStep(step.id),
         resources: [],
         practiceTasks: []

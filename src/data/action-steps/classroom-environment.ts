@@ -1,4 +1,3 @@
-
 import { ActionStep } from './types';
 
 // Steps for categories 1-2 (classroom environment & routines)
@@ -8,6 +7,7 @@ export const classroomEnvironmentSteps: ActionStep[] = [
     title: "Loo selged klassiruumi reeglid",
     description: "Kehtesta koos õpilastega selged reeglid, mis aitavad luua stabiilsuse ja turvatunde.",
     category: "2", // Maps to "Kindlate ja harjumuspäraste tegevuste korraldamine klassis"
+    difficulty: "beginner",
     timeEstimate: "30-45 minutit",
     resources: [
       {
@@ -493,11 +493,4 @@ export const classroomEnvironmentSteps: ActionStep[] = [
     ],
     practiceTasks: [
       "Valige välja mõni klass, kellele õpetaja tundi annab",
-      "Käige läbi valdkonnad, kus õpilased saaksid teha valikuid ja edendada autonoomiat, arvestades õpieesmärke (näiteks: eri õppeviisid, eri õpikeskkonnad, lahenduste vormid, uurimistööde ja projektide suunad)",
-      "Valmistage klassi jaoks ette üks kuni kolm valikukohta, mida saaks mõnes järgmises tunnis kasutada",
-      "Hinnake pakutavaid valikuvõimalusi edukriteeriumide alusel ning viimistlege neid",
-      "Harjutage viimistletud valikuvõimaluste pakkumist"
-    ],
-  },
-];
-
+      "Käige läbi valdkonnad, kus õpilased saaksid teha valikuid ja edendada autonoomiat, arvestades õpieesmärke (näiteks: eri õ

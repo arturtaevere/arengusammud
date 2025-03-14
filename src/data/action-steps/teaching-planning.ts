@@ -8,6 +8,7 @@ export const teachingPlanningSteps: ActionStep[] = [
     title: "Kasuta selgeid õpieesmärke",
     description: "Sõnasta iga tunni alguses selged õpieesmärgid, mida soovid tunni jooksul saavutada.",
     category: "3", // Maps to "Tundide ja õppimise kavandamine õpieesmärkidest lähtuvalt"
+    difficulty: "beginner",
     timeEstimate: "10-15 minutit iga tunni kohta",
     resources: [
       {
@@ -21,6 +22,7 @@ export const teachingPlanningSteps: ActionStep[] = [
     title: "Rakenda aktiivõppe meetodeid",
     description: "Kasuta tunnis erinevaid aktiivõppe meetodeid, mis kaasavad õpilasi aktiivselt õppimisse.",
     category: "4", // Maps to "Kaasamõtlemise ja pingutamise soodustamine"
+    difficulty: "intermediate",
     timeEstimate: "Läbivalt tunnis",
     resources: [
       {
@@ -34,6 +36,7 @@ export const teachingPlanningSteps: ActionStep[] = [
     title: "Loo struktureeritud iseseisvad ülesanded",
     description: "Koosta selgete juhiste ja ajaraamiga iseseisvad tööd, mis arendavad õpilaste enesejuhtimist.",
     category: "5", // Maps to "Iseseisva töö kavandamine"
+    difficulty: "intermediate",
     timeEstimate: "30-60 minutit ülesande kohta",
     resources: [
       {
