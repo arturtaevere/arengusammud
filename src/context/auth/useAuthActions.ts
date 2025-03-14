@@ -66,7 +66,7 @@ export const useAuthActions = () => {
     if (foundUser && !foundUser.emailVerified) {
       const token = generateVerificationToken(foundUser.id);
       console.log(`New verification token for ${foundUser.email}: ${token}`);
-      console.log(`Verification link: /verify-email?id=${foundUser.id}&token=${token}`);
+      console.log(`Verification link: ${window.location.origin}/verify-email?id=${foundUser.id}&token=${token}`);
       
       toast({
         title: "Kinnitusmeil saadetud",
@@ -88,13 +88,20 @@ export const useAuthActions = () => {
   const login = async (email: string, password: string) => {
     await new Promise(resolve => setTimeout(resolve, 800));
     
-    const foundUser = users.find(u => u.email.toLowerCase() === email.toLowerCase() && u.password === password);
+    const foundUser = users.find(u => u.email.toLowerCase() === email.toLowerCase());
     
     if (!foundUser) {
       throw new Error('Vale e-post või parool');
     }
     
+    if (foundUser.password !== password) {
+      throw new Error('Vale e-post või parool');
+    }
+
     if (!foundUser.emailVerified) {
+      const token = generateVerificationToken(foundUser.id);
+      console.log(`Verification token for ${foundUser.email}: ${token}`);
+      console.log(`Verification link: ${window.location.origin}/verify-email?id=${foundUser.id}&token=${token}`);
       throw new Error('E-posti aadress pole kinnitatud. Palun kontrolli oma postkasti kinnituslingi jaoks.');
     }
     
@@ -138,7 +145,7 @@ export const useAuthActions = () => {
     
     const token = generateVerificationToken(userId);
     console.log(`Verification token for ${email}: ${token}`);
-    console.log(`Verification link: /verify-email?id=${userId}&token=${token}`);
+    console.log(`Verification link: ${window.location.origin}/verify-email?id=${userId}&token=${token}`);
     
     toast({
       title: "Registreerimine õnnestus",
