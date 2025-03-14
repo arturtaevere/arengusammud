@@ -3,7 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, BookOpen, CheckSquare, ListTodo, Video } from "lucide-react";
+import { ArrowLeft, BookOpen, CheckSquare, FileText, ListTodo, Video } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import VideoPlayer from "@/components/VideoPlayer";
@@ -21,6 +21,7 @@ const actionStepsDetails = {
     category: "1",
     difficulty: "beginner" as const,
     timeEstimate: "15-20 minutit päevas",
+    reason: "Positiivne suhtlusviis aitab luua turvalise õpikeskkonna, kus õpilased tunnevad end väärtustatuna. See edendab usaldust õpetaja ja õpilaste vahel ning julgustab õpilasi aktiivselt õppimisprotsessis osalema. Uuringud näitavad, et positiivne keskkond soodustab õpilaste akadeemilist edukust ja sotsiaal-emotsionaalset arengut.",
     successCriteria: [
       "Kasutan õpilastega suheldes positiivset ja julgustavat keelt.",
       "Väljendan selgelt oma ootusi positiivses võtmes.",
@@ -41,6 +42,7 @@ const actionStepsDetails = {
     category: "2",
     difficulty: "beginner" as const,
     timeEstimate: "30-45 minutit",
+    reason: "Selged reeglid loovad klassiruumis struktuuri ja ennustatavust, mis on kriitiliselt olulised turvalise õpikeskkonna jaoks. Kui õpilased teavad, mida neilt oodatakse, tunnevad nad end turvalisemalt ja saavad keskenduda õppimisele. Õpilaste kaasamine reeglite loomisse suurendab nende pühendumust ja vastutustunnet reeglite järgimise osas.",
     successCriteria: [
       "Loon õpilastega koos klassireeglid, mis on selgelt sõnastatud.",
       "Reeglid on positiivselt sõnastatud, keskendudes sellele, mida teha, mitte sellele, mida mitte teha.",
@@ -60,6 +62,7 @@ const actionStepsDetails = {
     category: "10",
     difficulty: "intermediate" as const,
     timeEstimate: "45-60 minutit",
+    reason: "Õpilased, kes mõistavad õppimise protsessi ja selle etappe, suudavad paremini oma õppimist juhtida. Kolmeetapiline protsess (planeerimine, tegutsemine, reflekteerimine) aitab õpilastel kujuneda ennastjuhtivateks õppijateks, kes võtavad vastutuse oma õppimise eest. See arendab metakognitiivseid oskusi, mis on vajalikud elukestvaks õppimiseks ja akadeemiliseks eduks.",
     successCriteria: [
       "Õpilased mõistavad õppimise kolme põhietappi: planeerimine, tegutsemine, reflekteerimine.",
       "Õpilased oskavad selgitada, miks kõik kolm etappi on olulised.",
@@ -160,8 +163,12 @@ const ActionStepDetail = () => {
           <p className="text-muted-foreground mb-6">{stepDetails?.description}</p>
           
           <div className="mb-8">
-            <Tabs defaultValue="criteria" className="w-full">
+            <Tabs defaultValue="reason" className="w-full">
               <TabsList className="mb-6 w-full justify-start overflow-x-auto">
+                <TabsTrigger value="reason" className="flex items-center">
+                  <FileText className="h-4 w-4 mr-2" />
+                  Põhjendus
+                </TabsTrigger>
                 <TabsTrigger value="criteria" className="flex items-center">
                   <CheckSquare className="h-4 w-4 mr-2" />
                   Edukriteeriumid
@@ -179,6 +186,17 @@ const ActionStepDetail = () => {
                   Video
                 </TabsTrigger>
               </TabsList>
+              
+              <TabsContent value="reason" className="animate-fade-in">
+                <Card>
+                  <CardContent className="pt-6">
+                    <h3 className="text-lg font-medium mb-4">Põhjendus</h3>
+                    <div className="prose max-w-none">
+                      <p>{stepDetails?.reason}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
               
               <TabsContent value="criteria" className="animate-fade-in">
                 <Card>
