@@ -4,22 +4,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { ChevronRight } from 'lucide-react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import ActionStepsList from './ActionStepsList';
-
-interface ActionStep {
-  id: string;
-  title: string;
-  description: string;
-  category: string;
-  difficulty: string;
-  timeEstimate: string;
-  resources: { title: string; url: string }[];
-}
+import { ActionStep } from '@/data/action-steps/types';
 
 interface CompetenceCardProps {
   id: string;
   title: string;
   description: string;
-  icon: React.ReactNode; // Changed from React.ElementType to React.ReactNode
+  icon: React.ReactNode;
   count: number;
   isExpanded: boolean;
   isStepsExpanded: boolean;

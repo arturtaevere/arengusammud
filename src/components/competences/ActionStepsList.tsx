@@ -4,16 +4,7 @@ import { Button } from '@/components/ui/button';
 import { BookOpen, Plus } from 'lucide-react';
 import ActionStepItem from './ActionStepItem';
 import { Link } from 'react-router-dom';
-
-interface ActionStep {
-  id: string;
-  title: string;
-  description: string;
-  category: string;
-  difficulty?: string;
-  timeEstimate: string;
-  resources: { title: string; url: string }[];
-}
+import { ActionStep } from '@/data/action-steps/types';
 
 interface ActionStepsListProps {
   steps: ActionStep[];

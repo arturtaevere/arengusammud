@@ -1,23 +1,14 @@
 
 import React from 'react';
 import CompetenceCard from './CompetenceCard';
+import { ActionStep } from '@/data/action-steps/types';
 
 interface Competence {
   id: string;
   title: string;
   description: string;
   count: number;
-  icon: React.ReactNode; // Changed from React.ElementType to React.ReactNode
-}
-
-interface ActionStep {
-  id: string;
-  title: string;
-  description: string;
-  category: string;
-  difficulty?: string;
-  timeEstimate: string;
-  resources: { title: string; url: string }[];
+  icon: React.ReactNode;
 }
 
 interface CompetenceListProps {
