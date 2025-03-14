@@ -55,7 +55,7 @@ const StatsCards = ({ stats }: StatsCardsProps) => {
         </CardHeader>
         <CardContent>
           <p className="text-3xl font-bold">{stats.feedbackCount}</p>
-          <p className="text-sm text-muted-foreground">Tagasiside ühikud</p>
+          <p className="text-sm text-muted-foreground">Tagasisidekohtumist läbi viidud</p>
           <div className="mt-4">
             <Button variant="outline" size="sm" className="w-full" asChild>
               <Link to="/feedback/new">
