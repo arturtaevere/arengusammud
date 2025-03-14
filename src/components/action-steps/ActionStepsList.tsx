@@ -29,7 +29,7 @@ const ActionStepsList = ({
   setSearchTerm
 }: ActionStepsListProps) => {
   const cleanDescription = (description: string): string => {
-    return description.replace(/^[\w\s]+:\s*/i, '');
+    return description.replace(/^[\w\s]+(:|\.\.\.)\s*/i, '');
   };
 
   if (filteredSteps.length === 0) {

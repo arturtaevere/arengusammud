@@ -10,9 +10,9 @@ interface ActionStepItemProps {
 }
 
 const ActionStepItem = ({ id, title, description }: ActionStepItemProps) => {
-  // Clean the description by removing category labels
+  // Improved cleaning function that removes any category text patterns
   const cleanDescription = (text: string): string => {
-    return text.replace(/^[\w\s]+:\s*/i, '');
+    return text.replace(/^[\w\s]+(:|\.\.\.)\s*/i, '');
   };
 
   return (
