@@ -1,4 +1,3 @@
-
 import { ActionStep } from '../types';
 
 // Steps related to behavior management in the classroom
@@ -9,7 +8,6 @@ export const behaviorManagementSteps: ActionStep[] = [
     description: "Loon selge seose hea käitumise ja hea õppimise vahel: \"Siseneme klassiruumi vaikselt, et saaksime võimalikult kiiresti uusi asju õppima asuda.\"",
     category: "1",
     difficulty: "beginner",
-    timeEstimate: "15-30 minutit",
     resources: [
       {
         title: "Enesekindel väljendus: räägin kindla kehahoiaku ja häälega",
@@ -38,7 +36,6 @@ export const behaviorManagementSteps: ActionStep[] = [
     description: "Ütlen, mida näha soovin, mitte seda, mida õpilased valesti tegid. Selle asemel et öelda: \"Te ei jälgi tundi\", ütlen: \"Ma soovin, et kõigi pilgud oleksid suunatud minule\"",
     category: "1",
     difficulty: "beginner",
-    timeEstimate: "15-30 minutit",
     resources: [
       {
         title: "Enesekindel väljendus: räägin kindla kehahoiaku ja häälega",
@@ -67,7 +64,6 @@ export const behaviorManagementSteps: ActionStep[] = [
     description: "Tunnustan vaikselt õpilase üht konkreetset positiivset sammu tunnis, et seda kinnistada: \"Jaak, ma märkasin, et võtsid kohe õpiku välja\"; väldin üldsõnalist kiitmist: \"Väga tubli, Jaak\"",
     category: "1",
     difficulty: "beginner",
-    timeEstimate: "Läbivalt tunnis",
     resources: [
       {
         title: "Täpsus: nimetan konkreetse teo, millega õpilane hästi hakkama sai – õpilasele peaks olema selge, mille eest teda tunnustatakse",
@@ -100,7 +96,6 @@ export const behaviorManagementSteps: ActionStep[] = [
     description: "Vestlen vaikselt õpilastega, kes tundi segavad, et parandada nende käitumist ja ennetada probleemi eskaleerumist. Näiteks: kükitan õpilase juurde, kui iseseisev ülesanne on kätte antud, ja ütlen talle poolihääli: \"Anna, kui mina klassi ees räägin, pead sa olema vaikselt, et paremini aru saada, mida järgmisena tunnis teha\"",
     category: "1",
     difficulty: "intermediate",
-    timeEstimate: "Läbivalt tunnis",
     resources: [
       {
         title: "Täpne väljendus: annan õpilasele selgelt mõista, mida ta tegi valesti ja mida ta peaks edaspidi teisiti tegema",
@@ -133,7 +128,6 @@ export const behaviorManagementSteps: ActionStep[] = [
     description: "Väljendan oma ootusi õpilastele läbi hea käitumise esiletõstmise, mitte läbi halva käitumise kritiseerimise. Näiteks selle asemel et öelda: \"Mitu korda ma pean teile ütlema, et ootan vaikust?\", kasutan väljendust: \"Pastapliiatsid lauale, pilgud siia\"",
     category: "1",
     difficulty: "beginner",
-    timeEstimate: "Läbivalt tunnis",
     resources: [
       {
         title: "Konkreetsus: veendun, et õpilased saavad täpselt aru, millist käitumisviisi esile tõstetakse",
@@ -165,7 +159,6 @@ export const behaviorManagementSteps: ActionStep[] = [
     description: "Õpetan õpilasi õigel hetkel abi küsima, selgitades neile, millal see on asjakohane. Näiteks: \"Proovi alati kõigepealt ise, kasuta eelnevalt õpitut ja harjutatut. Kui oled teinud kõik, mis oskad, ja tõepoolest ei tule ülesande või tegevusega toime, alles siis küsi abi kaaslaselt või minult\". Oluline on seejuures anda mõista, et ka edukad õpilased küsivad abi, kui nad seda vajavad",
     category: "1",
     difficulty: "intermediate",
-    timeEstimate: "15-30 minutit",
     resources: [
       {
         title: "Näitlikustamine: toon näiteid selle kohta, millal abi küsimine on asjakohane",
@@ -192,7 +185,6 @@ export const behaviorManagementSteps: ActionStep[] = [
     description: "Võimaldan õpilastel teha õppimise käigus valikuid, kuidas õppematerjali omandada või kuidas õpitut väljendada. Näiteks: õpilane võib valida ise koha, kus lahendada keskendumist nõudvat ülesannet; õpilane võib valida suurema peatüki raames, millist teemat uurida; õpilane võib valida, kuidas teha teemast kaaslaste jaoks kokkuvõtet (plakat, kõne, referaat vms). Pakun õpilastele selliseid valikuid, mis on neile jõukohased ja arendavad",
     category: "1",
     difficulty: "advanced",
-    timeEstimate: "30-45 minutit",
     resources: [
       {
         title: "Arengust lähtumine: pakun õpilastele valikuid, mis vastavad nende huvidele, vajadustele ja tugevustele",

@@ -9,7 +9,6 @@ export const classroomRulesSteps: ActionStep[] = [
     description: "Kehtesta koos õpilastega selged reeglid, mis aitavad luua stabiilsuse ja turvatunde.",
     category: "2", // Maps to "Kindlate ja harjumuspäraste tegevuste korraldamine klassis"
     difficulty: "beginner",
-    timeEstimate: "30-45 minutit",
     resources: [
       {
         title: "Tõhusate klassireeglite loomine",
@@ -23,7 +22,6 @@ export const classroomRulesSteps: ActionStep[] = [
     description: "Vajadusel loon oma klassiga ühised arusaamad, kuidas õppimist soodustada, suunates õpilasi neid sõnastama mitte läbi käskude-keeldude, vaid positiivsete kirjelduste.",
     category: "1",
     difficulty: "beginner",
-    timeEstimate: "30-45 minutit",
     resources: [
       {
         title: "Väärtustest lähtumine: enne kokkulepete (taas)sõlmimist arutlen õpilastega, millised võiksid olla klassi (või kooli) ühised väärtused ja miks",
@@ -52,7 +50,6 @@ export const classroomRulesSteps: ActionStep[] = [
     description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad",
     category: "1",
     difficulty: "intermediate",
-    timeEstimate: "30-45 minutit",
     resources: [
       {
         title: "Järjepidevus: viitan sellele mudelile võimalikult sageli",

@@ -53,7 +53,6 @@ export const convertActionStepsToCompetencesPageFormat = (): ActionStep[] => {
         description: step.description,
         category: step.category,
         difficulty: step.difficulty || getDifficultyForActionStep(step.id),
-        timeEstimate: step.timeEstimate || getTimeEstimateForActionStep(step.id),
         resources: step.resources || [],
         practiceTasks: step.practiceTasks || []
       };
@@ -70,7 +69,6 @@ export const convertActionStepsToCompetencesPageFormat = (): ActionStep[] => {
         description: step.description,
         category: comp.id.replace('comp', ''),
         difficulty: getDifficultyForActionStep(step.id),
-        timeEstimate: getTimeEstimateForActionStep(step.id),
         resources: [],
         practiceTasks: []
       };

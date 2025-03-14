@@ -9,7 +9,6 @@ export const classroomPositioningSteps: ActionStep[] = [
     description: "Otsin klassis seismiseks sellise koha, kust näen võimalikult suurt osa ruumist ning kus viibin nende õpilaste läheduses, kelle puhul on tõenäolisem, et nad võivad ülesande lahendamisest kõrvale kalduda. Annan õpilastele selgelt mõista, et jälgin nende tegevust",
     category: "1",
     difficulty: "beginner",
-    timeEstimate: "Läbivalt tunnis",
     resources: [
       {
         title: "Kehakeele kasutamine: annan õpilastele näoilme ja kehahoiakuga märku, et jälgin nende tegevust",

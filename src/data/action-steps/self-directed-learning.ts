@@ -8,7 +8,6 @@ export const selfDirectedLearningSteps: ActionStep[] = [
     description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
     category: "10",
     difficulty: "intermediate",
-    timeEstimate: "45-60 minutit",
     resources: [],
   },
   {
@@ -17,7 +16,6 @@ export const selfDirectedLearningSteps: ActionStep[] = [
     description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
     category: "10",
     difficulty: "intermediate",
-    timeEstimate: "30-45 minutit",
     resources: [],
   },
   {
@@ -26,7 +24,6 @@ export const selfDirectedLearningSteps: ActionStep[] = [
     description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
     category: "10",
     difficulty: "intermediate",
-    timeEstimate: "30-45 minutit",
     resources: [],
   },
   {
@@ -35,7 +32,6 @@ export const selfDirectedLearningSteps: ActionStep[] = [
     description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
     category: "10",
     difficulty: "intermediate",
-    timeEstimate: "20-30 minutit",
     resources: [],
   },
   {
@@ -44,7 +40,6 @@ export const selfDirectedLearningSteps: ActionStep[] = [
     description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
     category: "10",
     difficulty: "intermediate",
-    timeEstimate: "15-30 minutit",
     resources: [],
   },
   {
@@ -53,7 +48,6 @@ export const selfDirectedLearningSteps: ActionStep[] = [
     description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
     category: "10",
     difficulty: "intermediate",
-    timeEstimate: "10-15 minutit",
     resources: [],
   },
   {
@@ -62,7 +56,6 @@ export const selfDirectedLearningSteps: ActionStep[] = [
     description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
     category: "10",
     difficulty: "intermediate",
-    timeEstimate: "Läbivalt tunnis",
     resources: [],
   },
   {
@@ -71,7 +64,6 @@ export const selfDirectedLearningSteps: ActionStep[] = [
     description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
     category: "10",
     difficulty: "intermediate",
-    timeEstimate: "30-45 minutit",
     resources: [],
   },
   {
@@ -80,7 +72,6 @@ export const selfDirectedLearningSteps: ActionStep[] = [
     description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
     category: "10",
     difficulty: "intermediate",
-    timeEstimate: "45-60 minutit",
     resources: [],
   },
   {
@@ -89,7 +80,6 @@ export const selfDirectedLearningSteps: ActionStep[] = [
     description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
     category: "10",
     difficulty: "intermediate",
-    timeEstimate: "30-45 minutit",
     resources: [],
   },
   {
@@ -98,7 +88,6 @@ export const selfDirectedLearningSteps: ActionStep[] = [
     description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
     category: "10",
     difficulty: "intermediate",
-    timeEstimate: "15-30 minutit",
     resources: [],
   },
   {
@@ -107,7 +96,6 @@ export const selfDirectedLearningSteps: ActionStep[] = [
     description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
     category: "10",
     difficulty: "intermediate",
-    timeEstimate: "20-30 minutit",
     resources: [],
   },
   {
@@ -116,7 +104,6 @@ export const selfDirectedLearningSteps: ActionStep[] = [
     description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
     category: "10",
     difficulty: "intermediate",
-    timeEstimate: "15-20 minutit",
     resources: [],
   },
   {
@@ -125,7 +112,6 @@ export const selfDirectedLearningSteps: ActionStep[] = [
     description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
     category: "10",
     difficulty: "intermediate",
-    timeEstimate: "30-45 minutit",
     resources: [],
   },
   {
@@ -134,7 +120,6 @@ export const selfDirectedLearningSteps: ActionStep[] = [
     description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
     category: "10",
     difficulty: "intermediate",
-    timeEstimate: "Läbivalt tunnis",
     resources: [],
   },
   {
@@ -143,7 +128,6 @@ export const selfDirectedLearningSteps: ActionStep[] = [
     description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
     category: "10",
     difficulty: "intermediate",
-    timeEstimate: "30-45 minutit",
     resources: [],
   },
   {
@@ -152,7 +136,6 @@ export const selfDirectedLearningSteps: ActionStep[] = [
     description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
     category: "10",
     difficulty: "intermediate",
-    timeEstimate: "Pikema aja jooksul",
     resources: [],
   },
   {
@@ -161,7 +144,6 @@ export const selfDirectedLearningSteps: ActionStep[] = [
     description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
     category: "10",
     difficulty: "intermediate",
-    timeEstimate: "45-60 minutit",
     resources: [],
   },
   {
@@ -170,7 +152,6 @@ export const selfDirectedLearningSteps: ActionStep[] = [
     description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
     category: "10",
     difficulty: "intermediate",
-    timeEstimate: "30-45 minutit",
     resources: [],
   },
   {
@@ -179,7 +160,6 @@ export const selfDirectedLearningSteps: ActionStep[] = [
     description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
     category: "10",
     difficulty: "intermediate",
-    timeEstimate: "20-30 minutit + järjepidev kasutamine",
     resources: [],
   },
   {
@@ -188,7 +168,6 @@ export const selfDirectedLearningSteps: ActionStep[] = [
     description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
     category: "10",
     difficulty: "intermediate",
-    timeEstimate: "15-30 minutit + järjepidev kasutamine",
     resources: [],
   },
   {
@@ -197,7 +176,6 @@ export const selfDirectedLearningSteps: ActionStep[] = [
     description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
     category: "10",
     difficulty: "intermediate",
-    timeEstimate: "30-45 minutit",
     resources: [],
   },
   {
@@ -206,7 +184,6 @@ export const selfDirectedLearningSteps: ActionStep[] = [
     description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
     category: "10",
     difficulty: "intermediate",
-    timeEstimate: "30-45 minutit",
     resources: [],
   },
 ];

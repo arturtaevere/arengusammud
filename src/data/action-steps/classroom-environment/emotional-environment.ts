@@ -1,4 +1,3 @@
-
 import { ActionStep } from '../types';
 
 // Steps related to emotional environment in the classroom
@@ -8,7 +7,6 @@ export const emotionalEnvironmentSteps: ActionStep[] = [
     title: "Iga õpilase väärtustamine",
     description: "Annan märku, et iga õpilane on oodatud – ükskõik, kui kiiresti ta antud aines edasi jõuab, milliseid riideid ta kannab, mis keelt ta kodus räägib, kui palju sõpru tal on jne. Õppimist toetab keskkond, kus kõigil õpilastel on emotsionaalselt turvaline olla.",
     category: "1", // Maps to "Hooliva ja arengut toetava õpikeskkonna loomine"
-    timeEstimate: "20-30 minutit",
     difficulty: "beginner",
     resources: [
       {
@@ -43,7 +41,6 @@ export const emotionalEnvironmentSteps: ActionStep[] = [
     description: "Tunnen järjepidevalt huvi, millega õpilased tegelevad. Kuulan, millest nad räägivad. Esitan küsimusi ja tunnustan. Näiteks: \"Tere hommikust, Karl! Kas kuulsin õigesti, et tegid eelmisel nädalal korvpallis väga hea tulemuse?\"",
     category: "1",
     difficulty: "beginner",
-    timeEstimate: "15-30 minutit",
     resources: [
       {
         title: "Siiras huvi: võtan päriselt aega, et õpilasi tundma õppida",
@@ -77,7 +74,6 @@ export const emotionalEnvironmentSteps: ActionStep[] = [
     description: "Olen arvestanud, et õpilased eksivad ja võtan vead rõõmuga vastu. \"Mul on väga hea meel, et sa selle vea tegid, sest see aitab meil mõista, et ... \"",
     category: "1",
     difficulty: "intermediate",
-    timeEstimate: "15-30 minutit",
     resources: [
       {
         title: "Soe suhtumine: võtan eksimused vastu sõbraliku näoilme ja hoiakuga",
@@ -110,7 +106,6 @@ export const emotionalEnvironmentSteps: ActionStep[] = [
     description: "Sekkun kohe ja kindlakäeliselt, kui mõned õpilased teiste vastuste üle naeravad: \"Kõik eksivad aeg-ajalt ja me oleme sel puhul alati toetavad, sest eksimise kaudu me õpimegi\"",
     category: "1",
     difficulty: "intermediate",
-    timeEstimate: "15-30 minutit",
     resources: [
       {
         title: "Kiirus: reageerin mittetoetavale kommentaarile kohe ja suunan õpilaste tähelepanu tagasi ülesande lahendamisele",
@@ -143,7 +138,6 @@ export const emotionalEnvironmentSteps: ActionStep[] = [
     description: "Aitan õpilastel ära tunda emotsionaalseid pingeid, paludes neil märku anda, kui nad kogevad tugevaid tundeid (näiteks ärevus, murelikkus, kurbus, igavus jm). On oluline, et õpilased teadvustaksid emotsioone, mis võivad nende õppimist mõjutada",
     category: "1",
     difficulty: "intermediate",
-    timeEstimate: "30-45 minutit",
     resources: [
       {
         title: "Näitlikustamine: kasutan tunni aega, et tuua näiteid emotsionaalselt keerukatest olukordadest (näiteks: pettumus kehva hinde pärast, suur pinge enne kontrolltööd)",
@@ -170,7 +164,6 @@ export const emotionalEnvironmentSteps: ActionStep[] = [
     description: "Aitan õpilastel emotsionaalse pingega toime tulla, õpetades neile, milliseid strateegiaid kasutada ja millal seda teha. (Näiteks: olukorra ümberhindamine, kaaslastelt toe saamine, tähelepanu suunamine)",
     category: "1",
     difficulty: "advanced",
-    timeEstimate: "30-45 minutit",
     resources: [
       {
         title: "Näitlikustamine: kasutan tunni aega, et tuua näiteid emotsionaalselt keerukatest olukordadest ning eri viisidest, kuidas emotsioonile võib reageerida",

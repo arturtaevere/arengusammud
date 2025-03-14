@@ -5,8 +5,7 @@ export interface ActionStep {
   title: string;
   description: string;
   category: string;
-  difficulty?: string; // Changed back to optional and any string type
-  timeEstimate: string;
+  difficulty?: string; // Optional difficulty
   resources: { title: string; url: string }[];
   practiceTasks?: string[]; // Added optional practice tasks array
 }

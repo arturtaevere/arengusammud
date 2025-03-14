@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Bookmark, Clock, Tag } from 'lucide-react';
+import { Bookmark, Tag } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Link } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
@@ -12,7 +12,6 @@ interface ActionStepCardProps {
   title: string;
   description: string;
   category: string;
-  timeEstimate: string;
   resources?: { title: string; url: string }[];
   completed?: boolean;
   saved?: boolean;
@@ -24,7 +23,6 @@ const ActionStepCard = ({
   title,
   description,
   category,
-  timeEstimate,
   resources = [],
   completed = false,
   saved = false,
@@ -70,12 +68,6 @@ const ActionStepCard = ({
           <p className="text-sm mb-3">
             {description}
           </p>
-          {timeEstimate && (
-            <div className="flex items-center text-xs text-muted-foreground">
-              <Clock className="h-3 w-3 mr-1" />
-              {timeEstimate}
-            </div>
-          )}
         </CardContent>
       </Link>
     </Card>
