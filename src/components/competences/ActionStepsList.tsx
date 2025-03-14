@@ -1,9 +1,7 @@
 
 import React from 'react';
-import { Button } from '@/components/ui/button';
 import { BookOpen } from 'lucide-react';
 import ActionStepItem from './ActionStepItem';
-import { Link } from 'react-router-dom';
 import { ActionStep } from '@/data/action-steps/types';
 
 interface ActionStepsListProps {
@@ -33,11 +31,10 @@ const ActionStepsList = ({
     );
   }
 
-  const displayedSteps = isExpanded ? steps : steps.slice(0, 3);
-
+  // Show all steps, no need for slicing or "show more" button
   return (
     <div className="space-y-2">
-      {displayedSteps.map(step => (
+      {steps.map(step => (
         <ActionStepItem 
           key={step.id}
           id={step.id}
@@ -45,20 +42,6 @@ const ActionStepsList = ({
           description={step.description}
         />
       ))}
-      
-      {steps.length > 3 && (
-        <div className="mt-2">
-          <Button 
-            variant="ghost" 
-            className="text-sm text-primary hover:text-primary-foreground"
-            onClick={(e) => onToggleExpansion(competenceId, e)}
-          >
-            {isExpanded 
-              ? "Näita vähem" 
-              : `+ ${steps.length - 3} muud arengusammu`}
-          </Button>
-        </div>
-      )}
     </div>
   );
 };
