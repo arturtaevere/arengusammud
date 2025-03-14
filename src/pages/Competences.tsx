@@ -2,7 +2,10 @@
 import { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import CompetenceList from '@/components/competences/CompetenceList';
-import { convertToCompetencesPageFormat, convertActionStepsToCompetencesPageFormat } from '@/components/observation/competencyAdapter';
+import { 
+  convertToCompetencesPageFormat, 
+  convertActionStepsToCompetencesPageFormat 
+} from '@/components/observation/competencyAdapter';
 
 export default function Competences() {
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
