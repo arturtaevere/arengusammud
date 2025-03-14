@@ -30,11 +30,11 @@ const StatsCards = ({ stats }: StatsCardsProps) => {
           <div className="flex justify-between items-center">
             <div>
               <p className="text-3xl font-bold">{stats.actionStepsAssigned}</p>
-              <p className="text-sm text-muted-foreground">Määratud</p>
+              <p className="text-sm text-muted-foreground">Valitud</p>
             </div>
             <div className="text-right">
               <p className="text-3xl font-bold text-green-500">{stats.actionStepsCompleted}</p>
-              <p className="text-sm text-muted-foreground">Lõpetatud</p>
+              <p className="text-sm text-muted-foreground">Saavutatud</p>
             </div>
           </div>
           <div className="mt-4 h-2 bg-gray-100 rounded-full">
