@@ -80,18 +80,11 @@ const ActionStepDetail = () => {
           <>
             <ScrollArea className="h-[calc(100vh-250px)] pr-4">
               <ActionStepDetails 
-                details={actionStepDetails}
+                stepDetails={actionStepDetails}
                 videoUrl={videoUrl}
+                onVideoUploaded={handleVideoUploaded}
               />
             </ScrollArea>
-            
-            <div className="mt-8 mb-20">
-              <h3 className="text-lg font-semibold mb-4">Lisa või asenda video</h3>
-              <VideoUploader 
-                onVideoUploaded={handleVideoUploaded}
-                existingVideoUrl={videoUrl}
-              />
-            </div>
           </>
         ) : (
           <ActionStepNotFound />
