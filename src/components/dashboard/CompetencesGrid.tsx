@@ -31,7 +31,6 @@ const CompetencesGrid = ({ competences }: CompetencesGridProps) => {
           </Link>
         ))}
       </div>
-      <h2 className="text-2xl font-bold mt-6">Töölaud</h2>
     </div>
   );
 };
