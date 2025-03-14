@@ -38,26 +38,26 @@ const CompetenceCard = ({
       className="w-full"
     >
       <Card className="w-full hover:shadow-md transition-all">
-        <CardHeader className="pb-2 cursor-pointer">
+        <CardHeader className="py-2 px-4 cursor-pointer">
           <CollapsibleTrigger asChild>
             <div className="flex justify-between items-center w-full">
-              <div className="flex items-start gap-3">
-                <div className="bg-primary/10 p-2 rounded-lg">
+              <div className="flex items-center gap-2">
+                <div className="bg-primary/10 p-1.5 rounded-md">
                   {icon}
                 </div>
                 <div>
-                  <CardTitle className="text-xl">{title}</CardTitle>
+                  <CardTitle className="text-base font-medium">{title}</CardTitle>
                 </div>
               </div>
               <ChevronRight 
-                className={`h-5 w-5 transition-transform ${isExpanded ? 'rotate-90' : ''}`}
+                className={`h-4 w-4 transition-transform ${isExpanded ? 'rotate-90' : ''}`}
               />
             </div>
           </CollapsibleTrigger>
         </CardHeader>
         
         <CollapsibleContent>
-          <CardContent className="pt-4">
+          <CardContent className="pt-2 pb-3 px-4">
             <ActionStepsList 
               steps={steps}
               competenceId={id}

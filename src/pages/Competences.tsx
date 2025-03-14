@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import CompetenceList from '@/components/competences/CompetenceList';
@@ -85,19 +86,19 @@ export default function Competences() {
     <div className="min-h-screen bg-gray-50/50">
       <Navbar />
       
-      <main className="container mx-auto px-4 py-24">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Õpieesmärgid</h1>
+      <main className="container mx-auto px-4 py-16">
+        <div className="mb-4">
+          <h1 className="text-2xl font-bold">Õpieesmärgid</h1>
         </div>
 
         {isLoading && (
-          <div className="text-center py-10">
+          <div className="text-center py-6">
             <p>Laadin andmeid...</p>
           </div>
         )}
 
         {error && (
-          <div className="p-4 bg-red-50 text-red-700 rounded-md">
+          <div className="p-3 bg-red-50 text-red-700 rounded-md">
             {error}
           </div>
         )}

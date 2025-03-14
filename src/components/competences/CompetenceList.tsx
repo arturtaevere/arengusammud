@@ -42,7 +42,7 @@ const CompetenceList = ({
   }
   
   return (
-    <div className="grid grid-cols-1 gap-4 md:gap-6">
+    <div className="grid grid-cols-1 gap-2">
       {competences.map((competence) => {
         // Make sure we handle undefined actionSteps
         const categorySteps = actionSteps?.filter(step => 
@@ -70,6 +70,6 @@ const CompetenceList = ({
       })}
     </div>
   );
-};
+}
 
 export default CompetenceList;
