@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import VideoPlayer from "@/components/VideoPlayer";
 import VideoUploader from "@/components/VideoUploader";
 import { getActionStepDetailById } from "@/components/observation/data/competencyHelpers";
+import { actionSteps } from "@/data/actionStepsData";
 
 // Create a local storage key using the step ID to store video URLs
 const getVideoStorageKey = (stepId: string) => `action_step_video_${stepId}`;
@@ -56,6 +57,30 @@ const actionStepsDetails = {
     examples: "Klassiruumi reeglite loomine on oluline samm turvalise ja produktiivse õpikeskkonna loomiseks. Reeglid peaksid olema selged, konkreetsed ja positiivselt sõnastatud.",
     videoUrl: "https://example.com/video2"
   },
+  "step3": {
+    title: "Iga õpilase väärtustamine",
+    description: "Annan märku",
+    category: "1",
+    difficulty: "beginner" as const,
+    timeEstimate: "20-30 minutit",
+    reason: "Iga õpilase väärtustamine loob kaasava ja toetava õpikeskkonna, kus kõik õpilased tunnevad end oodatuna ja austatuna. See aitab luua usalduslikku suhet õpetaja ja õpilaste vahel, mis on oluline eeldus efektiivseks õppimiseks. Õpilased õpivad paremini, kui nad tunnevad, et neid hinnatakse kui indiviide.",
+    successCriteria: [
+      "Lugupidav suhtumine: suhtun austusega erineva tausta",
+      "Kaasamine: loon kõigile õpilastele võimalusi klassiaruteludes",
+      "Tunnustamine: märkan ja tõstan esile iga õpilase andeid",
+      "Lugupidav keel ja käitumine: kasutan viisakat keelt ja käitumist kõigi õpilaste suhtes"
+    ],
+    practiceTask: [
+      "Vaadake klassi nimekirja",
+      "Arutage",
+      "Mõelge läbi taktikad",
+      "Pakkuge variante",
+      "Vaadake kavandatu üle ja täpsustage seda kriteeriumide alusel",
+      "Mängige mõned situatsioonid läbi. Näiteks: tunni alguses siseneb klassiruumi käratsev õpilane ja räägib valjuhäälselt oma sõpradega. Ta naerab"
+    ],
+    examples: "Iga õpilase väärtustamine klassiruumis algab teadlikust tähelepanust kõigile õpilastele. Selleks võib kasutada erinevaid meetodeid, näiteks õpilaste nimede teadlikku kasutamist, nende tugevuste esiletoomist ja kõigile võrdsete võimaluste pakkumist tunnis osalemiseks.\n\nNäide 1: Kui uus õpilane liitub klassiga, võite paluda klassil mõelda, kuidas teda paremini tervitada ja kaasata.\n\nNäide 2: Kui märkate, et mõni õpilane on tõrjutud, saate luua grupitöid, kus tema tugevused saavad esile tulla.",
+    videoUrl: ""
+  },
   "step10-1": {
     title: "Tõhusa õppimisviisi avamine",
     description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
@@ -88,10 +113,63 @@ const ActionStepDetail = () => {
   
   useEffect(() => {
     if (stepId) {
-      // Use our helper to map URL IDs to data IDs
+      console.log("Looking for stepId:", stepId);
+      
+      // First check if it's in our hardcoded action steps details
+      if (stepId in actionStepsDetails) {
+        console.log("Found step in actionStepsDetails");
+        const details = actionStepsDetails[stepId as keyof typeof actionStepsDetails];
+        setStepDetails(details);
+        
+        // Try to get from localStorage first
+        const savedVideoUrl = localStorage.getItem(getVideoStorageKey(stepId));
+        
+        if (savedVideoUrl) {
+          setVideoUrl(savedVideoUrl);
+        } else if (details.videoUrl && details.videoUrl !== "https://example.com/video1" && details.videoUrl !== "https://example.com/video2") {
+          // Set the default video URL if it's a real URL (not example placeholder)
+          setVideoUrl(details.videoUrl);
+          // Also save real URLs to localStorage for future visits
+          localStorage.setItem(getVideoStorageKey(stepId), details.videoUrl);
+        }
+        return;
+      }
+      
+      // If not found in hardcoded details, try to use action steps from data
+      console.log("Checking action steps from data");
+      const foundStep = actionSteps.find(step => step.id === stepId);
+      
+      if (foundStep) {
+        console.log("Found step in actionSteps data:", foundStep);
+        // Create a compatible step details object from the found step
+        const compatibleDetails = {
+          title: foundStep.title,
+          description: foundStep.description,
+          category: foundStep.category,
+          difficulty: (foundStep.difficulty || "beginner") as const,
+          timeEstimate: foundStep.timeEstimate,
+          reason: "Põhjendus pole veel lisatud.",
+          successCriteria: foundStep.resources?.map(r => r.title) || [],
+          practiceTask: foundStep.practiceTasks || [],
+          examples: "Näited pole veel lisatud.",
+          videoUrl: ""
+        };
+        
+        setStepDetails(compatibleDetails);
+        
+        // Check for saved video
+        const savedVideoUrl = localStorage.getItem(getVideoStorageKey(stepId));
+        if (savedVideoUrl) {
+          setVideoUrl(savedVideoUrl);
+        }
+        return;
+      }
+      
+      // If still not found, use the competency helper as fallback
       const dataStepId = getActionStepDetailById(stepId);
       
       if (dataStepId && dataStepId in actionStepsDetails) {
+        console.log("Found step via helper:", dataStepId);
         const details = actionStepsDetails[dataStepId as keyof typeof actionStepsDetails];
         setStepDetails(details);
         
@@ -106,6 +184,8 @@ const ActionStepDetail = () => {
           // Also save real URLs to localStorage for future visits
           localStorage.setItem(getVideoStorageKey(dataStepId), details.videoUrl);
         }
+      } else {
+        console.log("Step not found in any source:", stepId);
       }
     }
   }, [stepId]);
