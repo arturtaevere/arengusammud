@@ -2,6 +2,7 @@ import { competencies } from '../data/competenciesData';
 import { getCompetencyDescription, getDifficultyForActionStep, getTimeEstimateForActionStep } from './competencyMetadata';
 import { getIconComponent } from './competencyIcons';
 import { CSVImportService } from '@/services/csvImport';
+import { ActionStepDetailsCollection } from '@/services/actionStepDetails/types';
 
 // Convert a competency from the standard format to the format used in the Competences page
 export const convertToCompetencesPageFormat = () => {
@@ -88,7 +89,7 @@ export const convertActionStepsToCompetencesPageFormat = () => {
       category: categoryId,
       difficulty: details.difficulty || 'beginner',
       timeEstimate: details.timeEstimate || '15 min',
-      resources: Array.isArray(details.resources) ? details.resources : []
+      resources: []
     };
     
     console.log(`Processed action step: ${id}, category: ${actionStep.category}`);

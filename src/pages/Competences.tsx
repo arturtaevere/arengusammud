@@ -9,7 +9,7 @@ import {
 import { CSVImportService } from '@/services/csvImport';
 import { toast } from '@/components/ui/use-toast';
 import { Button } from '@/components/ui/button';
-import { FileUpIcon } from 'lucide-react';
+import { FileUpIcon, RefreshCw } from 'lucide-react';
 import CSVImportModal from '@/components/action-step/CSVImportModal';
 
 export default function Competences() {
@@ -103,6 +103,14 @@ export default function Competences() {
     });
   };
 
+  const handleRefreshData = () => {
+    loadData();
+    toast({
+      title: "Andmed värskendatud",
+      description: "Arengusammude andmed on värskendatud.",
+    });
+  };
+
   return (
     <div className="min-h-screen bg-gray-50/50">
       <Navbar />
@@ -116,14 +124,25 @@ export default function Competences() {
             </p>
           </div>
           
-          <Button 
-            onClick={() => setShowImportModal(true)}
-            variant="outline"
-            className="flex items-center gap-2"
-          >
-            <FileUpIcon className="h-4 w-4" />
-            Impordi CSV
-          </Button>
+          <div className="flex gap-2">
+            <Button 
+              onClick={handleRefreshData}
+              variant="outline"
+              className="flex items-center gap-2"
+            >
+              <RefreshCw className="h-4 w-4" />
+              Värskenda
+            </Button>
+            
+            <Button 
+              onClick={() => setShowImportModal(true)}
+              variant="outline"
+              className="flex items-center gap-2"
+            >
+              <FileUpIcon className="h-4 w-4" />
+              Impordi CSV
+            </Button>
+          </div>
         </div>
 
         {isLoading ? (
