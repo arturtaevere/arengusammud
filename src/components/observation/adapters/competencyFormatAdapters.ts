@@ -30,21 +30,8 @@ export const convertToDashboardFormat = () => {
 
 // Convert action steps to the format used in the Competences page
 export const convertActionStepsToCompetencesPageFormat = () => {
-  // Get imported action steps
+  // Get imported action steps only
   const importedActionSteps = CSVImportService.getImportedData();
-  
-  // Convert standard action steps from competencies
-  const standardSteps = competencies.flatMap(comp => 
-    comp.actionSteps.map(step => ({
-      id: step.id,
-      title: step.title,
-      description: step.description,
-      category: comp.id.replace('comp', ''),
-      difficulty: getDifficultyForActionStep(step.id),
-      timeEstimate: getTimeEstimateForActionStep(step.id),
-      resources: []
-    }))
-  );
   
   // Convert imported action steps
   const importedSteps = Object.entries(importedActionSteps).map(([id, details]) => ({
@@ -57,6 +44,6 @@ export const convertActionStepsToCompetencesPageFormat = () => {
     resources: []
   }));
   
-  // Combine both sets of action steps
-  return [...standardSteps, ...importedSteps];
+  // Return only imported action steps
+  return importedSteps;
 };
