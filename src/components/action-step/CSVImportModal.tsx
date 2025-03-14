@@ -29,6 +29,10 @@ const CSVImportModal: React.FC<CSVImportModalProps> = ({
   const handleFileChange = (selectedFile: File | null, errorMessage: string | null) => {
     setFile(selectedFile);
     setError(errorMessage);
+    // Reset parsed data when file changes
+    if (selectedFile !== file) {
+      setParsedData(null);
+    }
   };
   
   const handleImport = async () => {
@@ -41,18 +45,25 @@ const CSVImportModal: React.FC<CSVImportModalProps> = ({
     setError(null);
     
     try {
+      console.log('Reading file:', file.name, file.size);
+      
       // Read file content
       const text = await file.text();
+      console.log('File content length:', text.length);
+      
+      if (!text.trim()) {
+        throw new Error('Fail on tühi');
+      }
       
       // Parse CSV
       const parsedData = CSVImportService.parseCSVContent(text);
       
       // Check if any data was parsed
       const entryCount = Object.keys(parsedData).length;
+      console.log('Parsed entries:', entryCount);
+      
       if (entryCount === 0) {
-        setError('Failist ei leitud ühtegi kehtivat arengusammu');
-        setIsUploading(false);
-        return;
+        throw new Error('Failist ei leitud ühtegi kehtivat arengusammu');
       }
       
       // Store parsed data for confirmation
@@ -91,12 +102,24 @@ const CSVImportModal: React.FC<CSVImportModalProps> = ({
     // Reset state
     setFile(null);
     setParsedData(null);
+    setError(null);
+  };
+  
+  // Reset modal state when closing
+  const handleOpenChange = (open: boolean) => {
+    if (!open) {
+      setFile(null);
+      setError(null);
+      setParsedData(null);
+      setShowConfirmDialog(false);
+    }
+    onOpenChange(open);
   };
   
   return (
     <>
-      <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="sm:max-w-md">
+      <Dialog open={open} onOpenChange={handleOpenChange}>
+        <DialogContent className="sm:max-w-lg">
           <DialogHeader>
             <DialogTitle>Impordi arengusammud CSV failist</DialogTitle>
             <DialogDescription>
@@ -104,7 +127,7 @@ const CSVImportModal: React.FC<CSVImportModalProps> = ({
             </DialogDescription>
           </DialogHeader>
           
-          <div className="space-y-4 py-4">
+          <div className="space-y-6 py-4">
             <CSVFileInput 
               file={file}
               error={error}
@@ -119,7 +142,7 @@ const CSVImportModal: React.FC<CSVImportModalProps> = ({
           <DialogFooter className="sm:justify-end">
             <Button 
               variant="secondary" 
-              onClick={() => onOpenChange(false)}
+              onClick={() => handleOpenChange(false)}
             >
               Tühista
             </Button>

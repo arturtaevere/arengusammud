@@ -34,8 +34,11 @@ export class CSVImportService {
       throw new Error('CSV file must contain headers and at least one data row');
     }
     
-    // Get headers from first line
-    const headers = this.parseCSVLine(lines[0]);
+    // Get headers from first line and normalize them
+    const headers = this.parseCSVLine(lines[0])
+      .map(header => header.toLowerCase().trim());
+    
+    console.log('CSV Headers found:', headers);
     
     // Process action steps row by row
     let currentId = '';
@@ -49,19 +52,19 @@ export class CSVImportService {
       if (!line) continue; // Skip empty lines
       
       // Check if this is a line with success criteria (support both colon and semicolon)
-      if (line.startsWith('Edukriteerium:') || line.startsWith('Edukriteerium;')) {
+      if (line.match(/^Edukriteerium[;:]/i)) {
         if (currentStep) {
-          const criterion = line.replace(/^Edukriteerium[;:]/, '').trim();
-          successCriteria.push(criterion);
+          const criterion = line.replace(/^Edukriteerium[;:]/i, '').trim();
+          if (criterion) successCriteria.push(criterion);
         }
         continue;
       }
       
       // Check if this is a line with practice task (support both colon and semicolon)
-      if (line.startsWith('Harjutusülesanne:') || line.startsWith('Harjutusülesanne;')) {
+      if (line.match(/^Harjutusülesanne[;:]/i)) {
         if (currentStep) {
-          const task = line.replace(/^Harjutusülesanne[;:]/, '').trim();
-          practiceTasks.push(task);
+          const task = line.replace(/^Harjutusülesanne[;:]/i, '').trim();
+          if (task) practiceTasks.push(task);
         }
         continue;
       }
@@ -71,6 +74,8 @@ export class CSVImportService {
         // Save success criteria and practice tasks
         currentStep.successCriteria = successCriteria;
         currentStep.practiceTask = practiceTasks;
+        
+        console.log(`Saving action step ${currentId} with ${successCriteria.length} criteria and ${practiceTasks.length} tasks`);
         
         // Store the complete step
         result[currentId] = currentStep as ActionStepDetailBase;
@@ -83,23 +88,19 @@ export class CSVImportService {
       // Parse the current line as a new action step
       const values = this.parseCSVLine(line);
       
-      // Skip if there aren't enough values
-      if (values.length < headers.length) {
-        console.warn(`Line ${i} has only ${values.length} values but needs ${headers.length}. Skipping.`);
-        currentStep = null;
-        continue;
-      }
-      
       // Create an object from headers and values
-      const rowData = headers.reduce((obj, header, index) => {
-        obj[header.toLowerCase()] = values[index];
-        return obj;
-      }, {} as Record<string, string>);
+      const rowData: Record<string, string> = {};
+      headers.forEach((header, index) => {
+        if (index < values.length) {
+          rowData[header] = values[index];
+        }
+      });
       
       // Validate required fields
       if (!rowData.id || !rowData.title) {
-        console.warn(`Line ${i} is missing id or title. Skipping.`);
+        console.warn(`Line ${i+1} is missing id or title. Skipping.`, rowData);
         currentStep = null;
+        currentId = '';
         continue;
       }
       
@@ -112,13 +113,15 @@ export class CSVImportService {
         description: rowData.description || '',
         category: rowData.category || '',
         difficulty: (rowData.difficulty || 'beginner') as 'beginner' | 'intermediate' | 'advanced',
-        timeEstimate: rowData.timeestimate || '',
+        timeEstimate: rowData.timeestimate || rowData.time || rowData['time estimate'] || '',
         reason: rowData.reason || '',
         examples: rowData.examples || '',
-        videoUrl: rowData.videourl || '',
+        videoUrl: rowData.videourl || rowData.video || rowData['video url'] || '',
         successCriteria: [],
         practiceTask: []
       };
+      
+      console.log(`Detected new action step: ${currentId} - ${currentStep.title}`);
     }
     
     // Don't forget to store the last step
@@ -126,13 +129,21 @@ export class CSVImportService {
       currentStep.successCriteria = successCriteria;
       currentStep.practiceTask = practiceTasks;
       result[currentId] = currentStep as ActionStepDetailBase;
+      
+      console.log(`Saving final action step ${currentId}`);
+    }
+    
+    console.log(`Total action steps parsed: ${Object.keys(result).length}`);
+    
+    if (Object.keys(result).length === 0) {
+      throw new Error('No valid action steps found in the CSV file. Check file format and required fields (id, title).');
     }
     
     return result;
   }
   
   /**
-   * Parse a CSV line considering quoted values
+   * Parse a CSV line considering quoted values and handling commas within quotes
    */
   private static parseCSVLine(line: string): string[] {
     const result: string[] = [];
@@ -143,8 +154,16 @@ export class CSVImportService {
       const char = line[i];
       
       if (char === '"') {
-        inQuotes = !inQuotes;
+        if (inQuotes && i + 1 < line.length && line[i + 1] === '"') {
+          // Handle escaped quotes (two double quotes in sequence)
+          currentValue += '"';
+          i++; // Skip the next quote
+        } else {
+          // Toggle quote state
+          inQuotes = !inQuotes;
+        }
       } else if (char === ',' && !inQuotes) {
+        // End of field
         result.push(currentValue.trim());
         currentValue = '';
       } else {
@@ -180,5 +199,19 @@ export class CSVImportService {
     }
     return {};
   }
+  
+  /**
+   * Get a sample CSV template for users to download
+   */
+  static getSampleCSV(): string {
+    return `id,title,description,category,difficulty,timeEstimate,reason,examples,videoUrl
+step-1,Sample Step 1,This is a sample description,Category 1,beginner,10-15 min,Reason for this step,Example implementation,https://example.com/video
+Edukriteerium: First success criterion for step 1
+Edukriteerium: Second success criterion for step 1
+Harjutusülesanne: Practice task 1 for step 1
+Harjutusülesanne: Practice task 2 for step 1
+step-2,Sample Step 2,Another sample description,Category 2,intermediate,20-30 min,Another reason,More examples,https://example.com/video2
+Edukriteerium: First success criterion for step 2
+Harjutusülesanne: Practice task for step 2`;
+  }
 }
-
