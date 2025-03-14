@@ -32,7 +32,7 @@ const Dashboard = () => {
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">Tere tulemast tagasi, {user?.name?.split(' ')[0]}</h1>
           <p className="text-muted-foreground">
-            Siin on ülevaade sinu juhendamistegevustest ja progressist.
+            Siin on ülevaade sinu õppimisest, arengust ja tegevusest õpipartnerina.
           </p>
         </div>
         
