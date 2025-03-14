@@ -5,9 +5,12 @@ import CompetenceList from '@/components/competences/CompetenceList';
 import { 
   convertToCompetencesPageFormat, 
   convertActionStepsToCompetencesPageFormat 
-} from '@/components/observation/competencyAdapter';
+} from '@/components/observation/adapters/competencyFormatAdapters';
 import { CSVImportService } from '@/services/csvImport';
 import { toast } from '@/components/ui/use-toast';
+import { Button } from '@/components/ui/button';
+import { FileUpIcon } from 'lucide-react';
+import CSVImportModal from '@/components/action-step/CSVImportModal';
 
 export default function Competences() {
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
@@ -15,65 +18,68 @@ export default function Competences() {
   const [expandedSteps, setExpandedSteps] = useState<Record<string, boolean>>({});
   const [actionSteps, setActionSteps] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [showImportModal, setShowImportModal] = useState(false);
 
   // Load both standard and imported action steps when the component mounts
   useEffect(() => {
-    const loadData = () => {
-      setIsLoading(true);
-      try {
-        // Check if there's any imported data
-        const importedData = CSVImportService.getImportedData();
-        console.log('Imported data from storage:', Object.keys(importedData).length, 'items');
-        
-        // Get all action steps, including imported ones
-        const allActionSteps = convertActionStepsToCompetencesPageFormat();
-        console.log('All action steps count:', allActionSteps.length);
-        
-        if (allActionSteps.length === 0) {
-          console.log('No action steps found! Check imported data.');
-          toast({
-            title: "Ei leitud arengusamme",
-            description: "Palun impordi arengusammud CSV failist",
-            variant: "destructive"
-          });
-        }
-        
-        setActionSteps(allActionSteps);
-        
-        // Update competence counts based on action steps
-        const updatedCompetences = competencesWithCounts.map(comp => {
-          // Make sure we're using the same category ID format when filtering
-          const categorySteps = allActionSteps.filter(step => {
-            const matches = step.category === comp.id;
-            if (matches) {
-              console.log(`Found a step for category ${comp.id}:`, step.title);
-            }
-            return matches;
-          });
-          
-          console.log(`Steps for category ${comp.id}:`, categorySteps.length);
-          
-          return {
-            ...comp,
-            count: categorySteps.length
-          };
-        });
-        
-        setCompetencesWithCounts(updatedCompetences);
-      } catch (error) {
-        console.error('Error loading competences data:', error);
-        toast({
-          title: "Viga andmete laadimisel",
-          description: "Ei õnnestunud arengusammude andmeid laadida. Palun proovi lehte värskendada.",
-          variant: "destructive"
-        });
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    
     loadData();
   }, []);
+
+  const loadData = () => {
+    setIsLoading(true);
+    try {
+      // Check if there's any imported data
+      const importedData = CSVImportService.getImportedData();
+      console.log('Imported data from storage:', importedData);
+      console.log('Imported data count:', Object.keys(importedData).length, 'items');
+      
+      // Get all action steps, including imported ones
+      const allActionSteps = convertActionStepsToCompetencesPageFormat();
+      console.log('All action steps after conversion:', allActionSteps);
+      console.log('All action steps count:', allActionSteps.length);
+      
+      if (allActionSteps.length === 0) {
+        console.log('No action steps found! Check imported data.');
+        toast({
+          title: "Ei leitud arengusamme",
+          description: "Palun impordi arengusammud CSV failist",
+          variant: "destructive"
+        });
+      }
+      
+      setActionSteps(allActionSteps);
+      
+      // Update competence counts based on action steps
+      const updatedCompetences = competencesWithCounts.map(comp => {
+        // Make sure we're using the same category ID format when filtering
+        const categorySteps = allActionSteps.filter(step => {
+          const matches = step.category === comp.id;
+          if (matches) {
+            console.log(`Found a step for category ${comp.id}:`, step.title);
+          }
+          return matches;
+        });
+        
+        console.log(`Steps for category ${comp.id}:`, categorySteps.length);
+        
+        return {
+          ...comp,
+          count: categorySteps.length
+        };
+      });
+      
+      setCompetencesWithCounts(updatedCompetences);
+    } catch (error) {
+      console.error('Error loading competences data:', error);
+      toast({
+        title: "Viga andmete laadimisel",
+        description: "Ei õnnestunud arengusammude andmeid laadida. Palun proovi lehte värskendada.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const toggleCategory = (id: string) => {
     setExpandedCategory(expandedCategory === id ? null : id);
@@ -87,17 +93,37 @@ export default function Competences() {
       [id]: !prev[id]
     }));
   };
+  
+  const handleImportSuccess = () => {
+    // Reload data after successful import
+    loadData();
+    toast({
+      title: "Arengusammud imporditud",
+      description: "Arengusammud on edukalt imporditud ja nähtavad kategooriates.",
+    });
+  };
 
   return (
     <div className="min-h-screen bg-gray-50/50">
       <Navbar />
       
       <main className="container mx-auto px-4 py-24">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Õpieesmärgid</h1>
-          <p className="text-muted-foreground">
-            Siit leiad erinevatesse kategooriatesse jaotatud arengusammud, mis aitavad õpetamisoskusi arendada.
-          </p>
+        <div className="flex justify-between items-start mb-8">
+          <div>
+            <h1 className="text-3xl font-bold mb-2">Õpieesmärgid</h1>
+            <p className="text-muted-foreground">
+              Siit leiad erinevatesse kategooriatesse jaotatud arengusammud, mis aitavad õpetamisoskusi arendada.
+            </p>
+          </div>
+          
+          <Button 
+            onClick={() => setShowImportModal(true)}
+            variant="outline"
+            className="flex items-center gap-2"
+          >
+            <FileUpIcon className="h-4 w-4" />
+            Impordi CSV
+          </Button>
         </div>
 
         {isLoading ? (
@@ -110,7 +136,7 @@ export default function Competences() {
         ) : actionSteps.length === 0 ? (
           <div className="bg-muted p-8 rounded-lg text-center">
             <p className="text-muted-foreground mb-4">Ühtegi arengusammu pole leitud.</p>
-            <p className="text-sm">Mine arengusammu detailvaatesse ja importi arengusammud CSV failist.</p>
+            <p className="text-sm">Klõpsa "Impordi CSV" nupul ja impordi arengusammud CSV failist.</p>
           </div>
         ) : (
           <CompetenceList 
@@ -123,6 +149,12 @@ export default function Competences() {
           />
         )}
       </main>
+      
+      <CSVImportModal 
+        open={showImportModal}
+        onOpenChange={setShowImportModal}
+        onImportSuccess={handleImportSuccess}
+      />
     </div>
   );
 }
