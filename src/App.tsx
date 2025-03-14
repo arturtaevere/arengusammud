@@ -15,7 +15,7 @@ import Profile from "./pages/Profile";
 import Observations from "./pages/Observations";
 import Admin from "./pages/Admin";
 import VerifyEmail from "./pages/VerifyEmail";
-import { AuthProvider } from "./context/AuthContext";
+import { AuthProvider } from "./context/auth";
 
 const queryClient = new QueryClient();
 
