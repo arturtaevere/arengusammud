@@ -6,12 +6,31 @@ import {
   convertToCompetencesPageFormat, 
   convertActionStepsToCompetencesPageFormat 
 } from '@/components/observation/competencyAdapter';
+import { CSVImportService } from '@/services/csvImport';
 
 export default function Competences() {
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
   const [competencesWithCounts, setCompetencesWithCounts] = useState(convertToCompetencesPageFormat());
   const [expandedSteps, setExpandedSteps] = useState<Record<string, boolean>>({});
-  const [actionSteps, setActionSteps] = useState(convertActionStepsToCompetencesPageFormat());
+  const [actionSteps, setActionSteps] = useState<any[]>([]);
+
+  // Load both standard and imported action steps when the component mounts
+  useEffect(() => {
+    // Get all action steps, including imported ones
+    const allActionSteps = convertActionStepsToCompetencesPageFormat();
+    setActionSteps(allActionSteps);
+    
+    // Update competence counts based on all action steps
+    const updatedCompetences = competencesWithCounts.map(comp => {
+      const categorySteps = allActionSteps.filter(step => step.category === comp.id);
+      return {
+        ...comp,
+        count: categorySteps.length
+      };
+    });
+    
+    setCompetencesWithCounts(updatedCompetences);
+  }, []);
 
   const toggleCategory = (id: string) => {
     setExpandedCategory(expandedCategory === id ? null : id);

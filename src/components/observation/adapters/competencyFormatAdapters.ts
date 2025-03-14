@@ -2,6 +2,7 @@
 import { competencies } from '../data/competenciesData';
 import { getCompetencyDescription, getDifficultyForActionStep, getTimeEstimateForActionStep } from './competencyMetadata';
 import { getIconComponent } from './competencyIcons';
+import { CSVImportService } from '@/services/csvImport';
 
 // Convert a competency from the standard format to the format used in the Competences page
 export const convertToCompetencesPageFormat = () => {
@@ -29,7 +30,11 @@ export const convertToDashboardFormat = () => {
 
 // Convert action steps to the format used in the Competences page
 export const convertActionStepsToCompetencesPageFormat = () => {
-  return competencies.flatMap(comp => 
+  // Get imported action steps
+  const importedActionSteps = CSVImportService.getImportedData();
+  
+  // Convert standard action steps from competencies
+  const standardSteps = competencies.flatMap(comp => 
     comp.actionSteps.map(step => ({
       id: step.id,
       title: step.title,
@@ -40,4 +45,18 @@ export const convertActionStepsToCompetencesPageFormat = () => {
       resources: []
     }))
   );
+  
+  // Convert imported action steps
+  const importedSteps = Object.entries(importedActionSteps).map(([id, details]) => ({
+    id: id,
+    title: details.title,
+    description: details.description,
+    category: details.category,
+    difficulty: details.difficulty,
+    timeEstimate: details.timeEstimate,
+    resources: []
+  }));
+  
+  // Combine both sets of action steps
+  return [...standardSteps, ...importedSteps];
 };
