@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { CSVImportService } from '@/services/csvImportService';
+import { CSVImportService } from '@/services/csvImport';
 import { toast } from '@/components/ui/use-toast';
 import { ActionStepDetailsCollection } from '@/services/actionStepDetails/types';
 import CSVFileInput from './csv-import/CSVFileInput';

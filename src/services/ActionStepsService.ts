@@ -1,9 +1,8 @@
-
 import { ActionStep, actionSteps } from "@/data/actionStepsData";
 import { actionStepsDetails, ActionStepDetails } from "@/services/actionStepData";
 import { getCompetenceTitle } from "@/data/competencesData";
 import { getActionStepDetailById } from "@/components/observation/data/competencyHelpers";
-import { CSVImportService } from "@/services/csvImportService";
+import { CSVImportService } from "@/services/csvImport";
 
 // Local storage utils
 export const getVideoStorageKey = (stepId: string) => `action_step_video_${stepId}`;
