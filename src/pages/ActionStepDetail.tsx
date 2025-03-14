@@ -8,6 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import VideoPlayer from "@/components/VideoPlayer";
 import VideoUploader from "@/components/VideoUploader";
+import { getActionStepDetailById } from "@/components/observation/data/competencyHelpers";
 
 // Create a local storage key using the step ID to store video URLs
 const getVideoStorageKey = (stepId: string) => `action_step_video_${stepId}`;
@@ -83,20 +84,25 @@ const ActionStepDetail = () => {
   const [videoUrl, setVideoUrl] = useState<string>("");
   
   useEffect(() => {
-    if (stepId && stepId in actionStepsDetails) {
-      const details = actionStepsDetails[stepId as keyof typeof actionStepsDetails];
-      setStepDetails(details);
+    if (stepId) {
+      // Use our helper to map URL IDs to data IDs
+      const dataStepId = getActionStepDetailById(stepId);
       
-      // Try to get from localStorage first
-      const savedVideoUrl = localStorage.getItem(getVideoStorageKey(stepId));
-      
-      if (savedVideoUrl) {
-        setVideoUrl(savedVideoUrl);
-      } else if (details.videoUrl && details.videoUrl !== "https://example.com/video1" && details.videoUrl !== "https://example.com/video2") {
-        // Set the default video URL if it's a real URL (not example placeholder)
-        setVideoUrl(details.videoUrl);
-        // Also save real URLs to localStorage for future visits
-        localStorage.setItem(getVideoStorageKey(stepId), details.videoUrl);
+      if (dataStepId && dataStepId in actionStepsDetails) {
+        const details = actionStepsDetails[dataStepId as keyof typeof actionStepsDetails];
+        setStepDetails(details);
+        
+        // Try to get from localStorage first
+        const savedVideoUrl = localStorage.getItem(getVideoStorageKey(dataStepId));
+        
+        if (savedVideoUrl) {
+          setVideoUrl(savedVideoUrl);
+        } else if (details.videoUrl && details.videoUrl !== "https://example.com/video1" && details.videoUrl !== "https://example.com/video2") {
+          // Set the default video URL if it's a real URL (not example placeholder)
+          setVideoUrl(details.videoUrl);
+          // Also save real URLs to localStorage for future visits
+          localStorage.setItem(getVideoStorageKey(dataStepId), details.videoUrl);
+        }
       }
     }
   }, [stepId]);
