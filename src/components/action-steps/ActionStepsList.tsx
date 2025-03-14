@@ -1,4 +1,3 @@
-
 import ActionStepCard from "@/components/ActionStepCard";
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
@@ -29,6 +28,10 @@ const ActionStepsList = ({
   searchTerm, 
   setSearchTerm
 }: ActionStepsListProps) => {
+  const cleanDescription = (description: string): string => {
+    return description.replace(/^[\w\s]+:\s*/i, '');
+  };
+
   if (filteredSteps.length === 0) {
     return (
       <div className="text-center py-12 bg-slate-50 rounded-lg border border-slate-100">
@@ -56,7 +59,7 @@ const ActionStepsList = ({
           key={step.id}
           id={step.id}
           title={step.title}
-          description={step.description}
+          description={cleanDescription(step.description)}
           category={competences.find(c => c.id === step.category)?.title || ""}
           resources={step.resources}
         />

@@ -30,6 +30,9 @@ const ActionStepCard = ({
 }: ActionStepCardProps) => {
   const [isSaved, setIsSaved] = useState(saved);
 
+  // Clean the description to remove any category labels that might remain
+  const cleanedDescription = description.replace(/^[\w\s]+:\s*/i, '');
+
   return (
     <Card className={cn("overflow-hidden transition-all hover:shadow-md", className)}>
       <Link to={`/action-steps/${id}`} className="block cursor-pointer">
@@ -66,7 +69,7 @@ const ActionStepCard = ({
         </CardHeader>
         <CardContent>
           <p className="text-sm mb-3">
-            {description}
+            {cleanedDescription}
           </p>
         </CardContent>
       </Link>
