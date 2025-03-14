@@ -39,6 +39,9 @@ const Dashboard = () => {
     { id: '3', title: 'Diferentseeri õpetamist', dueDate: '2023-05-25', category: 'Diferentseerimine' },
   ];
 
+  // Debug the competencesList to see what's happening
+  console.log('CompetencesList in Dashboard:', competencesList);
+
   return (
     <div className="min-h-screen bg-gray-50/50">
       <Navbar />
@@ -51,7 +54,13 @@ const Dashboard = () => {
           </p>
         </div>
         
-        <CompetencesGrid competences={competencesList} />
+        {competencesList && competencesList.length > 0 ? (
+          <CompetencesGrid competences={competencesList} />
+        ) : (
+          <div className="p-6 bg-white rounded-lg shadow mb-8">
+            <p className="text-center text-gray-500">Õpieesmärgid laadin...</p>
+          </div>
+        )}
         
         <StatsCards stats={stats} />
         
