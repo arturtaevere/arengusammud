@@ -7,7 +7,6 @@ import { useActionSteps } from "@/hooks/useActionSteps";
 import ActionStepsHeader from "@/components/action-steps/ActionStepsHeader";
 import ActionStepsFilters from "@/components/action-steps/ActionStepsFilters";
 import ActionStepsList from "@/components/action-steps/ActionStepsList";
-import { ActionStep } from "@/data/action-steps/types";
 
 const ActionSteps = () => {
   const [searchParams] = useSearchParams();
@@ -17,7 +16,7 @@ const ActionSteps = () => {
   
   const currentCategory = competences.find(c => c.id === categoryFilter)?.title || "Kõik arengusammud";
 
-  // Use the correct type for actionSteps
+  // Use the hook with the imported action steps
   const { filteredSteps } = useActionSteps(
     actionSteps, 
     categoryFilter, 

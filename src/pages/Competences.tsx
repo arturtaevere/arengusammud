@@ -10,36 +10,39 @@ import {
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import { actionSteps } from '@/data/actionStepsData';
+import { ActionStep } from '@/data/action-steps/types';
 
 export default function Competences() {
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
   const [expandedSteps, setExpandedSteps] = useState<Record<string, boolean>>({});
   const [competencesWithCounts, setCompetencesWithCounts] = useState(convertToCompetencesPageFormat());
-  const [actionStepsData, setActionStepsData] = useState(convertActionStepsToCompetencesPageFormat());
+  const [actionStepsData, setActionStepsData] = useState<ActionStep[]>([]);
 
   // Debug logging to check data
   console.log("Action steps from data module:", actionSteps);
-  console.log("Original action steps count:", actionSteps.length);
-  console.log("Converted action steps data:", actionStepsData);
-  console.log("Number of action steps after conversion:", actionStepsData.length);
+  console.log("Original action steps count:", actionSteps?.length || 0);
   
   useEffect(() => {
-    // Make sure we're getting fresh data
-    const steps = convertActionStepsToCompetencesPageFormat();
-    console.log("Steps from converter:", steps);
-    setActionStepsData(steps);
-    
-    // Update competence counts based on actual action steps
-    const updatedCompetences = convertToCompetencesPageFormat().map(comp => {
-      const stepsCount = steps.filter(step => step.category === comp.id).length;
-      console.log(`Competence ${comp.id} (${comp.title}) has ${stepsCount} steps`);
-      return {
-        ...comp,
-        count: stepsCount
-      };
-    });
-    
-    setCompetencesWithCounts(updatedCompetences);
+    try {
+      // Make sure we're getting fresh data
+      const steps = convertActionStepsToCompetencesPageFormat();
+      console.log("Steps from converter:", steps);
+      setActionStepsData(steps);
+      
+      // Update competence counts based on actual action steps
+      const updatedCompetences = convertToCompetencesPageFormat().map(comp => {
+        const stepsCount = steps.filter(step => step.category === comp.id).length;
+        console.log(`Competence ${comp.id} (${comp.title}) has ${stepsCount} steps`);
+        return {
+          ...comp,
+          count: stepsCount
+        };
+      });
+      
+      setCompetencesWithCounts(updatedCompetences);
+    } catch (error) {
+      console.error("Error loading competences data:", error);
+    }
   }, []);
 
   const toggleCategory = (id: string) => {
