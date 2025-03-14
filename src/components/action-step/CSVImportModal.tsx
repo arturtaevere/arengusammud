@@ -1,30 +1,13 @@
 
 import React, { useState } from 'react';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
-import { Upload, Check, AlertCircle } from 'lucide-react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import { CSVImportService } from '@/services/csvImportService';
 import { toast } from '@/components/ui/use-toast';
 import { ActionStepDetailsCollection } from '@/services/actionStepDetails/types';
+import CSVFileInput from './csv-import/CSVFileInput';
+import CSVImportInstructions from './csv-import/CSVImportInstructions';
+import CSVImportConfirmDialog from './csv-import/CSVImportConfirmDialog';
 
 interface CSVImportModalProps {
   open: boolean;
@@ -43,20 +26,9 @@ const CSVImportModal: React.FC<CSVImportModalProps> = ({
   const [parsedData, setParsedData] = useState<ActionStepDetailsCollection | null>(null);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setError(null);
-    
-    if (e.target.files && e.target.files[0]) {
-      const selectedFile = e.target.files[0];
-      
-      // Check if it's a CSV file
-      if (!selectedFile.name.endsWith('.csv')) {
-        setError('Palun vali CSV fail');
-        return;
-      }
-      
-      setFile(selectedFile);
-    }
+  const handleFileChange = (selectedFile: File | null, errorMessage: string | null) => {
+    setFile(selectedFile);
+    setError(errorMessage);
   };
   
   const handleImport = async () => {
@@ -133,43 +105,15 @@ const CSVImportModal: React.FC<CSVImportModalProps> = ({
           </DialogHeader>
           
           <div className="space-y-4 py-4">
-            {error && (
-              <Alert variant="destructive">
-                <AlertCircle className="h-4 w-4" />
-                <AlertDescription>{error}</AlertDescription>
-              </Alert>
-            )}
+            <CSVFileInput 
+              file={file}
+              error={error}
+              isUploading={isUploading}
+              onFileChange={handleFileChange}
+              onImport={handleImport}
+            />
             
-            <div className="flex items-center gap-4">
-              <Input 
-                type="file" 
-                accept=".csv" 
-                onChange={handleFileChange}
-                className="flex-1"
-              />
-              
-              <Button
-                onClick={handleImport}
-                disabled={!file || isUploading}
-              >
-                {isUploading ? 'Töötlemine...' : 'Impordi'}
-                <Upload className="ml-2 h-4 w-4" />
-              </Button>
-            </div>
-            
-            <div className="text-sm text-muted-foreground">
-              <p className="font-medium mb-2">CSV faili nõuded:</p>
-              <ul className="list-disc pl-5 space-y-1">
-                <li>Esimene rida peab sisaldama väljade pealkirju</li>
-                <li>Vajalikud väljad: id, title, description, category</li>
-                <li>Soovituslikud väljad: difficulty, timeEstimate, reason, examples, videoUrl</li>
-                <li>Edukriteeriumid ja harjutusülesanded saab lisada eraldi ridadel:</li>
-                <ul className="list-disc pl-5 space-y-1">
-                  <li>Edukriteeriumid: igal real "Edukriteerium:" või "Edukriteerium;" millele järgneb kriteerium</li>
-                  <li>Harjutusülesanded: igal real "Harjutusülesanne:" või "Harjutusülesanne;" millele järgneb ülesanne</li>
-                </ul>
-              </ul>
-            </div>
+            <CSVImportInstructions />
           </div>
           
           <DialogFooter className="sm:justify-end">
@@ -183,23 +127,12 @@ const CSVImportModal: React.FC<CSVImportModalProps> = ({
         </DialogContent>
       </Dialog>
       
-      <AlertDialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Kinnita import</AlertDialogTitle>
-            <AlertDialogDescription>
-              {parsedData && `Failist leiti ${Object.keys(parsedData).length} arengusammu. Kas soovid need importida?`}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Tühista</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmImport}>
-              <Check className="mr-2 h-4 w-4" />
-              Kinnita import
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <CSVImportConfirmDialog 
+        open={showConfirmDialog}
+        onOpenChange={setShowConfirmDialog}
+        parsedData={parsedData}
+        onConfirm={confirmImport}
+      />
     </>
   );
 };
