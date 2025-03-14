@@ -21,7 +21,6 @@ const Dashboard = () => {
   const stats = {
     actionStepsAssigned: 12,
     actionStepsCompleted: 7,
-    observationsCount: 8,
     feedbackCount: 15
   };
 

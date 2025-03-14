@@ -3,25 +3,22 @@ import { Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { 
-  BookOpen, 
   ClipboardList, 
   MessageSquare, 
-  Plus, 
-  TrendingUp 
+  Plus 
 } from 'lucide-react';
 
 interface StatsCardsProps {
   stats: {
     actionStepsAssigned: number;
     actionStepsCompleted: number;
-    observationsCount: number;
     feedbackCount: number;
   };
 }
 
 const StatsCards = ({ stats }: StatsCardsProps) => {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-10">
       <Card className="hover:shadow-md transition-all">
         <CardHeader className="pb-2">
           <CardTitle className="text-lg font-medium flex items-center">
@@ -52,27 +49,6 @@ const StatsCards = ({ stats }: StatsCardsProps) => {
       <Card className="hover:shadow-md transition-all">
         <CardHeader className="pb-2">
           <CardTitle className="text-lg font-medium flex items-center">
-            <BookOpen className="mr-2 h-5 w-5 text-primary" />
-            Vaatlused
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-3xl font-bold">{stats.observationsCount}</p>
-          <p className="text-sm text-muted-foreground">Kokku läbi viidud</p>
-          <div className="mt-4">
-            <Button variant="outline" size="sm" className="w-full" asChild>
-              <Link to="/observations/new">
-                <Plus className="mr-2 h-4 w-4" />
-                Uus vaatlus
-              </Link>
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-      
-      <Card className="hover:shadow-md transition-all">
-        <CardHeader className="pb-2">
-          <CardTitle className="text-lg font-medium flex items-center">
             <MessageSquare className="mr-2 h-5 w-5 text-primary" />
             Tagasiside
           </CardTitle>
@@ -86,27 +62,6 @@ const StatsCards = ({ stats }: StatsCardsProps) => {
                 <Plus className="mr-2 h-4 w-4" />
                 Anna tagasisidet
               </Link>
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-      
-      <Card className="hover:shadow-md transition-all">
-        <CardHeader className="pb-2">
-          <CardTitle className="text-lg font-medium flex items-center">
-            <TrendingUp className="mr-2 h-5 w-5 text-primary" />
-            Progress
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex items-end gap-2">
-            <p className="text-3xl font-bold">58%</p>
-            <p className="text-sm text-green-500 mb-1">+12%</p>
-          </div>
-          <p className="text-sm text-muted-foreground">Üldine paranemine</p>
-          <div className="mt-4">
-            <Button variant="outline" size="sm" className="w-full" asChild>
-              <Link to="/progress">Vaata detaile</Link>
             </Button>
           </div>
         </CardContent>
