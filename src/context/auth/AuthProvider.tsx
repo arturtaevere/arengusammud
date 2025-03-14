@@ -16,11 +16,19 @@ export const AuthContext = createContext<AuthContextType>({
   updateProfileImage: () => {},
   getAllUsers: () => [],
   deleteUserByEmail: async () => false,
+  
+  // Add the stub verification functions
+  verifyEmail: async () => false,
+  resendVerificationEmail: async () => false,
+  pendingVerificationEmail: null,
+  setPendingVerificationEmail: () => {},
 });
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  // Add state for pendingVerificationEmail
+  const [pendingVerificationEmail, setPendingVerificationEmail] = useState<string | null>(null);
   
   // Custom hooks for auth functionality
   const {
@@ -77,6 +85,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  // Stub implementations for verification functions
+  const verifyEmail = async () => {
+    console.log("Email verification is disabled");
+    return false;
+  };
+
+  const resendVerificationEmail = async () => {
+    console.log("Email verification is disabled");
+    return false;
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -89,6 +108,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         updateProfileImage: handleUpdateProfileImage,
         getAllUsers,
         deleteUserByEmail,
+        // Add the verification-related values
+        verifyEmail,
+        resendVerificationEmail,
+        pendingVerificationEmail,
+        setPendingVerificationEmail,
       }}
     >
       {children}

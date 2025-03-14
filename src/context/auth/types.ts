@@ -26,4 +26,10 @@ export interface AuthContextType {
   updateProfileImage: (imageUrl: string) => void;
   getAllUsers: () => User[];
   deleteUserByEmail: (email: string) => Promise<boolean>;
+  
+  // Adding these stub properties to fix type errors
+  verifyEmail: (id: string, token: string) => Promise<boolean>;
+  resendVerificationEmail: (email: string) => Promise<boolean>;
+  pendingVerificationEmail: string | null;
+  setPendingVerificationEmail: (email: string | null) => void;
 }
