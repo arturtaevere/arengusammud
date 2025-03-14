@@ -4,9 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import AuthForm from '@/components/AuthForm';
 import Navbar from '@/components/Navbar';
+import VerificationMessage from '@/components/VerificationMessage';
 
 const Auth = () => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, pendingVerificationEmail } = useAuth();
   const navigate = useNavigate();
   
   // Redirect authenticated users to dashboard
@@ -27,7 +28,11 @@ const Auth = () => {
         </div>
         
         <div className="w-full max-w-md animate-fade-in">
-          <AuthForm />
+          {pendingVerificationEmail ? (
+            <VerificationMessage email={pendingVerificationEmail} />
+          ) : (
+            <AuthForm />
+          )}
         </div>
       </div>
     </div>

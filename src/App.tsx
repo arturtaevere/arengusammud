@@ -14,6 +14,7 @@ import ActionStepDetail from "./pages/ActionStepDetail";
 import Profile from "./pages/Profile";
 import Observations from "./pages/Observations";
 import Admin from "./pages/Admin";
+import VerifyEmail from "./pages/VerifyEmail";
 import { AuthProvider } from "./context/AuthContext";
 
 const queryClient = new QueryClient();
@@ -28,6 +29,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<Auth />} />
+            <Route path="/verify-email" element={<VerifyEmail />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/competences" element={<Competences />} />
             <Route path="/action-steps" element={<ActionSteps />} />
