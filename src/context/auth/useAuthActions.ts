@@ -41,59 +41,79 @@ export const useAuthActions = () => {
   };
 
   const generateVerificationToken = (userId: string) => {
-    // Generate a more reliable token
-    const token = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-    console.log(`Generated new token for userId ${userId}: ${token}`);
-    
-    // Store token in localStorage BEFORE updating state to ensure it's saved immediately
+    // Clear any existing tokens for this user first
     const currentTokens = JSON.parse(localStorage.getItem(VERIFICATION_TOKENS_KEY) || '{}');
+    
+    // Generate a stronger token
+    const token = Math.random().toString(36).substring(2, 15);
+    
+    // Store the new token
     const updatedTokens = { ...currentTokens, [userId]: token };
     localStorage.setItem(VERIFICATION_TOKENS_KEY, JSON.stringify(updatedTokens));
     
     // Update state
     setVerificationTokens(updatedTokens);
+    
+    console.log(`Generated new token for userId ${userId}: ${token}`);
+    console.log(`Updated tokens in localStorage:`, updatedTokens);
+    
     return token;
   };
 
   const verifyEmail = async (userId: string, token: string) => {
     await new Promise(resolve => setTimeout(resolve, 800));
     
-    // Get the most up-to-date tokens from localStorage
+    // Get the most up-to-date tokens directly from localStorage
     const currentTokens = JSON.parse(localStorage.getItem(VERIFICATION_TOKENS_KEY) || '{}');
     
     console.log(`Trying to verify userId: ${userId} with token: ${token}`);
     console.log('Available tokens from localStorage:', currentTokens);
-    console.log('Available tokens from state:', verificationTokens);
+    
+    // For debugging
+    if (currentTokens[userId] === token) {
+      console.log('✅ Token match found!');
+    } else {
+      console.log(`❌ Token mismatch. Expected: ${currentTokens[userId]}, Received: ${token}`);
+    }
     
     // Check against the tokens from localStorage
     if (currentTokens[userId] === token) {
-      // Get the most up-to-date users
-      const currentUsers = JSON.parse(localStorage.getItem(USERS_STORAGE_KEY) || '[]');
-      
-      // Update the user's emailVerified status
-      const updatedUsers = currentUsers.map((u: UserWithPassword) => {
-        if (u.id === userId) {
-          console.log(`Marking user ${u.email} as verified`);
-          return { ...u, emailVerified: true };
-        }
-        return u;
-      });
-      
-      // Save the updated users
-      localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(updatedUsers));
-      setUsers(updatedUsers);
-      
-      // Remove the used token
-      const { [userId]: _, ...restTokens } = currentTokens;
-      localStorage.setItem(VERIFICATION_TOKENS_KEY, JSON.stringify(restTokens));
-      setVerificationTokens(restTokens);
-      
-      toast({
-        title: "Email kinnitatud",
-        description: "Sinu e-posti aadress on edukalt kinnitatud. Võid nüüd sisse logida.",
-      });
-      
-      return true;
+      try {
+        // Get the most up-to-date users
+        const currentUsers = JSON.parse(localStorage.getItem(USERS_STORAGE_KEY) || '[]');
+        
+        // Update the user's emailVerified status
+        const updatedUsers = currentUsers.map((u: UserWithPassword) => {
+          if (u.id === userId) {
+            console.log(`Marking user ${u.email} as verified`);
+            return { ...u, emailVerified: true };
+          }
+          return u;
+        });
+        
+        // Save the updated users
+        localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(updatedUsers));
+        setUsers(updatedUsers);
+        
+        // Remove the used token
+        const { [userId]: removedToken, ...restTokens } = currentTokens;
+        localStorage.setItem(VERIFICATION_TOKENS_KEY, JSON.stringify(restTokens));
+        setVerificationTokens(restTokens);
+        
+        console.log('User verified successfully');
+        console.log('Updated users:', updatedUsers);
+        console.log('Removed used token, remaining tokens:', restTokens);
+        
+        toast({
+          title: "Email kinnitatud",
+          description: "Sinu e-posti aadress on edukalt kinnitatud. Võid nüüd sisse logida.",
+        });
+        
+        return true;
+      } catch (error) {
+        console.error('Error during verification process:', error);
+        return false;
+      }
     }
     
     toast({
@@ -108,30 +128,42 @@ export const useAuthActions = () => {
   const resendVerificationEmail = async (email: string) => {
     await new Promise(resolve => setTimeout(resolve, 800));
     
-    // Use the most up-to-date users from localStorage
+    // Always use the most up-to-date users from localStorage
     const currentUsers = JSON.parse(localStorage.getItem(USERS_STORAGE_KEY) || '[]');
     const foundUser = currentUsers.find((u: UserWithPassword) => u.email.toLowerCase() === email.toLowerCase());
     
-    if (foundUser && !foundUser.emailVerified) {
+    if (foundUser) {
+      // Always regenerate the token
       const token = generateVerificationToken(foundUser.id);
       const verificationLink = `${window.location.origin}/verify-email?id=${foundUser.id}&token=${token}`;
       
-      console.log(`New verification token for ${foundUser.email}: ${token}`);
+      console.log(`User found: ${foundUser.email}, ID: ${foundUser.id}`);
+      console.log(`New verification token: ${token}`);
       console.log(`Verification link: ${verificationLink}`);
+      
+      // Save tokens to ensure consistency
+      const updatedTokens = { ...verificationTokens, [foundUser.id]: token };
+      saveVerificationTokens(updatedTokens);
       
       toast({
         title: "Kinnitusmeil saadetud",
         description: "Uus kinnitusmeil on saadetud. Palun kontrolli oma postkasti.",
       });
       
-      // For development: Show verification link directly in UI
+      // For development: Show verification link directly in UI and alert
       alert(`DEV MODE: Use this verification link: ${verificationLink}`);
+      
+      return true;
     } else {
+      console.log(`User with email ${email} not found`);
+      
       toast({
         variant: "destructive",
         title: "Saatmine ebaõnnestus",
-        description: "Kasutajat selle e-posti aadressiga ei leitud või on e-post juba kinnitatud.",
+        description: "Kasutajat selle e-posti aadressiga ei leitud.",
       });
+      
+      return false;
     }
   };
 
@@ -155,13 +187,15 @@ export const useAuthActions = () => {
     }
 
     if (!foundUser.emailVerified) {
+      console.log(`User ${foundUser.email} not verified, sending verification email`);
+      
       const token = generateVerificationToken(foundUser.id);
       const verificationLink = `${window.location.origin}/verify-email?id=${foundUser.id}&token=${token}`;
       
       console.log(`Verification token for ${foundUser.email}: ${token}`);
       console.log(`Verification link: ${verificationLink}`);
       
-      // For development: Show verification link directly in UI
+      // For development: Show verification link directly 
       alert(`DEV MODE: Use this verification link: ${verificationLink}`);
       
       throw new Error('E-posti aadress pole kinnitatud. Palun kontrolli oma postkasti kinnituslingi jaoks.');
@@ -206,13 +240,19 @@ export const useAuthActions = () => {
     saveUsers(updatedUsers);
     
     const token = generateVerificationToken(userId);
-    console.log(`Verification token for ${email}: ${token}`);
-    console.log(`Verification link: ${window.location.origin}/verify-email?id=${userId}&token=${token}`);
+    const verificationLink = `${window.location.origin}/verify-email?id=${userId}&token=${token}`;
+    
+    console.log(`New user created: ${email}, ID: ${userId}`);
+    console.log(`Verification token: ${token}`);
+    console.log(`Verification link: ${verificationLink}`);
     
     toast({
       title: "Registreerimine õnnestus",
       description: "Kinnitusmeil on saadetud. Palun kontrolli oma postkasti.",
     });
+    
+    // For development
+    alert(`DEV MODE: Use this verification link: ${verificationLink}`);
     
     return email;
   };

@@ -1,4 +1,3 @@
-
 import { Link } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -23,6 +22,9 @@ const VerificationMessage = ({ email }: VerificationMessageProps) => {
       // Check if this is a verification link log
       if (typeof args[0] === 'string' && args[0].includes('Verification link:') && args[1]) {
         setVerificationUrl(args[1]);
+        // For development, show the verification link in an alert
+        // Helps ensure the user can easily copy it
+        alert(`DEV MODE: Use this verification link: ${args[1]}`);
       }
     };
     
@@ -42,6 +44,14 @@ const VerificationMessage = ({ email }: VerificationMessageProps) => {
   
   const handleDismiss = () => {
     setPendingVerificationEmail(null);
+  };
+  
+  // Function to automatically verify when link is available
+  const handleAutoVerify = () => {
+    if (verificationUrl) {
+      // Instead of just navigating, we'll open in a new tab to keep this context
+      window.open(verificationUrl, '_blank');
+    }
   };
   
   return (
@@ -65,11 +75,18 @@ const VerificationMessage = ({ email }: VerificationMessageProps) => {
         </p>
         
         {verificationUrl && (
-          <div className="mt-4 p-3 bg-muted/50 rounded-md">
+          <div className="mt-4 p-3 bg-primary/10 rounded-md">
             <p className="text-sm font-medium mb-2">Arendusrežiimi link:</p>
-            <Link to={verificationUrl} className="text-sm break-all text-primary hover:underline">
+            <a href={verificationUrl} target="_blank" rel="noopener noreferrer" className="text-sm break-all text-primary hover:underline">
               {verificationUrl}
-            </Link>
+            </a>
+            <Button 
+              className="w-full mt-3"
+              onClick={handleAutoVerify}
+              variant="outline"
+            >
+              Kinnita e-post
+            </Button>
           </div>
         )}
       </CardContent>

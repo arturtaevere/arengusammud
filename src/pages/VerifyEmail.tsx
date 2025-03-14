@@ -6,16 +6,19 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import Navbar from '@/components/Navbar';
 import { Mail, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
+import { useToast } from '@/components/ui/use-toast';
 
 const VerifyEmail = () => {
   const [searchParams] = useSearchParams();
   const { verifyEmail, resendVerificationEmail, pendingVerificationEmail, setPendingVerificationEmail } = useAuth();
   const navigate = useNavigate();
+  const { toast } = useToast();
   
   const [verifying, setVerifying] = useState(false);
   const [resending, setResending] = useState(false);
   const [verificationStatus, setVerificationStatus] = useState<'verifying' | 'success' | 'error' | 'pending'>('pending');
   const [email, setEmail] = useState(pendingVerificationEmail || '');
+  const [verificationMessage, setVerificationMessage] = useState('');
   
   // Try to verify email if ID and token are provided in URL
   useEffect(() => {
@@ -28,18 +31,48 @@ const VerifyEmail = () => {
         setVerificationStatus('verifying');
         try {
           console.log(`Starting verification process with id: ${id}, token: ${token}`);
+          
+          // Read tokens directly from localStorage to debug
+          const localStorageTokens = JSON.parse(localStorage.getItem('verification_tokens') || '{}');
+          console.log('Current tokens in localStorage:', localStorageTokens);
+          console.log(`Checking if token ${token} matches stored token for id ${id}: ${localStorageTokens[id]}`);
+          
           const success = await verifyEmail(id, token);
           console.log(`Verification result: ${success ? 'success' : 'failure'}`);
+          
           setVerificationStatus(success ? 'success' : 'error');
+          setVerificationMessage(success 
+            ? 'Sinu e-posti aadress on edukalt kinnitatud.' 
+            : 'Vigane või aegunud kinnituslink. Tokenid ei kattu.');
           
           // If verification is successful, clear the pending email
           if (success) {
             console.log('Email verification successful, clearing pending email');
             setPendingVerificationEmail(null);
+            
+            // Show success toast
+            toast({
+              title: "E-post kinnitatud",
+              description: "Sinu e-posti aadress on edukalt kinnitatud.",
+            });
+          } else {
+            // Show error toast
+            toast({
+              variant: "destructive",
+              title: "Kinnitamine ebaõnnestus",
+              description: "Vigane või aegunud kinnituslink. Palun proovi uuesti.",
+            });
           }
         } catch (error) {
           console.error('Error during verification:', error);
           setVerificationStatus('error');
+          setVerificationMessage('Verifikatsiooni käigus tekkis viga. Palun proovi uuesti.');
+          
+          toast({
+            variant: "destructive",
+            title: "Kinnitamine ebaõnnestus",
+            description: "Verifikatsiooni käigus tekkis viga. Palun proovi uuesti.",
+          });
         } finally {
           setVerifying(false);
         }
@@ -47,7 +80,7 @@ const VerifyEmail = () => {
     };
     
     verifyEmailToken();
-  }, [searchParams, verifyEmail, setPendingVerificationEmail]);
+  }, [searchParams, verifyEmail, setPendingVerificationEmail, toast]);
   
   const handleResendVerification = async () => {
     if (!email.trim()) return;
@@ -56,8 +89,19 @@ const VerifyEmail = () => {
     try {
       await resendVerificationEmail(email);
       console.log(`Verification email resent to ${email}`);
+      
+      toast({
+        title: "Kinnitusmeil saadetud",
+        description: "Uus kinnitusmeil on saadetud. Palun kontrolli oma postkasti.",
+      });
     } catch (error) {
       console.error('Error resending verification email:', error);
+      
+      toast({
+        variant: "destructive",
+        title: "Saatmine ebaõnnestus",
+        description: "Kinnitusmeili saatmine ebaõnnestus. Palun proovi uuesti.",
+      });
     } finally {
       setResending(false);
     }
@@ -103,6 +147,7 @@ const VerifyEmail = () => {
               
               <CardDescription>
                 {verificationStatus === 'verifying' ? 'Palun oota, kontrollime sinu e-posti...' : 
+                 verificationMessage ? verificationMessage :
                  verificationStatus === 'success' ? 'Sinu e-posti aadress on edukalt kinnitatud.' : 
                  verificationStatus === 'error' ? 'Vigane või aegunud kinnituslink.' : 
                  'Kirjutasime sulle kinnituslingi. Palun kontrolli oma postkasti.'}
