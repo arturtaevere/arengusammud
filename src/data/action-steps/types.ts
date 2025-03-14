@@ -5,6 +5,7 @@ export interface ActionStep {
   title: string;
   description: string;
   category: string;
+  difficulty?: string; // Added difficulty property as optional
   timeEstimate: string;
   resources: { title: string; url: string }[];
 }
