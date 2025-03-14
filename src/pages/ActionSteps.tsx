@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import Navbar from "@/components/Navbar";
@@ -7,16 +6,7 @@ import { useActionSteps } from "@/hooks/useActionSteps";
 import ActionStepsHeader from "@/components/action-steps/ActionStepsHeader";
 import ActionStepsFilters from "@/components/action-steps/ActionStepsFilters";
 import ActionStepsList from "@/components/action-steps/ActionStepsList";
-
-// Define local interface for type safety
-interface ActionStep {
-  id: string;
-  title: string;
-  description: string;
-  category: string;
-  timeEstimate: string;
-  resources: { title: string; url: string }[];
-}
+import { ActionStep } from "@/data/action-steps/types";
 
 const ActionSteps = () => {
   const [searchParams] = useSearchParams();
@@ -24,10 +14,8 @@ const ActionSteps = () => {
   
   const [searchTerm, setSearchTerm] = useState("");
   
-  // Get current category title
   const currentCategory = competences.find(c => c.id === categoryFilter)?.title || "Kõik arengusammud";
 
-  // Use custom hook to filter action steps
   const { filteredSteps } = useActionSteps(
     actionSteps as ActionStep[], 
     categoryFilter, 
