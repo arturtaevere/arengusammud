@@ -1,3 +1,4 @@
+
 /**
  * Service for importing action step details from CSV format
  */
@@ -47,19 +48,19 @@ export class CSVImportService {
       const line = lines[i].trim();
       if (!line) continue; // Skip empty lines
       
-      // Check if this is a line with success criteria
-      if (line.startsWith('Edukriteerium:')) {
+      // Check if this is a line with success criteria (support both colon and semicolon)
+      if (line.startsWith('Edukriteerium:') || line.startsWith('Edukriteerium;')) {
         if (currentStep) {
-          const criterion = line.replace('Edukriteerium:', '').trim();
+          const criterion = line.replace(/^Edukriteerium[;:]/, '').trim();
           successCriteria.push(criterion);
         }
         continue;
       }
       
-      // Check if this is a line with practice task
-      if (line.startsWith('Harjutusülesanne:')) {
+      // Check if this is a line with practice task (support both colon and semicolon)
+      if (line.startsWith('Harjutusülesanne:') || line.startsWith('Harjutusülesanne;')) {
         if (currentStep) {
-          const task = line.replace('Harjutusülesanne:', '').trim();
+          const task = line.replace(/^Harjutusülesanne[;:]/, '').trim();
           practiceTasks.push(task);
         }
         continue;
@@ -180,3 +181,4 @@ export class CSVImportService {
     return {};
   }
 }
+

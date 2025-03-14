@@ -165,8 +165,8 @@ const CSVImportModal: React.FC<CSVImportModalProps> = ({
                 <li>Soovituslikud väljad: difficulty, timeEstimate, reason, examples, videoUrl</li>
                 <li>Edukriteeriumid ja harjutusülesanded saab lisada eraldi ridadel:</li>
                 <ul className="list-disc pl-5 space-y-1">
-                  <li>Edukriteeriumid: igal real "Edukriteerium: [kriteerium]"</li>
-                  <li>Harjutusülesanded: igal real "Harjutusülesanne: [ülesanne]"</li>
+                  <li>Edukriteeriumid: igal real "Edukriteerium:" või "Edukriteerium;" millele järgneb kriteerium</li>
+                  <li>Harjutusülesanded: igal real "Harjutusülesanne:" või "Harjutusülesanne;" millele järgneb ülesanne</li>
                 </ul>
               </ul>
             </div>
