@@ -19,7 +19,7 @@ const CompetencesGrid = ({ competences }: CompetencesGridProps) => {
       <h2 className="text-2xl font-bold mb-4">Õpieesmärgid</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3">
         {competences.map((competence) => (
-          <Link key={competence.id} to={`/action-steps?category=${competence.id}`}>
+          <Link key={competence.id} to={`/competences?category=${competence.id}`}>
             <Card className="h-full hover:shadow-md transition-all border-l-4 border-l-primary">
               <CardContent className="p-4 flex items-center">
                 <div className="mr-3 bg-primary/10 p-2 rounded-md">

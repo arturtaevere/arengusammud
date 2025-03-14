@@ -1,5 +1,6 @@
 
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import CompetenceList from '@/components/competences/CompetenceList';
 import { 
@@ -10,7 +11,10 @@ import { actionSteps } from '@/data/actionStepsData';
 import { ActionStep } from '@/data/action-steps/types';
 
 export default function Competences() {
-  const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
+  const [searchParams] = useSearchParams();
+  const categoryParam = searchParams.get("category");
+  
+  const [expandedCategory, setExpandedCategory] = useState<string | null>(categoryParam);
   const [expandedSteps, setExpandedSteps] = useState<Record<string, boolean>>({});
   const [competencesWithCounts, setCompetencesWithCounts] = useState(convertToCompetencesPageFormat());
   const [actionStepsData, setActionStepsData] = useState<ActionStep[]>([]);
@@ -61,6 +65,18 @@ export default function Competences() {
       setIsLoading(false);
     }
   }, []);
+
+  // Auto-expand the category from URL parameter
+  useEffect(() => {
+    if (categoryParam) {
+      setExpandedCategory(categoryParam);
+      // Also auto-expand the steps for this category
+      setExpandedSteps(prev => ({
+        ...prev,
+        [categoryParam]: true
+      }));
+    }
+  }, [categoryParam]);
 
   const toggleCategory = (id: string) => {
     setExpandedCategory(expandedCategory === id ? null : id);
