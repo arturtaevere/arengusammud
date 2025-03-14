@@ -28,7 +28,7 @@ const ActionStepsList = ({
   isExpanded, 
   onToggleExpansion 
 }: ActionStepsListProps) => {
-  if (steps.length === 0) {
+  if (!steps || steps.length === 0) {
     return (
       <div className="bg-slate-50 p-4 rounded-lg border border-slate-100 text-center">
         <BookOpen className="h-12 w-12 mx-auto text-slate-400 mb-2" />

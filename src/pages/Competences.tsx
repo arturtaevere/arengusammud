@@ -9,12 +9,33 @@ import {
 } from '@/components/observation/competencyAdapter';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
+import { actionSteps } from '@/data/actionStepsData';
 
 export default function Competences() {
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
   const [competencesWithCounts, setCompetencesWithCounts] = useState(convertToCompetencesPageFormat());
   const [expandedSteps, setExpandedSteps] = useState<Record<string, boolean>>({});
-  const [actionSteps, setActionSteps] = useState(convertActionStepsToCompetencesPageFormat());
+  const [actionStepsData, setActionStepsData] = useState(convertActionStepsToCompetencesPageFormat());
+
+  // Debug logging to check data
+  console.log("Action steps data:", actionSteps);
+  console.log("Converted action steps:", actionStepsData);
+  
+  useEffect(() => {
+    // Ensure we're getting data from the right source
+    setActionStepsData(convertActionStepsToCompetencesPageFormat());
+    
+    // Update competence counts based on actual action steps
+    const updatedCompetences = competencesWithCounts.map(comp => {
+      const stepsCount = actionStepsData.filter(step => step.category === comp.id).length;
+      return {
+        ...comp,
+        count: stepsCount
+      };
+    });
+    
+    setCompetencesWithCounts(updatedCompetences);
+  }, []);
 
   const toggleCategory = (id: string) => {
     setExpandedCategory(expandedCategory === id ? null : id);
@@ -51,7 +72,7 @@ export default function Competences() {
 
         <CompetenceList 
           competences={competencesWithCounts}
-          actionSteps={actionSteps}
+          actionSteps={actionStepsData}
           expandedCategory={expandedCategory}
           expandedSteps={expandedSteps}
           onToggleCategory={toggleCategory}
