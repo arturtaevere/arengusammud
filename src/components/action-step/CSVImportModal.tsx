@@ -80,7 +80,8 @@ const CSVImportModal: React.FC<CSVImportModalProps> = ({
   const confirmImport = () => {
     if (!parsedData) return;
     
-    // Save the imported data
+    // Save the imported data to localStorage
+    console.log('Saving imported data with', Object.keys(parsedData).length, 'items');
     CSVImportService.saveImportedData(parsedData);
     
     // Notify parent component

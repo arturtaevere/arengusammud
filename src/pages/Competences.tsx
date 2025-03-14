@@ -9,8 +9,9 @@ import {
 import { CSVImportService } from '@/services/csvImport';
 import { toast } from '@/components/ui/use-toast';
 import { Button } from '@/components/ui/button';
-import { FileUpIcon, RefreshCw } from 'lucide-react';
+import { FileUpIcon, RefreshCw, Trash2 } from 'lucide-react';
 import CSVImportModal from '@/components/action-step/CSVImportModal';
+import { clearImportedData } from '@/services/csvImport/storage';
 
 export default function Competences() {
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
@@ -40,11 +41,13 @@ export default function Competences() {
       
       if (allActionSteps.length === 0) {
         console.log('No action steps found! Check imported data.');
-        toast({
-          title: "Ei leitud arengusamme",
-          description: "Palun impordi arengusammud CSV failist",
-          variant: "destructive"
-        });
+        if (Object.keys(importedData).length === 0) {
+          toast({
+            title: "Ei leitud arengusamme",
+            description: "Palun impordi arengusammud CSV failist",
+            variant: "destructive"
+          });
+        }
       }
       
       setActionSteps(allActionSteps);
@@ -110,6 +113,17 @@ export default function Competences() {
       description: "Arengusammude andmed on värskendatud.",
     });
   };
+  
+  const handleClearData = () => {
+    if (window.confirm('Kas oled kindel, et soovid kõik imporditud arengusammud kustutada?')) {
+      clearImportedData();
+      loadData();
+      toast({
+        title: "Andmed kustutatud",
+        description: "Imporditud arengusammud on edukalt kustutatud.",
+      });
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50/50">
@@ -142,6 +156,17 @@ export default function Competences() {
               <FileUpIcon className="h-4 w-4" />
               Impordi CSV
             </Button>
+            
+            {actionSteps.length > 0 && (
+              <Button 
+                onClick={handleClearData}
+                variant="outline"
+                className="flex items-center gap-2"
+              >
+                <Trash2 className="h-4 w-4" />
+                Kustuta imporditud
+              </Button>
+            )}
           </div>
         </div>
 

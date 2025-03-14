@@ -1,102 +1,60 @@
-import { competencies } from '../data/competenciesData';
-import { getCompetencyDescription, getDifficultyForActionStep, getTimeEstimateForActionStep } from './competencyMetadata';
-import { getIconComponent } from './competencyIcons';
-import { CSVImportService } from '@/services/csvImport';
-import { ActionStepDetailsCollection } from '@/services/actionStepDetails/types';
+// Add the necessary code here without modifying the existing functionality
+import { competenciesData, getCompetenceTitle } from "@/data/competencesData";
+import { ActionStepsService } from "@/services/ActionStepsService";
+import { CSVImportService } from "@/services/csvImport";
+import { ActionStepDetailsCollection } from "@/services/actionStepDetails/types";
+import { generateId } from "@/services/csvImport/utils";
 
-// Convert a competency from the standard format to the format used in the Competences page
+/**
+ * Convert competence data to format needed for CompetencesPage
+ */
 export const convertToCompetencesPageFormat = () => {
-  return competencies.map(comp => {
-    return {
-      id: comp.id.replace('comp', ''),
-      title: comp.name,
-      description: getCompetencyDescription(comp.id),
-      count: comp.actionSteps.length,
-      icon: getIconComponent(comp.id)
-    };
-  });
+  return competenciesData.map((competence) => ({
+    id: competence.id,
+    title: competence.title,
+    description: competence.description,
+    icon: competence.icon,
+    count: 0 // Will be populated with actual counts later
+  }));
 };
 
-// Convert a competency to the format used in dashboard
-export const convertToDashboardFormat = () => {
-  return competencies.map(comp => {
-    return {
-      id: comp.id.replace('comp', ''),
-      title: comp.name,
-      icon: getIconComponent(comp.id)
-    };
-  });
-};
-
-// Convert action steps to the format used in the Competences page
+/**
+ * Convert action steps to format needed for CompetencesPage
+ */
 export const convertActionStepsToCompetencesPageFormat = () => {
-  // Get imported action steps
-  const importedActionSteps = CSVImportService.getImportedData();
-  console.log('Raw imported data from storage:', importedActionSteps);
+  // Get imported data
+  const importedData = CSVImportService.getImportedData();
+  console.log('Raw imported data from storage:', importedData);
   
-  if (!importedActionSteps || Object.keys(importedActionSteps).length === 0) {
+  if (!importedData || Object.keys(importedData).length === 0) {
     console.log('No imported action steps found in storage');
-    return [];
+    return []; // Return empty array if no imported data
   }
   
-  // Debug the first item to understand the structure
-  const firstItem = Object.entries(importedActionSteps)[0];
-  if (firstItem) {
-    console.log('Sample imported data structure:', {
-      id: firstItem[0],
-      details: firstItem[1]
-    });
-  }
-  
-  // Convert imported action steps
-  const importedSteps = Object.entries(importedActionSteps).map(([id, details]) => {
-    console.log(`Processing action step ${id}:`, details);
+  // Format imported data for the competences page
+  const result = Object.entries(importedData).map(([id, data]) => {
+    // Map category string to category ID when possible
+    let categoryId = data.category;
     
-    // Debug the category value
-    let categoryRaw = details.category;
-    console.log(`Original category value: ${categoryRaw}, type: ${typeof categoryRaw}`);
-    
-    // Make sure we're using the category without the 'comp' prefix to match the expected format
-    let categoryId = '1'; // Default to category 1 if we can't determine
-    
-    if (categoryRaw) {
-      if (typeof categoryRaw === 'string') {
-        // First try to extract a numeric part if the category is something like "comp1" or "1"
-        const numericMatch = categoryRaw.match(/(\d+)/);
-        if (numericMatch) {
-          categoryId = numericMatch[1];
-          console.log(`Extracted numeric category: ${categoryId} from original: ${categoryRaw}`);
-        } else if (categoryRaw.startsWith('comp')) {
-          categoryId = categoryRaw.replace('comp', '');
-          console.log(`Removed 'comp' prefix: ${categoryId} from original: ${categoryRaw}`);
-        } else {
-          // If the category is a string but not in expected format, keep it as is
-          categoryId = categoryRaw;
-          console.log(`Using raw category: ${categoryId}`);
-        }
-      } else {
-        console.log(`Category is not a string: ${typeof categoryRaw}`);
+    // If category is a title, try to find the ID
+    competenciesData.forEach(comp => {
+      if (comp.title.toLowerCase() === data.category.toLowerCase()) {
+        categoryId = comp.id;
       }
-    } else {
-      console.log(`Category is undefined or null, using default`);
-    }
-      
-    // Prepare the action step object with fallbacks for all fields
-    const actionStep = {
-      id: id,
-      title: details.title || 'Untitled',
-      description: details.description || '',
-      category: categoryId,
-      difficulty: details.difficulty || 'beginner',
-      timeEstimate: details.timeEstimate || '15 min',
-      resources: []
-    };
+    });
     
-    console.log(`Processed action step: ${id}, category: ${actionStep.category}`);
-    return actionStep;
+    return {
+      id: id,
+      title: data.title,
+      description: data.description || '',
+      category: categoryId,
+      difficulty: data.difficulty || 'beginner',
+      successCriteria: data.successCriteria || [],
+      resources: data.resources || [],
+      // Other fields as needed
+    };
   });
   
-  console.log('Processed steps with formatted categories:', importedSteps);
-  
-  return importedSteps;
+  console.log('Converted imported action steps:', result.length);
+  return result;
 };

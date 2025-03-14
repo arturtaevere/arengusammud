@@ -4,7 +4,7 @@
  */
 import { ActionStepDetailsCollection } from '../actionStepDetails/types';
 import { parseCSVContent } from './parser';
-import { saveImportedData, getImportedData } from './storage';
+import { saveImportedData, getImportedData, clearImportedData } from './storage';
 import { getSampleCSV } from './samples';
 
 export class CSVImportService {
@@ -24,7 +24,13 @@ export class CSVImportService {
   static getImportedData = getImportedData;
   
   /**
+   * Clear imported data from localStorage
+   */
+  static clearImportedData = clearImportedData;
+  
+  /**
    * Get a sample CSV template for users to download
    */
   static getSampleCSV = getSampleCSV;
 }
+
