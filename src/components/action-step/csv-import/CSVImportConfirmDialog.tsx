@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Check } from 'lucide-react';
 import { ActionStepDetailsCollection } from '@/services/actionStepDetails/types';
+import CSVImportPreview from './CSVImportPreview';
 
 interface CSVImportConfirmDialogProps {
   open: boolean;
@@ -28,13 +29,18 @@ const CSVImportConfirmDialog: React.FC<CSVImportConfirmDialogProps> = ({
 }) => {
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent>
+      <AlertDialogContent className="max-w-3xl max-h-[90vh] overflow-hidden flex flex-col">
         <AlertDialogHeader>
           <AlertDialogTitle>Kinnita import</AlertDialogTitle>
           <AlertDialogDescription>
-            {parsedData && `Failist leiti ${Object.keys(parsedData).length} arengusammu. Kas soovid need importida?`}
+            {parsedData && `Failist leiti ${Object.keys(parsedData).length} arengusammu. Vaata üle andmed ja kinnita import.`}
           </AlertDialogDescription>
         </AlertDialogHeader>
+        
+        <div className="py-4 flex-1 overflow-auto">
+          <CSVImportPreview parsedData={parsedData} />
+        </div>
+        
         <AlertDialogFooter>
           <AlertDialogCancel>Tühista</AlertDialogCancel>
           <AlertDialogAction onClick={onConfirm}>

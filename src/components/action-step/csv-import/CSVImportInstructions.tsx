@@ -14,6 +14,7 @@ const CSVImportInstructions: React.FC = () => {
           <li>Edukriteeriumid: igal real "Edukriteerium:" või "Edukriteerium;" millele järgneb kriteerium</li>
           <li>Harjutusülesanded: igal real "Harjutusülesanne:" või "Harjutusülesanne;" millele järgneb ülesanne</li>
         </ul>
+        <li>Enne importimist kuvatakse andmete eelvaade kinnitamiseks</li>
       </ul>
     </div>
   );
