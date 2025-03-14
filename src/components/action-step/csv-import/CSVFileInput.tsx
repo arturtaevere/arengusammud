@@ -24,9 +24,10 @@ const CSVFileInput: React.FC<CSVFileInputProps> = ({
     if (e.target.files && e.target.files[0]) {
       const selectedFile = e.target.files[0];
       
-      // Check if it's a CSV file
-      if (!selectedFile.name.toLowerCase().endsWith('.csv')) {
-        onFileChange(null, 'Palun vali CSV fail (.csv laiendiga)');
+      // Check if it's a CSV file (or TXT which may contain CSV data)
+      if (!selectedFile.name.toLowerCase().endsWith('.csv') && 
+          !selectedFile.name.toLowerCase().endsWith('.txt')) {
+        onFileChange(null, 'Palun vali CSV fail (.csv või .txt laiendiga)');
         return;
       }
       
@@ -53,7 +54,7 @@ const CSVFileInput: React.FC<CSVFileInputProps> = ({
         <div className="flex-1 relative">
           <Input 
             type="file" 
-            accept=".csv" 
+            accept=".csv,.txt" 
             onChange={handleFileChange}
             className="cursor-pointer"
           />

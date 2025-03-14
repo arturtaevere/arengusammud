@@ -28,6 +28,12 @@ export class CSVImportService {
   static parseCSVContent(csvContent: string): ActionStepDetailsCollection {
     const result: ActionStepDetailsCollection = {};
     
+    // Try to detect the delimiter (comma or semicolon)
+    const firstLine = csvContent.split('\n')[0];
+    const delimiter = firstLine.includes(';') ? ';' : ',';
+    
+    console.log(`Detected delimiter: "${delimiter}"`);
+    
     // Split by rows (lines)
     const lines = csvContent.split('\n');
     if (lines.length < 2) {
@@ -35,58 +41,48 @@ export class CSVImportService {
     }
     
     // Get headers from first line and normalize them
-    const headers = this.parseCSVLine(lines[0])
+    const headers = this.parseCSVLine(lines[0], delimiter)
       .map(header => header.toLowerCase().trim());
     
     console.log('CSV Headers found:', headers);
+    
+    // Map headers to our expected structure
+    // Try to identify the key columns based on the actual headers in the file
+    const headerMap: Record<string, string> = {
+      // Default mappings for standard headers
+      'id': 'id',
+      'title': 'title',
+      'description': 'description',
+      'category': 'category',
+      'difficulty': 'difficulty',
+      'timeestimate': 'timeEstimate',
+      'reason': 'reason',
+      'examples': 'examples',
+      'videourl': 'videoUrl',
+      
+      // Custom mappings for Estonian headers based on the provided example
+      'kategooria': 'category',
+      'tekst': 'text',  // This will be mapped later based on context
+      'sammu nimi': 'title',
+      'sammu kirjeldus': 'description',
+      'õpieesmärk': 'category',
+    };
     
     // Process action steps row by row
     let currentId = '';
     let currentStep: Partial<ActionStepDetailBase> | null = null;
     let successCriteria: string[] = [];
     let practiceTasks: string[] = [];
+    let currentCategory = '';
     
-    // Start from line 1 (skip headers)
-    for (let i = 1; i < lines.length; i++) {
+    // Process the file structure
+    for (let i = 0; i < lines.length; i++) {
       const line = lines[i].trim();
       if (!line) continue; // Skip empty lines
       
-      // Check if this is a line with success criteria (support both colon and semicolon)
-      if (line.match(/^Edukriteerium[;:]/i)) {
-        if (currentStep) {
-          const criterion = line.replace(/^Edukriteerium[;:]/i, '').trim();
-          if (criterion) successCriteria.push(criterion);
-        }
-        continue;
-      }
-      
-      // Check if this is a line with practice task (support both colon and semicolon)
-      if (line.match(/^Harjutusülesanne[;:]/i)) {
-        if (currentStep) {
-          const task = line.replace(/^Harjutusülesanne[;:]/i, '').trim();
-          if (task) practiceTasks.push(task);
-        }
-        continue;
-      }
-      
-      // This is a new action step row, store the previous step if exists
-      if (currentStep && currentId) {
-        // Save success criteria and practice tasks
-        currentStep.successCriteria = successCriteria;
-        currentStep.practiceTask = practiceTasks;
-        
-        console.log(`Saving action step ${currentId} with ${successCriteria.length} criteria and ${practiceTasks.length} tasks`);
-        
-        // Store the complete step
-        result[currentId] = currentStep as ActionStepDetailBase;
-        
-        // Reset for next step
-        successCriteria = [];
-        practiceTasks = [];
-      }
-      
-      // Parse the current line as a new action step
-      const values = this.parseCSVLine(line);
+      // Parse the line
+      const values = this.parseCSVLine(line, delimiter);
+      if (values.length < 2) continue; // Skip lines without enough values
       
       // Create an object from headers and values
       const rowData: Record<string, string> = {};
@@ -96,32 +92,137 @@ export class CSVImportService {
         }
       });
       
-      // Validate required fields
-      if (!rowData.id || !rowData.title) {
-        console.warn(`Line ${i+1} is missing id or title. Skipping.`, rowData);
-        currentStep = null;
-        currentId = '';
+      console.log(`Row ${i+1} data:`, rowData);
+      
+      // Detect row type based on content
+      if (headers.includes('kategooria') && rowData['kategooria']?.toLowerCase() === 'õpieesmärk') {
+        // This is a category definition row
+        currentCategory = rowData['tekst'] || '';
+        console.log(`Detected category: ${currentCategory}`);
         continue;
       }
       
-      // Store current ID
-      currentId = rowData.id;
+      if (headers.includes('kategooria') && rowData['kategooria']?.toLowerCase() === 'sammu nimi') {
+        // This is an action step title row - create a new step
+        if (currentStep && currentId) {
+          // Save the previous step if exists
+          currentStep.successCriteria = successCriteria;
+          currentStep.practiceTask = practiceTasks;
+          result[currentId] = currentStep as ActionStepDetailBase;
+          
+          console.log(`Saved action step ${currentId} with ${successCriteria.length} criteria and ${practiceTasks.length} tasks`);
+          
+          // Reset for next step
+          successCriteria = [];
+          practiceTasks = [];
+        }
+        
+        // Generate a unique ID for this step based on title
+        const title = rowData['tekst'] || '';
+        if (!title) continue;
+        
+        currentId = this.generateId(title);
+        
+        // Create a new step
+        currentStep = {
+          title: title,
+          description: '',
+          category: currentCategory,
+          difficulty: 'beginner', // Default
+          timeEstimate: '',
+          reason: '',
+          examples: '',
+          videoUrl: '',
+          successCriteria: [],
+          practiceTask: []
+        };
+        
+        console.log(`Created new step: ${currentId} - ${title}`);
+        continue;
+      }
       
-      // Initialize the new step
-      currentStep = {
-        title: rowData.title || '',
-        description: rowData.description || '',
-        category: rowData.category || '',
-        difficulty: (rowData.difficulty || 'beginner') as 'beginner' | 'intermediate' | 'advanced',
-        timeEstimate: rowData.timeestimate || rowData.time || rowData['time estimate'] || '',
-        reason: rowData.reason || '',
-        examples: rowData.examples || '',
-        videoUrl: rowData.videourl || rowData.video || rowData['video url'] || '',
-        successCriteria: [],
-        practiceTask: []
-      };
+      if (headers.includes('kategooria') && rowData['kategooria']?.toLowerCase() === 'sammu kirjeldus') {
+        // This is a description row
+        if (currentStep) {
+          currentStep.description = rowData['tekst'] || '';
+          console.log(`Added description: ${currentStep.description}`);
+        }
+        continue;
+      }
       
-      console.log(`Detected new action step: ${currentId} - ${currentStep.title}`);
+      // Check if this is a line with success criteria
+      if (headers.includes('kategooria') && rowData['kategooria']?.toLowerCase().includes('edukriteerium')) {
+        if (currentStep) {
+          const criterion = rowData['tekst']?.trim();
+          if (criterion) {
+            successCriteria.push(criterion);
+            console.log(`Added success criterion: ${criterion}`);
+          }
+        }
+        continue;
+      }
+      
+      // Check if this is a line with practice task
+      if (headers.includes('kategooria') && rowData['kategooria']?.toLowerCase().includes('harjutusülesanne')) {
+        if (currentStep) {
+          const task = rowData['tekst']?.trim();
+          if (task) {
+            practiceTasks.push(task);
+            console.log(`Added practice task: ${task}`);
+          }
+        }
+        continue;
+      }
+      
+      // For standard CSV format, check if this is a line with raw success criteria or practice tasks
+      if (line.match(/^Edukriteerium[;:]/i)) {
+        if (currentStep) {
+          const criterion = line.replace(/^Edukriteerium[;:]/i, '').trim();
+          if (criterion) successCriteria.push(criterion);
+        }
+        continue;
+      }
+      
+      if (line.match(/^Harjutusülesanne[;:]/i)) {
+        if (currentStep) {
+          const task = line.replace(/^Harjutusülesanne[;:]/i, '').trim();
+          if (task) practiceTasks.push(task);
+        }
+        continue;
+      }
+      
+      // For standard CSV format with direct fields
+      if (headers.includes('id') && rowData['id']) {
+        // Save the previous step if exists
+        if (currentStep && currentId) {
+          currentStep.successCriteria = successCriteria;
+          currentStep.practiceTask = practiceTasks;
+          result[currentId] = currentStep as ActionStepDetailBase;
+          
+          // Reset for next step
+          successCriteria = [];
+          practiceTasks = [];
+        }
+        
+        // This is a standard CSV row with all fields
+        currentId = rowData['id'];
+        
+        // Initialize the new step
+        currentStep = {
+          title: rowData['title'] || '',
+          description: rowData['description'] || '',
+          category: rowData['category'] || '',
+          difficulty: (rowData['difficulty'] || 'beginner') as 'beginner' | 'intermediate' | 'advanced',
+          timeEstimate: rowData['timeestimate'] || rowData['time'] || rowData['time estimate'] || '',
+          reason: rowData['reason'] || '',
+          examples: rowData['examples'] || '',
+          videoUrl: rowData['videourl'] || rowData['video'] || rowData['video url'] || '',
+          successCriteria: [],
+          practiceTask: []
+        };
+        
+        console.log(`Detected standard format row: ${currentId} - ${currentStep.title}`);
+      }
     }
     
     // Don't forget to store the last step
@@ -136,16 +237,27 @@ export class CSVImportService {
     console.log(`Total action steps parsed: ${Object.keys(result).length}`);
     
     if (Object.keys(result).length === 0) {
-      throw new Error('No valid action steps found in the CSV file. Check file format and required fields (id, title).');
+      throw new Error('No valid action steps found in the CSV file. Check file format and required fields.');
     }
     
     return result;
   }
   
   /**
-   * Parse a CSV line considering quoted values and handling commas within quotes
+   * Generate a simple ID from a title
    */
-  private static parseCSVLine(line: string): string[] {
+  private static generateId(title: string): string {
+    return 'step-' + title
+      .toLowerCase()
+      .replace(/[^\w\s]/g, '')  // Remove non-alphanumeric characters
+      .replace(/\s+/g, '-')     // Replace spaces with hyphens
+      .substring(0, 20);        // Limit length
+  }
+  
+  /**
+   * Parse a CSV line considering quoted values and handling delimiter within quotes
+   */
+  private static parseCSVLine(line: string, delimiter: string = ','): string[] {
     const result: string[] = [];
     let inQuotes = false;
     let currentValue = '';
@@ -162,7 +274,7 @@ export class CSVImportService {
           // Toggle quote state
           inQuotes = !inQuotes;
         }
-      } else if (char === ',' && !inQuotes) {
+      } else if (char === delimiter && !inQuotes) {
         // End of field
         result.push(currentValue.trim());
         currentValue = '';
@@ -204,14 +316,19 @@ export class CSVImportService {
    * Get a sample CSV template for users to download
    */
   static getSampleCSV(): string {
-    return `id,title,description,category,difficulty,timeEstimate,reason,examples,videoUrl
-step-1,Sample Step 1,This is a sample description,Category 1,beginner,10-15 min,Reason for this step,Example implementation,https://example.com/video
-Edukriteerium: First success criterion for step 1
-Edukriteerium: Second success criterion for step 1
-Harjutusülesanne: Practice task 1 for step 1
-Harjutusülesanne: Practice task 2 for step 1
-step-2,Sample Step 2,Another sample description,Category 2,intermediate,20-30 min,Another reason,More examples,https://example.com/video2
-Edukriteerium: First success criterion for step 2
-Harjutusülesanne: Practice task for step 2`;
+    // Provide both comma and semicolon versions
+    const semicolonVersion = `Kategooria;Tekst
+Õpieesmärk;Hooliva ja arengut toetava õpikeskkonna loomine
+Sammu nimi;Iga õpilase väärtustamine
+Sammu kirjeldus;Annan märku, et iga õpilane on oluline ja väärtuslik
+Edukriteerium;Lugupidav suhtumine: suhtun austusega erineva tausta, võimete ja huvidega õpilastesse
+Edukriteerium;Kaasamine: loon kõigile õpilastele võimalusi klassiaruteludes osaleda
+Edukriteerium;Tunnustamine: märkan ja tõstan esile iga õpilase andeid, tugevusi ja edusamme
+Edukriteerium;Lugupidav keel ja käitumine: kasutan viisakat keelt ja käitumist kõigi õpilaste suhtes
+Harjutusülesanne;Vaadake klassi nimekirja ja mõelge, mida te iga õpilase kohta teate
+Harjutusülesanne;Koostage plaan, kuidas luua kõigile õpilastele võrdsed võimalused osaleda`;
+
+    // Return the semicolon version
+    return semicolonVersion;
   }
 }

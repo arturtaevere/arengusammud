@@ -24,13 +24,16 @@ const CSVImportInstructions: React.FC = () => {
       <div className="text-sm text-muted-foreground">
         <p className="font-medium mb-2">CSV faili nõuded:</p>
         <ul className="list-disc pl-5 space-y-1">
-          <li>Esimene rida peab sisaldama väljade pealkirju</li>
-          <li>Vajalikud väljad: <span className="font-semibold">id, title</span></li>
-          <li>Soovituslikud väljad: description, category, difficulty, timeEstimate, reason, examples, videoUrl</li>
-          <li>Edukriteeriumid ja harjutusülesanded saab lisada eraldi ridadel:</li>
+          <li>Toetame nii koma- kui semikooloniga eraldatud CSV formaati</li>
+          <li>Toetame kahte formaati:</li>
           <ul className="list-disc pl-5 space-y-1">
-            <li>Edukriteeriumid: igal real "Edukriteerium:" või "Edukriteerium;" millele järgneb kriteerium</li>
-            <li>Harjutusülesanded: igal real "Harjutusülesanne:" või "Harjutusülesanne;" millele järgneb ülesanne</li>
+            <li><strong>Standardne CSV:</strong> pealkirjadega "id, title, description, ..." (inglise keeles)</li>
+            <li><strong>Struktueeritud CSV:</strong> kahe veerguga "Kategooria" ja "Tekst", kus "Kategooria" näitab rea tüüpi</li>
+          </ul>
+          <li>Edukriteeriumid ja harjutusülesanded saab lisada:</li>
+          <ul className="list-disc pl-5 space-y-1">
+            <li>Eraldi ridadel, mis algavad "Edukriteerium:" või "Harjutusülesanne:"</li>
+            <li>Või kasutades "Kategooria" veerus "Edukriteerium" või "Harjutusülesanne" ja "Tekst" veerus sisu</li>
           </ul>
           <li>Enne importimist kuvatakse andmete eelvaade kinnitamiseks</li>
         </ul>
@@ -41,9 +44,9 @@ const CSVImportInstructions: React.FC = () => {
         <AlertDescription>
           <span className="block mb-2">Näpunäide: Kui imporditavaid arengusamme ei leita, kontrolli, et:</span>
           <ul className="list-disc pl-5 space-y-1">
-            <li>Igal arengusammul on olemas <span className="font-semibold">id</span> ja <span className="font-semibold">title</span> väljad</li>
-            <li>CSV failis on korrektsed komadega eraldatud väärtused (väärtused, mis sisaldavad koma, peavad olema jutumärkides)</li>
-            <li>Väljade pealkirjad on CSV esimesel real</li>
+            <li>Standardse CSV puhul: igal arengusammul on olemas <span className="font-semibold">id</span> ja <span className="font-semibold">title</span> väljad</li>
+            <li>Struktureeritud CSV puhul: failil on "Kategooria" ja "Tekst" veerud ning erinevad reatüübid ("Õpieesmärk", "Sammu nimi", jne)</li>
+            <li>Failil on õige kodeering (UTF-8) ja eraldajad (komad või semikoolonid)</li>
           </ul>
         </AlertDescription>
       </Alert>
