@@ -20,9 +20,14 @@ export default function Competences() {
     const allActionSteps = convertActionStepsToCompetencesPageFormat();
     setActionSteps(allActionSteps);
     
+    console.log('All action steps in competences page:', allActionSteps);
+    
     // Update competence counts based on all action steps
     const updatedCompetences = competencesWithCounts.map(comp => {
+      // Make sure we're using the same category ID format when filtering
       const categorySteps = allActionSteps.filter(step => step.category === comp.id);
+      console.log(`Steps for category ${comp.id}:`, categorySteps);
+      
       return {
         ...comp,
         count: categorySteps.length

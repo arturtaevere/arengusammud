@@ -34,15 +34,24 @@ export const convertActionStepsToCompetencesPageFormat = () => {
   const importedActionSteps = CSVImportService.getImportedData();
   
   // Convert imported action steps
-  const importedSteps = Object.entries(importedActionSteps).map(([id, details]) => ({
-    id: id,
-    title: details.title,
-    description: details.description,
-    category: details.category,
-    difficulty: details.difficulty,
-    timeEstimate: details.timeEstimate,
-    resources: []
-  }));
+  const importedSteps = Object.entries(importedActionSteps).map(([id, details]) => {
+    // Make sure we're using the category without the 'comp' prefix to match the expected format
+    const categoryId = details.category.startsWith('comp') 
+      ? details.category.replace('comp', '') 
+      : details.category;
+      
+    return {
+      id: id,
+      title: details.title,
+      description: details.description,
+      category: categoryId,
+      difficulty: details.difficulty,
+      timeEstimate: details.timeEstimate,
+      resources: []
+    };
+  });
+  
+  console.log('Imported steps with correct categories:', importedSteps);
   
   // Return only imported action steps
   return importedSteps;
