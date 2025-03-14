@@ -18,9 +18,9 @@ export function getCompetencyDescription(compId: string): string {
 }
 
 // Helper function to estimate difficulty level for an action step
-export function getDifficultyForActionStep(stepId: string): string {
+export function getDifficultyForActionStep(stepId: string): "beginner" | "intermediate" | "advanced" {
   // For now, using a simple algorithm based on ID
-  const idNumber = parseInt(stepId.replace('as', ''));
+  const idNumber = parseInt(stepId.replace(/\D/g, '')) || 0;
   if (idNumber < 10) return 'beginner';
   if (idNumber < 30) return 'intermediate';
   return 'advanced';
@@ -29,7 +29,7 @@ export function getDifficultyForActionStep(stepId: string): string {
 // Helper function to estimate time for an action step
 export function getTimeEstimateForActionStep(stepId: string): string {
   // For now, using a simple algorithm based on ID
-  const idNumber = parseInt(stepId.replace('as', ''));
+  const idNumber = parseInt(stepId.replace(/\D/g, '')) || 0;
   if (idNumber % 3 === 0) return 'Läbivalt tunnis';
   if (idNumber % 3 === 1) return '15-30 minutit';
   return '30-45 minutit';
