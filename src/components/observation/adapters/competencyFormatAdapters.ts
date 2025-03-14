@@ -35,6 +35,8 @@ export const convertToDashboardFormat = () => {
 
 // Convert action steps to the format used in the Competences page
 export const convertActionStepsToCompetencesPageFormat = () => {
+  console.log("Converting action steps, source length:", actionSteps.length);
+  
   // First check if we have action steps from the data module
   if (actionSteps && actionSteps.length > 0) {
     console.log("Using action steps from data module:", actionSteps.length);

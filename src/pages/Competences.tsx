@@ -13,21 +13,22 @@ import { actionSteps } from '@/data/actionStepsData';
 
 export default function Competences() {
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
-  const [competencesWithCounts, setCompetencesWithCounts] = useState(convertToCompetencesPageFormat());
   const [expandedSteps, setExpandedSteps] = useState<Record<string, boolean>>({});
+  const [competencesWithCounts, setCompetencesWithCounts] = useState(convertToCompetencesPageFormat());
   const [actionStepsData, setActionStepsData] = useState(convertActionStepsToCompetencesPageFormat());
 
   // Debug logging to check data
-  console.log("Action steps data:", actionSteps);
+  console.log("Action steps from data module:", actionSteps);
   console.log("Converted action steps:", actionStepsData);
   
   useEffect(() => {
-    // Ensure we're getting data from the right source
-    setActionStepsData(convertActionStepsToCompetencesPageFormat());
+    // Make sure we're getting fresh data
+    const steps = convertActionStepsToCompetencesPageFormat();
+    setActionStepsData(steps);
     
     // Update competence counts based on actual action steps
-    const updatedCompetences = competencesWithCounts.map(comp => {
-      const stepsCount = actionStepsData.filter(step => step.category === comp.id).length;
+    const updatedCompetences = convertToCompetencesPageFormat().map(comp => {
+      const stepsCount = steps.filter(step => step.category === comp.id).length;
       return {
         ...comp,
         count: stepsCount

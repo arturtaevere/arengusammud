@@ -10,7 +10,7 @@ interface ActionStep {
   title: string;
   description: string;
   category: string;
-  difficulty: string;
+  difficulty?: string;
   timeEstimate: string;
   resources: { title: string; url: string }[];
 }
