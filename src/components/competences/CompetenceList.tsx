@@ -28,14 +28,27 @@ const CompetenceList = ({
   onToggleCategory,
   onToggleStepsExpansion
 }: CompetenceListProps) => {
-  // Debug logging for diagnostics
-  console.log("CompetenceList received action steps:", actionSteps?.length || 0);
+  // Check if we have data
+  console.log("CompetenceList rendered");
+  console.log("Competences:", competences?.length || 0);
+  console.log("Action steps received:", actionSteps?.length || 0);
+  
+  if (!competences || competences.length === 0) {
+    return (
+      <div className="text-center py-10">
+        <p>Kompetentse ei leitud.</p>
+      </div>
+    );
+  }
   
   return (
     <div className="grid grid-cols-1 gap-4 md:gap-6">
       {competences.map((competence) => {
         // Make sure we handle undefined actionSteps
-        const categorySteps = actionSteps?.filter(step => step.category === competence.id) || [];
+        const categorySteps = actionSteps?.filter(step => 
+          step && step.category === competence.id
+        ) || [];
+        
         console.log(`Filtering steps for category ${competence.id} (${competence.title}):`, categorySteps.length);
         const isStepsExpanded = expandedSteps[competence.id] || false;
         

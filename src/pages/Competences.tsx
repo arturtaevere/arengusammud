@@ -17,21 +17,38 @@ export default function Competences() {
   const [expandedSteps, setExpandedSteps] = useState<Record<string, boolean>>({});
   const [competencesWithCounts, setCompetencesWithCounts] = useState(convertToCompetencesPageFormat());
   const [actionStepsData, setActionStepsData] = useState<ActionStep[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   // Debug logging to check data
-  console.log("Action steps from data module:", actionSteps);
-  console.log("Original action steps count:", actionSteps?.length || 0);
+  console.log("Competences component rendering");
+  console.log("Action steps from data module available:", Boolean(actionSteps));
+  if (actionSteps) {
+    console.log("Original action steps count:", actionSteps.length);
+  }
   
   useEffect(() => {
+    console.log("Competences useEffect running");
     try {
-      // Make sure we're getting fresh data
+      setIsLoading(true);
+      
+      // Initialize with empty data first
+      setCompetencesWithCounts(convertToCompetencesPageFormat());
+      
+      // Get action steps data
       const steps = convertActionStepsToCompetencesPageFormat();
       console.log("Steps from converter:", steps);
-      setActionStepsData(steps);
+      
+      if (!steps || steps.length === 0) {
+        console.warn("No action steps were loaded");
+      }
+      
+      // Update state with steps
+      setActionStepsData(steps || []);
       
       // Update competence counts based on actual action steps
       const updatedCompetences = convertToCompetencesPageFormat().map(comp => {
-        const stepsCount = steps.filter(step => step.category === comp.id).length;
+        const stepsCount = steps ? steps.filter(step => step && step.category === comp.id).length : 0;
         console.log(`Competence ${comp.id} (${comp.title}) has ${stepsCount} steps`);
         return {
           ...comp,
@@ -40,8 +57,11 @@ export default function Competences() {
       });
       
       setCompetencesWithCounts(updatedCompetences);
+      setIsLoading(false);
     } catch (error) {
       console.error("Error loading competences data:", error);
+      setError("Viga andmete laadimisel. Proovi lehte värskendada.");
+      setIsLoading(false);
     }
   }, []);
 
@@ -51,7 +71,7 @@ export default function Competences() {
     // Log for debugging
     console.log(`Toggling category ${id}`);
     if (expandedCategory !== id) {
-      const categorySteps = actionStepsData.filter(step => step.category === id);
+      const categorySteps = actionStepsData?.filter(step => step && step.category === id) || [];
       console.log(`Category ${id} has ${categorySteps.length} steps:`, categorySteps);
     }
   };
@@ -85,14 +105,28 @@ export default function Competences() {
           </Link>
         </div>
 
-        <CompetenceList 
-          competences={competencesWithCounts}
-          actionSteps={actionStepsData}
-          expandedCategory={expandedCategory}
-          expandedSteps={expandedSteps}
-          onToggleCategory={toggleCategory}
-          onToggleStepsExpansion={toggleStepsExpansion}
-        />
+        {isLoading && (
+          <div className="text-center py-10">
+            <p>Laadin andmeid...</p>
+          </div>
+        )}
+
+        {error && (
+          <div className="p-4 bg-red-50 text-red-700 rounded-md">
+            {error}
+          </div>
+        )}
+
+        {!isLoading && !error && (
+          <CompetenceList 
+            competences={competencesWithCounts}
+            actionSteps={actionStepsData}
+            expandedCategory={expandedCategory}
+            expandedSteps={expandedSteps}
+            onToggleCategory={toggleCategory}
+            onToggleStepsExpansion={toggleStepsExpansion}
+          />
+        )}
       </main>
     </div>
   );
