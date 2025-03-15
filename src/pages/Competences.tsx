@@ -102,9 +102,13 @@ export default function Competences() {
     <div className="min-h-screen bg-gray-50/50">
       <Navbar />
       
-      <main className="container mx-auto px-4 py-16">
-        <div className="mb-4">
-          <h1 className="text-2xl font-bold">Õpieesmärgid</h1>
+      {/* Added pt-24 (padding-top) to ensure content is below the fixed navbar */}
+      <main className="container mx-auto px-4 py-8 pt-24">
+        <div className="mb-6">
+          <h1 className="text-3xl font-bold text-gray-900">Õpieesmärgid</h1>
+          <p className="text-muted-foreground mt-2">
+            Tutvu õpieesmärkidega, mis aitavad sul professionaalselt areneda ja toetada oma õpilaste arengut.
+          </p>
         </div>
 
         {isLoading && (
