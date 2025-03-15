@@ -76,12 +76,17 @@ export default function Competences() {
       // Add a slight delay to ensure the DOM is fully rendered
       setTimeout(() => {
         if (categoryRefs.current[categoryParam]) {
-          // Scroll the category into view
-          categoryRefs.current[categoryParam]?.scrollIntoView({ 
-            behavior: 'smooth',
-            block: 'start' // Changed back to 'start' to show the heading at the top
+          // Scroll the category into view with offset
+          const yOffset = -80; // Add an offset to account for navbar and spacing
+          const element = categoryRefs.current[categoryParam];
+          const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+          
+          window.scrollTo({
+            top: y,
+            behavior: 'smooth'
           });
-          console.log(`Scrolling to category ${categoryParam}`);
+          
+          console.log(`Scrolling to category ${categoryParam} with offset`);
         } else {
           console.log(`Category ref for ${categoryParam} not found`);
         }
