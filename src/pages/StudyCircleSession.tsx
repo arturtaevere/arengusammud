@@ -7,14 +7,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { useEffect, useState } from 'react';
 import { allSessions } from '@/data/study-circles/sessions';
-
-interface SessionContent {
-  id: string;
-  title: string;
-  circleName: string;
-  session: number;
-  content: React.ReactNode;
-}
+import { SessionContent } from '@/data/study-circles/sessions/types';
 
 const StudyCircleSession = () => {
   const { sessionId } = useParams<{ sessionId: string }>();
