@@ -430,7 +430,66 @@ const circle1Sessions: SessionContent[] = [
       </>
     ),
   },
-  // Add more sessions for circle 1 as needed
+  {
+    id: "c1s4",
+    title: "Tähelepanu, töömälu ja õppimine",
+    circleName: "Mis on õppimine?",
+    session: 4,
+    content: (
+      <>
+        <h2>Tähelepanu, töömälu ja õppimine</h2>
+        <p>Sisu lisatakse peagi...</p>
+      </>
+    ),
+  },
+  {
+    id: "c1s5",
+    title: "Mälu ja pikaajaline õppimine",
+    circleName: "Mis on õppimine?",
+    session: 5,
+    content: (
+      <>
+        <h2>Mälu ja pikaajaline õppimine</h2>
+        <p>Sisu lisatakse peagi...</p>
+      </>
+    ),
+  },
+  {
+    id: "c1s6",
+    title: "Õppimise sotsiaalne dimensioon",
+    circleName: "Mis on õppimine?",
+    session: 6,
+    content: (
+      <>
+        <h2>Õppimise sotsiaalne dimensioon</h2>
+        <p>Sisu lisatakse peagi...</p>
+      </>
+    ),
+  },
+  {
+    id: "c1s7",
+    title: "Metakognitsioon ja õpistrateegiad",
+    circleName: "Mis on õppimine?",
+    session: 7,
+    content: (
+      <>
+        <h2>Metakognitsioon ja õpistrateegiad</h2>
+        <p>Sisu lisatakse peagi...</p>
+      </>
+    ),
+  },
+  {
+    id: "c1s8",
+    title: "Õppija individuaalsed eripärad",
+    circleName: "Mis on õppimine?",
+    session: 8,
+    content: (
+      <>
+        <h2>Õppija individuaalsed eripärad</h2>
+        <p>Sisu lisatakse peagi...</p>
+      </>
+    ),
+  },
 ];
 
 // Session content for the second learning circle
@@ -443,7 +502,9 @@ const circle2Sessions: SessionContent[] = [
     content: (
       <>
         <h2>Tõhusa õppimisviisi avamine</h2>
-        <p>Sisu lisatakse peagi...</p>
+        <p>
+          Õpilase võime oma õppimist planeerida, jälgida ja hinnata on edukaks õppimiseks vajalikud ning osa õpilase metakognitiivsest regulatsioonist. Kuigi asjatundlikel õppijatel võivad need protsessid olla automaatsed, vajab enamik õppijaid ennastjuhtivaks õppijaks kujunemisel toetust. Neil on tarvis nende õpioskuste selgesõnaliseks muutmist, juhendamist ja harjutamist.
+        </p>
       </>
     ),
   },
@@ -608,8 +669,29 @@ const circle2Sessions: SessionContent[] = [
       </>
     ),
   },
-  // Add more sessions for circle 2 as needed
-];
-
-export { circle1Sessions, circle2Sessions };
-export const allSessions = [...circle1Sessions, ...circle2Sessions];
+  {
+    id: "c2s3",
+    title: "Eneseregulatsiooni strateegiad",
+    circleName: "Kuidas toetada ennastjuhtiva õppija kujunemist?",
+    session: 3,
+    content: (
+      <>
+        <h2>Eneseregulatsiooni strateegiad</h2>
+        <p>Sisu lisatakse peagi...</p>
+      </>
+    ),
+  },
+  {
+    id: "c2s4",
+    title: "Iseseisvust toetav tagasisidestamine",
+    circleName: "Kuidas toetada ennastjuhtiva õppija kujunemist?",
+    session: 4,
+    content: (
+      <>
+        <h2>Iseseisvust toetav tagasisidestamine</h2>
+        <p>Sisu lisatakse peagi...</p>
+      </>
+    ),
+  },
+  {
+    id: "
