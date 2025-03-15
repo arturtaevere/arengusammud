@@ -1,19 +1,42 @@
 
 import { competencies } from './competenciesData';
+import { actionSteps } from '@/data/actionStepsData';
 
 // Helper function to get all action steps as a flat array
 export const getAllActionSteps = () => {
-  return competencies.flatMap(comp => 
-    comp.actionSteps.map(step => ({
+  // Map action steps from data module to competencies
+  const mappedSteps = actionSteps.map(step => {
+    // Find the corresponding competency 
+    const competencyId = `comp${step.category}`;
+    const competency = competencies.find(comp => comp.id === competencyId);
+    
+    return {
       ...step,
-      competencyId: comp.id,
-      competencyName: comp.name
-    }))
-  );
+      competencyId: competencyId,
+      competencyName: competency ? competency.name : 'Unknown Competency'
+    };
+  });
+  
+  console.log(`Mapped ${mappedSteps.length} action steps to competencies`);
+  return mappedSteps;
 };
 
 // Helper function to get action step by id
 export const getActionStepById = (id: string) => {
+  // First check in mapped action steps
+  const step = actionSteps.find(step => step.id === id);
+  if (step) {
+    const competencyId = `comp${step.category}`;
+    const competency = competencies.find(comp => comp.id === competencyId);
+    
+    return {
+      ...step,
+      competencyId: competencyId,
+      competencyName: competency ? competency.name : 'Unknown Competency'
+    };
+  }
+  
+  // If not found, check the hardcoded steps
   for (const comp of competencies) {
     const step = comp.actionSteps.find(step => step.id === id);
     if (step) {
@@ -24,6 +47,7 @@ export const getActionStepById = (id: string) => {
       };
     }
   }
+  
   return null;
 };
 
@@ -59,4 +83,33 @@ export const getActionStepDetailById = (urlId: string) => {
   
   console.log("No matching step found for:", urlId);
   return null;
+};
+
+// Helper to enrich competencies with their action steps
+export const getEnrichedCompetencies = () => {
+  // Create a deep copy of the competencies
+  const enriched = JSON.parse(JSON.stringify(competencies));
+  
+  // Group action steps by their competency category
+  actionSteps.forEach(step => {
+    const competencyId = `comp${step.category}`;
+    const competencyIndex = enriched.findIndex(comp => comp.id === competencyId);
+    
+    if (competencyIndex !== -1) {
+      if (!enriched[competencyIndex].actionSteps) {
+        enriched[competencyIndex].actionSteps = [];
+      }
+      
+      // Only add the step if it doesn't already exist
+      if (!enriched[competencyIndex].actionSteps.some(s => s.id === step.id)) {
+        enriched[competencyIndex].actionSteps.push({
+          id: step.id,
+          title: step.title,
+          description: step.description
+        });
+      }
+    }
+  });
+  
+  return enriched;
 };

@@ -8,7 +8,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { competencies } from './competencies';
+import { getEnrichedCompetencies } from './data/competencyHelpers';
 import ActionStepSearch from './ActionStepSearch';
 import CompetencyList from './CompetencyList';
 import CompetencyActionStepList from './CompetencyActionStepList';
@@ -25,6 +25,16 @@ const CompetencyActionStepSelector = ({ onSelect, value, open, onOpenChange }: C
   const [search, setSearch] = useState('');
   const [selectedCompetency, setSelectedCompetency] = useState<string | null>(null);
   const [internalOpen, setInternalOpen] = useState(false);
+  const [competencies, setCompetencies] = useState<any[]>([]);
+  
+  // Load enriched competencies on mount
+  useEffect(() => {
+    const enrichedCompetencies = getEnrichedCompetencies();
+    console.log("Loaded enriched competencies with action steps:", 
+      enrichedCompetencies.map(c => ({ id: c.id, name: c.name, stepCount: c.actionSteps?.length || 0 }))
+    );
+    setCompetencies(enrichedCompetencies);
+  }, []);
   
   // Sync internal state with external control if provided
   useEffect(() => {
@@ -52,11 +62,11 @@ const CompetencyActionStepSelector = ({ onSelect, value, open, onOpenChange }: C
     ? competencies // If no search, show all competencies
     : competencies.map(comp => ({
         ...comp,
-        actionSteps: comp.actionSteps.filter(step => 
+        actionSteps: comp.actionSteps?.filter(step => 
           step.title.toLowerCase().includes(search.toLowerCase()) || 
           step.description.toLowerCase().includes(search.toLowerCase())
-        )
-      })).filter(comp => comp.actionSteps.length > 0 || comp.name.toLowerCase().includes(search.toLowerCase()));
+        ) || []
+      })).filter(comp => (comp.actionSteps?.length > 0) || comp.name.toLowerCase().includes(search.toLowerCase()));
 
   const handleActionStepSelect = (step: { id: string; title: string; description: string }) => {
     onSelect(step);
