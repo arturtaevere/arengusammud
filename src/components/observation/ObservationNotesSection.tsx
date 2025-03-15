@@ -27,9 +27,6 @@ const ObservationNotesSection = ({ form, isSubmitting }: ObservationNotesSection
     <Card>
       <CardHeader>
         <CardTitle>Tunnivaatluse märkmed</CardTitle>
-        <CardDescription>
-          Dokumenteerige tunni jooksul märgatud tegevused
-        </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <TeacherStudentNotesSection form={form} />
