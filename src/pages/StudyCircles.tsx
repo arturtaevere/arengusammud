@@ -33,7 +33,7 @@ const StudyCircles = () => {
         <div className="max-w-4xl mx-auto">
           <h1 className="text-3xl font-bold mb-2">Õpiringid</h1>
           <p className="text-lg text-muted-foreground mb-8">
-            Õpiringid on koht, kus saate teiste õpetajatega koos õppida, jagada kogemusi ja arutada erinevaid teemasid.
+            Õpiringid on koht, kus saate teiste õpetajatega mõtestada õppimise ja õpetamise alusprintsiipe.
           </p>
 
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full mb-8">
