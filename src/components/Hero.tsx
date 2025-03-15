@@ -1,9 +1,23 @@
 
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { useEffect, useState } from 'react';
 
 const Hero = () => {
   const navigate = useNavigate();
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageError, setImageError] = useState(false);
+  
+  // Hero image path
+  const heroImagePath = "/lovable-uploads/c8a3998f-a27c-4656-a90e-cd9d4431e4da.png";
+  
+  // Preload the hero image
+  useEffect(() => {
+    const img = new Image();
+    img.src = heroImagePath;
+    img.onload = () => setImageLoaded(true);
+    img.onerror = () => setImageError(true);
+  }, []);
 
   return (
     <div className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 pb-16">
@@ -14,7 +28,7 @@ const Hero = () => {
       </div>
       
       <div className="container px-4 z-10">
-        <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-24">
+        <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-24 animate-fade-in">
           {/* Hero Content */}
           <div className="flex-1 text-center lg:text-left">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6">
@@ -68,17 +82,29 @@ const Hero = () => {
           {/* Hero Image */}
           <div className="flex-1">
             <div className="relative">
-              <div className="relative z-10 rounded-2xl overflow-hidden shadow-xl">
-                <img 
-                  src="/lovable-uploads/c8a3998f-a27c-4656-a90e-cd9d4431e4da.png" 
-                  alt="Õpetajad koostöös" 
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    console.error('Hero image failed to load', e);
-                    e.currentTarget.style.display = 'none';
-                  }}
-                />
-              </div>
+              {imageError ? (
+                <div className="h-80 w-full rounded-2xl bg-gradient-to-r from-blue-50 to-purple-50 flex items-center justify-center shadow-xl">
+                  <span className="text-muted-foreground">Õpetajad koostöös</span>
+                </div>
+              ) : (
+                <div className="relative z-10 rounded-2xl overflow-hidden shadow-xl">
+                  <img 
+                    src={heroImagePath}
+                    alt="Õpetajad koostöös" 
+                    className={`w-full h-full object-cover transition-opacity duration-300 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+                    onLoad={() => setImageLoaded(true)}
+                    onError={(e) => {
+                      console.error('Hero image failed to load', e);
+                      setImageError(true);
+                    }}
+                  />
+                  {!imageLoaded && !imageError && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-r from-blue-50 to-purple-50">
+                      <div className="animate-pulse h-5 w-5 rounded-full bg-blue-300"></div>
+                    </div>
+                  )}
+                </div>
+              )}
               
               {/* Decorative elements */}
               <div className="absolute -bottom-4 -right-4 w-64 h-64 bg-blue-50 rounded-full mix-blend-multiply filter blur-2xl opacity-50"></div>
