@@ -108,7 +108,7 @@ const session1: SessionContent = {
     React.createElement('p', { className: "font-medium mb-2" }, "Planeerimine:"),
     React.createElement('ul', { className: "list-disc pl-6 mb-4 space-y-1" },
       React.createElement('li', null, "\"Millist konkreetset teavet või teadmisi soovin saada sellest katsest erinevat tüüpi läätsedega?\";"),
-      React.createElement('li', null, "\"Milliseid läätsi ja muid vahendeid on mul katse jaoks vaja?\;"),
+      React.createElement('li', null, "\"Milliseid läätsi ja muid vahendeid on mul katse jaoks vaja?\";"),
       React.createElement('li', null, "\"Milliseid muutujaid mõõdan ja kuidas saan kontrollida muid tegureid?\";"),
       React.createElement('li', null, "\"Milliseid samme katses järgin ning kuidas tagan järjepidevuse ja täpsuse?\".")
     ),
