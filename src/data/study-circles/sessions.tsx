@@ -1,3 +1,4 @@
+
 import React from 'react';
 
 interface SessionContent {
@@ -693,5 +694,7 @@ const circle2Sessions: SessionContent[] = [
       </>
     ),
   },
-  {
-    id: "
+];
+
+export { circle1Sessions, circle2Sessions };
+export const allSessions = [...circle1Sessions, ...circle2Sessions];
