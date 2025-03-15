@@ -93,9 +93,6 @@ const GeneralInfoSection = ({ form, teachersInSchool }: GeneralInfoSectionProps)
                   readOnly
                 />
               </FormControl>
-              <FormDescription>
-                Õpetaja pikaajaline arengueesmärk täidetakse automaatselt vastavalt valitud õpetajale
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
