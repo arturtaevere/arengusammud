@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import CompetenceList from '@/components/competences/CompetenceList';
@@ -20,6 +20,9 @@ export default function Competences() {
   const [actionStepsData, setActionStepsData] = useState<ActionStep[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  
+  // Create a ref to the category element we want to scroll to
+  const categoryRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   // Debug logging to check data flow
   console.log("Competences component rendering");
@@ -69,8 +72,22 @@ export default function Competences() {
         ...prev,
         [categoryParam]: true
       }));
+      
+      // Add a slight delay to ensure the DOM is fully rendered
+      setTimeout(() => {
+        if (categoryRefs.current[categoryParam]) {
+          // Scroll the category into view
+          categoryRefs.current[categoryParam]?.scrollIntoView({ 
+            behavior: 'smooth',
+            block: 'start' 
+          });
+          console.log(`Scrolling to category ${categoryParam}`);
+        } else {
+          console.log(`Category ref for ${categoryParam} not found`);
+        }
+      }, 300);
     }
-  }, [categoryParam]);
+  }, [categoryParam, isLoading]);
 
   const toggleCategory = (id: string) => {
     setExpandedCategory(expandedCategory === id ? null : id);
@@ -125,6 +142,7 @@ export default function Competences() {
             expandedSteps={expandedSteps}
             onToggleCategory={toggleCategory}
             onToggleStepsExpansion={toggleStepsExpansion}
+            categoryRefs={categoryRefs}
           />
         )}
       </main>

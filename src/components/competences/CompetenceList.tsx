@@ -18,6 +18,7 @@ interface CompetenceListProps {
   expandedSteps: Record<string, boolean>;
   onToggleCategory: (id: string) => void;
   onToggleStepsExpansion: (id: string, e: React.MouseEvent) => void;
+  categoryRefs?: React.MutableRefObject<Record<string, HTMLDivElement | null>>;
 }
 
 const CompetenceList = ({
@@ -26,7 +27,8 @@ const CompetenceList = ({
   expandedCategory,
   expandedSteps,
   onToggleCategory,
-  onToggleStepsExpansion
+  onToggleStepsExpansion,
+  categoryRefs
 }: CompetenceListProps) => {
   // Check if we have data
   console.log("CompetenceList rendered");
@@ -53,19 +55,27 @@ const CompetenceList = ({
         const isStepsExpanded = expandedSteps[competence.id] || false;
         
         return (
-          <CompetenceCard
+          <div 
             key={competence.id}
-            id={competence.id}
-            title={competence.title}
-            description={competence.description}
-            icon={competence.icon}
-            count={competence.count}
-            isExpanded={expandedCategory === competence.id}
-            isStepsExpanded={isStepsExpanded}
-            steps={categorySteps}
-            onToggleExpansion={onToggleCategory}
-            onToggleStepsExpansion={onToggleStepsExpansion}
-          />
+            ref={el => {
+              if (categoryRefs && categoryRefs.current) {
+                categoryRefs.current[competence.id] = el;
+              }
+            }}
+          >
+            <CompetenceCard
+              id={competence.id}
+              title={competence.title}
+              description={competence.description}
+              icon={competence.icon}
+              count={competence.count}
+              isExpanded={expandedCategory === competence.id}
+              isStepsExpanded={isStepsExpanded}
+              steps={categorySteps}
+              onToggleExpansion={onToggleCategory}
+              onToggleStepsExpansion={onToggleStepsExpansion}
+            />
+          </div>
         );
       })}
     </div>
