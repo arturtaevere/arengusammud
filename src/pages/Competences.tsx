@@ -79,7 +79,7 @@ export default function Competences() {
           // Scroll the category into view
           categoryRefs.current[categoryParam]?.scrollIntoView({ 
             behavior: 'smooth',
-            block: 'start' 
+            block: 'center' // Changed from 'start' to 'center' to keep the heading visible
           });
           console.log(`Scrolling to category ${categoryParam}`);
         } else {
