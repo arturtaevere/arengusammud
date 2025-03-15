@@ -17,21 +17,15 @@ const Hero = () => {
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-24">
           {/* Hero Content */}
           <div className="flex-1 text-center lg:text-left">
-            <h1 
-              className="font-bold tracking-tight mb-6 animate-fade-in"
-            >
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6">
               Arengusammud aitavad õpetajal <span className="text-blue-500">kasvada</span>
             </h1>
             
-            <p 
-              className="text-xl mb-8 text-muted-foreground max-w-2xl mx-auto lg:mx-0 animate-fade-in [animation-delay:100ms]"
-            >
+            <p className="text-xl mb-8 text-muted-foreground max-w-2xl mx-auto lg:mx-0">
               Õpipartnerluse ja õpiringide kaudu saab õpetaja paremini jõuda iga õppijani ning toetada ennastjuhtiva õppija kujunemist.
             </p>
             
-            <div 
-              className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start animate-fade-in [animation-delay:200ms]"
-            >
+            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
               <Button 
                 size="lg" 
                 className="text-lg transition-all duration-300 hover:scale-105"
@@ -49,9 +43,7 @@ const Hero = () => {
               </Button>
             </div>
             
-            <div 
-              className="mt-12 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-6 text-sm text-muted-foreground animate-fade-in [animation-delay:300ms]"
-            >
+            <div className="mt-12 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-6 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
                 <svg className="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -74,15 +66,17 @@ const Hero = () => {
           </div>
           
           {/* Hero Image */}
-          <div 
-            className="flex-1 animate-fade-in [animation-delay:400ms]"
-          >
+          <div className="flex-1">
             <div className="relative">
-              <div className="relative z-10 glass rounded-2xl overflow-hidden shadow-xl">
+              <div className="relative z-10 rounded-2xl overflow-hidden shadow-xl">
                 <img 
                   src="/lovable-uploads/c8a3998f-a27c-4656-a90e-cd9d4431e4da.png" 
                   alt="Õpetajad koostöös" 
                   className="w-full h-full object-cover"
+                  onError={(e) => {
+                    console.error('Hero image failed to load', e);
+                    e.currentTarget.style.display = 'none';
+                  }}
                 />
               </div>
               
