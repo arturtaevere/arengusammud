@@ -21,24 +21,18 @@ export default function Competences() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Debug logging to check data
+  // Debug logging to check data flow
   console.log("Competences component rendering");
-  console.log("Action steps from data module available:", Boolean(actionSteps));
-  if (actionSteps) {
-    console.log("Original action steps count:", actionSteps.length);
-  }
+  console.log("Action steps available:", actionSteps ? actionSteps.length : 0);
   
   useEffect(() => {
     console.log("Competences useEffect running");
     try {
       setIsLoading(true);
       
-      // Initialize with empty data first
-      setCompetencesWithCounts(convertToCompetencesPageFormat());
-      
-      // Get action steps data
+      // Get action steps data first
       const steps = convertActionStepsToCompetencesPageFormat();
-      console.log("Steps from converter:", steps);
+      console.log("Steps from converter:", steps?.length || 0);
       
       if (!steps || steps.length === 0) {
         console.warn("No action steps were loaded");

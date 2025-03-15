@@ -47,22 +47,22 @@ export const convertActionStepsToCompetencesPageFormat = (): ActionStep[] => {
   
   try {
     // Map through each action step and ensure it has all required properties
-    return actionSteps.map(step => {
-      if (!step) {
-        console.error("Found null/undefined step in action steps");
-        return null;
-      }
-      
-      return {
-        id: step.id || "",
-        title: step.title || "",
-        description: step.description || "",
-        category: step.category || "",
-        difficulty: step.difficulty || getDifficultyForActionStep(step.id || ""),
-        resources: step.resources || [],
-        practiceTasks: step.practiceTasks || []
-      };
-    }).filter(Boolean) as ActionStep[];
+    const validSteps = actionSteps
+      .filter(Boolean) // Remove any null/undefined entries
+      .map(step => {
+        return {
+          id: step.id || "",
+          title: step.title || "",
+          description: step.description || "",
+          category: step.category || "",
+          difficulty: step.difficulty || getDifficultyForActionStep(step.id || ""),
+          resources: step.resources || [],
+          practiceTasks: step.practiceTasks || []
+        };
+      });
+    
+    console.log(`Processed ${validSteps.length} valid action steps`);
+    return validSteps;
   } catch (error) {
     console.error("Error converting action steps:", error);
     return [];

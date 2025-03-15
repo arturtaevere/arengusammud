@@ -1,16 +1,23 @@
 
-// This file now re-exports from the modular action-steps directory
-import { ActionStep, Competence, actionSteps as allActionSteps, competences } from './action-steps';
+// This file re-exports from the modular action-steps directory
+import { ActionStep, Competence } from './action-steps/types';
+import { competences } from './action-steps/competences';
+import { classroomEnvironmentSteps } from './action-steps/classroom-environment';
+import { teachingPlanningSteps } from './action-steps/teaching-planning';
+import { selfDirectedLearningSteps } from './action-steps/self-directed-learning';
 
-// Debug to see what we're importing
-console.log("Importing action steps:", allActionSteps ? allActionSteps.length : 'none');
-console.log("Importing competences:", competences ? competences.length : 'none');
-console.log("First action step:", allActionSteps && allActionSteps.length > 0 ? allActionSteps[0] : 'none');
+// Combine all action steps with defensive coding to prevent errors
+const allSteps = [
+  ...(classroomEnvironmentSteps || []),
+  ...(teachingPlanningSteps || []),
+  ...(selfDirectedLearningSteps || []),
+].filter(Boolean);
 
 // Export action steps and competences
-export { allActionSteps as actionSteps, competences };
+export const actionSteps: ActionStep[] = allSteps;
+export { competences };
 export type { ActionStep, Competence };
 
-// Add debugging to show what data is being exported
-console.log("Exporting action steps count:", allActionSteps ? allActionSteps.length : 0);
-console.log("Exporting competences count:", competences ? competences.length : 0);
+// Debug log the exported data
+console.log("Action steps data export:", actionSteps.length);
+console.log("Competences data export:", competences.length);
