@@ -37,9 +37,9 @@ const StudyCircles = () => {
           </p>
 
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full mb-8">
-            <TabsList className="w-full mb-6">
-              <TabsTrigger value="circle1" className="flex-1">Mis on õppimine?</TabsTrigger>
-              <TabsTrigger value="circle2" className="flex-1">Kuidas toetada ennastjuhtiva õppija kujunemist?</TabsTrigger>
+            <TabsList className="w-full mb-6 flex-col sm:flex-row">
+              <TabsTrigger value="circle1" className="flex-1 h-auto py-2">Mis on õppimine?</TabsTrigger>
+              <TabsTrigger value="circle2" className="flex-1 h-auto py-2">Kuidas toetada ennastjuhtiva õppija kujunemist?</TabsTrigger>
             </TabsList>
 
             <TabsContent value="circle1" className="animate-fade-in">
