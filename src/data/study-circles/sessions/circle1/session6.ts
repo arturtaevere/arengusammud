@@ -8,7 +8,6 @@ const session6: SessionContent = {
   circleName: "Mis on õppimine?",
   session: 6,
   content: React.createElement(React.Fragment, null,
-    React.createElement('h2', null, "Õppimise sotsiaalne dimensioon"),
     React.createElement('p', null, "Sisu lisatakse peagi...")
   ),
 };

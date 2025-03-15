@@ -64,7 +64,7 @@ const StudyCircleSession = () => {
             </div>
             <h1 className="text-3xl font-bold mb-6">{sessionData.title}</h1>
             
-            <div className={cn("prose prose-lg max-w-none")}>
+            <div className={cn("prose prose-lg max-w-none text-foreground")}>
               {sessionData.content}
             </div>
           </div>
