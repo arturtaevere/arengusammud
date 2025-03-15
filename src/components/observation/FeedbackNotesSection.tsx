@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage } from '@/components/ui/form';
+import { FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
 import { ThumbsUp, Lightbulb } from 'lucide-react';
 import { UseFormReturn } from 'react-hook-form';
@@ -31,9 +31,6 @@ const FeedbackNotesSection = ({ form }: FeedbackNotesSectionProps) => {
                 {...field} 
               />
             </FormControl>
-            <FormDescription>
-              Tooge välja konkreetsed näited õpetaja tugevustest
-            </FormDescription>
             <FormMessage />
           </FormItem>
         )}
@@ -57,9 +54,6 @@ const FeedbackNotesSection = ({ form }: FeedbackNotesSectionProps) => {
                 {...field} 
               />
             </FormControl>
-            <FormDescription>
-              Kirjeldage konstruktiivselt, mida saaks paremini teha
-            </FormDescription>
             <FormMessage />
           </FormItem>
         )}

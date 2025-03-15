@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage } from '@/components/ui/form';
+import { FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
 import { ArrowRight, ArrowLeftRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -45,9 +45,6 @@ const NextActionStepSection = ({ form, onOpenActionStepSelector }: NextActionSte
               />
             </FormControl>
           </div>
-          <FormDescription>
-            Pakkuge välja konkreetne järgmine arengusamm õpetajale
-          </FormDescription>
           <FormMessage />
         </FormItem>
       )}
