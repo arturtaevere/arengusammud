@@ -7,11 +7,9 @@ const session6: SessionContent = {
   title: "Õppimise sotsiaalne dimensioon",
   circleName: "Mis on õppimine?",
   session: 6,
-  content: (
-    <>
-      <h2>Õppimise sotsiaalne dimensioon</h2>
-      <p>Sisu lisatakse peagi...</p>
-    </>
+  content: React.createElement(React.Fragment, null,
+    React.createElement('h2', null, "Õppimise sotsiaalne dimensioon"),
+    React.createElement('p', null, "Sisu lisatakse peagi...")
   ),
 };
 

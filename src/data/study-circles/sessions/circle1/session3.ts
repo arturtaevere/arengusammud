@@ -7,174 +7,140 @@ const session3: SessionContent = {
   title: "Õpimotivatsioon ja õpikeskkond",
   circleName: "Mis on õppimine?",
   session: 3,
-  content: (
-    <>
-      <h2>Õpimotivatsioon ja õpikeskkond</h2>
-      <p>
-        Motivatsioon on õppimise mootor. Ilma motivatsioonita on raske alustada, 
-        püsida ja lõpetada õppimisprotsessi. Õpikeskkond mängib motivatsiooni kujunemisel 
-        ja säilitamisel keskset rolli ning õpetajatel on võimalus kujundada keskkonda, 
-        mis toetab ja suurendab õpilaste motivatsiooni.
-      </p>
-      
-      <h3>Motivatsiooni tüübid hariduses</h3>
-      
-      <p>
-        Traditsiooniliselt eristatakse kahte põhilist motivatsiooni tüüpi:
-      </p>
-      
-      <ul>
-        <li>
-          <strong>Sisemine motivatsioon</strong> (intrinsic motivation) – õppimine huvi, 
-          naudingu või isikliku rahulolu pärast. Näiteks õpilane, kes loeb raamatut, sest 
-          ta naudib lugemist.
-        </li>
-        <li>
-          <strong>Väline motivatsioon</strong> (extrinsic motivation) – õppimine väliste 
-          tegurite, nagu hinnete, kiituse või karistuse vältimise pärast. Näiteks õpilane, 
-          kes õpib kontrolltööks, et saada hea hinne.
-        </li>
-      </ul>
-      
-      <p>
-        Kuigi sisemine motivatsioon on tavaliselt seotud sügavama ja püsivama õppimisega, on ka 
-        välimise motivatsiooni erinevad vormid. Ryan ja Deci enesemääratlemise teooria kohaselt 
-        jaguneb väline motivatsioon omakorda:
-      </p>
-      
-      <ul>
-        <li>
-          <strong>Väline regulatsioon</strong> – käitumine on motiveeritud täielikult väliste tegurite poolt, 
-          nagu tasu või karistus.
-        </li>
-        <li>
-          <strong>Pealesurutud regulatsioon</strong> – käitumine on motiveeritud väliste ootuste 
-          internaliseerimisest, näiteks süütunde vältimiseks.
-        </li>
-        <li>
-          <strong>Omaksvõetud regulatsioon</strong> – käitumine on motiveeritud selle väärtuse või 
-          kasulikkuse teadvustamisest.
-        </li>
-        <li>
-          <strong>Integreeritud regulatsioon</strong> – käitumine on motiveeritud selle kooskõlast 
-          isiklike väärtuste ja identiteediga.
-        </li>
-      </ul>
-      
-      <p>
-        Ideaalis liiguvad õpilased välisest regulatsioonist integreeritud regulatsiooni ja 
-        sisemise motivatsiooni suunas.
-      </p>
-      
-      <h3>Motivatsiooni mõjutavad tegurid õpikeskkonnas</h3>
-      
-      <p>
-        Enesemääratlemise teooria kohaselt on kolm põhivajadust, mis peavad olema rahuldatud, 
-        et soodustada sisemist motivatsiooni:
-      </p>
-      
-      <ol>
-        <li>
-          <strong>Autonoomia</strong> – vajadus tunda, et oled oma tegevuste ja valikute juht, 
-          mitte kellegi teise kontrolli all.
-        </li>
-        <li>
-          <strong>Kompetentsus</strong> – vajadus tunda, et saad hakkama väljakutsetega ja oskad 
-          kasutada oma oskusi efektiivselt.
-        </li>
-        <li>
-          <strong>Seotus</strong> – vajadus tunda sidet ja kuuluvust teiste inimestega, samuti tunda, 
-          et sinu tegevused on olulised ja väärtuslikud.
-        </li>
-      </ol>
-      
-      <h3>Õpikeskkonna kujundamine motivatsiooni toetamiseks</h3>
-      
-      <p>
-        Õpetajad saavad kujundada õpikeskkonda, mis toetab neid kolme põhivajadust ja soodustab 
-        sisemist motivatsiooni:
-      </p>
-      
-      <h4>Autonoomia toetamine:</h4>
-      
-      <ul>
-        <li>
-          <strong>Valikuvõimaluste pakkumine</strong> – Võimaluse andmine õpilastele valida õppimismeetodeid, 
-          hindamisviise või projekte.
-        </li>
-        <li>
-          <strong>Selgituste pakkumine</strong> – Selgitage, miks mingi tegevus või õppesisu on oluline, aidates 
-          õpilastel näha selle väärtust.
-        </li>
-        <li>
-          <strong>Negatiivse keele vältimine</strong> – Ärge kasutage kontrollivat keelt, nagu "sa pead" või 
-          "sa oled kohustatud".
-        </li>
-      </ul>
-      
-      <h4>Kompetentsuse toetamine:</h4>
-      
-      <ul>
-        <li>
-          <strong>Optimaalsete väljakutsete pakkumine</strong> – Ülesanded peaksid olema piisavalt väljakutsuvad, 
-          kuid mitte liiga rasked.
-        </li>
-        <li>
-          <strong>Konstruktiivse tagasiside andmine</strong> – Tagasiside peaks keskenduma protsessile, mitte isikule, 
-          ja pakkuma konkreetseid soovitusi parandamiseks.
-        </li>
-        <li>
-          <strong>Edu tunnistamine ja tähistamine</strong> – Tehke õpilaste edusammud nähtavaks ja tähistage neid.
-        </li>
-      </ul>
-      
-      <h4>Seotuse toetamine:</h4>
-      
-      <ul>
-        <li>
-          <strong>Kuuluvustunde loomine</strong> – Looge klassikogukond, kus kõik tunnevad end kaasatuna ja väärtustatuna.
-        </li>
-        <li>
-          <strong>Koostöö soodustamine</strong> – Kasutage rühmatöid ja vastastikust õpetamist, mis tugevdavad sidemeid.
-        </li>
-        <li>
-          <strong>Õpitava seostamine reaalse eluga</strong> – Näidake, kuidas õpitav on seotud õpilaste eluga väljaspool kooli.
-        </li>
-      </ul>
-      
-      <h3>Praktilised strateegiad motiveeriva õpikeskkonna loomiseks</h3>
-      
-      <ol>
-        <li>
-          <strong>Isiklikud eesmärgid</strong> – Aidake õpilastel seada isiklikke õpieesmärke, mis on konkreetsed, 
-          mõõdetavad ja saavutatavad.
-        </li>
-        <li>
-          <strong>Huvipõhine õpe</strong> – Lõimige õppesse õpilaste huvid ja küsimused, andes neile võimaluse 
-          uurida teemasid, mis neid köidavad.
-        </li>
-        <li>
-          <strong>Tähendusrikas hindamine</strong> – Kasutage hindamismeetodeid, mis keskenduvad õppimisele ja 
-          arengule, mitte ainult lõpptulemusele.
-        </li>
-        <li>
-          <strong>Modelleerimine</strong> – Näidake oma entusiasmi ja huvi õpitava vastu, modelleerides sisemist motivatsiooni.
-        </li>
-        <li>
-          <strong>Õpistiilide arvestamine</strong> – Pakkuge mitmekesiseid õppemeetodeid, mis sobivad erinevate õpistiilide ja -eelistustega.
-        </li>
-        <li>
-          <strong>Positiivne õhkkond</strong> – Looge klassiruumis õhkkond, mis on turvaline, toetav ja positiivne, 
-          vähendades ärevust ja stressi.
-        </li>
-      </ol>
-      
-      <p>
-        Õpimotivatsiooni toetav keskkond ei teki iseenesest, vaid on teadliku planeerimise ja kujundamise tulemus. 
-        Mõistes, mis motiveerib õpilasi ja kuidas õpikeskkond mõjutab nende motivatsiooni, saavad õpetajad luua 
-        tingimused, mis soodustavad sügavat ja püsivat õppimist.
-      </p>
-    </>
+  content: React.createElement(React.Fragment, null,
+    React.createElement('h2', null, "Õpimotivatsioon ja õpikeskkond"),
+    React.createElement('p', null,
+      "Motivatsioon on õppimise mootor. Ilma motivatsioonita on raske alustada, püsida ja lõpetada õppimisprotsessi. Õpikeskkond mängib motivatsiooni kujunemisel ja säilitamisel keskset rolli ning õpetajatel on võimalus kujundada keskkonda, mis toetab ja suurendab õpilaste motivatsiooni."
+    ),
+    
+    React.createElement('h3', null, "Motivatsiooni tüübid hariduses"),
+    
+    React.createElement('p', null,
+      "Traditsiooniliselt eristatakse kahte põhilist motivatsiooni tüüpi:"
+    ),
+    
+    React.createElement('ul', null,
+      React.createElement('li', null,
+        React.createElement('strong', null, "Sisemine motivatsioon"), " (intrinsic motivation) – õppimine huvi, naudingu või isikliku rahulolu pärast. Näiteks õpilane, kes loeb raamatut, sest ta naudib lugemist."
+      ),
+      React.createElement('li', null,
+        React.createElement('strong', null, "Väline motivatsioon"), " (extrinsic motivation) – õppimine väliste tegurite, nagu hinnete, kiituse või karistuse vältimise pärast. Näiteks õpilane, kes õpib kontrolltööks, et saada hea hinne."
+      )
+    ),
+    
+    React.createElement('p', null,
+      "Kuigi sisemine motivatsioon on tavaliselt seotud sügavama ja püsivama õppimisega, on ka välimise motivatsiooni erinevad vormid. Ryan ja Deci enesemääratlemise teooria kohaselt jaguneb väline motivatsioon omakorda:"
+    ),
+    
+    React.createElement('ul', null,
+      React.createElement('li', null,
+        React.createElement('strong', null, "Väline regulatsioon"), " – käitumine on motiveeritud täielikult väliste tegurite poolt, nagu tasu või karistus."
+      ),
+      React.createElement('li', null,
+        React.createElement('strong', null, "Pealesurutud regulatsioon"), " – käitumine on motiveeritud väliste ootuste internaliseerimisest, näiteks süütunde vältimiseks."
+      ),
+      React.createElement('li', null,
+        React.createElement('strong', null, "Omaksvõetud regulatsioon"), " – käitumine on motiveeritud selle väärtuse või kasulikkuse teadvustamisest."
+      ),
+      React.createElement('li', null,
+        React.createElement('strong', null, "Integreeritud regulatsioon"), " – käitumine on motiveeritud selle kooskõlast isiklike väärtuste ja identiteediga."
+      )
+    ),
+    
+    React.createElement('p', null,
+      "Ideaalis liiguvad õpilased välisest regulatsioonist integreeritud regulatsiooni ja sisemise motivatsiooni suunas."
+    ),
+    
+    React.createElement('h3', null, "Motivatsiooni mõjutavad tegurid õpikeskkonnas"),
+    
+    React.createElement('p', null,
+      "Enesemääratlemise teooria kohaselt on kolm põhivajadust, mis peavad olema rahuldatud, et soodustada sisemist motivatsiooni:"
+    ),
+    
+    React.createElement('ol', null,
+      React.createElement('li', null,
+        React.createElement('strong', null, "Autonoomia"), " – vajadus tunda, et oled oma tegevuste ja valikute juht, mitte kellegi teise kontrolli all."
+      ),
+      React.createElement('li', null,
+        React.createElement('strong', null, "Kompetentsus"), " – vajadus tunda, et saad hakkama väljakutsetega ja oskad kasutada oma oskusi efektiivselt."
+      ),
+      React.createElement('li', null,
+        React.createElement('strong', null, "Seotus"), " – vajadus tunda sidet ja kuuluvust teiste inimestega, samuti tunda, et sinu tegevused on olulised ja väärtuslikud."
+      )
+    ),
+    
+    React.createElement('h3', null, "Õpikeskkonna kujundamine motivatsiooni toetamiseks"),
+    
+    React.createElement('p', null, "Õpetajad saavad kujundada õpikeskkonda, mis toetab neid kolme põhivajadust ja soodustab sisemist motivatsiooni:"),
+    
+    React.createElement('h4', null, "Autonoomia toetamine:"),
+    
+    React.createElement('ul', null,
+      React.createElement('li', null,
+        React.createElement('strong', null, "Valikuvõimaluste pakkumine"), " – Võimaluse andmine õpilastele valida õppimismeetodeid, hindamisviise või projekte."
+      ),
+      React.createElement('li', null,
+        React.createElement('strong', null, "Selgituste pakkumine"), " – Selgitage, miks mingi tegevus või õppesisu on oluline, aidates õpilastel näha selle väärtust."
+      ),
+      React.createElement('li', null,
+        React.createElement('strong', null, "Negatiivse keele vältimine"), " – Ärge kasutage kontrollivat keelt, nagu \"sa pead\" või \"sa oled kohustatud\"."
+      )
+    ),
+    
+    React.createElement('h4', null, "Kompetentsuse toetamine:"),
+    
+    React.createElement('ul', null,
+      React.createElement('li', null,
+        React.createElement('strong', null, "Optimaalsete väljakutsete pakkumine"), " – Ülesanded peaksid olema piisavalt väljakutsuvad, kuid mitte liiga rasked."
+      ),
+      React.createElement('li', null,
+        React.createElement('strong', null, "Konstruktiivse tagasiside andmine"), " – Tagasiside peaks keskenduma protsessile, mitte isikule, ja pakkuma konkreetseid soovitusi parandamiseks."
+      ),
+      React.createElement('li', null,
+        React.createElement('strong', null, "Edu tunnistamine ja tähistamine"), " – Tehke õpilaste edusammud nähtavaks ja tähistage neid."
+      )
+    ),
+    
+    React.createElement('h4', null, "Seotuse toetamine:"),
+    
+    React.createElement('ul', null,
+      React.createElement('li', null,
+        React.createElement('strong', null, "Kuuluvustunde loomine"), " – Looge klassikogukond, kus kõik tunnevad end kaasatuna ja väärtustatuna."
+      ),
+      React.createElement('li', null,
+        React.createElement('strong', null, "Koostöö soodustamine"), " – Kasutage rühmatöid ja vastastikust õpetamist, mis tugevdavad sidemeid."
+      ),
+      React.createElement('li', null,
+        React.createElement('strong', null, "Õpitava seostamine reaalse eluga"), " – Näidake, kuidas õpitav on seotud õpilaste eluga väljaspool kooli."
+      )
+    ),
+    
+    React.createElement('h3', null, "Praktilised strateegiad motiveeriva õpikeskkonna loomiseks"),
+    
+    React.createElement('ol', null,
+      React.createElement('li', null,
+        React.createElement('strong', null, "Isiklikud eesmärgid"), " – Aidake õpilastel seada isiklikke õpieesmärke, mis on konkreetsed, mõõdetavad ja saavutatavad."
+      ),
+      React.createElement('li', null,
+        React.createElement('strong', null, "Huvipõhine õpe"), " – Lõimige õppesse õpilaste huvid ja küsimused, andes neile võimaluse uurida teemasid, mis neid köidavad."
+      ),
+      React.createElement('li', null,
+        React.createElement('strong', null, "Tähendusrikas hindamine"), " – Kasutage hindamismeetodeid, mis keskenduvad õppimisele ja arengule, mitte ainult lõpptulemusele."
+      ),
+      React.createElement('li', null,
+        React.createElement('strong', null, "Modelleerimine"), " – Näidake oma entusiasmi ja huvi õpitava vastu, modelleerides sisemist motivatsiooni."
+      ),
+      React.createElement('li', null,
+        React.createElement('strong', null, "Õpistiilide arvestamine"), " – Pakkuge mitmekesiseid õppemeetodeid, mis sobivad erinevate õpistiilide ja -eelistustega."
+      ),
+      React.createElement('li', null,
+        React.createElement('strong', null, "Positiivne õhkkond"), " – Looge klassiruumis õhkkond, mis on turvaline, toetav ja positiivne, vähendades ärevust ja stressi."
+      )
+    ),
+    
+    React.createElement('p', null,
+      "Õpimotivatsiooni toetav keskkond ei teki iseenesest, vaid on teadliku planeerimise ja kujundamise tulemus. Mõistes, mis motiveerib õpilasi ja kuidas õpikeskkond mõjutab nende motivatsiooni, saavad õpetajad luua tingimused, mis soodustavad sügavat ja püsivat õppimist."
+    )
   ),
 };
 

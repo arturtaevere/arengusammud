@@ -7,11 +7,9 @@ const session3: SessionContent = {
   title: "Eneseregulatsiooni strateegiad",
   circleName: "Kuidas toetada ennastjuhtiva õppija kujunemist?",
   session: 3,
-  content: (
-    <>
-      <h2>Eneseregulatsiooni strateegiad</h2>
-      <p>Sisu lisatakse peagi...</p>
-    </>
+  content: React.createElement(React.Fragment, null,
+    React.createElement('h2', null, "Eneseregulatsiooni strateegiad"),
+    React.createElement('p', null, "Sisu lisatakse peagi...")
   ),
 };
 
