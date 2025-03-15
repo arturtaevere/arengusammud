@@ -178,7 +178,7 @@ const circle2Sessions = [
     id: "c2s1",
     session: 1,
     title: "Tõhusa õppimisviisi avamine",
-    description: "Selles sessioonis käsitleme, kuidas aidata õpilastel mõista efektiivse õppimise olemust. Vaatleme, kuidas õpetaja saab tutvustada planeerimise, tegutsemise ja refleksiooni tsüklit."
+    description: "Õpilase võime oma õppimist planeerida, jälgida ja hinnata on edukaks õppimiseks vajalikud ning osa õpilase metakognitiivsest regulatsioonist. Kuigi asjatundlikel õppijatel võivad need protsessid olla automaatsed, vajab enamik õppijaid ennastjuhtivaks õppijaks kujunemisel toetust. Neil on tarvis nende õpioskuste selgesõnaliseks muutmist, juhendamist ja harjutamist."
   },
   {
     id: "c2s2",
