@@ -44,7 +44,7 @@ const TeacherStudentNotesSection = ({ form }: TeacherStudentNotesSectionProps) =
             <FormLabel>
               <span className="flex items-center">
                 <MessageSquare className="h-4 w-4 mr-2" />
-                Tunnivaatluse märkmed: mida õpilased tegid
+                Mida õpilased tegid
               </span>
             </FormLabel>
             <FormControl>
