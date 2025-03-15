@@ -26,14 +26,7 @@ const NextActionStepSection = ({ form, onOpenActionStepSelector }: NextActionSte
             </span>
           </FormLabel>
           <div className="space-y-2">
-            <FormControl>
-              <Textarea 
-                placeholder="Milline võiks olla järgmine arengusamm..." 
-                className="min-h-[120px]"
-                {...field} 
-              />
-            </FormControl>
-            <div className="flex gap-2 mt-2">
+            <div className="flex gap-2 mb-2">
               <Button
                 type="button"
                 variant="outline"
@@ -44,6 +37,13 @@ const NextActionStepSection = ({ form, onOpenActionStepSelector }: NextActionSte
                 Vali uus samm
               </Button>
             </div>
+            <FormControl>
+              <Textarea 
+                placeholder="Milline võiks olla järgmine arengusamm..." 
+                className="min-h-[120px]"
+                {...field} 
+              />
+            </FormControl>
           </div>
           <FormDescription>
             Pakkuge välja konkreetne järgmine arengusamm õpetajale
