@@ -15,6 +15,8 @@ import Profile from "./pages/Profile";
 import Observations from "./pages/Observations";
 import Admin from "./pages/Admin";
 import VerifyEmail from "./pages/VerifyEmail";
+import StudyCircles from "./pages/StudyCircles";
+import StudyCircleSession from "./pages/StudyCircleSession";
 import { AuthProvider } from "./context/auth";
 
 const queryClient = new QueryClient();
@@ -36,7 +38,8 @@ const App = () => (
             <Route path="/action-steps/:stepId" element={<ActionStepDetail />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/admin" element={<Admin />} />
-            <Route path="/study-circles" element={<Dashboard />} /> {/* Placeholder - will need a dedicated page */}
+            <Route path="/study-circles" element={<StudyCircles />} />
+            <Route path="/study-circles/session/:sessionId" element={<StudyCircleSession />} />
             <Route path="/observations" element={<Observations />} />
             <Route path="/observations/:id" element={<Dashboard />} /> {/* Will implement later */}
             <Route path="/observations/new" element={<Observations />} />
