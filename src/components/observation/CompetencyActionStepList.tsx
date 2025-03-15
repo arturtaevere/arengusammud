@@ -39,17 +39,17 @@ const CompetencyActionStepList = ({
         </h3>
         
         {hasActionSteps ? (
-          <div className="space-y-2 pl-1">
+          <div className="space-y-3 pl-1">
             {competency.actionSteps.map((step) => (
               <Button
                 key={step.id}
                 variant="ghost"
-                className="w-full justify-start text-left h-auto p-2 text-sm"
+                className="w-full justify-start text-left h-auto py-3 px-3 text-sm"
                 onClick={() => onSelectStep(step)}
               >
-                <div className="text-left w-full">
+                <div className="text-left w-full space-y-1">
                   <div className="font-medium text-left">{step.title}</div>
-                  <div className="text-xs text-muted-foreground text-left">{step.description}</div>
+                  <div className="text-xs text-muted-foreground text-left whitespace-normal">{step.description}</div>
                 </div>
               </Button>
             ))}
