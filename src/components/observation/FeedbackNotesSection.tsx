@@ -26,7 +26,7 @@ const FeedbackNotesSection = ({ form }: FeedbackNotesSectionProps) => {
             </FormLabel>
             <FormControl>
               <Textarea 
-                placeholder="Millega sai õpetaja hästi hakkama..." 
+                placeholder="Üks asi, millega õpetaja sai hästi hakkama ja mida ta võiks edaspidi samamoodi teha..." 
                 className="min-h-[100px]"
                 {...field} 
               />
