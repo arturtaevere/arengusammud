@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 interface SessionContent {
@@ -446,10 +445,7 @@ const circle2Sessions: SessionContent[] = [
         <h2>Tõhusa õppimisviisi avamine</h2>
         
         <p>
-          Efektiivse õppimise olemus on paljude õpilaste jaoks mõistatus. Nad teavad, et peavad õppima, 
-          aga sageli ei mõista, kuidas õppimine tegelikult toimub ja millised strateegiad on kõige tõhusamad. 
-          Õpetaja ülesanne on avada õpilastele tõhusa õppimise olemus ning tutvustada planeerimise, 
-          tegutsemise ja refleksiooni tsüklit.
+          Õpilase võime oma õppimist planeerida, jälgida ja hinnata on edukaks õppimiseks vajalikud ning osa õpilase metakognitiivsest regulatsioonist. Kuigi asjatundlikel õppijatel võivad need protsessid olla automaatsed, vajab enamik õppijaid ennastjuhtivaks õppijaks kujunemisel toetust. Neil on tarvis nende õpioskuste selgesõnaliseks muutmist, juhendamist ja harjutamist.
         </p>
         
         <h3>Õpilaste arusaam õppimisest</h3>
@@ -655,126 +651,4 @@ const circle2Sessions: SessionContent[] = [
             (nt "Tahan saada A").
           </li>
           <li>
-            <strong>Vältimise eesmärgid</strong> (avoidance goals) – Orienteeritud millegi negatiivse vältimisele 
-            (nt "Ei taha läbi kukkuda").
-          </li>
-          <li>
-            <strong>Protsessi eesmärgid</strong> (process goals) – Keskenduvad tegevustele ja strateegiatele 
-            (nt "Õpin iga päev 30 minutit").
-          </li>
-          <li>
-            <strong>Tulemuse eesmärgid</strong> (outcome goals) – Keskenduvad lõpptulemusele 
-            (nt "Soovin lõpetada gümnaasiumis kuldmedaliga").
-          </li>
-        </ul>
-        
-        <p>
-          Uuringud näitavad, et meisterlikkuse eesmärgid ja protsessi eesmärgid on tavaliselt seotud parema 
-          õpimotivatsiooni, sügavama õppimise ja püsivama huviga kui soorituse eesmärgid ja tulemuse eesmärgid. 
-          Samuti on lähenemise eesmärgid üldjuhul kasulikumad kui vältimise eesmärgid.
-        </p>
-        
-        <h3>SMART eesmärkide põhimõtted</h3>
-        
-        <p>
-          SMART on laialdaselt kasutatud raamistik efektiivsete eesmärkide seadmiseks. SMART eesmärgid on:
-        </p>
-        
-        <ul>
-          <li>
-            <strong>S</strong>pecific (Konkreetsed) – Eesmärk peab olema selgelt defineeritud, mitte üldine. 
-            "Tahan matemaatikat paremini osata" asemel "Tahan mõista ja lahendada ruutvõrrandeid."
-          </li>
-          <li>
-            <strong>M</strong>easurable (Mõõdetavad) – Eesmärk peab olema mõõdetav, et saaks hinnata edu. 
-            "Oskan lahendada 8 ruutvõrrandit 10-st õigesti."
-          </li>
-          <li>
-            <strong>A</strong>chievable (Saavutatavad) – Eesmärk peab olema väljakutsuv, kuid realistlik. 
-            "Parandan oma matemaatika hinnet C-lt B-le" mitte "Teen kõik ülesanded alati perfektselt."
-          </li>
-          <li>
-            <strong>R</strong>elevant (Asjakohased) – Eesmärk peab olema seotud laiemate eesmärkide või väärtustega. 
-            "Õpin matemaatikat, sest tahan tulevikus inseneeria õppida."
-          </li>
-          <li>
-            <strong>T</strong>ime-bound (Ajaliselt piiritletud) – Eesmärgil peab olema selge ajaline raamistik. 
-            "Õpin ruutvõrrandeid järgmise kahe nädala jooksul."
-          </li>
-        </ul>
-        
-        <h3>Õpilaste toetamine eesmärkide seadmisel</h3>
-        
-        <p>
-          Õpetajad saavad kasutada mitmeid strateegiaid, et aidata õpilastel seada efektiivseid õpieesmärke:
-        </p>
-        
-        <ol>
-          <li>
-            <strong>Selge ootuste kommunikeerimine</strong> – Selgitage õpilastele õpieesmärke ja oodatavaid 
-            tulemusi, et nad saaksid seada oma isiklikke eesmärke sellega kooskõlas.
-          </li>
-          <li>
-            <strong>Eesmärkide seadmise õpetamine</strong> – Tutvustage SMART raamistikku ja näidake, kuidas 
-            formuleerida konkreetseid, mõõdetavaid, saavutatavaid, asjakohaseid ja ajaliselt piiritletud eesmärke.
-          </li>
-          <li>
-            <strong>Individuaalsed eesmärgistamise vestlused</strong> – Viige õpilastega läbi vestlusi, kus aitate 
-            neil seada isiklikke eesmärke, mis arvestavad nende huvisid, tugevusi ja arenguvajadusi.
-          </li>
-          <li>
-            <strong>Eesmärkide visualiseerimine</strong> – Kasutage visuaalseid abivahendeid nagu eesmärgipuud, 
-            mõistekaarte või eesmärgitahvleid, et teha eesmärgid nähtavaks ja meeldejäävaks.
-          </li>
-          <li>
-            <strong>Edusammude jälgimine</strong> – Õpetage õpilasi oma progressi jälgima ja eesmärke vajadusel 
-            kohandama.
-          </li>
-          <li>
-            <strong>Refleksiooni innustamine</strong> – Julgustage õpilasi regulaarselt mõtisklema selle üle, 
-            kuidas nende tegevused on seotud seatud eesmärkidega.
-          </li>
-        </ol>
-        
-        <h3>Praktilised harjutused klassiruumis</h3>
-        
-        <ol>
-          <li>
-            <strong>Eesmärgipäevikud</strong> – Õpilased peavad päevikut, kus nad kirjutavad oma eesmärgid, 
-            plaanid nende saavutamiseks ja reflekteerivad edasimineku üle.
-          </li>
-          <li>
-            <strong>Eesmärgi muutmine tegevuskavaks</strong> – Õpilased võtavad eesmärgi ja jaotavad selle 
-            väiksemateks, konkreetseteks sammudeks ja tähtaegadeks.
-          </li>
-          <li>
-            <strong>Eesmärkide jagamine</strong> – Õpilased jagavad oma eesmärke klassikaaslastega, mis suurendab 
-            pühendumust ja võimaldab vastastikust toetust.
-          </li>
-          <li>
-            <strong>"Minu õpiteekond"</strong> – Õpilased visualiseerivad oma õpieesmärke ja -teekonda, kasutades 
-            joonistusi, kollaaže või digitaalseid vahendeid.
-          </li>
-          <li>
-            <strong>Edutseremoonia</strong> – Regulaarne aeg, kus tähistatakse eesmärkide saavutamist ja jagatatakse 
-            sellega seotud kogemusi.
-          </li>
-        </ol>
-        
-        <h3>Kokkuvõte</h3>
-        
-        <p>
-          Eesmärgistamine on võimas vahend õpimotivatsiooni suurendamiseks ja ennastjuhtiva õppimise toetamiseks. 
-          Õpetades õpilasi seadma SMART eesmärke, suunates neid meisterlikkuse ja protsessi eesmärkide poole ning 
-          pakkudes tuge eesmärkide jälgimisel ja kohandamisel, aitame neil arendada oskusi, mis on olulised nii 
-          õpingutes kui ka edaspidises elus. Kui õpilased näevad selget seost oma igapäevaste pingutuste ja 
-          pikaajaliste eesmärkide vahel, kasvab nende motivatsioon ja pühendumus õppimisele.
-        </p>
-      </>
-    ),
-  },
-  // Add more sessions for circle 2 as needed
-];
-
-// Combine all sessions for export
-export const allSessions = [...circle1Sessions, ...circle2Sessions];
+            <strong>Vältimise eesmärgid</strong> (avoidance goals) – Oriente
