@@ -42,7 +42,7 @@ const MobileMenu = ({ getInitials }: MobileMenuProps) => {
             >
               <div className="flex items-center">
                 <ClipboardList className="mr-2 h-5 w-5" />
-                Vaatlused ja tagasiside
+                Õpipartnerlus ja tagasiside
               </div>
             </Link>
             <Link 
