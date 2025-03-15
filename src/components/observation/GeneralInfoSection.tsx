@@ -111,7 +111,7 @@ const GeneralInfoSection = ({ form, teachersInSchool }: GeneralInfoSectionProps)
               </FormLabel>
               <FormControl>
                 <Textarea 
-                  placeholder="Õpetaja ja juhendaja valitud arengusamm..." 
+                  placeholder="Õpetaja ja õpipartneri valitud eelmine arengusamm..." 
                   className="min-h-[100px] bg-gray-50"
                   {...field}
                   readOnly
