@@ -105,7 +105,7 @@ export const getEnrichedCompetencies = () => {
         enriched[competencyIndex].actionSteps.push({
           id: step.id,
           title: step.title,
-          description: step.description
+          description: step.description // Use the unique description from the original action step
         });
       }
     }

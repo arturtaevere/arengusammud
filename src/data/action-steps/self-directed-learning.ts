@@ -1,3 +1,4 @@
+
 import { ActionStep } from './types';
 
 // Steps for category 10 (self-directed learning)
@@ -13,7 +14,7 @@ export const selfDirectedLearningSteps: ActionStep[] = [
   {
     id: "step10-2",
     title: "Emotsionaalsete pingete äratundmine",
-    description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
+    description: "Aitan õpilastel ära tunda emotsionaalseid pingeid, paludes neil märku anda, kui nad kogevad tugevaid tundeid.",
     category: "10",
     difficulty: "intermediate",
     resources: [],
@@ -21,7 +22,7 @@ export const selfDirectedLearningSteps: ActionStep[] = [
   {
     id: "step10-3",
     title: "Emotsionaalsete pingete maandamine",
-    description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
+    description: "Aitan õpilastel emotsionaalse pingega toime tulla, õpetades neile erinevaid toimetulekustrateegiaid.",
     category: "10",
     difficulty: "intermediate",
     resources: [],
@@ -29,7 +30,7 @@ export const selfDirectedLearningSteps: ActionStep[] = [
   {
     id: "step10-4",
     title: "Abi küsimise õpetamine",
-    description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
+    description: "Õpetan õpilasi õigel hetkel abi küsima, selgitades neile, millal see on asjakohane ja kuidas seda teha.",
     category: "10",
     difficulty: "intermediate",
     resources: [],
@@ -37,7 +38,7 @@ export const selfDirectedLearningSteps: ActionStep[] = [
   {
     id: "step10-5",
     title: "Õpilastele valikute pakkumine",
-    description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
+    description: "Võimaldan õpilastel teha õppimise käigus erinevaid valikuid, mis toetavad nende autonoomiat.",
     category: "10",
     difficulty: "intermediate",
     resources: [],
@@ -45,7 +46,7 @@ export const selfDirectedLearningSteps: ActionStep[] = [
   {
     id: "step10-6",
     title: "Tunniks häälestumine",
-    description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
+    description: "Aitan õpilastel tunniks vaimselt häälestuda, kasutades lühikesi keskendumisharjutusi.",
     category: "10",
     difficulty: "intermediate",
     resources: [],
@@ -53,7 +54,7 @@ export const selfDirectedLearningSteps: ActionStep[] = [
   {
     id: "step10-7",
     title: "Õpilaste jõupingutuste suunamine",
-    description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
+    description: "Suunan õpilaste jõupingutusi optimaalsete väljakutsete poole, et toetada nende motivatsiooni ja arengut.",
     category: "10",
     difficulty: "intermediate",
     resources: [],
@@ -61,7 +62,7 @@ export const selfDirectedLearningSteps: ActionStep[] = [
   {
     id: "step10-8",
     title: "Innustavate eesmärkide seadmine",
-    description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
+    description: "Aitan õpilastel seada konkreetseid, mõõdetavaid ja saavutatavaid eesmärke, mis neid motiveerivad.",
     category: "10",
     difficulty: "intermediate",
     resources: [],
@@ -69,7 +70,7 @@ export const selfDirectedLearningSteps: ActionStep[] = [
   {
     id: "step10-9",
     title: "Tegevuskava loomine",
-    description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
+    description: "Õpetan õpilasi looma selget tegevuskava eesmärkide saavutamiseks, mis hõlmab konkreetseid samme ja tähtaegu.",
     category: "10",
     difficulty: "intermediate",
     resources: [],
@@ -77,7 +78,7 @@ export const selfDirectedLearningSteps: ActionStep[] = [
   {
     id: "step10-10",
     title: "Tuleviku visualiseerimine",
-    description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
+    description: "Aitan õpilastel visualiseerida oma tulevikku ja edu, et tugevdada nende motivatsiooni ja sihikindlust.",
     category: "10",
     difficulty: "intermediate",
     resources: [],
@@ -85,7 +86,7 @@ export const selfDirectedLearningSteps: ActionStep[] = [
   {
     id: "step10-11",
     title: "Küsimuste esitamine loetu kohta",
-    description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
+    description: "Õpetan õpilasi esitama endale küsimusi loetu kohta, et arendada kriitilist mõtlemist ja tekstimõistmist.",
     category: "10",
     difficulty: "intermediate",
     resources: [],
@@ -93,7 +94,7 @@ export const selfDirectedLearningSteps: ActionStep[] = [
   {
     id: "step10-12",
     title: "Mõtlemise suunamine läbi võrdluste",
-    description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
+    description: "Suunan õpilaste mõtlemist võrdluste ja analoogiate kaudu, et aidata neil luua seoseid uue ja olemasoleva teadmise vahel.",
     category: "10",
     difficulty: "intermediate",
     resources: [],
@@ -101,7 +102,7 @@ export const selfDirectedLearningSteps: ActionStep[] = [
   {
     id: "step10-13",
     title: "Teema kokku võtmine õpilaste jaoks",
-    description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
+    description: "Õpetan õpilasi oma sõnadega kokku võtma õpitud teemat, mis aitab kinnistada teadmisi ja tuua välja olulisima.",
     category: "10",
     difficulty: "intermediate",
     resources: [],
@@ -109,7 +110,7 @@ export const selfDirectedLearningSteps: ActionStep[] = [
   {
     id: "step10-14",
     title: "Olulise meeldejätmine",
-    description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
+    description: "Tutvustan õpilastele erinevaid mälutehnikaid, mis aitavad olulisi fakte ja mõisteid paremini meelde jätta.",
     category: "10",
     difficulty: "intermediate",
     resources: [],
@@ -117,7 +118,7 @@ export const selfDirectedLearningSteps: ActionStep[] = [
   {
     id: "step10-15",
     title: "Läbimõeldud harjutamine",
-    description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
+    description: "Õpetan õpilasi harjutama läbimõeldult, keskendudes konkreetsetele oskustele ja analüüsides oma sooritust.",
     category: "10",
     difficulty: "intermediate",
     resources: [],
@@ -125,7 +126,7 @@ export const selfDirectedLearningSteps: ActionStep[] = [
   {
     id: "step10-16",
     title: "Tegevuskava loomine iseseisvaks tööks",
-    description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
+    description: "Aitan õpilastel luua konkreetse tegevuskava iseseisva töö tegemiseks, mis hõlmab ajaplaneermist ja eesmärke.",
     category: "10",
     difficulty: "intermediate",
     resources: [],
@@ -133,7 +134,7 @@ export const selfDirectedLearningSteps: ActionStep[] = [
   {
     id: "step10-17",
     title: "Abivahenditest järk-järgult loobumine",
-    description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
+    description: "Pakun õpilastele alguses rohkem tuge ja abivahendeid, kuid vähendades neid järk-järgult, et arendada iseseisvust.",
     category: "10",
     difficulty: "intermediate",
     resources: [],
@@ -141,7 +142,7 @@ export const selfDirectedLearningSteps: ActionStep[] = [
   {
     id: "step10-18",
     title: "Õpitu kasutamine uues kontekstis",
-    description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
+    description: "Loon õpilastele võimalusi rakendada õpitut uutes ja erinevates kontekstides, et arendada teadmiste ülekannet.",
     category: "10",
     difficulty: "intermediate",
     resources: [],
@@ -149,7 +150,7 @@ export const selfDirectedLearningSteps: ActionStep[] = [
   {
     id: "step10-19",
     title: "Enesehindamise õpetamine",
-    description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
+    description: "Õpetan õpilasi oma tööd ja arengut ise hindama, kasutades selgeid kriteeriumeid ja eneserefleksiooni.",
     category: "10",
     difficulty: "intermediate",
     resources: [],
@@ -157,7 +158,7 @@ export const selfDirectedLearningSteps: ActionStep[] = [
   {
     id: "step10-20",
     title: "Enese arengu jälgimise võimaldamine",
-    description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
+    description: "Aitan õpilastel oma arengut jälgida, kasutades edenemise jälgimise vahendeid ja visuaalseid näitajaid.",
     category: "10",
     difficulty: "intermediate",
     resources: [],
@@ -165,7 +166,7 @@ export const selfDirectedLearningSteps: ActionStep[] = [
   {
     id: "step10-21",
     title: "Õpilaste ajakasutuse jälgimine",
-    description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
+    description: "Õpetan õpilasi oma ajakasutust jälgima ja analüüsima, et nad saaksid oma õppimist tõhusamalt planeerida.",
     category: "10",
     difficulty: "intermediate",
     resources: [],
@@ -173,7 +174,7 @@ export const selfDirectedLearningSteps: ActionStep[] = [
   {
     id: "step10-22",
     title: "Enese tööde parandamine",
-    description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
+    description: "Juhendades õpilasi oma töid ise parandama ja täiendama, arendades kriitilist mõtlemist ja eneseanalüüsi.",
     category: "10",
     difficulty: "intermediate",
     resources: [],
@@ -181,7 +182,7 @@ export const selfDirectedLearningSteps: ActionStep[] = [
   {
     id: "step10-23",
     title: "Reflekteerimise õpetamine",
-    description: "Selgitan õpilastele, et tõhusad õppijad kõigepealt planeerivad, siis tegutsevad ja siis reflekteerivad.",
+    description: "Õpetan õpilasi reflekteerima oma õppimiskogemuse üle, analüüsides, mis toimis hästi ja mida saaks paremini teha.",
     category: "10",
     difficulty: "intermediate",
     resources: [],
