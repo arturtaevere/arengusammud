@@ -1,6 +1,6 @@
 
 import { Link, useLocation } from 'react-router-dom';
-import { BookOpen, ClipboardList, LayoutDashboard, Users } from 'lucide-react';
+import { BookOpen, ClipboardList, LayoutDashboard, Users, MessageSquare } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 
 const MainNavLinks = () => {
@@ -20,6 +20,17 @@ const MainNavLinks = () => {
       >
         <BookOpen className="mr-2 h-4 w-4" />
         <span>Sisu</span>
+      </Link>
+      <Link 
+        to="/study-circles" 
+        className={`flex items-center transition-colors ${
+          location.pathname.includes('/study-circles') 
+            ? 'text-primary font-medium' 
+            : 'text-foreground/70 hover:text-foreground'
+        }`}
+      >
+        <MessageSquare className="mr-2 h-4 w-4" />
+        <span>Õpiringid</span>
       </Link>
       <Link 
         to="/observations" 

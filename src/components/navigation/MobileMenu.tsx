@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { BookOpen, ClipboardList, LayoutDashboard, Users } from 'lucide-react';
+import { BookOpen, ClipboardList, LayoutDashboard, Users, MessageSquare } from 'lucide-react';
 
 interface MobileMenuProps {
   getInitials: (name: string) => string;
@@ -30,6 +30,19 @@ const MobileMenu = ({ getInitials }: MobileMenuProps) => {
               <div className="flex items-center">
                 <BookOpen className="mr-2 h-5 w-5" />
                 Sisu
+              </div>
+            </Link>
+            <Link 
+              to="/study-circles" 
+              className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
+                location.pathname.includes('/study-circles') 
+                  ? 'bg-primary text-primary-foreground' 
+                  : 'hover:bg-gray-100'
+              }`}
+            >
+              <div className="flex items-center">
+                <MessageSquare className="mr-2 h-5 w-5" />
+                Õpiringid
               </div>
             </Link>
             <Link 

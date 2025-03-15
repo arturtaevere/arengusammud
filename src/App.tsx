@@ -36,6 +36,7 @@ const App = () => (
             <Route path="/action-steps/:stepId" element={<ActionStepDetail />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/admin" element={<Admin />} />
+            <Route path="/study-circles" element={<Dashboard />} /> {/* Placeholder - will need a dedicated page */}
             <Route path="/observations" element={<Observations />} />
             <Route path="/observations/:id" element={<Dashboard />} /> {/* Will implement later */}
             <Route path="/observations/new" element={<Observations />} />
