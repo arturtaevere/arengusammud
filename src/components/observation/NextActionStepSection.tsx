@@ -39,7 +39,7 @@ const NextActionStepSection = ({ form, onOpenActionStepSelector }: NextActionSte
             </div>
             <FormControl>
               <Textarea 
-                placeholder="Milline võiks olla järgmine arengusamm..." 
+                placeholder="Soovi korral saad valitud sammu sõnastust muuta" 
                 className="min-h-[120px]"
                 {...field} 
               />
