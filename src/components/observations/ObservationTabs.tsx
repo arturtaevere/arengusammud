@@ -23,8 +23,8 @@ const ObservationTabs = ({ observations, onFeedbackGiven }: ObservationTabsProps
     // Normally this would be filtered by a proper backend
     const storedObservations = getStoredObservations();
     
-    // Use user's display name (or email as fallback) to match with teacher field
-    const teacherName = user?.displayName || user?.email?.split('@')[0] || '';
+    // Use user's name or email as fallback to match with teacher field
+    const teacherName = user?.name || user?.email?.split('@')[0] || '';
     
     const received = observations.filter(obs => 
       obs.teacher.toLowerCase().includes(teacherName.toLowerCase()) && 
@@ -43,7 +43,7 @@ const ObservationTabs = ({ observations, onFeedbackGiven }: ObservationTabsProps
 
   return (
     <Card className="p-4">
-      <Tabs defaultValue="conducted" className="w-full">
+      <Tabs defaultValue="received" className="w-full">
         <TabsList className="grid w-full grid-cols-2 mb-4">
           <TabsTrigger value="conducted" className="flex items-center justify-center gap-2">
             <UserCheck className="h-4 w-4" />
