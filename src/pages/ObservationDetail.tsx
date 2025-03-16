@@ -2,12 +2,13 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, User, Calendar, Target, ClipboardList, MessageSquare, CalendarCheck } from 'lucide-react';
+import { ArrowLeft, User, Calendar, Target, ClipboardList, MessageSquare, CalendarCheck, Edit, Save } from 'lucide-react';
 import { getStoredObservations, StoredObservation, updateObservation } from '@/components/observation/storage';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/context/AuthContext';
+import { Textarea } from '@/components/ui/textarea';
 
 const ObservationDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -18,6 +19,8 @@ const ObservationDetail = () => {
   const [loading, setLoading] = useState(true);
   const [feedbackProvided, setFeedbackProvided] = useState(false);
   const [isObserved, setIsObserved] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedObservation, setEditedObservation] = useState<Partial<StoredObservation>>({});
 
   useEffect(() => {
     const loadObservation = () => {
@@ -26,6 +29,7 @@ const ObservationDetail = () => {
       
       if (found) {
         setObservation(found);
+        setEditedObservation(found);
         setFeedbackProvided(found.hasFeedback);
         
         // Check if current user is the observed teacher
@@ -59,6 +63,38 @@ const ObservationDetail = () => {
     });
   };
 
+  // Handle editing mode
+  const toggleEdit = () => {
+    setIsEditing(!isEditing);
+  };
+
+  // Update form fields when editing
+  const handleInputChange = (field: keyof StoredObservation, value: string) => {
+    setEditedObservation(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  // Save edited observation
+  const saveChanges = () => {
+    if (!observation || !editedObservation) return;
+    
+    const updatedObservation = {
+      ...observation,
+      ...editedObservation
+    };
+    
+    updateObservation(updatedObservation);
+    setObservation(updatedObservation);
+    setIsEditing(false);
+    
+    toast({
+      title: "Muudatused salvestatud",
+      description: "Vaatluse andmed on edukalt uuendatud",
+    });
+  };
+
   // Determine if user should see feedback details
   const canSeeFeedback = () => {
     if (!observation) return false;
@@ -68,6 +104,14 @@ const ObservationDetail = () => {
     
     // Teacher can only see feedback if it's been provided
     return isObserved && observation.hasFeedback;
+  };
+
+  // Determine if user can edit the observation
+  const canEdit = () => {
+    if (!observation) return false;
+    
+    // Only coach can edit
+    return !isObserved && !feedbackProvided;
   };
 
   if (loading) {
@@ -101,17 +145,33 @@ const ObservationDetail = () => {
     <div className="min-h-screen bg-gray-50">
       <Navbar />
       <div className="container mx-auto pt-24 pb-12 px-4 max-w-4xl">
-        <div className="flex items-center mb-6">
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            className="mr-2"
-            onClick={() => navigate('/observations')}
-          >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Tagasi
-          </Button>
-          <h1 className="text-2xl font-semibold">Tunnivaatlus</h1>
+        <div className="flex items-center mb-6 justify-between">
+          <div className="flex items-center">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="mr-2"
+              onClick={() => navigate('/observations')}
+            >
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Tagasi
+            </Button>
+            <h1 className="text-2xl font-semibold">Tunnivaatlus</h1>
+          </div>
+          
+          {canEdit() && !isEditing && (
+            <Button onClick={toggleEdit} variant="outline" size="sm">
+              <Edit className="h-4 w-4 mr-2" />
+              Muuda
+            </Button>
+          )}
+          
+          {isEditing && (
+            <Button onClick={saveChanges} variant="default" size="sm">
+              <Save className="h-4 w-4 mr-2" />
+              Salvesta
+            </Button>
+          )}
         </div>
 
         <div className="space-y-6">
@@ -144,7 +204,15 @@ const ObservationDetail = () => {
                   <Target className="h-4 w-4 mr-2" />
                   Õpetaja arengueesmärk
                 </h3>
-                <p className="mt-1 whitespace-pre-wrap">{observation.developmentGoal}</p>
+                {isEditing ? (
+                  <Textarea
+                    value={editedObservation.developmentGoal || ''}
+                    onChange={(e) => handleInputChange('developmentGoal', e.target.value)}
+                    className="mt-1"
+                  />
+                ) : (
+                  <p className="mt-1 whitespace-pre-wrap">{observation.developmentGoal}</p>
+                )}
               </div>
               
               <div>
@@ -152,7 +220,15 @@ const ObservationDetail = () => {
                   <ClipboardList className="h-4 w-4 mr-2" />
                   Õpetaja arengusamm
                 </h3>
-                <p className="mt-1 whitespace-pre-wrap">{observation.actionStep}</p>
+                {isEditing ? (
+                  <Textarea
+                    value={editedObservation.actionStep || ''}
+                    onChange={(e) => handleInputChange('actionStep', e.target.value)}
+                    className="mt-1"
+                  />
+                ) : (
+                  <p className="mt-1 whitespace-pre-wrap">{observation.actionStep}</p>
+                )}
               </div>
             </CardContent>
           </Card>
@@ -165,12 +241,28 @@ const ObservationDetail = () => {
             <CardContent className="space-y-4">
               <div>
                 <h3 className="text-sm font-medium text-gray-500">Õpetaja tegevus</h3>
-                <p className="mt-1 whitespace-pre-wrap">{observation.teacherNotes}</p>
+                {isEditing ? (
+                  <Textarea
+                    value={editedObservation.teacherNotes || ''}
+                    onChange={(e) => handleInputChange('teacherNotes', e.target.value)}
+                    className="mt-1"
+                  />
+                ) : (
+                  <p className="mt-1 whitespace-pre-wrap">{observation.teacherNotes}</p>
+                )}
               </div>
               
               <div>
                 <h3 className="text-sm font-medium text-gray-500">Õpilaste tegevus</h3>
-                <p className="mt-1 whitespace-pre-wrap">{observation.studentNotes}</p>
+                {isEditing ? (
+                  <Textarea
+                    value={editedObservation.studentNotes || ''}
+                    onChange={(e) => handleInputChange('studentNotes', e.target.value)}
+                    className="mt-1"
+                  />
+                ) : (
+                  <p className="mt-1 whitespace-pre-wrap">{observation.studentNotes}</p>
+                )}
               </div>
             </CardContent>
           </Card>
@@ -184,12 +276,28 @@ const ObservationDetail = () => {
               <CardContent className="space-y-4">
                 <div>
                   <h3 className="text-sm font-medium text-gray-500">Konkreetne kiitus</h3>
-                  <p className="mt-1 whitespace-pre-wrap">{observation.specificPraise}</p>
+                  {isEditing ? (
+                    <Textarea
+                      value={editedObservation.specificPraise || ''}
+                      onChange={(e) => handleInputChange('specificPraise', e.target.value)}
+                      className="mt-1"
+                    />
+                  ) : (
+                    <p className="mt-1 whitespace-pre-wrap">{observation.specificPraise}</p>
+                  )}
                 </div>
                 
                 <div>
                   <h3 className="text-sm font-medium text-gray-500">Järgmine arengusamm</h3>
-                  <p className="mt-1 whitespace-pre-wrap">{observation.nextActionStep}</p>
+                  {isEditing ? (
+                    <Textarea
+                      value={editedObservation.nextActionStep || ''}
+                      onChange={(e) => handleInputChange('nextActionStep', e.target.value)}
+                      className="mt-1"
+                    />
+                  ) : (
+                    <p className="mt-1 whitespace-pre-wrap">{observation.nextActionStep}</p>
+                  )}
                 </div>
               </CardContent>
             </Card>
