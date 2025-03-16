@@ -19,9 +19,18 @@ interface Observation {
 interface ObservationsListProps {
   observations: Observation[];
   onFeedbackGiven: (id: string) => void;
+  title?: string;
+  emptyMessage?: string;
+  role?: 'observer' | 'observed';
 }
 
-const ObservationsList = ({ observations, onFeedbackGiven }: ObservationsListProps) => {
+const ObservationsList = ({ 
+  observations, 
+  onFeedbackGiven, 
+  title = "Vaatlused", 
+  emptyMessage = "Vaatlusi pole", 
+  role = 'observer' 
+}: ObservationsListProps) => {
   const { toast } = useToast();
 
   const handleFeedbackGiven = (id: string, e: React.MouseEvent) => {
@@ -34,13 +43,24 @@ const ObservationsList = ({ observations, onFeedbackGiven }: ObservationsListPro
     });
   };
 
+  if (observations.length === 0) {
+    return (
+      <div className="bg-gray-50 rounded-lg p-8 text-center">
+        <p className="text-gray-500">{emptyMessage}</p>
+      </div>
+    );
+  }
+
   return (
     <div className="grid gap-4">
-      <div className="flex justify-end items-center mb-4">
-        <div className="text-sm text-gray-500">
-          Kokku: {observations.length} vaatlust
+      {title && (
+        <div className="flex justify-between items-center mb-2">
+          <h2 className="text-xl font-medium">{title}</h2>
+          <div className="text-sm text-gray-500">
+            Kokku: {observations.length}
+          </div>
         </div>
-      </div>
+      )}
       
       <div className="grid gap-4">
         {observations.map((observation) => (
@@ -85,7 +105,7 @@ const ObservationsList = ({ observations, onFeedbackGiven }: ObservationsListPro
                   )}
                 </div>
                 <div className="flex gap-2">
-                  {!observation.hasFeedback && (
+                  {role === 'observer' && !observation.hasFeedback && (
                     <Button 
                       variant="outline" 
                       size="sm"

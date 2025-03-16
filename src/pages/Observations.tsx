@@ -15,34 +15,6 @@ const Observations = () => {
   const [showForm, setShowForm] = useState(false);
   const [observations, setObservations] = useState<Observation[]>([]);
   
-  // Mock feedback data (could be enhanced in future to be stored persistently)
-  const [feedbacks, setFeedbacks] = useState([
-    {
-      id: 'feed1',
-      teacher: 'Jaan Kask',
-      subject: 'Eesti keel',
-      date: '16.05.2023',
-      type: 'Kiitus',
-      preview: 'Suurepärane õpilaste kaasamine aruteludesse...'
-    },
-    {
-      id: 'feed2',
-      teacher: 'Maria Tamm',
-      subject: 'Matemaatika',
-      date: '13.05.2023',
-      type: 'Soovitus',
-      preview: 'Soovitan proovida rohkem rühmatöid...'
-    },
-    {
-      id: 'feed3',
-      teacher: 'Anna Lepp',
-      subject: 'Loodusõpetus',
-      date: '19.05.2023',
-      type: 'Küsimus',
-      preview: 'Kuidas plaanid edaspidi diferentseerida ülesandeid?'
-    }
-  ]);
-
   // Load observations from localStorage on component mount
   useEffect(() => {
     const loadObservations = () => {
@@ -69,14 +41,27 @@ const Observations = () => {
     setShowForm(true);
   };
 
-  const handleFeedbackProvided = () => {
+  const handleSubmitForm = () => {
     // This is a placeholder for future functionality
     toast({
-      title: "Tagasiside antud",
-      description: "Õpetajale on saadetud tagasiside",
+      title: "Vaatlus salvestatud",
+      description: "Tunnivaatlus on edukalt salvestatud",
       variant: "default",
     });
     setShowForm(false);
+    
+    // Reload observations to refresh the list
+    const storedObservations = getStoredObservations();
+    const formattedObservations = storedObservations.map(obs => ({
+      id: obs.id,
+      teacher: obs.teacher,
+      subject: obs.subject || 'Tund',
+      date: new Date(obs.date).toLocaleDateString('et-EE'),
+      status: obs.status,
+      hasFeedback: obs.hasFeedback,
+      competences: obs.competences || []
+    }));
+    setObservations(formattedObservations);
   };
 
   const handleFeedbackGiven = (id: string) => {
@@ -111,16 +96,15 @@ const Observations = () => {
           <div className="mb-8">
             <ObservationForm />
             <div className="flex justify-end mt-4">
-              <Button onClick={handleFeedbackProvided} className="bg-green-600 hover:bg-green-700">
+              <Button onClick={handleSubmitForm} className="bg-green-600 hover:bg-green-700">
                 <Check className="mr-2 h-4 w-4" />
-                Tagasiside antud
+                Salvesta vaatlus
               </Button>
             </div>
           </div>
         ) : (
           <ObservationTabs 
             observations={observations} 
-            feedbacks={feedbacks} 
             onFeedbackGiven={handleFeedbackGiven} 
           />
         )}

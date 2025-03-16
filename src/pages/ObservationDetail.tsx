@@ -7,14 +7,17 @@ import { Button } from '@/components/ui/button';
 import { ArrowLeft, User, Calendar, Target, ClipboardList, MessageSquare, CalendarCheck } from 'lucide-react';
 import { getStoredObservations, StoredObservation, updateObservation } from '@/components/observation/storage';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/context/AuthContext';
 
 const ObservationDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { user } = useAuth();
   const [observation, setObservation] = useState<StoredObservation | null>(null);
   const [loading, setLoading] = useState(true);
   const [feedbackProvided, setFeedbackProvided] = useState(false);
+  const [isObserved, setIsObserved] = useState(false);
 
   useEffect(() => {
     const loadObservation = () => {
@@ -24,13 +27,18 @@ const ObservationDetail = () => {
       if (found) {
         setObservation(found);
         setFeedbackProvided(found.hasFeedback);
+        
+        // Check if current user is the observed teacher
+        const teacherName = user?.displayName || user?.email?.split('@')[0] || '';
+        const isUserObserved = found.teacher.toLowerCase().includes(teacherName.toLowerCase());
+        setIsObserved(isUserObserved);
       }
       
       setLoading(false);
     };
     
     loadObservation();
-  }, [id]);
+  }, [id, user]);
 
   const handleFeedbackProvided = () => {
     if (!observation) return;
@@ -49,6 +57,17 @@ const ObservationDetail = () => {
       title: "Tagasiside märgitud",
       description: "Tagasisidekohtumine on märgitud toimunuks",
     });
+  };
+
+  // Determine if user should see feedback details
+  const canSeeFeedback = () => {
+    if (!observation) return false;
+    
+    // Coach can always see feedback
+    if (!isObserved) return true;
+    
+    // Teacher can only see feedback if it's been provided
+    return isObserved && observation.hasFeedback;
   };
 
   if (loading) {
@@ -138,7 +157,7 @@ const ObservationDetail = () => {
             </CardContent>
           </Card>
 
-          {/* Observation Notes */}
+          {/* Observation Notes - visible to everyone */}
           <Card>
             <CardHeader>
               <CardTitle>Vaatluse märkmed</CardTitle>
@@ -156,37 +175,52 @@ const ObservationDetail = () => {
             </CardContent>
           </Card>
 
-          {/* Feedback */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Tagasiside</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <h3 className="text-sm font-medium text-gray-500">Konkreetne kiitus</h3>
-                <p className="mt-1 whitespace-pre-wrap">{observation.specificPraise}</p>
-              </div>
-              
-              <div>
-                <h3 className="text-sm font-medium text-gray-500">Järgmine arengusamm</h3>
-                <p className="mt-1 whitespace-pre-wrap">{observation.nextActionStep}</p>
-              </div>
-            </CardContent>
-          </Card>
+          {/* Feedback - only visible to coaches or teachers with feedback provided */}
+          {canSeeFeedback() && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Tagasiside</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <h3 className="text-sm font-medium text-gray-500">Konkreetne kiitus</h3>
+                  <p className="mt-1 whitespace-pre-wrap">{observation.specificPraise}</p>
+                </div>
+                
+                <div>
+                  <h3 className="text-sm font-medium text-gray-500">Järgmine arengusamm</h3>
+                  <p className="mt-1 whitespace-pre-wrap">{observation.nextActionStep}</p>
+                </div>
+              </CardContent>
+            </Card>
+          )}
           
-          {/* Feedback Meeting Button */}
-          <div className="flex justify-end mt-8">
-            <Button 
-              onClick={handleFeedbackProvided}
-              disabled={feedbackProvided}
-              className="gap-2"
-            >
-              <CalendarCheck className="h-4 w-4" />
-              {feedbackProvided 
-                ? "Tagasisidekohtumine toimunud" 
-                : "Märgi tagasisidekohtumine toimunuks"}
-            </Button>
-          </div>
+          {/* Feedback Meeting Button - only visible to coaches */}
+          {!isObserved && (
+            <div className="flex justify-end mt-8">
+              <Button 
+                onClick={handleFeedbackProvided}
+                disabled={feedbackProvided}
+                className="gap-2"
+              >
+                <CalendarCheck className="h-4 w-4" />
+                {feedbackProvided 
+                  ? "Tagasisidekohtumine toimunud" 
+                  : "Märgi tagasisidekohtumine toimunuks"}
+              </Button>
+            </div>
+          )}
+          
+          {/* Message for teachers when feedback is not yet provided */}
+          {isObserved && !observation.hasFeedback && (
+            <Card className="bg-blue-50 border-blue-200">
+              <CardContent className="p-4">
+                <p className="text-blue-800">
+                  Tagasiside kuvatakse siin pärast seda, kui õpipartner on märkinud tagasisidekohtumise toimunuks.
+                </p>
+              </CardContent>
+            </Card>
+          )}
         </div>
       </div>
     </div>
