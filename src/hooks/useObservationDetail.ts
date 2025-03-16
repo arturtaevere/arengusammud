@@ -23,6 +23,7 @@ export const useObservationDetail = () => {
       const found = observations.find(obs => obs.id === id);
       
       if (found) {
+        console.log('Loaded observation:', found);
         setObservation(found);
         setEditedObservation(found);
         setFeedbackProvided(found.hasFeedback);
@@ -31,6 +32,8 @@ export const useObservationDetail = () => {
         const teacherName = user?.name || user?.email?.split('@')[0] || '';
         const isUserObserved = found.teacher.toLowerCase().includes(teacherName.toLowerCase());
         setIsObserved(isUserObserved);
+      } else {
+        console.log('Observation not found with id:', id);
       }
       
       setLoading(false);

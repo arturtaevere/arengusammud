@@ -61,7 +61,7 @@ const FeedbackCard = ({
                   type="button"
                   variant="link"
                   size="sm"
-                  className="px-0 h-auto text-xs mt-2"
+                  className="px-0 h-auto text-xs mt-2 text-primary"
                   onClick={() => setDialogOpen(true)}
                 >
                   <ExternalLink className="h-3 w-3 mr-1" />

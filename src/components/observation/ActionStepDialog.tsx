@@ -25,10 +25,16 @@ const ActionStepDialog: React.FC<ActionStepDialogProps> = ({
   onOpenChange,
   actionStepId
 }) => {
+  // Debug logging to check the actionStepId
+  console.log('ActionStepDialog receiving actionStepId:', actionStepId);
+  
   // Get action step details
   const actionStep = actionStepId ? getActionStepById(actionStepId) : null;
+  
+  console.log('Retrieved actionStep:', actionStep);
 
   if (!actionStep) {
+    console.log('No action step found with id:', actionStepId);
     return null;
   }
 

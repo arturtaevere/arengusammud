@@ -115,7 +115,7 @@ export const generateSampleObservations = (teacherName: string): void => {
       developmentGoal: "Suurendada õpilaste iseseisvust ülesannete lahendamisel.",
       actionStep: "Kasutada rohkem avatud küsimusi, mis suunavad õpilasi ise lahendusi leidma.",
       nextActionStep: "Katsetada uut küsimuste esitamise tehnikat, mis suunab õpilasi iseseisvalt mõtlema. Valmistada ette 2-3 probleemülesannet, mida saab lahendada erinevate lähenemistega.",
-      selectedActionStepId: "step1", // Add a sample action step ID
+      selectedActionStepId: "step10", // Updated to use a valid action step ID
       coachName: "Mari Mets",
       createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString() // 1 week ago
     },
@@ -133,7 +133,7 @@ export const generateSampleObservations = (teacherName: string): void => {
       developmentGoal: "Rakendada enesehindamist õppeprotsessis.",
       actionStep: "Kasutada hindamismudeleid, mis võimaldavad õpilastel oma tööd ise hinnata enne õpetaja tagasisidet.",
       nextActionStep: "Koostada enesehindamise küsimustik, mida õpilased saavad kasutada enne lõplikku töö esitamist. Tutvustada seda järgmises tunnis ja lasta õpilastel katsetada.",
-      selectedActionStepId: "step2", // Add a sample action step ID
+      selectedActionStepId: "step1", // Updated to use a valid action step ID
       coachName: "Jaan Tamm",
       createdAt: new Date(Date.now() - 21 * 24 * 60 * 60 * 1000).toISOString(), // 3 weeks ago
       teacherReflection: {
