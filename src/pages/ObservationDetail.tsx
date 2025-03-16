@@ -4,14 +4,17 @@ import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, User, Calendar, Target, ClipboardList } from 'lucide-react';
-import { getStoredObservations, StoredObservation } from '@/components/observation/storage';
+import { ArrowLeft, User, Calendar, Target, ClipboardList, MessageSquare, CalendarCheck } from 'lucide-react';
+import { getStoredObservations, StoredObservation, updateObservation } from '@/components/observation/storage';
+import { useToast } from '@/hooks/use-toast';
 
 const ObservationDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [observation, setObservation] = useState<StoredObservation | null>(null);
   const [loading, setLoading] = useState(true);
+  const [feedbackProvided, setFeedbackProvided] = useState(false);
 
   useEffect(() => {
     const loadObservation = () => {
@@ -20,6 +23,7 @@ const ObservationDetail = () => {
       
       if (found) {
         setObservation(found);
+        setFeedbackProvided(found.hasFeedback);
       }
       
       setLoading(false);
@@ -27,6 +31,25 @@ const ObservationDetail = () => {
     
     loadObservation();
   }, [id]);
+
+  const handleFeedbackProvided = () => {
+    if (!observation) return;
+    
+    const updatedObservation = {
+      ...observation,
+      hasFeedback: true,
+      status: 'Lõpetatud'
+    };
+    
+    updateObservation(updatedObservation);
+    setObservation(updatedObservation);
+    setFeedbackProvided(true);
+    
+    toast({
+      title: "Tagasiside märgitud",
+      description: "Tagasisidekohtumine on märgitud toimunuks",
+    });
+  };
 
   if (loading) {
     return (
@@ -150,6 +173,20 @@ const ObservationDetail = () => {
               </div>
             </CardContent>
           </Card>
+          
+          {/* Feedback Meeting Button */}
+          <div className="flex justify-end mt-8">
+            <Button 
+              onClick={handleFeedbackProvided}
+              disabled={feedbackProvided}
+              className="gap-2"
+            >
+              <CalendarCheck className="h-4 w-4" />
+              {feedbackProvided 
+                ? "Tagasisidekohtumine toimunud" 
+                : "Märgi tagasisidekohtumine toimunuks"}
+            </Button>
+          </div>
         </div>
       </div>
     </div>

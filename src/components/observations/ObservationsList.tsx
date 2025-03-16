@@ -24,7 +24,9 @@ interface ObservationsListProps {
 const ObservationsList = ({ observations, onFeedbackGiven }: ObservationsListProps) => {
   const { toast } = useToast();
 
-  const handleFeedbackGiven = (id: string) => {
+  const handleFeedbackGiven = (id: string, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     onFeedbackGiven(id);
     toast({
       title: "Tagasiside antud",
@@ -56,7 +58,7 @@ const ObservationsList = ({ observations, onFeedbackGiven }: ObservationsListPro
                   {observation.status}
                 </span>
               </div>
-              <CardDescription>{observation.subject} • {observation.date}</CardDescription>
+              <CardDescription>{observation.date}</CardDescription>
             </CardHeader>
             <CardContent className="pb-2">
               <div className="flex flex-wrap gap-1 text-xs">
@@ -88,7 +90,7 @@ const ObservationsList = ({ observations, onFeedbackGiven }: ObservationsListPro
                       variant="outline" 
                       size="sm"
                       className="text-xs"
-                      onClick={() => handleFeedbackGiven(observation.id)}
+                      onClick={(e) => handleFeedbackGiven(observation.id, e)}
                     >
                       Tagasiside antud
                     </Button>
