@@ -9,7 +9,7 @@ const MainNavLinks = () => {
   const isJuht = user?.role === 'juht';
 
   return (
-    <nav className="hidden md:flex items-center space-x-8">
+    <nav className="hidden md:flex items-center space-x-6 ml-8">
       <Link 
         to="/competences" 
         className={`flex items-center transition-colors ${
