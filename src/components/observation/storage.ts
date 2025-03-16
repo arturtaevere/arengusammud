@@ -17,6 +17,7 @@ export interface StoredObservation {
   developmentGoal: string;
   actionStep: string;
   nextActionStep: string;
+  selectedActionStepId?: string | null; // Add the selectedActionStepId field
   createdAt: string;
   coachName?: string; // Add coach name field
   teacherReflection?: {

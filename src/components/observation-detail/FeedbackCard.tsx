@@ -2,6 +2,10 @@
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { StoredObservation } from '@/components/observation/storage';
+import { useState } from 'react';
+import { ExternalLink } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import ActionStepDialog from '@/components/observation/ActionStepDialog';
 
 interface FeedbackCardProps {
   observation: StoredObservation;
@@ -18,6 +22,8 @@ const FeedbackCard = ({
   handleInputChange,
   canSeeFeedback
 }: FeedbackCardProps) => {
+  const [dialogOpen, setDialogOpen] = useState(false);
+  
   if (!canSeeFeedback) return null;
   
   return (
@@ -48,10 +54,31 @@ const FeedbackCard = ({
               className="mt-1"
             />
           ) : (
-            <p className="mt-1 whitespace-pre-wrap">{observation.nextActionStep}</p>
+            <>
+              <p className="mt-1 whitespace-pre-wrap">{observation.nextActionStep}</p>
+              {observation.selectedActionStepId && (
+                <Button
+                  type="button"
+                  variant="link"
+                  size="sm"
+                  className="px-0 h-auto text-xs mt-2"
+                  onClick={() => setDialogOpen(true)}
+                >
+                  <ExternalLink className="h-3 w-3 mr-1" />
+                  Vaata sammu põhjendust, edukriteeriume ja näiteid
+                </Button>
+              )}
+            </>
           )}
         </div>
       </CardContent>
+      
+      {/* Action Step Details Dialog */}
+      <ActionStepDialog 
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        actionStepId={observation.selectedActionStepId || null}
+      />
     </Card>
   );
 };
