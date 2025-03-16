@@ -111,6 +111,7 @@ export const useObservationDetail = () => {
 
   return {
     observation,
+    setObservation,
     loading,
     isObserved,
     feedbackProvided,

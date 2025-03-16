@@ -12,13 +12,15 @@ interface FeedbackActionsProps {
   feedbackProvided: boolean;
   handleFeedbackProvided: () => void;
   observation: StoredObservation;
+  setObservation: (observation: StoredObservation) => void;
 }
 
 const FeedbackActions = ({
   isObserved,
   feedbackProvided,
   handleFeedbackProvided,
-  observation
+  observation,
+  setObservation
 }: FeedbackActionsProps) => {
   const [reflectionOpen, setReflectionOpen] = useState(false);
   const { toast } = useToast();
@@ -39,6 +41,7 @@ const FeedbackActions = ({
     };
 
     updateObservation(updatedObservation);
+    setObservation(updatedObservation);
     
     toast({
       title: "Refleksioon salvestatud",

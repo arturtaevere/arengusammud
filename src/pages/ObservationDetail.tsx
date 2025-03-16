@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 const ObservationDetail = () => {
   const {
     observation,
+    setObservation,
     loading,
     isObserved,
     feedbackProvided,
@@ -92,7 +93,7 @@ const ObservationDetail = () => {
           />
           
           {/* Teacher Reflection */}
-          {observation.hasFeedback && observation.teacherReflection && (
+          {observation.teacherReflection && (
             <TeacherReflectionCard 
               observation={observation}
               isObserved={isObserved}
@@ -105,6 +106,7 @@ const ObservationDetail = () => {
             feedbackProvided={feedbackProvided}
             handleFeedbackProvided={handleFeedbackProvided}
             observation={observation}
+            setObservation={setObservation}
           />
         </div>
       </div>
