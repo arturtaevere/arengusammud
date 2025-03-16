@@ -52,7 +52,7 @@ const ObservationTabs = ({ observations, onFeedbackGiven }: ObservationTabsProps
           </TabsTrigger>
           <TabsTrigger value="received" className="flex items-center justify-center gap-2">
             <UserCog className="h-4 w-4" />
-            <span className="hidden sm:inline">Tagasiside mulle</span>
+            <span className="hidden sm:inline">Tagasiside minule</span>
             <span className="sm:hidden">Saadud</span>
           </TabsTrigger>
         </TabsList>
@@ -71,7 +71,7 @@ const ObservationTabs = ({ observations, onFeedbackGiven }: ObservationTabsProps
           <ObservationsList 
             observations={receivedFeedback} 
             onFeedbackGiven={onFeedbackGiven}
-            title="Tagasiside mulle minu õpipartnerilt"
+            title="Tagasiside minule"
             emptyMessage="Sa pole veel tagasisidet saanud"
             role="observed"
           />
