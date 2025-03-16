@@ -29,7 +29,7 @@ const ObservationDetail = () => {
         setFeedbackProvided(found.hasFeedback);
         
         // Check if current user is the observed teacher
-        const teacherName = user?.displayName || user?.email?.split('@')[0] || '';
+        const teacherName = user?.name || user?.email?.split('@')[0] || '';
         const isUserObserved = found.teacher.toLowerCase().includes(teacherName.toLowerCase());
         setIsObserved(isUserObserved);
       }
