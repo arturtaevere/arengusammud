@@ -5,6 +5,7 @@ import { z } from 'zod';
 export const observationFormSchema = z.object({
   teacherName: z.string().min(2, { message: "Õpetaja nimi on kohustuslik" }),
   date: z.string().min(1, { message: "Kuupäev on kohustuslik" }),
+  subject: z.string().optional(),
   developmentGoal: z.string().min(10, { message: "Arengueesmärk peab olema vähemalt 10 tähemärki" }),
   actionStep: z.string().min(10, { message: "Arengusamm peab olema vähemalt 10 tähemärki" }),
   teacherNotes: z.string().min(10, { message: "Õpetaja tegevuse märkmed peavad olema vähemalt 10 tähemärki" }),

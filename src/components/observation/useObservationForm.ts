@@ -13,6 +13,7 @@ import {
   getTeacherActionStep,
   getAllActionSteps
 } from './types';
+import { saveObservation, generateObservationId, StoredObservation } from './storage';
 
 export const useObservationForm = () => {
   const { toast } = useToast();
@@ -26,6 +27,11 @@ export const useObservationForm = () => {
     teacherName: lastTeacher || "",
     developmentGoal: lastTeacher ? getTeacherDevelopmentGoal(lastTeacher) : "",
     actionStep: lastTeacher ? getTeacherActionStep(lastTeacher) : "",
+    teacherNotes: "",
+    studentNotes: "",
+    specificPraise: "",
+    improvementAreas: "",
+    nextActionStep: "",
   };
   
   // Form setup
@@ -54,18 +60,45 @@ export const useObservationForm = () => {
     // Save the selected teacher for next time
     saveLastObservedTeacher(data.teacherName);
     
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    console.log('Observation data:', data);
-    
-    toast({
-      title: "Vaatlus salvestatud",
-      description: "Tunnivaatlus on edukalt salvestatud.",
-    });
-    
-    setIsSubmitting(false);
-    navigate('/observations');
+    try {
+      // Create observation record
+      const observation: StoredObservation = {
+        id: generateObservationId(),
+        teacher: data.teacherName,
+        subject: 'Tund', // Default subject, could be enhanced later
+        date: data.date,
+        status: 'Vaadeldud',
+        hasFeedback: false,
+        competences: [], // Could be enhanced later
+        teacherNotes: data.teacherNotes,
+        studentNotes: data.studentNotes,
+        specificPraise: data.specificPraise,
+        improvementAreas: data.improvementAreas || '',
+        developmentGoal: data.developmentGoal,
+        actionStep: data.actionStep,
+        nextActionStep: data.nextActionStep,
+        createdAt: new Date().toISOString(),
+      };
+      
+      // Save to localStorage
+      saveObservation(observation);
+      
+      toast({
+        title: "Vaatlus salvestatud",
+        description: "Tunnivaatlus on edukalt salvestatud.",
+      });
+      
+      navigate('/observations');
+    } catch (error) {
+      console.error('Error saving observation:', error);
+      toast({
+        variant: "destructive",
+        title: "Viga salvestamisel",
+        description: "Vaatluse salvestamisel tekkis viga. Palun proovi uuesti.",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
   
   // Get all action steps for the selection

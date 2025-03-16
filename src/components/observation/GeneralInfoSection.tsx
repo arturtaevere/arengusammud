@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
-import { User, Calendar, Target, ClipboardList } from 'lucide-react';
+import { User, Calendar, Target, ClipboardList, BookOpen } from 'lucide-react';
 import { UseFormReturn } from 'react-hook-form';
 import { ObservationFormValues } from './types';
 
@@ -73,6 +73,29 @@ const GeneralInfoSection = ({ form, teachersInSchool }: GeneralInfoSectionProps)
             )}
           />
         </div>
+        
+        <FormField
+          control={form.control}
+          name="subject"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>
+                <span className="flex items-center">
+                  <BookOpen className="h-4 w-4 mr-2" />
+                  Õppeaine
+                </span>
+              </FormLabel>
+              <FormControl>
+                <Input 
+                  placeholder="Sisesta õppeaine" 
+                  {...field} 
+                  value={field.value || ''}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         
         <FormField
           control={form.control}

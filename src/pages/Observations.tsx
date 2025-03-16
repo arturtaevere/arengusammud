@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import { Button } from '@/components/ui/button';
 import { Check } from 'lucide-react';
@@ -7,51 +7,16 @@ import ObservationForm from '@/components/ObservationForm';
 import { useToast } from '@/hooks/use-toast';
 import ObservationHeader from '@/components/observations/ObservationHeader';
 import ObservationTabs from '@/components/observations/ObservationTabs';
+import { getStoredObservations, updateObservation, StoredObservation } from '@/components/observation/storage';
+import { Observation } from '@/components/observations/types';
 
 const Observations = () => {
   const { toast } = useToast();
   const [showForm, setShowForm] = useState(false);
+  const [observations, setObservations] = useState<Observation[]>([]);
   
-  const [observations, setObservations] = useState([
-    {
-      id: 'obs1',
-      teacher: 'Maria Tamm',
-      subject: 'Matemaatika',
-      date: '12.05.2023',
-      status: 'Vaadeldud',
-      hasFeedback: true,
-      competences: ['Õpikeskkonna kujundamine', 'Digipädevuste arendamine']
-    },
-    {
-      id: 'obs2',
-      teacher: 'Jaan Kask',
-      subject: 'Eesti keel',
-      date: '15.05.2023',
-      status: 'Tagasiside ootel',
-      hasFeedback: false,
-      competences: ['Eneseanalüüs', 'Koostöö']
-    },
-    {
-      id: 'obs3',
-      teacher: 'Anna Lepp',
-      subject: 'Loodusõpetus',
-      date: '18.05.2023',
-      status: 'Lõpetatud',
-      hasFeedback: true,
-      competences: ['Õppimist toetav hindamine', 'Kaasav haridus']
-    },
-    {
-      id: 'obs4',
-      teacher: 'Peeter Kuusk',
-      subject: 'Ajalugu',
-      date: '20.05.2023',
-      status: 'Vaadeldud',
-      hasFeedback: false,
-      competences: ['Eneseanalüüs', 'Õpikeskkonna kujundamine']
-    }
-  ]);
-
-  const feedbacks = [
+  // Mock feedback data (could be enhanced in future to be stored persistently)
+  const [feedbacks, setFeedbacks] = useState([
     {
       id: 'feed1',
       teacher: 'Jaan Kask',
@@ -76,13 +41,36 @@ const Observations = () => {
       type: 'Küsimus',
       preview: 'Kuidas plaanid edaspidi diferentseerida ülesandeid?'
     }
-  ];
+  ]);
+
+  // Load observations from localStorage on component mount
+  useEffect(() => {
+    const loadObservations = () => {
+      const storedObservations = getStoredObservations();
+      
+      // Map stored observations to the format expected by the UI
+      const formattedObservations = storedObservations.map(obs => ({
+        id: obs.id,
+        teacher: obs.teacher,
+        subject: obs.subject || 'Tund',
+        date: new Date(obs.date).toLocaleDateString('et-EE'),
+        status: obs.status,
+        hasFeedback: obs.hasFeedback,
+        competences: obs.competences || []
+      }));
+      
+      setObservations(formattedObservations);
+    };
+    
+    loadObservations();
+  }, []);
 
   const handleNewObservation = () => {
     setShowForm(true);
   };
 
   const handleFeedbackProvided = () => {
+    // This is a placeholder for future functionality
     toast({
       title: "Tagasiside antud",
       description: "Õpetajale on saadetud tagasiside",
@@ -92,6 +80,7 @@ const Observations = () => {
   };
 
   const handleFeedbackGiven = (id: string) => {
+    // Update both the UI state and the persisted data
     setObservations(prevObservations => 
       prevObservations.map(obs => 
         obs.id === id 
@@ -99,6 +88,17 @@ const Observations = () => {
           : obs
       )
     );
+    
+    // Update in localStorage
+    const storedObs = getStoredObservations().find(obs => obs.id === id);
+    if (storedObs) {
+      const updatedObs: StoredObservation = {
+        ...storedObs,
+        hasFeedback: true,
+        status: 'Lõpetatud'
+      };
+      updateObservation(updatedObs);
+    }
   };
 
   return (
