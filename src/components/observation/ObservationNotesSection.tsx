@@ -64,6 +64,7 @@ const ObservationNotesSection = ({ form, isSubmitting }: ObservationNotesSection
         onOpenChange={setSheetOpen}
         onSelect={(step) => {
           form.setValue('nextActionStep', `${step.title}: ${step.description}`);
+          form.setValue('selectedActionStepId', step.id);
           setSheetOpen(false);
         }}
       />
