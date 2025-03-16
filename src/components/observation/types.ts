@@ -28,16 +28,15 @@ export type EnrichedActionStep = {
   practiceTasks?: string[];
 };
 
-// Export this type that's used in multiple components
+// Updated ObservationFormValues to match actual form fields
 export interface ObservationFormValues {
   teacherName: string;
   date: string;
   coachName: string;
   actionStep: string;
   developmentGoal: string;
-  what: string;
-  why: string;
-  how: string;
+  teacherNotes: string;  // Changed from what
+  studentNotes: string;  // Changed from why
   specificPraise: string;
   nextActionStep: string;
   selectedActionStepId: string | null;

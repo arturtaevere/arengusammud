@@ -4,7 +4,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
-import { observationFormSchema, ObservationFormValues } from './schemas';
+import { observationFormSchema } from './schemas';
+import { ObservationFormValues } from './types';
 import { generateObservationId, saveObservation } from './storage';
 import { useAuth } from '@/context/AuthContext';
 
