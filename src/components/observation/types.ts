@@ -16,13 +16,44 @@ export interface Competency {
   }[];
 }
 
-export interface EnrichedActionStep extends Competency['actionSteps'][0] {
+// Fix the syntax by using type instead of extending an indexed type
+export type EnrichedActionStep = {
+  id: string;
+  title: string;
+  description: string;
   competencyId: string;
   competencyName: string;
   category?: string;
   resources: { title: string; url: string }[];
   practiceTasks?: string[];
+};
+
+// Export this type that's used in multiple components
+export interface ObservationFormValues {
+  teacherName: string;
+  date: string;
+  coachName: string;
+  actionStep: string;
+  developmentGoal: string;
+  what: string;
+  why: string;
+  how: string;
+  specificPraise: string;
+  nextActionStep: string;
+  selectedActionStepId: string | null;
 }
+
+// Also export the mock teachers used in ObservationForm
+export const mockTeachers = {
+  "Kool A": [
+    { id: "1", name: "Mari Mets", developmentGoal: "Õpilaste kaasamine ja aktiivsuse tõstmine" },
+    { id: "2", name: "Jaan Tamm", developmentGoal: "Diferentseeritud õpetamine" }
+  ],
+  "Kool B": [
+    { id: "3", name: "Anne Kask", developmentGoal: "Klassiruumi juhtimine" },
+    { id: "4", name: "Peeter Pärn", developmentGoal: "Digivahendite kasutamine" }
+  ]
+};
 
 // Helper function to get action step by id
 export const getActionStepById = (id: string): EnrichedActionStep | null => {
