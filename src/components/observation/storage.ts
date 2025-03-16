@@ -78,3 +78,67 @@ export const deleteObservation = (id: string): void => {
 export const generateObservationId = (): string => {
   return `obs_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
 };
+
+// Generate sample observations for teacher feedback form demo
+export const generateSampleObservations = (teacherName: string): void => {
+  const currentObservations = getStoredObservations();
+  
+  // Check if we already have observations for this teacher
+  const hasTeacherObservations = currentObservations.some(
+    obs => obs.teacher.toLowerCase() === teacherName.toLowerCase() && obs.hasFeedback
+  );
+  
+  if (hasTeacherObservations) {
+    return; // Don't create duplicates if samples already exist
+  }
+  
+  const competencesList = [
+    ["Õpikeskkonna kujundamine", "Õppimist toetav suhtlemine"],
+    ["Õppimise juhtimine", "Tagasiside ja hindamine"],
+    ["Professionaalne enesearendamine", "Digipädevused"]
+  ];
+  
+  const sampleObservations: StoredObservation[] = [
+    {
+      id: generateObservationId(),
+      teacher: teacherName,
+      subject: "Matemaatika",
+      date: new Date().toISOString(),
+      status: "Lõpetatud",
+      hasFeedback: true,
+      competences: competencesList[0],
+      teacherNotes: "Õpetaja selgitas ülesande lahenduskäiku detailselt. Jagas õpilased gruppidesse ja toetas neid, liikudes klassis ringi.",
+      studentNotes: "Õpilased töötasid aktiivselt. Mõned õpilased vajasid lisaselgitusi, kuid enamik töötas iseseisvalt.",
+      specificPraise: "Hästi läbi mõeldud grupijaotus, mis toetas erinevate võimetega õpilasi. Eriti positiivne oli see, kuidas õpetaja julgustas õpilasi oma mõttekäiku selgitama.",
+      developmentGoal: "Suurendada õpilaste iseseisvust ülesannete lahendamisel.",
+      actionStep: "Kasutada rohkem avatud küsimusi, mis suunavad õpilasi ise lahendusi leidma.",
+      nextActionStep: "Katsetada uut küsimuste esitamise tehnikat, mis suunab õpilasi iseseisvalt mõtlema. Valmistada ette 2-3 probleemülesannet, mida saab lahendada erinevate lähenemistega.",
+      createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString() // 1 week ago
+    },
+    {
+      id: generateObservationId(),
+      teacher: teacherName,
+      subject: "Eesti keel",
+      date: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString(), // 2 weeks ago
+      status: "Lõpetatud",
+      hasFeedback: true,
+      competences: competencesList[1],
+      teacherNotes: "Õpetaja andis õpilastele tagasisidet nende kirjalikele töödele. Selgitas hindamiskriteeriume ja andis soovitusi paremaks soorituseks.",
+      studentNotes: "Õpilased kuulasid tähelepanelikult ja esitasid küsimusi. Mõned õpilased tegid parandusi oma töödes kohapeal.",
+      specificPraise: "Väga hästi läbi mõeldud tagasiside, mis oli konkreetne ja arendav. Õpilased said selged juhised, mida ja kuidas parandada.",
+      developmentGoal: "Rakendada enesehindamist õppeprotsessis.",
+      actionStep: "Kasutada hindamismudeleid, mis võimaldavad õpilastel oma tööd ise hinnata enne õpetaja tagasisidet.",
+      nextActionStep: "Koostada enesehindamise küsimustik, mida õpilased saavad kasutada enne lõplikku töö esitamist. Tutvustada seda järgmises tunnis ja lasta õpilastel katsetada.",
+      createdAt: new Date(Date.now() - 21 * 24 * 60 * 60 * 1000).toISOString(), // 3 weeks ago
+      teacherReflection: {
+        positiveImpact: "Märkasin, et õpilased hakkasid oma töid põhjalikumalt üle vaatama enne esitamist. Eriti oli näha arengut nõrgemate õpilaste puhul, kes varem ei osanud oma vigu märgata.",
+        challengesFaced: "Alguses oli keeruline õpilasi motiveerida enesehindamisega tegelema, kuna see tundus neile lisatööna. Samuti oli väljakutse leida tasakaal liiga kriitilise ja liiga pealiskaudse enesehindamise vahel.",
+        habitFormation: "Plaanin jätkata igas tunnis 5-minutilise eneserefleksiooni ajaga. Samuti olen loonud klassile veebikeskkonna, kus nad saavad oma arengut jälgida ja tagasisidet anda.",
+        submittedAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString() // 10 days ago
+      }
+    }
+  ];
+  
+  const updatedObservations = [...sampleObservations, ...currentObservations];
+  localStorage.setItem(OBSERVATIONS_STORAGE_KEY, JSON.stringify(updatedObservations));
+};

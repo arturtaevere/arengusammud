@@ -2,40 +2,42 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import { Button } from '@/components/ui/button';
-import { Check } from 'lucide-react';
+import { Check, Plus } from 'lucide-react';
 import ObservationForm from '@/components/ObservationForm';
 import { useToast } from '@/hooks/use-toast';
 import ObservationHeader from '@/components/observations/ObservationHeader';
 import ObservationTabs from '@/components/observations/ObservationTabs';
-import { getStoredObservations, updateObservation, StoredObservation } from '@/components/observation/storage';
+import { getStoredObservations, updateObservation, StoredObservation, generateSampleObservations } from '@/components/observation/storage';
 import { Observation } from '@/components/observations/types';
+import { useAuth } from '@/context/AuthContext';
 
 const Observations = () => {
   const { toast } = useToast();
+  const { user } = useAuth();
   const [showForm, setShowForm] = useState(false);
   const [observations, setObservations] = useState<Observation[]>([]);
   
   // Load observations from localStorage on component mount
   useEffect(() => {
-    const loadObservations = () => {
-      const storedObservations = getStoredObservations();
-      
-      // Map stored observations to the format expected by the UI
-      const formattedObservations = storedObservations.map(obs => ({
-        id: obs.id,
-        teacher: obs.teacher,
-        subject: obs.subject || 'Tund',
-        date: new Date(obs.date).toLocaleDateString('et-EE'),
-        status: obs.status,
-        hasFeedback: obs.hasFeedback,
-        competences: obs.competences || []
-      }));
-      
-      setObservations(formattedObservations);
-    };
-    
     loadObservations();
   }, []);
+
+  const loadObservations = () => {
+    const storedObservations = getStoredObservations();
+    
+    // Map stored observations to the format expected by the UI
+    const formattedObservations = storedObservations.map(obs => ({
+      id: obs.id,
+      teacher: obs.teacher,
+      subject: obs.subject || 'Tund',
+      date: new Date(obs.date).toLocaleDateString('et-EE'),
+      status: obs.status,
+      hasFeedback: obs.hasFeedback,
+      competences: obs.competences || []
+    }));
+    
+    setObservations(formattedObservations);
+  };
 
   const handleNewObservation = () => {
     setShowForm(true);
@@ -51,17 +53,7 @@ const Observations = () => {
     setShowForm(false);
     
     // Reload observations to refresh the list
-    const storedObservations = getStoredObservations();
-    const formattedObservations = storedObservations.map(obs => ({
-      id: obs.id,
-      teacher: obs.teacher,
-      subject: obs.subject || 'Tund',
-      date: new Date(obs.date).toLocaleDateString('et-EE'),
-      status: obs.status,
-      hasFeedback: obs.hasFeedback,
-      competences: obs.competences || []
-    }));
-    setObservations(formattedObservations);
+    loadObservations();
   };
 
   const handleFeedbackGiven = (id: string) => {
@@ -86,11 +78,36 @@ const Observations = () => {
     }
   };
 
+  const handleGenerateSampleData = () => {
+    if (user) {
+      const teacherName = user.name || user.email?.split('@')[0] || 'Õpetaja';
+      generateSampleObservations(teacherName);
+      loadObservations();
+      
+      toast({
+        title: "Näidisandmed lisatud",
+        description: "Testkasutamiseks on lisatud vaatlused koos tagasisidega",
+      });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
       <div className="container mx-auto pt-24 pb-12 px-4">
-        <ObservationHeader onNewObservation={handleNewObservation} />
+        <div className="flex justify-between items-center mb-6">
+          <ObservationHeader onNewObservation={handleNewObservation} />
+          
+          {/* Sample data generation button */}
+          <Button 
+            variant="outline" 
+            onClick={handleGenerateSampleData}
+            className="ml-2"
+          >
+            <Plus className="mr-2 h-4 w-4" />
+            Lisa näidisvaatlused
+          </Button>
+        </div>
 
         {showForm ? (
           <div className="mb-8">
