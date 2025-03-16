@@ -1,3 +1,4 @@
+
 // Utility functions for storing and retrieving observation data from localStorage
 
 const OBSERVATIONS_STORAGE_KEY = 'observations_data';
@@ -17,6 +18,12 @@ export interface StoredObservation {
   actionStep: string;
   nextActionStep: string;
   createdAt: string;
+  teacherReflection?: {
+    positiveImpact: string;
+    challengesFaced: string;
+    habitFormation: string;
+    submittedAt: string;
+  };
 }
 
 // Get all stored observations

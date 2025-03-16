@@ -6,6 +6,7 @@ import GeneralInfoCard from '@/components/observation-detail/GeneralInfoCard';
 import ObservationNotesCard from '@/components/observation-detail/ObservationNotesCard';
 import FeedbackCard from '@/components/observation-detail/FeedbackCard';
 import FeedbackActions from '@/components/observation-detail/FeedbackActions';
+import TeacherReflectionCard from '@/components/observation-detail/TeacherReflectionCard';
 import { Button } from '@/components/ui/button';
 
 const ObservationDetail = () => {
@@ -89,6 +90,14 @@ const ObservationDetail = () => {
             handleInputChange={handleInputChange}
             canSeeFeedback={canSeeFeedback}
           />
+          
+          {/* Teacher Reflection */}
+          {observation.hasFeedback && observation.teacherReflection && (
+            <TeacherReflectionCard 
+              observation={observation}
+              isObserved={isObserved}
+            />
+          )}
           
           {/* Feedback Actions */}
           <FeedbackActions 

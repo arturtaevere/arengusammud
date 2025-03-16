@@ -1,13 +1,17 @@
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { CalendarCheck } from 'lucide-react';
+import { CalendarCheck, BookOpen } from 'lucide-react';
+import { useState } from 'react';
+import ReflectionDialog from './ReflectionDialog';
+import { StoredObservation, updateObservation } from '@/components/observation/storage';
+import { useToast } from '@/hooks/use-toast';
 
 interface FeedbackActionsProps {
   isObserved: boolean;
   feedbackProvided: boolean;
   handleFeedbackProvided: () => void;
-  observation: { hasFeedback: boolean };
+  observation: StoredObservation;
 }
 
 const FeedbackActions = ({
@@ -16,6 +20,32 @@ const FeedbackActions = ({
   handleFeedbackProvided,
   observation
 }: FeedbackActionsProps) => {
+  const [reflectionOpen, setReflectionOpen] = useState(false);
+  const { toast } = useToast();
+
+  const hasReflection = !!observation.teacherReflection;
+
+  const saveReflection = (reflection: {
+    positiveImpact: string;
+    challengesFaced: string;
+    habitFormation: string;
+  }) => {
+    const updatedObservation = {
+      ...observation,
+      teacherReflection: {
+        ...reflection,
+        submittedAt: new Date().toISOString(),
+      }
+    };
+
+    updateObservation(updatedObservation);
+    
+    toast({
+      title: "Refleksioon salvestatud",
+      description: "Sinu refleksioon on edukalt salvestatud",
+    });
+  };
+
   return (
     <>
       {/* Feedback Meeting Button - only visible to coaches */}
@@ -34,6 +64,22 @@ const FeedbackActions = ({
         </div>
       )}
       
+      {/* Teacher Reflection Button - only visible to teachers after feedback is provided */}
+      {isObserved && observation.hasFeedback && (
+        <div className="flex justify-end mt-8">
+          <Button
+            onClick={() => setReflectionOpen(true)}
+            variant={hasReflection ? "outline" : "default"}
+            className="gap-2"
+          >
+            <BookOpen className="h-4 w-4" />
+            {hasReflection 
+              ? "Vaata/muuda refleksiooni" 
+              : "Lisa refleksioon"}
+          </Button>
+        </div>
+      )}
+      
       {/* Message for teachers when feedback is not yet provided */}
       {isObserved && !observation.hasFeedback && (
         <Card className="bg-blue-50 border-blue-200">
@@ -44,6 +90,14 @@ const FeedbackActions = ({
           </CardContent>
         </Card>
       )}
+
+      {/* Reflection Dialog */}
+      <ReflectionDialog
+        open={reflectionOpen}
+        onOpenChange={setReflectionOpen}
+        observation={observation}
+        saveReflection={saveReflection}
+      />
     </>
   );
 };
