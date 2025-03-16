@@ -26,7 +26,7 @@ const TeacherReflectionCard = ({ observation, isObserved }: TeacherReflectionCar
       <CardContent className="space-y-4">
         <div>
           <h3 className="text-sm font-medium text-gray-500">
-            1. Kas ma olen märganud midagi konkreetset, mille põhjal võib järeldada, et see uus õpetamistehnika mõjutab positiivselt õpilaste õppimist või kaasatust?
+            1. Kuidas on see uus õpetamistehnika mõjutanud õpilaste õppimist või kaasatust? Palun too konkreetseid näiteid.
           </h3>
           <p className="mt-1 whitespace-pre-wrap">{observation.teacherReflection.positiveImpact}</p>
         </div>

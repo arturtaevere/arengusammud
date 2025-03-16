@@ -78,7 +78,7 @@ const ReflectionDialog = ({
         <div className="space-y-6 py-3">
           <div className="space-y-2">
             <Label htmlFor="positiveImpact" className="text-base font-medium">
-              1. Kas ma olen märganud midagi konkreetset, mille põhjal võib järeldada, et see uus õpetamistehnika mõjutab positiivselt õpilaste õppimist või kaasatust?
+              1. Kuidas on see uus õpetamistehnika mõjutanud õpilaste õppimist või kaasatust? Palun too konkreetseid näiteid.
             </Label>
             <Textarea
               id="positiveImpact"
