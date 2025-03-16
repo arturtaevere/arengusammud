@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -18,6 +17,7 @@ import VerifyEmail from "./pages/VerifyEmail";
 import StudyCircles from "./pages/StudyCircles";
 import StudyCircleSession from "./pages/StudyCircleSession";
 import { AuthProvider } from "./context/auth";
+import ObservationDetail from './pages/ObservationDetail';
 
 const queryClient = new QueryClient();
 
@@ -41,11 +41,10 @@ const App = () => (
             <Route path="/study-circles" element={<StudyCircles />} />
             <Route path="/study-circles/session/:sessionId" element={<StudyCircleSession />} />
             <Route path="/observations" element={<Observations />} />
-            <Route path="/observations/:id" element={<Dashboard />} /> {/* Will implement later */}
+            <Route path="/observations/:id" element={<ObservationDetail />} />
             <Route path="/observations/new" element={<Observations />} />
             <Route path="/feedback/new" element={<Observations />} />
-            <Route path="/feedback/:id" element={<Dashboard />} /> {/* Will implement later */}
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="/feedback/:id" element={<Dashboard />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

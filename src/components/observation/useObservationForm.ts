@@ -1,113 +1,79 @@
 
-import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
-import { 
-  ObservationFormValues, 
-  observationFormSchema, 
-  getLastObservedTeacher, 
-  saveLastObservedTeacher,
-  getTeacherDevelopmentGoal,
-  getTeacherActionStep,
-  getAllActionSteps
-} from './types';
-import { saveObservation, generateObservationId, StoredObservation } from './storage';
+import { observationFormSchema, ObservationFormValues } from './schemas';
+import { generateObservationId, saveObservation } from './storage';
 
 export const useObservationForm = () => {
-  const { toast } = useToast();
-  const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate();
+  const { toast } = useToast();
   
-  // Default values for the form
-  const lastTeacher = getLastObservedTeacher();
-  const defaultValues: Partial<ObservationFormValues> = {
-    date: new Date().toISOString().split('T')[0],
-    teacherName: lastTeacher || "",
-    developmentGoal: lastTeacher ? getTeacherDevelopmentGoal(lastTeacher) : "",
-    actionStep: lastTeacher ? getTeacherActionStep(lastTeacher) : "",
-    teacherNotes: "",
-    studentNotes: "",
-    specificPraise: "",
-    improvementAreas: "",
-    nextActionStep: "",
-  };
-  
-  // Form setup
   const form = useForm<ObservationFormValues>({
     resolver: zodResolver(observationFormSchema),
-    defaultValues,
+    defaultValues: {
+      teacherName: '',
+      date: new Date().toISOString().split('T')[0],
+      developmentGoal: '',
+      actionStep: '',
+      teacherNotes: '',
+      studentNotes: '',
+      specificPraise: '',
+      nextActionStep: '',
+    }
   });
   
-  // Watch for teacher name changes to update the development goal and action step
-  const teacherName = form.watch('teacherName');
-  
-  useEffect(() => {
-    if (teacherName) {
-      const developmentGoal = getTeacherDevelopmentGoal(teacherName);
-      const actionStep = getTeacherActionStep(teacherName);
-      
-      form.setValue('developmentGoal', developmentGoal);
-      form.setValue('actionStep', actionStep);
-    }
-  }, [teacherName, form]);
-  
-  // Form submission handler
-  const onSubmit = async (data: ObservationFormValues) => {
+  const onSubmit = async (values: ObservationFormValues) => {
     setIsSubmitting(true);
     
-    // Save the selected teacher for next time
-    saveLastObservedTeacher(data.teacherName);
-    
     try {
-      // Create observation record
-      const observation: StoredObservation = {
+      // Create observation object
+      const newObservation = {
         id: generateObservationId(),
-        teacher: data.teacherName,
-        subject: 'Tund', // Default subject, could be enhanced later
-        date: data.date,
+        teacher: values.teacherName,
+        subject: 'Tund', // Default subject
+        date: values.date,
         status: 'Vaadeldud',
         hasFeedback: false,
-        competences: [], // Could be enhanced later
-        teacherNotes: data.teacherNotes,
-        studentNotes: data.studentNotes,
-        specificPraise: data.specificPraise,
-        improvementAreas: data.improvementAreas || '',
-        developmentGoal: data.developmentGoal,
-        actionStep: data.actionStep,
-        nextActionStep: data.nextActionStep,
+        competences: [],
+        teacherNotes: values.teacherNotes,
+        studentNotes: values.studentNotes,
+        specificPraise: values.specificPraise,
+        developmentGoal: values.developmentGoal,
+        actionStep: values.actionStep,
+        nextActionStep: values.nextActionStep,
         createdAt: new Date().toISOString(),
       };
       
-      // Save to localStorage
-      saveObservation(observation);
+      // Save to local storage
+      saveObservation(newObservation);
       
+      // Show success message
       toast({
         title: "Vaatlus salvestatud",
-        description: "Tunnivaatlus on edukalt salvestatud.",
+        description: "Tunnivaatlus on edukalt salvestatud",
       });
       
+      // Redirect to observations list
       navigate('/observations');
     } catch (error) {
       console.error('Error saving observation:', error);
       toast({
+        title: "Viga",
+        description: "Tunnivaatluse salvestamine ebaõnnestus",
         variant: "destructive",
-        title: "Viga salvestamisel",
-        description: "Vaatluse salvestamisel tekkis viga. Palun proovi uuesti.",
       });
     } finally {
       setIsSubmitting(false);
     }
   };
   
-  // Get all action steps for the selection
-  const actionSteps = getAllActionSteps();
-  
   return {
     form,
     isSubmitting,
     onSubmit,
-    actionSteps,
   };
 };
