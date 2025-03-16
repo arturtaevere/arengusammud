@@ -5,7 +5,7 @@ import { StoredObservation } from '@/components/observation/storage';
 import { useState } from 'react';
 import { ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import ActionStepDialog from '@/components/observation/ActionStepDialog';
+import ActionStepDialog from '@/components/observation-detail/ActionStepDialog';
 
 interface FeedbackCardProps {
   observation: StoredObservation;
