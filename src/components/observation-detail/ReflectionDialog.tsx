@@ -67,7 +67,7 @@ const ReflectionDialog = ({
         <DialogHeader>
           <DialogTitle>Minu refleksioon</DialogTitle>
           <DialogDescription>
-            Mõtiskle tagasiside ja oma õpetamispraktika üle vastates järgmistele küsimustele.
+            
           </DialogDescription>
         </DialogHeader>
 
