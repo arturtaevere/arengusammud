@@ -4,9 +4,10 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
-import { User, Calendar, Target, ClipboardList } from 'lucide-react';
+import { User, Calendar, Target, ClipboardList, UserPlus } from 'lucide-react';
 import { UseFormReturn } from 'react-hook-form';
 import { ObservationFormValues } from './types';
+import { useAuth } from '@/context/AuthContext';
 
 interface GeneralInfoSectionProps {
   form: UseFormReturn<ObservationFormValues>;
@@ -14,6 +15,8 @@ interface GeneralInfoSectionProps {
 }
 
 const GeneralInfoSection = ({ form, teachersInSchool }: GeneralInfoSectionProps) => {
+  const { user } = useAuth();
+  
   return (
     <Card>
       <CardHeader>
@@ -73,6 +76,29 @@ const GeneralInfoSection = ({ form, teachersInSchool }: GeneralInfoSectionProps)
             )}
           />
         </div>
+        
+        <FormField
+          control={form.control}
+          name="coachName"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>
+                <span className="flex items-center">
+                  <UserPlus className="h-4 w-4 mr-2" />
+                  Õpipartneri nimi
+                </span>
+              </FormLabel>
+              <FormControl>
+                <Input 
+                  placeholder="Sisesta õpipartneri nimi" 
+                  {...field}
+                  defaultValue={user?.name || ''}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         
         <FormField
           control={form.control}

@@ -18,6 +18,7 @@ export interface StoredObservation {
   actionStep: string;
   nextActionStep: string;
   createdAt: string;
+  coachName?: string; // Add coach name field
   teacherReflection?: {
     positiveImpact: string;
     challengesFaced: string;
@@ -113,6 +114,7 @@ export const generateSampleObservations = (teacherName: string): void => {
       developmentGoal: "Suurendada õpilaste iseseisvust ülesannete lahendamisel.",
       actionStep: "Kasutada rohkem avatud küsimusi, mis suunavad õpilasi ise lahendusi leidma.",
       nextActionStep: "Katsetada uut küsimuste esitamise tehnikat, mis suunab õpilasi iseseisvalt mõtlema. Valmistada ette 2-3 probleemülesannet, mida saab lahendada erinevate lähenemistega.",
+      coachName: "Mari Mets", // Add sample coach name
       createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString() // 1 week ago
     },
     {
@@ -129,6 +131,7 @@ export const generateSampleObservations = (teacherName: string): void => {
       developmentGoal: "Rakendada enesehindamist õppeprotsessis.",
       actionStep: "Kasutada hindamismudeleid, mis võimaldavad õpilastel oma tööd ise hinnata enne õpetaja tagasisidet.",
       nextActionStep: "Koostada enesehindamise küsimustik, mida õpilased saavad kasutada enne lõplikku töö esitamist. Tutvustada seda järgmises tunnis ja lasta õpilastel katsetada.",
+      coachName: "Jaan Tamm", // Add sample coach name
       createdAt: new Date(Date.now() - 21 * 24 * 60 * 60 * 1000).toISOString(), // 3 weeks ago
       teacherReflection: {
         positiveImpact: "Märkasin, et õpilased hakkasid oma töid põhjalikumalt üle vaatama enne esitamist. Eriti oli näha arengut nõrgemate õpilaste puhul, kes varem ei osanud oma vigu märgata.",

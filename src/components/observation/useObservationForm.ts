@@ -6,17 +6,20 @@ import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { observationFormSchema, ObservationFormValues } from './schemas';
 import { generateObservationId, saveObservation } from './storage';
+import { useAuth } from '@/context/AuthContext';
 
 export const useObservationForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { user } = useAuth();
   
   const form = useForm<ObservationFormValues>({
     resolver: zodResolver(observationFormSchema),
     defaultValues: {
       teacherName: '',
       date: new Date().toISOString().split('T')[0],
+      coachName: user?.name || '', // Default to current user's name
       developmentGoal: '',
       actionStep: '',
       teacherNotes: '',
@@ -38,6 +41,7 @@ export const useObservationForm = () => {
         date: values.date,
         status: 'Vaadeldud',
         hasFeedback: false,
+        coachName: values.coachName,
         competences: [],
         teacherNotes: values.teacherNotes,
         studentNotes: values.studentNotes,

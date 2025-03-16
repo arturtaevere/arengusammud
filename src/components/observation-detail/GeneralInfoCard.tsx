@@ -1,6 +1,6 @@
 
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { User, Calendar, Target, ClipboardList } from 'lucide-react';
+import { User, Calendar, Target, ClipboardList, UserPlus } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
 import { StoredObservation } from '@/components/observation/storage';
 
@@ -41,6 +41,15 @@ const GeneralInfoCard = ({
             </h3>
             <p className="mt-1">{formattedDate}</p>
           </div>
+        </div>
+        
+        {/* Coach Name */}
+        <div>
+          <h3 className="text-sm font-medium flex items-center text-gray-500">
+            <UserPlus className="h-4 w-4 mr-2" />
+            Õpipartneri nimi
+          </h3>
+          <p className="mt-1">{observation.coachName || 'Määramata'}</p>
         </div>
         
         <div>
