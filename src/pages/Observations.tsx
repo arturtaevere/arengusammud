@@ -96,17 +96,22 @@ const Observations = () => {
       <Navbar />
       <div className="container mx-auto pt-24 pb-12 px-4">
         <div className="flex justify-between items-center mb-6">
-          <ObservationHeader onNewObservation={handleNewObservation} />
-          
-          {/* Sample data generation button */}
-          <Button 
-            variant="outline" 
-            onClick={handleGenerateSampleData}
-            className="ml-2"
-          >
-            <Plus className="mr-2 h-4 w-4" />
-            Lisa näidisvaatlused
-          </Button>
+          <div>
+            <h1 className="text-3xl font-bold mb-2">Õpipartnerlus</h1>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-2">
+            <Button onClick={handleNewObservation}>
+              <Plus className="mr-2 h-4 w-4" />
+              Uus vaatlus
+            </Button>
+            <Button 
+              variant="outline" 
+              onClick={handleGenerateSampleData}
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              Lisa näidisvaatlused
+            </Button>
+          </div>
         </div>
 
         {showForm ? (
