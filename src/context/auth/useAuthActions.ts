@@ -15,14 +15,20 @@ export const useAuthActions = () => {
     // Log the users before saving for debugging
     console.log('Saving users, count:', updatedUsers.length);
     
-    // Save to localStorage
-    localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(updatedUsers));
-    
-    // Update state
-    setUsers(updatedUsers);
-    
-    // Dispatch a custom event so other components can react to user changes
-    window.dispatchEvent(new CustomEvent('users-updated'));
+    try {
+      // Save to localStorage
+      localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(updatedUsers));
+      console.log('Successfully saved users to localStorage');
+      
+      // Update state
+      setUsers(updatedUsers);
+      
+      // Dispatch a custom event so other components can react to user changes
+      window.dispatchEvent(new CustomEvent('users-updated'));
+      console.log('Dispatched users-updated event');
+    } catch (error) {
+      console.error('Error in saveUsers:', error);
+    }
   };
   
   // Load initial data from localStorage
@@ -46,6 +52,7 @@ export const useAuthActions = () => {
     
     // Listen for changes to users from other components
     const handleUsersUpdated = () => {
+      console.log('users-updated event received in useAuthActions');
       loadUsers();
     };
     

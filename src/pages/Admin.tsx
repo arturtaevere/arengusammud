@@ -30,6 +30,23 @@ const Admin = () => {
   // Load users directly from localStorage to ensure we have the latest data
   const loadUsers = () => {
     if (isAuthenticated && user?.role === 'juht') {
+      // Try to get users directly from localStorage first
+      try {
+        const storedUsers = localStorage.getItem(USERS_STORAGE_KEY);
+        if (storedUsers) {
+          const parsedUsers = JSON.parse(storedUsers);
+          console.log('Loaded users in Admin directly from localStorage:', parsedUsers.length);
+          // Remove passwords from users
+          const usersWithoutPasswords = parsedUsers.map(({ password, ...user }: any) => user);
+          setUsers(usersWithoutPasswords);
+          setFilteredUsers(usersWithoutPasswords);
+          return;
+        }
+      } catch (error) {
+        console.error('Error loading users from localStorage:', error);
+      }
+      
+      // Fallback to getAllUsers from context
       const allUsers = getAllUsers();
       console.log('Loaded users in Admin:', allUsers.length);
       setUsers(allUsers);
@@ -39,6 +56,7 @@ const Admin = () => {
 
   // Load users when the component mounts and when users are updated
   useEffect(() => {
+    console.log('Admin component mounted');
     loadUsers();
     
     // Set up listeners for user changes
@@ -67,12 +85,14 @@ const Admin = () => {
       console.log('No users found in localStorage on Admin page load');
     }
     
+    // Add event listeners
     window.addEventListener('storage', handleStorageChange);
     window.addEventListener('users-updated', handleUsersUpdated);
     
     // Force a refresh when this component mounts
     window.dispatchEvent(new CustomEvent('users-updated'));
     
+    // Cleanup
     return () => {
       window.removeEventListener('storage', handleStorageChange);
       window.removeEventListener('users-updated', handleUsersUpdated);
@@ -124,6 +144,18 @@ const Admin = () => {
           <p className="text-muted-foreground">
             Siit leiad kõik registreeritud kasutajad ja nende info.
           </p>
+          <button 
+            onClick={() => {
+              loadUsers();
+              toast({
+                title: "Kasutajate nimekiri värskendatud",
+                description: "Näed nüüd kõige uuemaid andmeid.",
+              });
+            }}
+            className="mt-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+          >
+            Värskenda kasutajate nimekirja
+          </button>
         </div>
 
         <FilterCard 

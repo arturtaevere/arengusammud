@@ -28,6 +28,8 @@ export const useUserProfile = (
   };
 
   const getAllUsers = () => {
+    console.log('getAllUsers called, returning users:', users.length);
+    // Deep clone the users array and remove passwords
     return users.map(({ password, ...user }) => user);
   };
 

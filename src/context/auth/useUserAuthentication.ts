@@ -1,3 +1,4 @@
+
 import { useToast } from '@/components/ui/use-toast';
 import { User, UserWithPassword } from './types';
 import { USER_STORAGE_KEY, USERS_STORAGE_KEY } from './constants';
@@ -73,16 +74,29 @@ export const useUserAuthentication = (
       emailVerified: true, // Set to true by default to skip verification
     };
     
+    // Log the current users before adding the new one
+    console.log('Current users before adding new user:', users.length);
+    console.log('Adding new user:', email);
+    
     const updatedUsers = [...users, newUser];
     
-    // Save to localStorage directly to ensure it's immediately available
-    localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(updatedUsers));
+    // Save to localStorage directly with a try/catch to ensure it works
+    try {
+      localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(updatedUsers));
+      console.log('Saved users directly to localStorage, count:', updatedUsers.length);
+    } catch (error) {
+      console.error('Error saving users to localStorage:', error);
+    }
     
     // Use saveUsers to update state and trigger events
     saveUsers(updatedUsers);
     
     console.log('New user registered:', newUser.email);
     console.log('Updated users count:', updatedUsers.length);
+    
+    // Explicitly trigger a refresh for the Admin page
+    window.dispatchEvent(new Event('storage'));
+    window.dispatchEvent(new CustomEvent('users-updated'));
     
     toast({
       title: "Registreerimine õnnestus",

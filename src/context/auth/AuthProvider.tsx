@@ -50,7 +50,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Immediately trigger a users-updated event when the component mounts
   useEffect(() => {
     // Dispatch an event to notify listeners that AuthProvider has mounted
-    window.dispatchEvent(new CustomEvent('users-updated'));
+    console.log('AuthProvider mounted, dispatching users-updated event');
+    setTimeout(() => {
+      window.dispatchEvent(new CustomEvent('users-updated'));
+    }, 500); // Small delay to ensure other components are ready
   }, []);
 
   // Handle user login
@@ -70,6 +73,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       await signup(name, email, password, role, school);
       // Force-refresh users list after signup
+      console.log('Signup successful, dispatching users-updated event');
       window.dispatchEvent(new CustomEvent('users-updated'));
     } finally {
       setIsLoading(false);
