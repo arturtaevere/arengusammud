@@ -1,4 +1,3 @@
-
 import { useToast } from '@/components/ui/use-toast';
 import { User, UserWithPassword } from './types';
 import { USER_STORAGE_KEY, USERS_STORAGE_KEY } from './constants';
@@ -76,7 +75,10 @@ export const useUserAuthentication = (
     
     const updatedUsers = [...users, newUser];
     
-    // Use saveUsers to ensure consistent updating
+    // Save to localStorage directly to ensure it's immediately available
+    localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(updatedUsers));
+    
+    // Use saveUsers to update state and trigger events
     saveUsers(updatedUsers);
     
     console.log('New user registered:', newUser.email);

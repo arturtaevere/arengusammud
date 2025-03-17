@@ -12,8 +12,15 @@ export const useAuthActions = () => {
   
   // Helper function for saving users that we can pass to other hooks
   const saveUsers = (updatedUsers: UserWithPassword[]) => {
+    // Log the users before saving for debugging
+    console.log('Saving users, count:', updatedUsers.length);
+    
+    // Save to localStorage
     localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(updatedUsers));
+    
+    // Update state
     setUsers(updatedUsers);
+    
     // Dispatch a custom event so other components can react to user changes
     window.dispatchEvent(new CustomEvent('users-updated'));
   };
@@ -24,10 +31,14 @@ export const useAuthActions = () => {
       const storedUsers = localStorage.getItem(USERS_STORAGE_KEY);
       if (storedUsers) {
         try {
-          setUsers(JSON.parse(storedUsers));
+          const parsedUsers = JSON.parse(storedUsers);
+          console.log('Loading users from localStorage, count:', parsedUsers.length);
+          setUsers(parsedUsers);
         } catch (error) {
           console.error('Error parsing users:', error);
         }
+      } else {
+        console.log('No users found in localStorage');
       }
     };
 

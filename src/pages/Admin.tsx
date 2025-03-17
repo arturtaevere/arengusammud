@@ -54,8 +54,24 @@ const Admin = () => {
       loadUsers();
     };
     
+    // Force an initial check of localStorage to ensure we have the latest data
+    const storedUsers = localStorage.getItem(USERS_STORAGE_KEY);
+    if (storedUsers) {
+      try {
+        const parsedUsers = JSON.parse(storedUsers);
+        console.log('Found', parsedUsers.length, 'users in localStorage on Admin page load');
+      } catch (error) {
+        console.error('Error parsing users from localStorage:', error);
+      }
+    } else {
+      console.log('No users found in localStorage on Admin page load');
+    }
+    
     window.addEventListener('storage', handleStorageChange);
     window.addEventListener('users-updated', handleUsersUpdated);
+    
+    // Force a refresh when this component mounts
+    window.dispatchEvent(new CustomEvent('users-updated'));
     
     return () => {
       window.removeEventListener('storage', handleStorageChange);

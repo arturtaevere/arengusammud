@@ -1,7 +1,7 @@
 
-import React, { createContext, useState } from 'react';
+import React, { createContext, useState, useEffect } from 'react';
 import { AuthContextType, User, UserWithPassword } from './types';
-import { USER_STORAGE_KEY } from './constants';
+import { USER_STORAGE_KEY, USERS_STORAGE_KEY } from './constants';
 import { useAuthInit } from './useAuthInit';
 import { useAuthActions } from './useAuthActions';
 
@@ -46,6 +46,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser,
     setIsLoading
   );
+
+  // Immediately trigger a users-updated event when the component mounts
+  useEffect(() => {
+    // Dispatch an event to notify listeners that AuthProvider has mounted
+    window.dispatchEvent(new CustomEvent('users-updated'));
+  }, []);
 
   // Handle user login
   const handleLogin = async (email: string, password: string) => {
