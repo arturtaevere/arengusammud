@@ -1,38 +1,19 @@
 
-import { useState, useEffect } from 'react';
 import { useToast } from '@/components/ui/use-toast';
 import { User, UserWithPassword } from './types';
 import { USER_STORAGE_KEY, USERS_STORAGE_KEY } from './constants';
 
-export const useUserAuthentication = () => {
-  const [users, setUsers] = useState<UserWithPassword[]>([]);
+export const useUserAuthentication = (
+  users: UserWithPassword[],
+  saveUsers: (updatedUsers: UserWithPassword[]) => void
+) => {
   const { toast } = useToast();
-
-  // Load the latest users from localStorage
-  useEffect(() => {
-    const storedUsers = localStorage.getItem(USERS_STORAGE_KEY);
-    if (storedUsers) {
-      try {
-        setUsers(JSON.parse(storedUsers));
-      } catch (error) {
-        console.error('Error parsing users:', error);
-      }
-    }
-  }, []);
-
-  const saveUsers = (updatedUsers: UserWithPassword[]) => {
-    localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(updatedUsers));
-    setUsers(updatedUsers);
-  };
 
   const login = async (email: string, password: string) => {
     await new Promise(resolve => setTimeout(resolve, 800));
     
-    // Get the most up-to-date users from localStorage
-    const currentUsers = JSON.parse(localStorage.getItem(USERS_STORAGE_KEY) || '[]');
-    
     // Convert any 'coach' role users to 'juht'
-    const updatedUsers = currentUsers.map((u: UserWithPassword) => {
+    const updatedUsers = users.map((u: UserWithPassword) => {
       // Use type assertions to fix the type comparison issues
       if (u.role === 'coach' as any) {
         return {...u, role: 'juht' as const};
@@ -43,9 +24,9 @@ export const useUserAuthentication = () => {
       return u;
     });
     
-    // Save the updated users with the new roles
-    if (JSON.stringify(updatedUsers) !== JSON.stringify(currentUsers)) {
-      localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(updatedUsers));
+    // Save the updated users with the new roles if there are changes
+    if (JSON.stringify(updatedUsers) !== JSON.stringify(users)) {
+      saveUsers(updatedUsers);
     }
     
     const foundUser = updatedUsers.find((u: UserWithPassword) => u.email.toLowerCase() === email.toLowerCase());
@@ -58,14 +39,10 @@ export const useUserAuthentication = () => {
       throw new Error('Vale e-post või parool');
     }
     
-    // No longer checking emailVerified flag
     const { password: _, ...userWithoutPassword } = foundUser;
     
     localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(userWithoutPassword));
     
-    // Update the local state
-    setUsers(updatedUsers);
-
     toast({
       title: "Sisselogimine õnnestus",
       description: `Tere tulemast, ${userWithoutPassword.name}!`,
@@ -77,10 +54,7 @@ export const useUserAuthentication = () => {
   const signup = async (name: string, email: string, password: string, role: 'juht' | 'õpetaja', school?: string) => {
     await new Promise(resolve => setTimeout(resolve, 800));
     
-    // Get the most up-to-date users from localStorage
-    const currentUsers = JSON.parse(localStorage.getItem(USERS_STORAGE_KEY) || '[]');
-    
-    if (currentUsers.some((u: UserWithPassword) => u.email.toLowerCase() === email.toLowerCase())) {
+    if (users.some((u: UserWithPassword) => u.email.toLowerCase() === email.toLowerCase())) {
       throw new Error('Selle e-posti aadressiga kasutaja on juba olemas');
     }
 
@@ -100,11 +74,13 @@ export const useUserAuthentication = () => {
       emailVerified: true, // Set to true by default to skip verification
     };
     
-    const updatedUsers = [...currentUsers, newUser];
-    localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(updatedUsers));
+    const updatedUsers = [...users, newUser];
     
-    // Update the local state
-    setUsers(updatedUsers);
+    // Use saveUsers to ensure consistent updating
+    saveUsers(updatedUsers);
+    
+    console.log('New user registered:', newUser.email);
+    console.log('Updated users count:', updatedUsers.length);
     
     toast({
       title: "Registreerimine õnnestus",
@@ -115,9 +91,6 @@ export const useUserAuthentication = () => {
   };
 
   return {
-    users,
-    setUsers,
-    saveUsers,
     login,
     signup
   };

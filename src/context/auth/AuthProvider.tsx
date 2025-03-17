@@ -33,7 +33,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Custom hooks for auth functionality
   const {
     users,
-    setUsers,
     saveUsers,
     login,
     signup,
@@ -45,7 +44,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Initialize auth state
   useAuthInit(
     setUser,
-    setUsers,
     setIsLoading
   );
 
@@ -65,6 +63,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoading(true);
     try {
       await signup(name, email, password, role, school);
+      // Force-refresh users list after signup
+      window.dispatchEvent(new CustomEvent('users-updated'));
     } finally {
       setIsLoading(false);
     }

@@ -37,20 +37,29 @@ const Admin = () => {
     }
   };
 
-  // Load users when the component mounts
+  // Load users when the component mounts and when users are updated
   useEffect(() => {
     loadUsers();
     
-    // Also set up a listener for localStorage changes
+    // Set up listeners for user changes
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === USERS_STORAGE_KEY) {
+        console.log('Users updated in localStorage, refreshing users list');
         loadUsers();
       }
     };
     
+    const handleUsersUpdated = () => {
+      console.log('Users updated event received, refreshing users list');
+      loadUsers();
+    };
+    
     window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('users-updated', handleUsersUpdated);
+    
     return () => {
       window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('users-updated', handleUsersUpdated);
     };
   }, [isAuthenticated, user]);
 

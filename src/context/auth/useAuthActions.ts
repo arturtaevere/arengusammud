@@ -14,25 +14,48 @@ export const useAuthActions = () => {
   const saveUsers = (updatedUsers: UserWithPassword[]) => {
     localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(updatedUsers));
     setUsers(updatedUsers);
+    // Dispatch a custom event so other components can react to user changes
+    window.dispatchEvent(new CustomEvent('users-updated'));
   };
   
+  // Load initial data from localStorage
+  useEffect(() => {
+    const loadUsers = () => {
+      const storedUsers = localStorage.getItem(USERS_STORAGE_KEY);
+      if (storedUsers) {
+        try {
+          setUsers(JSON.parse(storedUsers));
+        } catch (error) {
+          console.error('Error parsing users:', error);
+        }
+      }
+    };
+
+    loadUsers();
+    
+    // Listen for changes to users from other components
+    const handleUsersUpdated = () => {
+      loadUsers();
+    };
+    
+    window.addEventListener('users-updated', handleUsersUpdated);
+    window.addEventListener('storage', (e) => {
+      if (e.key === USERS_STORAGE_KEY) {
+        loadUsers();
+      }
+    });
+    
+    return () => {
+      window.removeEventListener('users-updated', handleUsersUpdated);
+      window.removeEventListener('storage', handleUsersUpdated);
+    };
+  }, []);
+  
   // Authentication hooks
-  const { login, signup } = useUserAuthentication();
+  const { login, signup } = useUserAuthentication(users, saveUsers);
   
   // We need to pass the current users state and the saveUsers function
   const { updateProfileImage, getAllUsers, deleteUserByEmail } = useUserProfile(users, saveUsers);
-
-  // Load initial data from localStorage
-  useEffect(() => {
-    const storedUsers = localStorage.getItem(USERS_STORAGE_KEY);
-    if (storedUsers) {
-      try {
-        setUsers(JSON.parse(storedUsers));
-      } catch (error) {
-        console.error('Error parsing users:', error);
-      }
-    }
-  }, []);
 
   return {
     users,
