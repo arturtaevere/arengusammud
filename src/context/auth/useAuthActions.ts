@@ -18,6 +18,8 @@ export const useAuthActions = () => {
   
   // Authentication hooks
   const { login, signup } = useUserAuthentication();
+  
+  // We need to pass the current users state and the saveUsers function
   const { updateProfileImage, getAllUsers, deleteUserByEmail } = useUserProfile(users, saveUsers);
 
   // Load initial data from localStorage
@@ -35,6 +37,7 @@ export const useAuthActions = () => {
   return {
     users,
     setUsers,
+    saveUsers,
     login,
     signup,
     updateProfileImage,

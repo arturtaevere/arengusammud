@@ -34,6 +34,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const {
     users,
     setUsers,
+    saveUsers,
     login,
     signup,
     updateProfileImage,
@@ -41,14 +42,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     deleteUserByEmail
   } = useAuthActions();
 
-  // Initialize auth state (simplified)
+  // Initialize auth state
   useAuthInit(
     setUser,
     setUsers,
     setIsLoading
   );
 
-  // Handle user login (simplified)
+  // Handle user login
   const handleLogin = async (email: string, password: string) => {
     setIsLoading(true);
     try {
@@ -59,7 +60,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  // Handle user signup (simplified)
+  // Handle user signup
   const handleSignup = async (name: string, email: string, password: string, role: 'juht' | 'õpetaja', school?: string) => {
     setIsLoading(true);
     try {

@@ -6,6 +6,7 @@ import Navbar from '@/components/Navbar';
 import { useToast } from '@/components/ui/use-toast';
 import { FilterCard, UserTable } from '@/components/admin';
 import { User } from '@/context/auth/types';
+import { USERS_STORAGE_KEY } from '@/context/auth/constants';
 
 const Admin = () => {
   const { user, isAuthenticated, getAllUsers, deleteUserByEmail } = useAuth();
@@ -17,6 +18,7 @@ const Admin = () => {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const { toast } = useToast();
 
+  // Redirect if not authenticated or not a juht
   useEffect(() => {
     if (!isAuthenticated) {
       navigate('/auth');
@@ -25,14 +27,34 @@ const Admin = () => {
     }
   }, [isAuthenticated, user, navigate]);
 
-  useEffect(() => {
+  // Load users directly from localStorage to ensure we have the latest data
+  const loadUsers = () => {
     if (isAuthenticated && user?.role === 'juht') {
       const allUsers = getAllUsers();
+      console.log('Loaded users in Admin:', allUsers.length);
       setUsers(allUsers);
       setFilteredUsers(allUsers);
     }
-  }, [isAuthenticated, user, getAllUsers]);
+  };
 
+  // Load users when the component mounts
+  useEffect(() => {
+    loadUsers();
+    
+    // Also set up a listener for localStorage changes
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === USERS_STORAGE_KEY) {
+        loadUsers();
+      }
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, [isAuthenticated, user]);
+
+  // Filter users based on search and filter criteria
   useEffect(() => {
     let result = users;
     
@@ -59,9 +81,7 @@ const Admin = () => {
   const handleDeleteUser = async (email: string) => {
     const success = await deleteUserByEmail(email);
     if (success) {
-      const allUsers = getAllUsers();
-      setUsers(allUsers);
-      setFilteredUsers(allUsers);
+      loadUsers(); // Reload the users after deletion
     }
   };
 

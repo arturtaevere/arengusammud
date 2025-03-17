@@ -1,4 +1,5 @@
-import { useState } from 'react';
+
+import { useState, useEffect } from 'react';
 import { useToast } from '@/components/ui/use-toast';
 import { User, UserWithPassword } from './types';
 import { USER_STORAGE_KEY, USERS_STORAGE_KEY } from './constants';
@@ -6,6 +7,18 @@ import { USER_STORAGE_KEY, USERS_STORAGE_KEY } from './constants';
 export const useUserAuthentication = () => {
   const [users, setUsers] = useState<UserWithPassword[]>([]);
   const { toast } = useToast();
+
+  // Load the latest users from localStorage
+  useEffect(() => {
+    const storedUsers = localStorage.getItem(USERS_STORAGE_KEY);
+    if (storedUsers) {
+      try {
+        setUsers(JSON.parse(storedUsers));
+      } catch (error) {
+        console.error('Error parsing users:', error);
+      }
+    }
+  }, []);
 
   const saveUsers = (updatedUsers: UserWithPassword[]) => {
     localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(updatedUsers));
@@ -49,6 +62,9 @@ export const useUserAuthentication = () => {
     const { password: _, ...userWithoutPassword } = foundUser;
     
     localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(userWithoutPassword));
+    
+    // Update the local state
+    setUsers(updatedUsers);
 
     toast({
       title: "Sisselogimine õnnestus",
@@ -61,7 +77,10 @@ export const useUserAuthentication = () => {
   const signup = async (name: string, email: string, password: string, role: 'juht' | 'õpetaja', school?: string) => {
     await new Promise(resolve => setTimeout(resolve, 800));
     
-    if (users.some(u => u.email.toLowerCase() === email.toLowerCase())) {
+    // Get the most up-to-date users from localStorage
+    const currentUsers = JSON.parse(localStorage.getItem(USERS_STORAGE_KEY) || '[]');
+    
+    if (currentUsers.some((u: UserWithPassword) => u.email.toLowerCase() === email.toLowerCase())) {
       throw new Error('Selle e-posti aadressiga kasutaja on juba olemas');
     }
 
@@ -81,8 +100,11 @@ export const useUserAuthentication = () => {
       emailVerified: true, // Set to true by default to skip verification
     };
     
-    const updatedUsers = [...users, newUser];
-    saveUsers(updatedUsers);
+    const updatedUsers = [...currentUsers, newUser];
+    localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(updatedUsers));
+    
+    // Update the local state
+    setUsers(updatedUsers);
     
     toast({
       title: "Registreerimine õnnestus",
