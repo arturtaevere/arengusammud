@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useToast } from '@/components/ui/use-toast';
 import { UserWithPassword } from './types';
-import { USERS_STORAGE_KEY, INITIAL_USERS } from './constants';
+import { USERS_STORAGE_KEY, INITIAL_USERS, TEST_EMAILS } from './constants';
 import { useUserAuthentication } from './useUserAuthentication';
 import { useUserProfile } from './useUserProfile';
 
@@ -47,9 +47,8 @@ export const useAuthActions = () => {
           const parsedUsers = JSON.parse(storedUsers);
           
           // Check if the stored users list contains any test users we want to remove
-          const testEmails = ['coach@example.com', 'teacher@example.com', 'maarja@kesklinnakool.ee', 'tiit@reaalkool.ee', 'artur.taevere@gmail.com'];
           const hasTestUsers = parsedUsers.some((user: UserWithPassword) => 
-            testEmails.includes(user.email.toLowerCase().trim())
+            TEST_EMAILS.includes(user.email.toLowerCase().trim())
           );
           
           if (hasTestUsers) {

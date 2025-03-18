@@ -13,6 +13,15 @@ export const SCHOOLS = [
   'Pärnu Koidula Gümnaasium',
 ];
 
+// List of test emails that should be removed when resetting user list
+export const TEST_EMAILS = [
+  'coach@example.com', 
+  'teacher@example.com', 
+  'maarja@kesklinnakool.ee', 
+  'tiit@reaalkool.ee', 
+  'artur.taevere@gmail.com'
+];
+
 // Initial user - only keeping Artur
 export const INITIAL_USERS = [
   {

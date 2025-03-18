@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
@@ -6,7 +5,7 @@ import Navbar from '@/components/Navbar';
 import { useToast } from '@/components/ui/use-toast';
 import { FilterCard, UserTable } from '@/components/admin';
 import { User } from '@/context/auth/types';
-import { USERS_STORAGE_KEY } from '@/context/auth/constants';
+import { USERS_STORAGE_KEY, TEST_EMAILS } from '@/context/auth/constants';
 
 const Admin = () => {
   const { user, isAuthenticated, getAllUsers, deleteUserByEmail } = useAuth();
@@ -21,22 +20,17 @@ const Admin = () => {
   const loadUsers = () => {
     if (isAuthenticated && user?.role === 'juht') {
       try {
-        // Force clear localStorage if needed
-        const testEmails = ['coach@example.com', 'teacher@example.com', 'maarja@kesklinnakool.ee', 'tiit@reaalkool.ee', 'artur.taevere@gmail.com'];
-        
-        // Use getAllUsers from AuthContext
         const allUsers = getAllUsers();
         console.log('Admin page - Loading users from getAllUsers:', {
           total: allUsers.length,
           emails: allUsers.map((u: User) => u.email)
         });
         
-        // Check if we still have test users
-        const hasTestUsers = allUsers.some(u => testEmails.includes(u.email.toLowerCase().trim()));
+        const hasTestUsers = allUsers.some(u => TEST_EMAILS.includes(u.email.toLowerCase().trim()));
         if (hasTestUsers) {
           console.log('Admin page - Test users still present, dispatching reset event');
           window.dispatchEvent(new CustomEvent('reset-users'));
-          setTimeout(loadUsers, 500); // Try again after a short delay
+          setTimeout(loadUsers, 500);
           return;
         }
         
@@ -52,7 +46,6 @@ const Admin = () => {
     }
   };
 
-  // Initial auth check
   useEffect(() => {
     if (!isAuthenticated) {
       navigate('/auth');
@@ -61,21 +54,17 @@ const Admin = () => {
     }
   }, [isAuthenticated, user, navigate]);
 
-  // Load users and set up event listeners
   useEffect(() => {
     console.log('Admin component mounted, loading initial users');
     
-    // Force clear localStorage immediately
-    const testEmails = ['coach@example.com', 'teacher@example.com', 'maarja@kesklinnakool.ee', 'tiit@reaalkool.ee', 'artur.taevere@gmail.com'];
     const storedUsersStr = localStorage.getItem(USERS_STORAGE_KEY);
     if (storedUsersStr) {
       try {
         const parsedUsers = JSON.parse(storedUsersStr);
-        const hasTestUsers = parsedUsers.some((u: any) => testEmails.includes(u.email.toLowerCase().trim()));
+        const hasTestUsers = parsedUsers.some((u: any) => TEST_EMAILS.includes(u.email.toLowerCase().trim()));
         if (hasTestUsers) {
           console.log('Admin page - Test users found in localStorage, dispatching reset event');
           window.dispatchEvent(new CustomEvent('reset-users'));
-          // Short delay before loading users
           setTimeout(loadUsers, 800);
         } else {
           loadUsers();
@@ -99,7 +88,6 @@ const Admin = () => {
       window.dispatchEvent(new Event('storage'));
     };
     
-    // Listen for both storage events and custom users-updated events
     window.addEventListener('users-updated', handleUsersUpdated);
     window.addEventListener('reset-users', handleResetUsers);
     window.addEventListener('storage', (e) => {
@@ -109,7 +97,6 @@ const Admin = () => {
       }
     });
     
-    // Also check for updates periodically (every 3 seconds)
     const checkUsersInterval = setInterval(() => {
       loadUsers();
     }, 3000);
@@ -122,7 +109,6 @@ const Admin = () => {
     };
   }, [isAuthenticated, user]);
 
-  // Update filtered users when users, filters, or search term changes
   useEffect(() => {
     let result = users;
     
@@ -163,11 +149,9 @@ const Admin = () => {
   };
 
   const handleRefreshUsers = () => {
-    // Force a complete reset to initial users
     console.log('Admin page - Manual reset triggered');
     window.dispatchEvent(new CustomEvent('reset-users'));
     
-    // Reload after a short delay
     setTimeout(() => {
       loadUsers();
       toast({

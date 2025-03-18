@@ -1,7 +1,7 @@
 
 import { useToast } from '@/components/ui/use-toast';
 import { User, UserWithPassword } from './types';
-import { USER_STORAGE_KEY, USERS_STORAGE_KEY } from './constants';
+import { USER_STORAGE_KEY, USERS_STORAGE_KEY, TEST_EMAILS } from './constants';
 
 export const useUserAuthentication = (
   users: UserWithPassword[],
@@ -50,6 +50,13 @@ export const useUserAuthentication = (
   const signup = async (name: string, email: string, password: string, role: 'juht' | 'õpetaja', school?: string) => {
     await new Promise(resolve => setTimeout(resolve, 800));
     
+    // First, check if this is a test email that should be rejected
+    const normalizedNewEmail = email.toLowerCase().trim();
+    if (TEST_EMAILS.includes(normalizedNewEmail)) {
+      console.log('Attempted to sign up with a test email:', normalizedNewEmail);
+      throw new Error('Selle e-posti aadressiga ei saa kontot luua');
+    }
+    
     // Get latest users from localStorage
     const storedUsersStr = localStorage.getItem(USERS_STORAGE_KEY);
     const currentUsers: UserWithPassword[] = storedUsersStr ? JSON.parse(storedUsersStr) : users;
@@ -60,8 +67,6 @@ export const useUserAuthentication = (
       count: currentUsers.length,
       emails: currentUsers.map(u => u.email)
     });
-    
-    const normalizedNewEmail = email.toLowerCase().trim();
     
     console.log('Checking if user exists with normalized email:', normalizedNewEmail);
     console.log('All normalized emails in system:', currentUsers.map(u => u.email.toLowerCase().trim()));
