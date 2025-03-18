@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
@@ -19,11 +20,29 @@ const Admin = () => {
 
   const loadUsers = () => {
     if (isAuthenticated && user?.role === 'juht') {
-      const allUsers = getAllUsers();
-      console.log('Admin page - All users loaded:', {
+      // Get users directly from localStorage to ensure we have the latest data
+      const storedUsersStr = localStorage.getItem(USERS_STORAGE_KEY);
+      let allUsers = [];
+      
+      if (storedUsersStr) {
+        try {
+          const storedUsers = JSON.parse(storedUsersStr);
+          // Remove passwords before setting to state
+          allUsers = storedUsers.map(({ password, ...user }: any) => user);
+        } catch (error) {
+          console.error('Error parsing stored users:', error);
+          allUsers = getAllUsers();
+        }
+      } else {
+        allUsers = getAllUsers();
+      }
+      
+      console.log('Admin page - Loading users:', {
+        fromStorage: !!storedUsersStr,
         count: allUsers.length,
-        emails: allUsers.map(u => u.email)
+        emails: allUsers.map((u: User) => u.email)
       });
+      
       setUsers(allUsers);
       setFilteredUsers(allUsers);
     }
