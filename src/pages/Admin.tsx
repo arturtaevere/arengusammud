@@ -21,31 +21,26 @@ const Admin = () => {
   const loadUsers = () => {
     if (isAuthenticated && user?.role === 'juht') {
       try {
+        // Force clear localStorage if needed
+        const testEmails = ['coach@example.com', 'teacher@example.com', 'maarja@kesklinnakool.ee', 'tiit@reaalkool.ee'];
+        
         // Use getAllUsers from AuthContext
         const allUsers = getAllUsers();
         console.log('Admin page - Loading users from getAllUsers:', {
           total: allUsers.length,
           emails: allUsers.map((u: User) => u.email)
         });
-        setUsers(allUsers);
         
-        // Also check localStorage to ensure we have the most up-to-date data
-        const storedUsersStr = localStorage.getItem(USERS_STORAGE_KEY);
-        if (storedUsersStr) {
-          try {
-            const parsedUsers = JSON.parse(storedUsersStr);
-            const usersWithoutPasswords = parsedUsers.map(({ password, ...user }: any) => user);
-            if (usersWithoutPasswords.length !== allUsers.length) {
-              console.log('Admin page - Users from localStorage different from state:', {
-                localStorageCount: usersWithoutPasswords.length,
-                stateCount: allUsers.length
-              });
-              setUsers(usersWithoutPasswords);
-            }
-          } catch (error) {
-            console.error('Error parsing users from localStorage:', error);
-          }
+        // Check if we still have test users
+        const hasTestUsers = allUsers.some(u => testEmails.includes(u.email.toLowerCase()));
+        if (hasTestUsers) {
+          console.log('Admin page - Test users still present, dispatching update event');
+          window.dispatchEvent(new CustomEvent('reset-users'));
+          setTimeout(loadUsers, 500); // Try again after a short delay
+          return;
         }
+        
+        setUsers(allUsers);
       } catch (error) {
         console.error('Error getting users in Admin page:', error);
         toast({
@@ -69,15 +64,44 @@ const Admin = () => {
   // Load users and set up event listeners
   useEffect(() => {
     console.log('Admin component mounted, loading initial users');
-    loadUsers();
+    
+    // Force clear localStorage immediately
+    const testEmails = ['coach@example.com', 'teacher@example.com', 'maarja@kesklinnakool.ee', 'tiit@reaalkool.ee'];
+    const storedUsersStr = localStorage.getItem(USERS_STORAGE_KEY);
+    if (storedUsersStr) {
+      try {
+        const parsedUsers = JSON.parse(storedUsersStr);
+        const hasTestUsers = parsedUsers.some((u: any) => testEmails.includes(u.email.toLowerCase()));
+        if (hasTestUsers) {
+          console.log('Admin page - Test users found in localStorage, dispatching reset event');
+          window.dispatchEvent(new CustomEvent('reset-users'));
+          // Short delay before loading users
+          setTimeout(loadUsers, 800);
+        } else {
+          loadUsers();
+        }
+      } catch (error) {
+        console.error('Error parsing users from localStorage:', error);
+        loadUsers();
+      }
+    } else {
+      loadUsers();
+    }
     
     const handleUsersUpdated = () => {
       console.log('Admin page - users-updated event received');
       loadUsers();
     };
     
+    const handleResetUsers = () => {
+      console.log('Admin page - reset-users event received');
+      localStorage.removeItem(USERS_STORAGE_KEY);
+      window.dispatchEvent(new Event('storage'));
+    };
+    
     // Listen for both storage events and custom users-updated events
     window.addEventListener('users-updated', handleUsersUpdated);
+    window.addEventListener('reset-users', handleResetUsers);
     window.addEventListener('storage', (e) => {
       if (e.key === USERS_STORAGE_KEY) {
         console.log('Admin page - storage event received for users');
@@ -92,6 +116,7 @@ const Admin = () => {
     
     return () => {
       window.removeEventListener('users-updated', handleUsersUpdated);
+      window.removeEventListener('reset-users', handleResetUsers);
       window.removeEventListener('storage', handleUsersUpdated);
       clearInterval(checkUsersInterval);
     };
@@ -138,11 +163,18 @@ const Admin = () => {
   };
 
   const handleRefreshUsers = () => {
-    loadUsers();
-    toast({
-      title: "Kasutajate nimekiri värskendatud",
-      description: `Laeti ${users.length} kasutajat.`,
-    });
+    // Forcibly clear localStorage to trigger reload of initial users
+    localStorage.removeItem(USERS_STORAGE_KEY);
+    window.dispatchEvent(new Event('storage'));
+    
+    // Reload after a short delay
+    setTimeout(() => {
+      loadUsers();
+      toast({
+        title: "Kasutajate nimekiri värskendatud",
+        description: `Nimekiri taastatud.`,
+      });
+    }, 800);
   };
 
   if (!isAuthenticated || user?.role !== 'juht') {
@@ -163,7 +195,7 @@ const Admin = () => {
             onClick={handleRefreshUsers}
             className="mt-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
           >
-            Värskenda kasutajate nimekirja
+            Lähtesta kasutajate nimekiri
           </button>
         </div>
 
