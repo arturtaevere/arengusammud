@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
@@ -18,7 +17,6 @@ const Admin = () => {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const { toast } = useToast();
 
-  // Redirect if not authenticated or not a juht
   useEffect(() => {
     if (!isAuthenticated) {
       navigate('/auth');
@@ -27,16 +25,13 @@ const Admin = () => {
     }
   }, [isAuthenticated, user, navigate]);
 
-  // Load users directly from localStorage to ensure we have the latest data
   const loadUsers = () => {
     if (isAuthenticated && user?.role === 'juht') {
-      // Try to get users directly from localStorage first
       try {
         const storedUsers = localStorage.getItem(USERS_STORAGE_KEY);
         if (storedUsers) {
           const parsedUsers = JSON.parse(storedUsers);
-          console.log('Loaded users in Admin directly from localStorage:', parsedUsers.length);
-          // Remove passwords from users
+          console.log('Loaded users in Admin from localStorage:', parsedUsers.length);
           const usersWithoutPasswords = parsedUsers.map(({ password, ...user }: any) => user);
           setUsers(usersWithoutPasswords);
           setFilteredUsers(usersWithoutPasswords);
@@ -46,60 +41,34 @@ const Admin = () => {
         console.error('Error loading users from localStorage:', error);
       }
       
-      // Fallback to getAllUsers from context
       const allUsers = getAllUsers();
-      console.log('Loaded users in Admin:', allUsers.length);
       setUsers(allUsers);
       setFilteredUsers(allUsers);
     }
   };
 
-  // Load users when the component mounts and when users are updated
   useEffect(() => {
-    console.log('Admin component mounted');
+    console.log('Admin component mounted, loading users');
     loadUsers();
     
-    // Set up listeners for user changes
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === USERS_STORAGE_KEY) {
-        console.log('Users updated in localStorage, refreshing users list');
-        loadUsers();
-      }
-    };
-    
     const handleUsersUpdated = () => {
-      console.log('Users updated event received, refreshing users list');
+      console.log('Users updated event received in Admin, refreshing list');
       loadUsers();
     };
     
-    // Force an initial check of localStorage to ensure we have the latest data
-    const storedUsers = localStorage.getItem(USERS_STORAGE_KEY);
-    if (storedUsers) {
-      try {
-        const parsedUsers = JSON.parse(storedUsers);
-        console.log('Found', parsedUsers.length, 'users in localStorage on Admin page load');
-      } catch (error) {
-        console.error('Error parsing users from localStorage:', error);
-      }
-    } else {
-      console.log('No users found in localStorage on Admin page load');
-    }
-    
-    // Add event listeners
-    window.addEventListener('storage', handleStorageChange);
     window.addEventListener('users-updated', handleUsersUpdated);
+    window.addEventListener('storage', (e) => {
+      if (e.key === USERS_STORAGE_KEY) {
+        handleUsersUpdated();
+      }
+    });
     
-    // Force a refresh when this component mounts
-    window.dispatchEvent(new CustomEvent('users-updated'));
-    
-    // Cleanup
     return () => {
-      window.removeEventListener('storage', handleStorageChange);
       window.removeEventListener('users-updated', handleUsersUpdated);
+      window.removeEventListener('storage', handleUsersUpdated);
     };
   }, [isAuthenticated, user]);
 
-  // Filter users based on search and filter criteria
   useEffect(() => {
     let result = users;
     
@@ -126,7 +95,7 @@ const Admin = () => {
   const handleDeleteUser = async (email: string) => {
     const success = await deleteUserByEmail(email);
     if (success) {
-      loadUsers(); // Reload the users after deletion
+      loadUsers();
     }
   };
 

@@ -10,55 +10,58 @@ export const useAuthActions = () => {
   const [users, setUsers] = useState<UserWithPassword[]>([]);
   const { toast } = useToast();
   
-  // Helper function for saving users that we can pass to other hooks
   const saveUsers = (updatedUsers: UserWithPassword[]) => {
-    // Log the users before saving for debugging
-    console.log('Saving users, count:', updatedUsers.length);
+    console.log('Saving users to state and localStorage, count:', updatedUsers.length);
     
     try {
-      // Save to localStorage
+      // First update localStorage
       localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(updatedUsers));
-      console.log('Successfully saved users to localStorage');
       
-      // Update state
+      // Then update state
       setUsers(updatedUsers);
       
-      // Dispatch a custom event so other components can react to user changes
+      // Dispatch events to notify other components
+      window.dispatchEvent(new Event('storage'));
       window.dispatchEvent(new CustomEvent('users-updated'));
-      console.log('Dispatched users-updated event');
+      
+      console.log('Successfully saved users and dispatched events');
     } catch (error) {
       console.error('Error in saveUsers:', error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to save user data",
+      });
     }
   };
-  
-  // Load initial data from localStorage
+
   useEffect(() => {
     const loadUsers = () => {
-      const storedUsers = localStorage.getItem(USERS_STORAGE_KEY);
-      if (storedUsers) {
-        try {
+      try {
+        const storedUsers = localStorage.getItem(USERS_STORAGE_KEY);
+        if (storedUsers) {
           const parsedUsers = JSON.parse(storedUsers);
           console.log('Loading users from localStorage, count:', parsedUsers.length);
           setUsers(parsedUsers);
-        } catch (error) {
-          console.error('Error parsing users:', error);
         }
-      } else {
-        console.log('No users found in localStorage');
+      } catch (error) {
+        console.error('Error loading users:', error);
       }
     };
 
+    // Load initial users
     loadUsers();
     
-    // Listen for changes to users from other components
+    // Set up event listeners
     const handleUsersUpdated = () => {
-      console.log('users-updated event received in useAuthActions');
+      console.log('users-updated event received, reloading users');
       loadUsers();
     };
     
     window.addEventListener('users-updated', handleUsersUpdated);
     window.addEventListener('storage', (e) => {
       if (e.key === USERS_STORAGE_KEY) {
+        console.log('storage event received for users, reloading');
         loadUsers();
       }
     });
@@ -68,11 +71,8 @@ export const useAuthActions = () => {
       window.removeEventListener('storage', handleUsersUpdated);
     };
   }, []);
-  
-  // Authentication hooks
+
   const { login, signup } = useUserAuthentication(users, saveUsers);
-  
-  // We need to pass the current users state and the saveUsers function
   const { updateProfileImage, getAllUsers, deleteUserByEmail } = useUserProfile(users, saveUsers);
 
   return {
