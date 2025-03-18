@@ -8,7 +8,7 @@ import { User } from '@/context/auth/types';
 import { USERS_STORAGE_KEY } from '@/context/auth/constants';
 
 const Admin = () => {
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, deleteUserByEmail } = useAuth();
   const navigate = useNavigate();
   const [users, setUsers] = useState<User[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
@@ -52,7 +52,6 @@ const Admin = () => {
     console.log('Admin component mounted, loading initial users');
     loadUsers();
     
-    // Listen for updates
     const handleUsersUpdated = () => {
       console.log('Admin page - users-updated event received');
       loadUsers();
