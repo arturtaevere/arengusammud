@@ -54,14 +54,21 @@ export const useUserAuthentication = (
   const signup = async (name: string, email: string, password: string, role: 'juht' | 'õpetaja', school?: string) => {
     await new Promise(resolve => setTimeout(resolve, 800));
     
-    // Get the latest users from localStorage
+    // Get ALL current users from localStorage first
     const storedUsersStr = localStorage.getItem(USERS_STORAGE_KEY);
-    const currentUsers = storedUsersStr ? JSON.parse(storedUsersStr) : users;
+    let currentUsers: UserWithPassword[] = [];
     
-    console.log('Signup - Current users in storage:', {
-      count: currentUsers.length,
-      emails: currentUsers.map((u: UserWithPassword) => u.email)
-    });
+    try {
+      currentUsers = storedUsersStr ? JSON.parse(storedUsersStr) : users;
+      console.log('Current users from storage during signup:', {
+        stored: storedUsersStr ? 'yes' : 'no',
+        count: currentUsers.length,
+        emails: currentUsers.map(u => u.email)
+      });
+    } catch (error) {
+      console.error('Error parsing stored users:', error);
+      currentUsers = users;
+    }
     
     const existingUser = currentUsers.find((u: UserWithPassword) => u.email.toLowerCase() === email.toLowerCase());
     if (existingUser) {
@@ -85,24 +92,28 @@ export const useUserAuthentication = (
       emailVerified: true,
     };
     
-    console.log('Creating new user:', newUser);
-    
     const updatedUsers = [...currentUsers, newUser];
     
+    console.log('Attempting to save new user:', {
+      newUser: { ...newUser, password: '[REDACTED]' },
+      totalUsers: updatedUsers.length
+    });
+    
     try {
-      // First update localStorage
+      // Update localStorage first
       localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(updatedUsers));
-      console.log('Successfully saved to localStorage. Updated users:', {
+      
+      // Then update the state
+      saveUsers(updatedUsers);
+      
+      // Force refresh by dispatching events
+      window.dispatchEvent(new Event('storage'));
+      window.dispatchEvent(new CustomEvent('users-updated'));
+      
+      console.log('Successfully saved user. Updated users in storage:', {
         count: updatedUsers.length,
         emails: updatedUsers.map(u => u.email)
       });
-      
-      // Then update state through saveUsers
-      saveUsers(updatedUsers);
-      
-      // Dispatch events to notify other components
-      window.dispatchEvent(new Event('storage'));
-      window.dispatchEvent(new CustomEvent('users-updated'));
       
       toast({
         title: "Registreerimine õnnestus",
@@ -121,4 +132,3 @@ export const useUserAuthentication = (
     signup
   };
 };
-

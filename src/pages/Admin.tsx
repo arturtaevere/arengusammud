@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
@@ -20,28 +19,26 @@ const Admin = () => {
 
   const loadUsers = () => {
     if (isAuthenticated && user?.role === 'juht') {
-      // Get users directly from localStorage to ensure we have the latest data
       const storedUsersStr = localStorage.getItem(USERS_STORAGE_KEY);
-      let allUsers = [];
+      let allUsers: User[] = [];
       
       if (storedUsersStr) {
         try {
           const storedUsers = JSON.parse(storedUsersStr);
-          // Remove passwords before setting to state
           allUsers = storedUsers.map(({ password, ...user }: any) => user);
+          console.log('Admin - Loading users from storage:', {
+            rawCount: storedUsers.length,
+            processedCount: allUsers.length,
+            emails: allUsers.map(u => u.email)
+          });
         } catch (error) {
-          console.error('Error parsing stored users:', error);
+          console.error('Error loading users from storage:', error);
           allUsers = getAllUsers();
         }
       } else {
+        console.log('No users in localStorage, falling back to getAllUsers');
         allUsers = getAllUsers();
       }
-      
-      console.log('Admin page - Loading users:', {
-        fromStorage: !!storedUsersStr,
-        count: allUsers.length,
-        emails: allUsers.map((u: User) => u.email)
-      });
       
       setUsers(allUsers);
       setFilteredUsers(allUsers);
@@ -109,6 +106,14 @@ const Admin = () => {
     }
   };
 
+  const handleRefreshUsers = () => {
+    loadUsers();
+    toast({
+      title: "Kasutajate nimekiri värskendatud",
+      description: `Laeti ${users.length} kasutajat.`,
+    });
+  };
+
   if (!isAuthenticated || user?.role !== 'juht') {
     return null;
   }
@@ -124,13 +129,7 @@ const Admin = () => {
             Siit leiad kõik registreeritud kasutajad ja nende info.
           </p>
           <button 
-            onClick={() => {
-              loadUsers();
-              toast({
-                title: "Kasutajate nimekiri värskendatud",
-                description: "Näed nüüd kõige uuemaid andmeid.",
-              });
-            }}
+            onClick={handleRefreshUsers}
             className="mt-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
           >
             Värskenda kasutajate nimekirja
