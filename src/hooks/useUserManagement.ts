@@ -23,9 +23,15 @@ export const useUserManagement = () => {
           emails: allUsers.map((u: User) => u.email)
         });
         
-        const hasTestUsers = allUsers.some(u => TEST_EMAILS.includes(u.email.toLowerCase().trim()));
+        // Check for test users by comparing normalized emails
+        const hasTestUsers = allUsers.some(u => {
+          const normalizedEmail = u.email.toLowerCase().trim();
+          return TEST_EMAILS.some(testEmail => testEmail.toLowerCase().trim() === normalizedEmail);
+        });
+        
         if (hasTestUsers) {
-          console.log('Admin page - Test users still present, dispatching reset event');
+          console.log('Admin page - Test users still present, dispatching reset-users event');
+          localStorage.removeItem(USERS_STORAGE_KEY);
           window.dispatchEvent(new CustomEvent('reset-users'));
           setTimeout(loadUsers, 500);
           return;
@@ -50,9 +56,16 @@ export const useUserManagement = () => {
     if (storedUsersStr) {
       try {
         const parsedUsers = JSON.parse(storedUsersStr);
-        const hasTestUsers = parsedUsers.some((u: any) => TEST_EMAILS.includes(u.email.toLowerCase().trim()));
+        
+        // Check for test users with normalized email comparison
+        const hasTestUsers = parsedUsers.some((u: any) => {
+          const normalizedEmail = u.email.toLowerCase().trim();
+          return TEST_EMAILS.some(testEmail => testEmail.toLowerCase().trim() === normalizedEmail);
+        });
+        
         if (hasTestUsers) {
           console.log('Admin page - Test users found in localStorage, dispatching reset event');
+          localStorage.removeItem(USERS_STORAGE_KEY);
           window.dispatchEvent(new CustomEvent('reset-users'));
           setTimeout(loadUsers, 800);
         } else {
@@ -139,6 +152,7 @@ export const useUserManagement = () => {
 
   const handleRefreshUsers = () => {
     console.log('Admin page - Manual reset triggered');
+    localStorage.removeItem(USERS_STORAGE_KEY);
     window.dispatchEvent(new CustomEvent('reset-users'));
     
     setTimeout(() => {

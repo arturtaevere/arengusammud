@@ -47,12 +47,17 @@ export const useAuthActions = () => {
           const parsedUsers = JSON.parse(storedUsers);
           
           // Check if the stored users list contains any test users we want to remove
-          const hasTestUsers = parsedUsers.some((user: UserWithPassword) => 
-            TEST_EMAILS.includes(user.email.toLowerCase().trim())
-          );
+          // Using improved email comparison
+          const hasTestUsers = parsedUsers.some((user: UserWithPassword) => {
+            const normalizedEmail = user.email.toLowerCase().trim();
+            return TEST_EMAILS.some(testEmail => 
+              testEmail.toLowerCase().trim() === normalizedEmail
+            );
+          });
           
           if (hasTestUsers) {
             console.log('Found test users in localStorage, resetting to initial users');
+            localStorage.removeItem(USERS_STORAGE_KEY);
             saveUsers(INITIAL_USERS);
           } else {
             console.log('Loading users in useAuthActions:', {
@@ -92,6 +97,7 @@ export const useAuthActions = () => {
     
     const handleResetUsers = () => {
       console.log('reset-users event received in useAuthActions');
+      localStorage.removeItem(USERS_STORAGE_KEY);
       saveUsers(INITIAL_USERS);
     };
     

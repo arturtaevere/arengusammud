@@ -52,7 +52,13 @@ export const useUserAuthentication = (
     
     // First, check if this is a test email that should be rejected
     const normalizedNewEmail = email.toLowerCase().trim();
-    if (TEST_EMAILS.includes(normalizedNewEmail)) {
+    
+    // Check against normalized test emails
+    const isTestEmail = TEST_EMAILS.some(testEmail => 
+      testEmail.toLowerCase().trim() === normalizedNewEmail
+    );
+    
+    if (isTestEmail) {
       console.log('Attempted to sign up with a test email:', normalizedNewEmail);
       throw new Error('Selle e-posti aadressiga ei saa kontot luua');
     }
