@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
@@ -40,6 +41,7 @@ const Admin = () => {
     }
   };
 
+  // Initial auth check
   useEffect(() => {
     if (!isAuthenticated) {
       navigate('/auth');
@@ -48,6 +50,7 @@ const Admin = () => {
     }
   }, [isAuthenticated, user, navigate]);
 
+  // Load users and set up event listeners
   useEffect(() => {
     console.log('Admin component mounted, loading initial users');
     loadUsers();
@@ -57,20 +60,28 @@ const Admin = () => {
       loadUsers();
     };
     
+    // Listen for both storage events and custom users-updated events
     window.addEventListener('users-updated', handleUsersUpdated);
     window.addEventListener('storage', (e) => {
       if (e.key === USERS_STORAGE_KEY) {
-        console.log('Admin page - storage event received');
-        handleUsersUpdated();
+        console.log('Admin page - storage event received for users');
+        loadUsers();
       }
     });
+    
+    // Also load users when the component mounts
+    const checkUsersInterval = setInterval(() => {
+      loadUsers();
+    }, 2000);
     
     return () => {
       window.removeEventListener('users-updated', handleUsersUpdated);
       window.removeEventListener('storage', handleUsersUpdated);
+      clearInterval(checkUsersInterval);
     };
   }, [isAuthenticated, user]);
 
+  // Filter users based on search and filter criteria
   useEffect(() => {
     let result = users;
     
