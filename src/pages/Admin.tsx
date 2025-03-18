@@ -6,6 +6,8 @@ import Navbar from '@/components/Navbar';
 import { FilterCard, UserTable } from '@/components/admin';
 import AdminHeader from '@/components/admin/AdminHeader';
 import { useUserManagement } from '@/hooks/useUserManagement';
+import { Button } from '@/components/ui/button';
+import { RefreshCw } from 'lucide-react';
 
 const Admin = () => {
   const { user, isAuthenticated } = useAuth();
@@ -19,7 +21,8 @@ const Admin = () => {
     setFilterRole,
     setFilterSchool,
     handleDeleteUser,
-    handleRefreshUsers
+    handleRefreshUsers,
+    refreshUsersList
   } = useUserManagement();
 
   useEffect(() => {
@@ -29,6 +32,14 @@ const Admin = () => {
       navigate('/dashboard');
     }
   }, [isAuthenticated, user, navigate]);
+
+  // Refresh users whenever this component renders
+  useEffect(() => {
+    if (isAuthenticated && user?.role === 'juht') {
+      // Force refresh user list on page load
+      refreshUsersList();
+    }
+  }, [isAuthenticated, user]);
 
   if (!isAuthenticated || user?.role !== 'juht') {
     return null;
@@ -40,6 +51,18 @@ const Admin = () => {
       
       <div className="container mx-auto px-4 py-24">
         <AdminHeader onRefreshUsers={handleRefreshUsers} />
+
+        <div className="flex justify-end mb-4">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={refreshUsersList}
+            className="flex items-center gap-2"
+          >
+            <RefreshCw className="h-4 w-4" />
+            <span>Värskenda nimekirja</span>
+          </Button>
+        </div>
 
         <FilterCard 
           searchTerm={searchTerm}

@@ -16,6 +16,7 @@ export const AuthContext = createContext<AuthContextType>({
   updateProfileImage: () => {},
   getAllUsers: () => [],
   deleteUserByEmail: async () => false,
+  refreshUsers: () => {}, // Add new refresh function
   
   // Add the stub verification functions
   verifyEmail: async () => false,
@@ -34,6 +35,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const {
     users,
     saveUsers,
+    forceRefreshUsers,
     login,
     signup,
     updateProfileImage,
@@ -92,6 +94,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // Force-refresh users list after signup
       console.log('Signup successful, dispatching users-updated event');
       window.dispatchEvent(new CustomEvent('users-updated'));
+      forceRefreshUsers(); // Add direct refresh
     } finally {
       setIsLoading(false);
     }
@@ -124,6 +127,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return false;
   };
 
+  // New function to force refresh all users
+  const refreshUsers = () => {
+    forceRefreshUsers();
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -136,6 +144,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         updateProfileImage: handleUpdateProfileImage,
         getAllUsers,
         deleteUserByEmail,
+        refreshUsers, // Add the new function
         // Add the verification-related values
         verifyEmail,
         resendVerificationEmail,

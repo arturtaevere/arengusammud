@@ -52,53 +52,31 @@ export const useUserManagement = () => {
   useEffect(() => {
     console.log('useUserManagement hook mounted, loading initial users');
     
-    const storedUsersStr = localStorage.getItem(USERS_STORAGE_KEY);
-    if (storedUsersStr) {
-      try {
-        const parsedUsers = JSON.parse(storedUsersStr);
-        
-        // Check for test users with normalized email comparison
-        const hasTestUsers = parsedUsers.some((u: any) => {
-          const normalizedEmail = u.email.toLowerCase().trim();
-          return TEST_EMAILS.some(testEmail => testEmail.toLowerCase().trim() === normalizedEmail);
-        });
-        
-        if (hasTestUsers) {
-          console.log('Admin page - Test users found in localStorage, dispatching reset event');
-          localStorage.removeItem(USERS_STORAGE_KEY);
-          window.dispatchEvent(new CustomEvent('reset-users'));
-          setTimeout(loadUsers, 800);
-        } else {
-          loadUsers();
-        }
-      } catch (error) {
-        console.error('Error parsing users from localStorage:', error);
-        loadUsers();
-      }
-    } else {
-      loadUsers();
-    }
+    loadUsers();
     
     const handleUsersUpdated = () => {
       console.log('Admin page - users-updated event received');
       loadUsers();
     };
     
-    const handleResetUsers = () => {
-      console.log('Admin page - reset-users event received');
-      localStorage.removeItem(USERS_STORAGE_KEY);
-      window.dispatchEvent(new Event('storage'));
-    };
-    
-    window.addEventListener('users-updated', handleUsersUpdated);
-    window.addEventListener('reset-users', handleResetUsers);
-    window.addEventListener('storage', (e) => {
+    const handleStorageEvent = (e: StorageEvent) => {
       if (e.key === USERS_STORAGE_KEY) {
         console.log('Admin page - storage event received for users');
         loadUsers();
       }
-    });
+    };
     
+    const handleResetUsers = () => {
+      console.log('Admin page - reset-users event received');
+      localStorage.removeItem(USERS_STORAGE_KEY);
+      setTimeout(loadUsers, 300);
+    };
+    
+    window.addEventListener('users-updated', handleUsersUpdated);
+    window.addEventListener('reset-users', handleResetUsers);
+    window.addEventListener('storage', handleStorageEvent);
+    
+    // Check for updates periodically
     const checkUsersInterval = setInterval(() => {
       loadUsers();
     }, 3000);
@@ -106,10 +84,16 @@ export const useUserManagement = () => {
     return () => {
       window.removeEventListener('users-updated', handleUsersUpdated);
       window.removeEventListener('reset-users', handleResetUsers);
-      window.removeEventListener('storage', handleUsersUpdated);
+      window.removeEventListener('storage', handleStorageEvent);
       clearInterval(checkUsersInterval);
     };
   }, [isAuthenticated, user]);
+
+  // Add a manual refresh function
+  const refreshUsersList = () => {
+    console.log('Manual user list refresh triggered');
+    loadUsers();
+  };
 
   useEffect(() => {
     let result = users;
@@ -174,5 +158,6 @@ export const useUserManagement = () => {
     setFilterSchool,
     handleDeleteUser,
     handleRefreshUsers,
+    refreshUsersList
   };
 };

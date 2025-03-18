@@ -26,6 +26,7 @@ export interface AuthContextType {
   updateProfileImage: (imageUrl: string) => void;
   getAllUsers: () => User[];
   deleteUserByEmail: (email: string) => Promise<boolean>;
+  refreshUsers: () => void; // New function to force refresh all users
   
   // Adding these stub properties to fix type errors
   verifyEmail: (id: string, token: string) => Promise<boolean>;

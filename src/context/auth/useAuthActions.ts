@@ -39,6 +39,20 @@ export const useAuthActions = () => {
     }
   };
 
+  const forceRefreshUsers = () => {
+    // Read users directly from local storage
+    const storedUsers = localStorage.getItem(USERS_STORAGE_KEY);
+    if (storedUsers) {
+      try {
+        const parsedUsers = JSON.parse(storedUsers);
+        setUsers(parsedUsers);
+        console.log('Forced refresh of users from localStorage:', parsedUsers.length);
+      } catch (error) {
+        console.error('Error parsing users during forced refresh:', error);
+      }
+    }
+  };
+
   useEffect(() => {
     const loadUsers = () => {
       try {
@@ -119,6 +133,7 @@ export const useAuthActions = () => {
     users,
     setUsers,
     saveUsers,
+    forceRefreshUsers,
     login,
     signup,
     updateProfileImage,
