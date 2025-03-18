@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useToast } from '@/components/ui/use-toast';
 import { UserWithPassword } from './types';
-import { USERS_STORAGE_KEY } from './constants';
+import { USERS_STORAGE_KEY, INITIAL_USERS } from './constants';
 import { useUserAuthentication } from './useUserAuthentication';
 import { useUserProfile } from './useUserProfile';
 
@@ -50,9 +50,16 @@ export const useAuthActions = () => {
             emails: parsedUsers.map((u: UserWithPassword) => u.email)
           });
           setUsers(parsedUsers);
+        } else {
+          // If no users in localStorage, load initial users
+          console.log('No users found in localStorage, loading initial users');
+          saveUsers(INITIAL_USERS);
         }
       } catch (error) {
         console.error('Error loading users:', error);
+        // If there's an error, load initial users as fallback
+        console.log('Error occurred, loading initial users as fallback');
+        saveUsers(INITIAL_USERS);
       }
     };
 
@@ -93,3 +100,4 @@ export const useAuthActions = () => {
     deleteUserByEmail,
   };
 };
+
