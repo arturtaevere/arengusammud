@@ -1,7 +1,7 @@
 
 import { useToast } from '@/components/ui/use-toast';
 import { User, UserWithPassword } from './types';
-import { USER_STORAGE_KEY } from './constants';
+import { USER_STORAGE_KEY, USERS_STORAGE_KEY } from './constants';
 
 export const useUserProfile = (
   users: UserWithPassword[], 
@@ -42,9 +42,22 @@ export const useUserProfile = (
   };
 
   const getAllUsers = () => {
-    console.log('getAllUsers called, returning users:', users.length);
+    // Always get the most up-to-date users from localStorage
+    const storedUsersStr = localStorage.getItem(USERS_STORAGE_KEY);
+    let latestUsers = users; // Default to state
+    
+    if (storedUsersStr) {
+      try {
+        latestUsers = JSON.parse(storedUsersStr);
+      } catch (e) {
+        console.error('Error parsing users in getAllUsers:', e);
+      }
+    }
+    
+    console.log('getAllUsers called, returning users:', latestUsers.length);
+    
     // Deep clone the users array and remove passwords
-    return users.map(({ password, ...user }) => user);
+    return latestUsers.map(({ password, ...user }: UserWithPassword) => user);
   };
 
   const deleteUserByEmail = async (email: string) => {
@@ -60,8 +73,20 @@ export const useUserProfile = (
       return false;
     }
     
+    // Always get the latest users from localStorage
+    const storedUsersStr = localStorage.getItem(USERS_STORAGE_KEY);
+    let currentUsers = users;
+    
+    if (storedUsersStr) {
+      try {
+        currentUsers = JSON.parse(storedUsersStr);
+      } catch (e) {
+        console.error('Error parsing users during delete:', e);
+      }
+    }
+    
     const normalizedEmail = email.toLowerCase().trim();
-    const userIndex = users.findIndex(u => u.email.toLowerCase() === normalizedEmail);
+    const userIndex = currentUsers.findIndex(u => u.email.toLowerCase() === normalizedEmail);
     
     if (userIndex === -1) {
       toast({
@@ -72,9 +97,13 @@ export const useUserProfile = (
       return false;
     }
     
-    const updatedUsers = [...users];
+    const updatedUsers = [...currentUsers];
     updatedUsers.splice(userIndex, 1);
     
+    // Save to localStorage first for immediate effect
+    localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(updatedUsers));
+    
+    // Then update state and dispatch events
     saveUsers(updatedUsers);
     
     toast({

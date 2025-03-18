@@ -45,12 +45,25 @@ export const useAuthActions = () => {
     if (storedUsers) {
       try {
         const parsedUsers = JSON.parse(storedUsers);
+        console.log('Forced refresh of users from localStorage:', {
+          count: parsedUsers.length,
+          emails: parsedUsers.map((u: UserWithPassword) => u.email)
+        });
         setUsers(parsedUsers);
-        console.log('Forced refresh of users from localStorage:', parsedUsers.length);
       } catch (error) {
         console.error('Error parsing users during forced refresh:', error);
       }
+    } else {
+      // If localStorage is empty, set initial users
+      console.log('No users in localStorage during forced refresh, setting initial users');
+      saveUsers(INITIAL_USERS);
     }
+    
+    // Dispatch events to notify other components
+    setTimeout(() => {
+      window.dispatchEvent(new Event('storage'));
+      window.dispatchEvent(new CustomEvent('users-updated'));
+    }, 100);
   };
 
   useEffect(() => {

@@ -63,9 +63,21 @@ export const useUserAuthentication = (
       throw new Error('Selle e-posti aadressiga ei saa kontot luua');
     }
     
-    // Get latest users from localStorage
+    // Important: Always get the fresh users list from localStorage for signup
+    // This ensures we catch users added in other tabs/sessions
     const storedUsersStr = localStorage.getItem(USERS_STORAGE_KEY);
-    const currentUsers: UserWithPassword[] = storedUsersStr ? JSON.parse(storedUsersStr) : users;
+    let currentUsers: UserWithPassword[] = [];
+    
+    if (storedUsersStr) {
+      try {
+        currentUsers = JSON.parse(storedUsersStr);
+      } catch (e) {
+        console.error('Error parsing stored users during signup:', e);
+        currentUsers = users; // Fallback to state if localStorage parse fails
+      }
+    } else {
+      currentUsers = users;
+    }
     
     console.log('Attempting signup for email:', email);
     console.log('Current users in system:', {
@@ -119,7 +131,7 @@ export const useUserAuthentication = (
     });
     
     try {
-      // Update localStorage
+      // Update localStorage directly first for immediate access
       localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(updatedUsers));
       console.log('Successfully saved to localStorage');
       
@@ -127,9 +139,16 @@ export const useUserAuthentication = (
       saveUsers(updatedUsers);
       console.log('Successfully updated state via saveUsers');
       
-      // Force refresh by dispatching storage event
+      // Force refresh by dispatching multiple events to ensure all listeners update
       window.dispatchEvent(new Event('storage'));
       window.dispatchEvent(new CustomEvent('users-updated'));
+      
+      // Add a slight delay and dispatch again to ensure components have time to set up listeners
+      setTimeout(() => {
+        window.dispatchEvent(new Event('storage'));
+        window.dispatchEvent(new CustomEvent('users-updated'));
+      }, 500);
+      
       console.log('Dispatched storage and users-updated events');
       
       toast({

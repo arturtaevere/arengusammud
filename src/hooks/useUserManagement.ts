@@ -1,24 +1,31 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { User } from '@/context/auth/types';
 import { useToast } from '@/components/ui/use-toast';
 import { USERS_STORAGE_KEY, TEST_EMAILS } from '@/context/auth/constants';
 
 export const useUserManagement = () => {
-  const { user, isAuthenticated, getAllUsers, deleteUserByEmail } = useAuth();
+  const { user, isAuthenticated, getAllUsers, deleteUserByEmail, refreshUsers } = useAuth();
   const [users, setUsers] = useState<User[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
   const [filterRole, setFilterRole] = useState<string>('all');
   const [filterSchool, setFilterSchool] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState<string>('');
   const { toast } = useToast();
+  const [lastRefresh, setLastRefresh] = useState(Date.now());
 
-  const loadUsers = () => {
+  const loadUsers = useCallback(() => {
     if (isAuthenticated && user?.role === 'juht') {
       try {
+        // Force global refresh first to ensure we get the latest data
+        refreshUsers();
+        
+        // Then get all users
         const allUsers = getAllUsers();
-        console.log('Admin page - Loading users from getAllUsers:', {
+        const timestamp = Date.now();
+        
+        console.log(`Admin page - Loading users at ${timestamp}:`, {
           total: allUsers.length,
           emails: allUsers.map((u: User) => u.email)
         });
@@ -33,11 +40,12 @@ export const useUserManagement = () => {
           console.log('Admin page - Test users still present, dispatching reset-users event');
           localStorage.removeItem(USERS_STORAGE_KEY);
           window.dispatchEvent(new CustomEvent('reset-users'));
-          setTimeout(loadUsers, 500);
+          setTimeout(() => loadUsers(), 500);
           return;
         }
         
         setUsers(allUsers);
+        setLastRefresh(timestamp);
       } catch (error) {
         console.error('Error getting users in Admin page:', error);
         toast({
@@ -47,7 +55,28 @@ export const useUserManagement = () => {
         });
       }
     }
-  };
+  }, [isAuthenticated, user, getAllUsers, refreshUsers, toast]);
+
+  // Force refresh the users list from both localStorage and context
+  const refreshUsersList = useCallback(() => {
+    console.log('Manual user list refresh triggered');
+    // Force refresh in context first
+    refreshUsers();
+    
+    // Wait a bit, then load from getAllUsers
+    setTimeout(() => {
+      const allUsers = getAllUsers();
+      console.log('Refreshed user list:', {
+        count: allUsers.length,
+        emails: allUsers.map(u => u.email)
+      });
+      setUsers(allUsers);
+      setLastRefresh(Date.now());
+      
+      // Dispatch an event to notify other components
+      window.dispatchEvent(new CustomEvent('admin-refreshed-users'));
+    }, 300);
+  }, [getAllUsers, refreshUsers]);
 
   useEffect(() => {
     console.log('useUserManagement hook mounted, loading initial users');
@@ -76,24 +105,12 @@ export const useUserManagement = () => {
     window.addEventListener('reset-users', handleResetUsers);
     window.addEventListener('storage', handleStorageEvent);
     
-    // Check for updates periodically
-    const checkUsersInterval = setInterval(() => {
-      loadUsers();
-    }, 3000);
-    
     return () => {
       window.removeEventListener('users-updated', handleUsersUpdated);
       window.removeEventListener('reset-users', handleResetUsers);
       window.removeEventListener('storage', handleStorageEvent);
-      clearInterval(checkUsersInterval);
     };
-  }, [isAuthenticated, user]);
-
-  // Add a manual refresh function
-  const refreshUsersList = () => {
-    console.log('Manual user list refresh triggered');
-    loadUsers();
-  };
+  }, [loadUsers]);
 
   useEffect(() => {
     let result = users;
@@ -158,6 +175,7 @@ export const useUserManagement = () => {
     setFilterSchool,
     handleDeleteUser,
     handleRefreshUsers,
-    refreshUsersList
+    refreshUsersList,
+    lastRefresh
   };
 };

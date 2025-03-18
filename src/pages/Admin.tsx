@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { RefreshCw } from 'lucide-react';
 
 const Admin = () => {
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, refreshUsers } = useAuth();
   const navigate = useNavigate();
   const { 
     users, 
@@ -33,17 +33,38 @@ const Admin = () => {
     }
   }, [isAuthenticated, user, navigate]);
 
-  // Refresh users whenever this component renders
+  // Refresh users whenever this component renders or mounts
   useEffect(() => {
     if (isAuthenticated && user?.role === 'juht') {
-      // Force refresh user list on page load
-      refreshUsersList();
+      console.log('Admin page - Initial load, forcing refresh from context');
+      refreshUsers(); // Call context refresh first
+      setTimeout(() => {
+        refreshUsersList(); // Then call local refresh
+      }, 300);
     }
-  }, [isAuthenticated, user]);
+  }, [isAuthenticated, user, refreshUsers, refreshUsersList]);
+
+  // Set up interval to check for updates
+  useEffect(() => {
+    if (isAuthenticated && user?.role === 'juht') {
+      const intervalId = setInterval(() => {
+        console.log('Admin page - Periodic refresh');
+        refreshUsersList();
+      }, 2000); // Check every 2 seconds
+
+      return () => clearInterval(intervalId);
+    }
+  }, [isAuthenticated, user, refreshUsersList]);
 
   if (!isAuthenticated || user?.role !== 'juht') {
     return null;
   }
+
+  const handleManualRefresh = () => {
+    console.log('Admin page - Manual refresh triggered');
+    refreshUsers(); // Global refresh
+    setTimeout(refreshUsersList, 300); // Local refresh with delay
+  };
 
   return (
     <div className="min-h-screen bg-gray-50/50">
@@ -56,7 +77,7 @@ const Admin = () => {
           <Button 
             variant="outline" 
             size="sm" 
-            onClick={refreshUsersList}
+            onClick={handleManualRefresh}
             className="flex items-center gap-2"
           >
             <RefreshCw className="h-4 w-4" />
