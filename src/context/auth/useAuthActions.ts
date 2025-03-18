@@ -11,7 +11,11 @@ export const useAuthActions = () => {
   const { toast } = useToast();
   
   const saveUsers = (updatedUsers: UserWithPassword[]) => {
-    console.log('Saving users to state and localStorage, count:', updatedUsers.length);
+    console.log('Saving users to state and localStorage:', {
+      currentUsers: users.length,
+      updatedUsers: updatedUsers.length,
+      emails: updatedUsers.map(u => u.email)
+    });
     
     try {
       // First update localStorage
@@ -41,7 +45,10 @@ export const useAuthActions = () => {
         const storedUsers = localStorage.getItem(USERS_STORAGE_KEY);
         if (storedUsers) {
           const parsedUsers = JSON.parse(storedUsers);
-          console.log('Loading users from localStorage, count:', parsedUsers.length);
+          console.log('Loading users in useAuthActions:', {
+            count: parsedUsers.length,
+            emails: parsedUsers.map((u: UserWithPassword) => u.email)
+          });
           setUsers(parsedUsers);
         }
       } catch (error) {
@@ -54,14 +61,14 @@ export const useAuthActions = () => {
     
     // Set up event listeners
     const handleUsersUpdated = () => {
-      console.log('users-updated event received, reloading users');
+      console.log('users-updated event received in useAuthActions');
       loadUsers();
     };
     
     window.addEventListener('users-updated', handleUsersUpdated);
     window.addEventListener('storage', (e) => {
       if (e.key === USERS_STORAGE_KEY) {
-        console.log('storage event received for users, reloading');
+        console.log('storage event received for users in useAuthActions');
         loadUsers();
       }
     });

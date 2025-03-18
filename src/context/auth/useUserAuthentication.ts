@@ -1,3 +1,4 @@
+
 import { useToast } from '@/components/ui/use-toast';
 import { User, UserWithPassword } from './types';
 import { USER_STORAGE_KEY, USERS_STORAGE_KEY } from './constants';
@@ -53,6 +54,13 @@ export const useUserAuthentication = (
   const signup = async (name: string, email: string, password: string, role: 'juht' | 'õpetaja', school?: string) => {
     await new Promise(resolve => setTimeout(resolve, 800));
     
+    console.log('Attempting to create new user:', {
+      email,
+      role,
+      school,
+      existingUsers: users.length
+    });
+    
     if (users.some((u: UserWithPassword) => u.email.toLowerCase() === email.toLowerCase())) {
       throw new Error('Selle e-posti aadressiga kasutaja on juba olemas');
     }
@@ -73,32 +81,34 @@ export const useUserAuthentication = (
       emailVerified: true,
     };
     
-    console.log('Creating new user:', newUser.email);
+    console.log('Creating new user with ID:', userId);
     
     const updatedUsers = [...users, newUser];
     
-    // First update localStorage directly
     try {
+      // First update localStorage directly
+      console.log('Saving new user to localStorage, total users:', updatedUsers.length);
       localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(updatedUsers));
-      console.log('Successfully saved new user to localStorage');
+      
+      // Then update state through saveUsers
+      saveUsers(updatedUsers);
+      
+      // Explicitly dispatch events to ensure updates
+      window.dispatchEvent(new Event('storage'));
+      window.dispatchEvent(new CustomEvent('users-updated'));
+      
+      console.log('Successfully created new user and dispatched events');
+      
+      toast({
+        title: "Registreerimine õnnestus",
+        description: "Konto on loodud. Võid nüüd sisse logida.",
+      });
+      
+      return email;
     } catch (error) {
-      console.error('Error saving to localStorage:', error);
+      console.error('Error during signup:', error);
       throw new Error('Kasutaja salvestamine ebaõnnestus');
     }
-    
-    // Then update state through saveUsers
-    saveUsers(updatedUsers);
-    
-    // Explicitly dispatch events to ensure updates
-    window.dispatchEvent(new Event('storage'));
-    window.dispatchEvent(new CustomEvent('users-updated'));
-    
-    toast({
-      title: "Registreerimine õnnestus",
-      description: "Konto on loodud. Võid nüüd sisse logida.",
-    });
-    
-    return email;
   };
 
   return {
