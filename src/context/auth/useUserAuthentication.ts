@@ -58,10 +58,13 @@ export const useUserAuthentication = (
       email,
       role,
       school,
-      existingUsers: users.length
+      existingUsers: users.length,
+      existingEmails: users.map(u => u.email)
     });
     
-    if (users.some((u: UserWithPassword) => u.email.toLowerCase() === email.toLowerCase())) {
+    const existingUser = users.find((u: UserWithPassword) => u.email.toLowerCase() === email.toLowerCase());
+    if (existingUser) {
+      console.log('Found existing user with email:', existingUser);
       throw new Error('Selle e-posti aadressiga kasutaja on juba olemas');
     }
 

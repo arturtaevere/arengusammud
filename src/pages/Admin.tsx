@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
@@ -20,24 +19,13 @@ const Admin = () => {
 
   const loadUsers = () => {
     if (isAuthenticated && user?.role === 'juht') {
-      try {
-        const storedUsers = localStorage.getItem(USERS_STORAGE_KEY);
-        if (storedUsers) {
-          const parsedUsers = JSON.parse(storedUsers);
-          console.log('Admin page - Loading users from localStorage:', {
-            count: parsedUsers.length,
-            emails: parsedUsers.map((u: any) => u.email)
-          });
-          const usersWithoutPasswords = parsedUsers.map(({ password, ...user }: any) => user);
-          setUsers(usersWithoutPasswords);
-          setFilteredUsers(usersWithoutPasswords);
-          return;
-        } else {
-          console.log('Admin page - No users found in localStorage');
-        }
-      } catch (error) {
-        console.error('Admin page - Error loading users from localStorage:', error);
-      }
+      const allUsers = getAllUsers();
+      console.log('Admin page - All users loaded:', {
+        count: allUsers.length,
+        emails: allUsers.map(u => u.email)
+      });
+      setUsers(allUsers);
+      setFilteredUsers(allUsers);
     }
   };
 
@@ -66,16 +54,9 @@ const Admin = () => {
       }
     });
     
-    // Force a refresh after a short delay to ensure we have the latest data
-    const refreshTimeout = setTimeout(() => {
-      console.log('Admin page - Performing delayed refresh');
-      loadUsers();
-    }, 1000);
-    
     return () => {
       window.removeEventListener('users-updated', handleUsersUpdated);
       window.removeEventListener('storage', handleUsersUpdated);
-      clearTimeout(refreshTimeout);
     };
   }, [isAuthenticated, user]);
 
