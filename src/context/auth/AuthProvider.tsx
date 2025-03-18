@@ -56,6 +56,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }, 500); // Small delay to ensure other components are ready
   }, []);
 
+  // Listen for localStorage changes to update current user if needed
+  useEffect(() => {
+    const handleStorageEvent = (event: StorageEvent) => {
+      if (event.key === USER_STORAGE_KEY && event.newValue !== event.oldValue) {
+        try {
+          const newUser = event.newValue ? JSON.parse(event.newValue) : null;
+          setUser(newUser);
+        } catch (error) {
+          console.error('Error parsing user from storage event:', error);
+        }
+      }
+    };
+    
+    window.addEventListener('storage', handleStorageEvent);
+    return () => window.removeEventListener('storage', handleStorageEvent);
+  }, []);
+
   // Handle user login
   const handleLogin = async (email: string, password: string) => {
     setIsLoading(true);

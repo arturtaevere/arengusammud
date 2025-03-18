@@ -9,7 +9,7 @@ import { User } from '@/context/auth/types';
 import { USERS_STORAGE_KEY } from '@/context/auth/constants';
 
 const Admin = () => {
-  const { user, isAuthenticated, deleteUserByEmail } = useAuth();
+  const { user, isAuthenticated, getAllUsers, deleteUserByEmail } = useAuth();
   const navigate = useNavigate();
   const [users, setUsers] = useState<User[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
@@ -20,23 +20,39 @@ const Admin = () => {
 
   const loadUsers = () => {
     if (isAuthenticated && user?.role === 'juht') {
-      const storedUsersStr = localStorage.getItem(USERS_STORAGE_KEY);
-      if (!storedUsersStr) {
-        console.log('No users found in localStorage');
-        return;
-      }
-
       try {
-        const allUsers = JSON.parse(storedUsersStr);
-        const usersWithoutPasswords = allUsers.map(({ password, ...user }: any) => user);
-        console.log('Admin page - Loading users:', {
-          total: usersWithoutPasswords.length,
-          emails: usersWithoutPasswords.map((u: User) => u.email)
+        // Use getAllUsers from AuthContext
+        const allUsers = getAllUsers();
+        console.log('Admin page - Loading users from getAllUsers:', {
+          total: allUsers.length,
+          emails: allUsers.map((u: User) => u.email)
         });
-        setUsers(usersWithoutPasswords);
-        setFilteredUsers(usersWithoutPasswords);
+        setUsers(allUsers);
+        
+        // Also check localStorage to ensure we have the most up-to-date data
+        const storedUsersStr = localStorage.getItem(USERS_STORAGE_KEY);
+        if (storedUsersStr) {
+          try {
+            const parsedUsers = JSON.parse(storedUsersStr);
+            const usersWithoutPasswords = parsedUsers.map(({ password, ...user }: any) => user);
+            if (usersWithoutPasswords.length !== allUsers.length) {
+              console.log('Admin page - Users from localStorage different from state:', {
+                localStorageCount: usersWithoutPasswords.length,
+                stateCount: allUsers.length
+              });
+              setUsers(usersWithoutPasswords);
+            }
+          } catch (error) {
+            console.error('Error parsing users from localStorage:', error);
+          }
+        }
       } catch (error) {
-        console.error('Error parsing users from localStorage:', error);
+        console.error('Error getting users in Admin page:', error);
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Failed to load users",
+        });
       }
     }
   };
@@ -69,10 +85,10 @@ const Admin = () => {
       }
     });
     
-    // Also load users when the component mounts
+    // Also check for updates periodically (every 3 seconds)
     const checkUsersInterval = setInterval(() => {
       loadUsers();
-    }, 2000);
+    }, 3000);
     
     return () => {
       window.removeEventListener('users-updated', handleUsersUpdated);
@@ -81,7 +97,7 @@ const Admin = () => {
     };
   }, [isAuthenticated, user]);
 
-  // Filter users based on search and filter criteria
+  // Update filtered users when users, filters, or search term changes
   useEffect(() => {
     let result = users;
     
@@ -106,6 +122,15 @@ const Admin = () => {
   }, [users, filterRole, filterSchool, searchTerm]);
 
   const handleDeleteUser = async (email: string) => {
+    if (email === 'artur@arengusammud.ee') {
+      toast({
+        variant: "destructive",
+        title: "Toimingut ei saa teha",
+        description: "Süsteemi peakasutajat ei saa kustutada.",
+      });
+      return;
+    }
+    
     const success = await deleteUserByEmail(email);
     if (success) {
       loadUsers();

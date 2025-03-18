@@ -1,7 +1,7 @@
 
-import { useState } from 'react';
 import { useToast } from '@/components/ui/use-toast';
-import { UserWithPassword } from './types';
+import { User, UserWithPassword } from './types';
+import { USER_STORAGE_KEY } from './constants';
 
 export const useUserProfile = (
   users: UserWithPassword[], 
@@ -18,6 +18,20 @@ export const useUserProfile = (
     });
     
     saveUsers(updatedUsers);
+    
+    // Update the current user in localStorage if needed
+    const currentUserStr = localStorage.getItem(USER_STORAGE_KEY);
+    if (currentUserStr) {
+      try {
+        const currentUser = JSON.parse(currentUserStr);
+        if (currentUser.id === userId) {
+          const updatedUser = { ...currentUser, profileImage: imageUrl };
+          localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(updatedUser));
+        }
+      } catch (error) {
+        console.error('Error updating profile image in localStorage:', error);
+      }
+    }
     
     toast({
       title: "Profiilipilt uuendatud",
@@ -36,7 +50,18 @@ export const useUserProfile = (
   const deleteUserByEmail = async (email: string) => {
     await new Promise(resolve => setTimeout(resolve, 800));
     
-    const userIndex = users.findIndex(u => u.email.toLowerCase() === email.toLowerCase());
+    // Protect main admin account
+    if (email.toLowerCase() === 'artur@arengusammud.ee') {
+      toast({
+        variant: "destructive",
+        title: "Toimingut ei saa teha",
+        description: "Süsteemi peakasutajat ei saa kustutada.",
+      });
+      return false;
+    }
+    
+    const normalizedEmail = email.toLowerCase().trim();
+    const userIndex = users.findIndex(u => u.email.toLowerCase() === normalizedEmail);
     
     if (userIndex === -1) {
       toast({

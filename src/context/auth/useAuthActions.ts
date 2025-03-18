@@ -72,17 +72,19 @@ export const useAuthActions = () => {
       loadUsers();
     };
     
-    window.addEventListener('users-updated', handleUsersUpdated);
-    window.addEventListener('storage', (e) => {
+    const handleStorageChange = (e: StorageEvent) => {
       if (e.key === USERS_STORAGE_KEY) {
         console.log('storage event received for users in useAuthActions');
         loadUsers();
       }
-    });
+    };
+    
+    window.addEventListener('users-updated', handleUsersUpdated);
+    window.addEventListener('storage', handleStorageChange);
     
     return () => {
       window.removeEventListener('users-updated', handleUsersUpdated);
-      window.removeEventListener('storage', handleUsersUpdated);
+      window.removeEventListener('storage', handleStorageChange);
     };
   }, []);
 
@@ -100,4 +102,3 @@ export const useAuthActions = () => {
     deleteUserByEmail,
   };
 };
-

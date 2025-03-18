@@ -1,3 +1,4 @@
+
 import { useToast } from '@/components/ui/use-toast';
 import { User, UserWithPassword } from './types';
 import { USER_STORAGE_KEY, USERS_STORAGE_KEY } from './constants';
@@ -11,36 +12,32 @@ export const useUserAuthentication = (
   const login = async (email: string, password: string) => {
     await new Promise(resolve => setTimeout(resolve, 800));
     
-    // Convert any 'coach' role users to 'juht'
-    const updatedUsers = users.map((u: UserWithPassword) => {
-      // Use type assertions to fix the type comparison issues
-      if (u.role === 'coach' as any) {
-        return {...u, role: 'juht' as const};
-      }
-      if (u.role === 'teacher' as any) {
-        return {...u, role: 'õpetaja' as const};
-      }
-      return u;
-    });
+    console.log('Attempting login for:', email);
     
-    // Save the updated users with the new roles if there are changes
-    if (JSON.stringify(updatedUsers) !== JSON.stringify(users)) {
-      saveUsers(updatedUsers);
-    }
+    // Get the latest users from localStorage in case another browser tab has updated it
+    const storedUsersStr = localStorage.getItem(USERS_STORAGE_KEY);
+    const latestUsers: UserWithPassword[] = storedUsersStr ? JSON.parse(storedUsersStr) : users;
     
-    const foundUser = updatedUsers.find((u: UserWithPassword) => u.email.toLowerCase() === email.toLowerCase());
+    const normalizedEmail = email.toLowerCase().trim();
+    const foundUser = latestUsers.find((u: UserWithPassword) => 
+      u.email.toLowerCase().trim() === normalizedEmail
+    );
     
     if (!foundUser) {
+      console.log('User not found for email:', normalizedEmail);
       throw new Error('Vale e-post või parool');
     }
     
     if (foundUser.password !== password) {
+      console.log('Invalid password for user:', normalizedEmail);
       throw new Error('Vale e-post või parool');
     }
     
     const { password: _, ...userWithoutPassword } = foundUser;
     
     localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(userWithoutPassword));
+    
+    console.log('Login successful for user:', userWithoutPassword.name);
     
     toast({
       title: "Sisselogimine õnnestus",
@@ -65,12 +62,15 @@ export const useUserAuthentication = (
     });
     
     const normalizedNewEmail = email.toLowerCase().trim();
-    const existingUser = currentUsers.find(
+    
+    console.log('Checking if user exists with normalized email:', normalizedNewEmail);
+    
+    const existingUserIndex = currentUsers.findIndex(
       (u: UserWithPassword) => u.email.toLowerCase().trim() === normalizedNewEmail
     );
     
-    if (existingUser) {
-      console.log('Found existing user with email:', email, existingUser);
+    if (existingUserIndex !== -1) {
+      console.log('Found existing user with email:', email, currentUsers[existingUserIndex]);
       throw new Error('Selle e-posti aadressiga kasutaja on juba olemas');
     }
 
@@ -82,7 +82,7 @@ export const useUserAuthentication = (
     const newUser = {
       id: userId,
       name,
-      email,
+      email: normalizedNewEmail, // Store normalized email
       password,
       role,
       school,
