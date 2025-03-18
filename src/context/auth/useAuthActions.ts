@@ -47,9 +47,9 @@ export const useAuthActions = () => {
           const parsedUsers = JSON.parse(storedUsers);
           
           // Check if the stored users list contains any test users we want to remove
-          const testEmails = ['coach@example.com', 'teacher@example.com', 'maarja@kesklinnakool.ee', 'tiit@reaalkool.ee'];
+          const testEmails = ['coach@example.com', 'teacher@example.com', 'maarja@kesklinnakool.ee', 'tiit@reaalkool.ee', 'artur.taevere@gmail.com'];
           const hasTestUsers = parsedUsers.some((user: UserWithPassword) => 
-            testEmails.includes(user.email.toLowerCase())
+            testEmails.includes(user.email.toLowerCase().trim())
           );
           
           if (hasTestUsers) {
@@ -91,12 +91,19 @@ export const useAuthActions = () => {
       }
     };
     
+    const handleResetUsers = () => {
+      console.log('reset-users event received in useAuthActions');
+      saveUsers(INITIAL_USERS);
+    };
+    
     window.addEventListener('users-updated', handleUsersUpdated);
     window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('reset-users', handleResetUsers);
     
     return () => {
       window.removeEventListener('users-updated', handleUsersUpdated);
       window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('reset-users', handleResetUsers);
     };
   }, []);
 

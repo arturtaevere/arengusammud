@@ -64,6 +64,16 @@ export const useUserAuthentication = (
     const normalizedNewEmail = email.toLowerCase().trim();
     
     console.log('Checking if user exists with normalized email:', normalizedNewEmail);
+    console.log('All normalized emails in system:', currentUsers.map(u => u.email.toLowerCase().trim()));
+    
+    // Dump entire users list for debugging
+    currentUsers.forEach((user, index) => {
+      console.log(`User ${index + 1}:`, {
+        email: user.email,
+        normalizedEmail: user.email.toLowerCase().trim(),
+        matches: user.email.toLowerCase().trim() === normalizedNewEmail
+      });
+    });
     
     const existingUserIndex = currentUsers.findIndex(
       (u: UserWithPassword) => u.email.toLowerCase().trim() === normalizedNewEmail

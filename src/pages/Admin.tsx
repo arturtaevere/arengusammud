@@ -22,7 +22,7 @@ const Admin = () => {
     if (isAuthenticated && user?.role === 'juht') {
       try {
         // Force clear localStorage if needed
-        const testEmails = ['coach@example.com', 'teacher@example.com', 'maarja@kesklinnakool.ee', 'tiit@reaalkool.ee'];
+        const testEmails = ['coach@example.com', 'teacher@example.com', 'maarja@kesklinnakool.ee', 'tiit@reaalkool.ee', 'artur.taevere@gmail.com'];
         
         // Use getAllUsers from AuthContext
         const allUsers = getAllUsers();
@@ -32,9 +32,9 @@ const Admin = () => {
         });
         
         // Check if we still have test users
-        const hasTestUsers = allUsers.some(u => testEmails.includes(u.email.toLowerCase()));
+        const hasTestUsers = allUsers.some(u => testEmails.includes(u.email.toLowerCase().trim()));
         if (hasTestUsers) {
-          console.log('Admin page - Test users still present, dispatching update event');
+          console.log('Admin page - Test users still present, dispatching reset event');
           window.dispatchEvent(new CustomEvent('reset-users'));
           setTimeout(loadUsers, 500); // Try again after a short delay
           return;
@@ -66,12 +66,12 @@ const Admin = () => {
     console.log('Admin component mounted, loading initial users');
     
     // Force clear localStorage immediately
-    const testEmails = ['coach@example.com', 'teacher@example.com', 'maarja@kesklinnakool.ee', 'tiit@reaalkool.ee'];
+    const testEmails = ['coach@example.com', 'teacher@example.com', 'maarja@kesklinnakool.ee', 'tiit@reaalkool.ee', 'artur.taevere@gmail.com'];
     const storedUsersStr = localStorage.getItem(USERS_STORAGE_KEY);
     if (storedUsersStr) {
       try {
         const parsedUsers = JSON.parse(storedUsersStr);
-        const hasTestUsers = parsedUsers.some((u: any) => testEmails.includes(u.email.toLowerCase()));
+        const hasTestUsers = parsedUsers.some((u: any) => testEmails.includes(u.email.toLowerCase().trim()));
         if (hasTestUsers) {
           console.log('Admin page - Test users found in localStorage, dispatching reset event');
           window.dispatchEvent(new CustomEvent('reset-users'));
@@ -163,16 +163,16 @@ const Admin = () => {
   };
 
   const handleRefreshUsers = () => {
-    // Forcibly clear localStorage to trigger reload of initial users
-    localStorage.removeItem(USERS_STORAGE_KEY);
-    window.dispatchEvent(new Event('storage'));
+    // Force a complete reset to initial users
+    console.log('Admin page - Manual reset triggered');
+    window.dispatchEvent(new CustomEvent('reset-users'));
     
     // Reload after a short delay
     setTimeout(() => {
       loadUsers();
       toast({
-        title: "Kasutajate nimekiri värskendatud",
-        description: `Nimekiri taastatud.`,
+        title: "Kasutajate nimekiri lähtestatud",
+        description: `Nimekiri taastatud vaikeväärtusele.`,
       });
     }, 800);
   };
