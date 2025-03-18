@@ -1,4 +1,3 @@
-
 import { useToast } from '@/components/ui/use-toast';
 import { User, UserWithPassword } from './types';
 import { USER_STORAGE_KEY, USERS_STORAGE_KEY } from './constants';
@@ -54,25 +53,19 @@ export const useUserAuthentication = (
   const signup = async (name: string, email: string, password: string, role: 'juht' | 'õpetaja', school?: string) => {
     await new Promise(resolve => setTimeout(resolve, 800));
     
-    // Get ALL current users from localStorage first
+    // Get latest users from localStorage
     const storedUsersStr = localStorage.getItem(USERS_STORAGE_KEY);
-    let currentUsers: UserWithPassword[] = [];
+    const currentUsers: UserWithPassword[] = storedUsersStr ? JSON.parse(storedUsersStr) : users;
     
-    try {
-      currentUsers = storedUsersStr ? JSON.parse(storedUsersStr) : users;
-      console.log('Current users from storage during signup:', {
-        stored: storedUsersStr ? 'yes' : 'no',
-        count: currentUsers.length,
-        emails: currentUsers.map(u => u.email)
-      });
-    } catch (error) {
-      console.error('Error parsing stored users:', error);
-      currentUsers = users;
-    }
+    console.log('Current users before signup:', {
+      fromStorage: storedUsersStr ? 'yes' : 'no',
+      count: currentUsers.length,
+      emails: currentUsers.map(u => u.email)
+    });
     
     const existingUser = currentUsers.find((u: UserWithPassword) => u.email.toLowerCase() === email.toLowerCase());
     if (existingUser) {
-      console.log('Found existing user with email:', existingUser);
+      console.log('Found existing user with email:', email);
       throw new Error('Selle e-posti aadressiga kasutaja on juba olemas');
     }
 
@@ -94,26 +87,24 @@ export const useUserAuthentication = (
     
     const updatedUsers = [...currentUsers, newUser];
     
-    console.log('Attempting to save new user:', {
+    console.log('New user signup - attempting to save:', {
       newUser: { ...newUser, password: '[REDACTED]' },
-      totalUsers: updatedUsers.length
+      totalUsersAfterAdd: updatedUsers.length
     });
     
     try {
-      // Update localStorage first
+      // Update localStorage
       localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(updatedUsers));
+      console.log('Successfully saved to localStorage');
       
-      // Then update the state
+      // Update state via context
       saveUsers(updatedUsers);
+      console.log('Successfully updated state via saveUsers');
       
-      // Force refresh by dispatching events
+      // Force refresh by dispatching storage event
       window.dispatchEvent(new Event('storage'));
       window.dispatchEvent(new CustomEvent('users-updated'));
-      
-      console.log('Successfully saved user. Updated users in storage:', {
-        count: updatedUsers.length,
-        emails: updatedUsers.map(u => u.email)
-      });
+      console.log('Dispatched storage and users-updated events');
       
       toast({
         title: "Registreerimine õnnestus",

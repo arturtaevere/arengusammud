@@ -8,7 +8,7 @@ import { User } from '@/context/auth/types';
 import { USERS_STORAGE_KEY } from '@/context/auth/constants';
 
 const Admin = () => {
-  const { user, isAuthenticated, getAllUsers, deleteUserByEmail } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const [users, setUsers] = useState<User[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
@@ -20,28 +20,23 @@ const Admin = () => {
   const loadUsers = () => {
     if (isAuthenticated && user?.role === 'juht') {
       const storedUsersStr = localStorage.getItem(USERS_STORAGE_KEY);
-      let allUsers: User[] = [];
-      
-      if (storedUsersStr) {
-        try {
-          const storedUsers = JSON.parse(storedUsersStr);
-          allUsers = storedUsers.map(({ password, ...user }: any) => user);
-          console.log('Admin - Loading users from storage:', {
-            rawCount: storedUsers.length,
-            processedCount: allUsers.length,
-            emails: allUsers.map(u => u.email)
-          });
-        } catch (error) {
-          console.error('Error loading users from storage:', error);
-          allUsers = getAllUsers();
-        }
-      } else {
-        console.log('No users in localStorage, falling back to getAllUsers');
-        allUsers = getAllUsers();
+      if (!storedUsersStr) {
+        console.log('No users found in localStorage');
+        return;
       }
-      
-      setUsers(allUsers);
-      setFilteredUsers(allUsers);
+
+      try {
+        const allUsers = JSON.parse(storedUsersStr);
+        const usersWithoutPasswords = allUsers.map(({ password, ...user }: any) => user);
+        console.log('Admin page - Loading users:', {
+          total: usersWithoutPasswords.length,
+          emails: usersWithoutPasswords.map((u: User) => u.email)
+        });
+        setUsers(usersWithoutPasswords);
+        setFilteredUsers(usersWithoutPasswords);
+      } catch (error) {
+        console.error('Error parsing users from localStorage:', error);
+      }
     }
   };
 
@@ -57,15 +52,16 @@ const Admin = () => {
     console.log('Admin component mounted, loading initial users');
     loadUsers();
     
+    // Listen for updates
     const handleUsersUpdated = () => {
-      console.log('Admin page - users-updated event received, reloading users');
+      console.log('Admin page - users-updated event received');
       loadUsers();
     };
     
     window.addEventListener('users-updated', handleUsersUpdated);
     window.addEventListener('storage', (e) => {
       if (e.key === USERS_STORAGE_KEY) {
-        console.log('Admin page - storage event received, reloading users');
+        console.log('Admin page - storage event received');
         handleUsersUpdated();
       }
     });
