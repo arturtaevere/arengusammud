@@ -57,15 +57,20 @@ export const useUserAuthentication = (
     const storedUsersStr = localStorage.getItem(USERS_STORAGE_KEY);
     const currentUsers: UserWithPassword[] = storedUsersStr ? JSON.parse(storedUsersStr) : users;
     
-    console.log('Current users before signup:', {
+    console.log('Attempting signup for email:', email);
+    console.log('Current users in system:', {
       fromStorage: storedUsersStr ? 'yes' : 'no',
       count: currentUsers.length,
       emails: currentUsers.map(u => u.email)
     });
     
-    const existingUser = currentUsers.find((u: UserWithPassword) => u.email.toLowerCase() === email.toLowerCase());
+    const normalizedNewEmail = email.toLowerCase().trim();
+    const existingUser = currentUsers.find(
+      (u: UserWithPassword) => u.email.toLowerCase().trim() === normalizedNewEmail
+    );
+    
     if (existingUser) {
-      console.log('Found existing user with email:', email);
+      console.log('Found existing user with email:', email, existingUser);
       throw new Error('Selle e-posti aadressiga kasutaja on juba olemas');
     }
 
