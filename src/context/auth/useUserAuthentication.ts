@@ -54,6 +54,9 @@ export const useUserAuthentication = (
   const signup = async (name: string, email: string, password: string, role: 'juht' | 'õpetaja', school?: string) => {
     await new Promise(resolve => setTimeout(resolve, 800));
     
+    // Clear any old data from localStorage to ensure we're working with fresh data
+    localStorage.removeItem(USERS_STORAGE_KEY);
+    
     console.log('Attempting to create new user:', {
       email,
       role,
