@@ -24,9 +24,11 @@ export interface AuthContextType {
   signup: (name: string, email: string, password: string, role: 'juht' | 'õpetaja' | 'coach', school?: string) => Promise<void>;
   logout: () => void;
   updateProfileImage: (imageUrl: string) => void;
+  
+  // These are kept for backward compatibility but will be simplified
   getAllUsers: () => User[];
   deleteUserByEmail: (email: string) => Promise<boolean>;
-  refreshUsers: () => void; // New function to force refresh all users
+  refreshUsers: () => void;
   
   // Adding these stub properties to fix type errors
   verifyEmail: (id: string, token: string) => Promise<boolean>;

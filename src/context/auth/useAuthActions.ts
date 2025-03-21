@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { useToast } from '@/components/ui/use-toast';
-import { UserWithPassword } from './types';
+import { UserWithPassword, User } from './types';
 import { USERS_STORAGE_KEY, INITIAL_USERS, TEST_EMAILS } from './constants';
 import { useUserAuthentication } from './useUserAuthentication';
 import { useUserProfile } from './useUserProfile';
@@ -11,12 +11,6 @@ export const useAuthActions = () => {
   const { toast } = useToast();
   
   const saveUsers = (updatedUsers: UserWithPassword[]) => {
-    console.log('Saving users to state and localStorage:', {
-      currentUsers: users.length,
-      updatedUsers: updatedUsers.length,
-      emails: updatedUsers.map(u => u.email)
-    });
-    
     try {
       // First update localStorage
       localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(updatedUsers));
@@ -26,9 +20,8 @@ export const useAuthActions = () => {
       
       // Dispatch events to notify other components
       window.dispatchEvent(new Event('storage'));
-      window.dispatchEvent(new CustomEvent('users-updated'));
       
-      console.log('Successfully saved users and dispatched events');
+      console.log('Successfully saved users');
     } catch (error) {
       console.error('Error in saveUsers:', error);
       toast({
@@ -45,25 +38,14 @@ export const useAuthActions = () => {
     if (storedUsers) {
       try {
         const parsedUsers = JSON.parse(storedUsers);
-        console.log('Forced refresh of users from localStorage:', {
-          count: parsedUsers.length,
-          emails: parsedUsers.map((u: UserWithPassword) => u.email)
-        });
         setUsers(parsedUsers);
       } catch (error) {
         console.error('Error parsing users during forced refresh:', error);
       }
     } else {
       // If localStorage is empty, set initial users
-      console.log('No users in localStorage during forced refresh, setting initial users');
       saveUsers(INITIAL_USERS);
     }
-    
-    // Dispatch events to notify other components
-    setTimeout(() => {
-      window.dispatchEvent(new Event('storage'));
-      window.dispatchEvent(new CustomEvent('users-updated'));
-    }, 100);
   };
 
   useEffect(() => {
@@ -72,36 +54,14 @@ export const useAuthActions = () => {
         const storedUsers = localStorage.getItem(USERS_STORAGE_KEY);
         if (storedUsers) {
           const parsedUsers = JSON.parse(storedUsers);
-          
-          // Check if the stored users list contains any test users we want to remove
-          // Using improved email comparison
-          const hasTestUsers = parsedUsers.some((user: UserWithPassword) => {
-            const normalizedEmail = user.email.toLowerCase().trim();
-            return TEST_EMAILS.some(testEmail => 
-              testEmail.toLowerCase().trim() === normalizedEmail
-            );
-          });
-          
-          if (hasTestUsers) {
-            console.log('Found test users in localStorage, resetting to initial users');
-            localStorage.removeItem(USERS_STORAGE_KEY);
-            saveUsers(INITIAL_USERS);
-          } else {
-            console.log('Loading users in useAuthActions:', {
-              count: parsedUsers.length,
-              emails: parsedUsers.map((u: UserWithPassword) => u.email)
-            });
-            setUsers(parsedUsers);
-          }
+          setUsers(parsedUsers);
         } else {
           // If no users in localStorage, load initial users
-          console.log('No users found in localStorage, loading initial users');
           saveUsers(INITIAL_USERS);
         }
       } catch (error) {
         console.error('Error loading users:', error);
         // If there's an error, load initial users as fallback
-        console.log('Error occurred, loading initial users as fallback');
         saveUsers(INITIAL_USERS);
       }
     };
@@ -110,32 +70,16 @@ export const useAuthActions = () => {
     loadUsers();
     
     // Set up event listeners
-    const handleUsersUpdated = () => {
-      console.log('users-updated event received in useAuthActions');
-      loadUsers();
-    };
-    
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === USERS_STORAGE_KEY) {
-        console.log('storage event received for users in useAuthActions');
         loadUsers();
       }
     };
     
-    const handleResetUsers = () => {
-      console.log('reset-users event received in useAuthActions');
-      localStorage.removeItem(USERS_STORAGE_KEY);
-      saveUsers(INITIAL_USERS);
-    };
-    
-    window.addEventListener('users-updated', handleUsersUpdated);
     window.addEventListener('storage', handleStorageChange);
-    window.addEventListener('reset-users', handleResetUsers);
     
     return () => {
-      window.removeEventListener('users-updated', handleUsersUpdated);
       window.removeEventListener('storage', handleStorageChange);
-      window.removeEventListener('reset-users', handleResetUsers);
     };
   }, []);
 

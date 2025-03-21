@@ -16,7 +16,7 @@ export const AuthContext = createContext<AuthContextType>({
   updateProfileImage: () => {},
   getAllUsers: () => [],
   deleteUserByEmail: async () => false,
-  refreshUsers: () => {}, // Add new refresh function
+  refreshUsers: () => {}, 
   
   // Add the stub verification functions
   verifyEmail: async () => false,
@@ -33,9 +33,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   
   // Custom hooks for auth functionality
   const {
-    users,
-    saveUsers,
-    forceRefreshUsers,
     login,
     signup,
     updateProfileImage,
@@ -48,15 +45,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser,
     setIsLoading
   );
-
-  // Immediately trigger a users-updated event when the component mounts
-  useEffect(() => {
-    // Dispatch an event to notify listeners that AuthProvider has mounted
-    console.log('AuthProvider mounted, dispatching users-updated event');
-    setTimeout(() => {
-      window.dispatchEvent(new CustomEvent('users-updated'));
-    }, 500); // Small delay to ensure other components are ready
-  }, []);
 
   // Listen for localStorage changes to update current user if needed
   useEffect(() => {
@@ -91,10 +79,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoading(true);
     try {
       await signup(name, email, password, role, school);
-      // Force-refresh users list after signup
-      console.log('Signup successful, dispatching users-updated event');
-      window.dispatchEvent(new CustomEvent('users-updated'));
-      forceRefreshUsers(); // Add direct refresh
     } finally {
       setIsLoading(false);
     }
@@ -116,6 +100,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  // Simplified stub implementations for user management
+  const refreshUsers = () => {
+    console.log("User management functionality removed");
+  };
+
   // Stub implementations for verification functions
   const verifyEmail = async () => {
     console.log("Email verification is disabled");
@@ -125,11 +114,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const resendVerificationEmail = async () => {
     console.log("Email verification is disabled");
     return false;
-  };
-
-  // New function to force refresh all users
-  const refreshUsers = () => {
-    forceRefreshUsers();
   };
 
   return (
@@ -144,8 +128,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         updateProfileImage: handleUpdateProfileImage,
         getAllUsers,
         deleteUserByEmail,
-        refreshUsers, // Add the new function
-        // Add the verification-related values
+        refreshUsers,
         verifyEmail,
         resendVerificationEmail,
         pendingVerificationEmail,

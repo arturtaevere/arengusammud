@@ -3,27 +3,11 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import Navbar from '@/components/Navbar';
-import { FilterCard, UserTable } from '@/components/admin';
-import AdminHeader from '@/components/admin/AdminHeader';
-import { useUserManagement } from '@/hooks/useUserManagement';
-import { Button } from '@/components/ui/button';
-import { RefreshCw } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 const Admin = () => {
-  const { user, isAuthenticated, refreshUsers } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const navigate = useNavigate();
-  const { 
-    users, 
-    searchTerm, 
-    filterRole, 
-    filterSchool,
-    setSearchTerm,
-    setFilterRole,
-    setFilterSchool,
-    handleDeleteUser,
-    handleRefreshUsers,
-    refreshUsersList
-  } = useUserManagement();
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -33,71 +17,37 @@ const Admin = () => {
     }
   }, [isAuthenticated, user, navigate]);
 
-  // Refresh users whenever this component renders or mounts
-  useEffect(() => {
-    if (isAuthenticated && (user?.role === 'juht' || user?.role === 'coach')) {
-      console.log('Admin page - Initial load, forcing refresh from context');
-      refreshUsers(); // Call context refresh first
-      setTimeout(() => {
-        refreshUsersList(); // Then call local refresh
-      }, 300);
-    }
-  }, [isAuthenticated, user, refreshUsers, refreshUsersList]);
-
-  // Set up interval to check for updates
-  useEffect(() => {
-    if (isAuthenticated && (user?.role === 'juht' || user?.role === 'coach')) {
-      const intervalId = setInterval(() => {
-        console.log('Admin page - Periodic refresh');
-        refreshUsersList();
-      }, 2000); // Check every 2 seconds
-
-      return () => clearInterval(intervalId);
-    }
-  }, [isAuthenticated, user, refreshUsersList]);
-
   if (!isAuthenticated || (user?.role !== 'juht' && user?.role !== 'coach')) {
     return null;
   }
-
-  const handleManualRefresh = () => {
-    console.log('Admin page - Manual refresh triggered');
-    refreshUsers(); // Global refresh
-    setTimeout(refreshUsersList, 300); // Local refresh with delay
-  };
 
   return (
     <div className="min-h-screen bg-gray-50/50">
       <Navbar />
       
       <div className="container mx-auto px-4 py-24">
-        <AdminHeader onRefreshUsers={handleRefreshUsers} />
-
-        <div className="flex justify-end mb-4">
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={handleManualRefresh}
-            className="flex items-center gap-2"
-          >
-            <RefreshCw className="h-4 w-4" />
-            <span>Värskenda nimekirja</span>
-          </Button>
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold mb-2">Administratsiooni paneel</h1>
+          <p className="text-muted-foreground">
+            Siit leiad administreerimise tööriistad
+          </p>
         </div>
 
-        <FilterCard 
-          searchTerm={searchTerm}
-          filterRole={filterRole}
-          filterSchool={filterSchool}
-          onSearchChange={setSearchTerm}
-          onRoleChange={setFilterRole}
-          onSchoolChange={setFilterSchool}
-        />
-
-        <UserTable 
-          users={users} 
-          onDeleteUser={handleDeleteUser} 
-        />
+        <Card>
+          <CardHeader>
+            <CardTitle>Kasutajate haldus</CardTitle>
+            <CardDescription>
+              Kasutajate halduse funktsioon on ajutiselt eemaldatud
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="py-10">
+            <div className="text-center py-8">
+              <p className="text-muted-foreground mb-2">
+                Kasutajate halduse süsteem ehitatakse tulevikus uuesti üles.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
