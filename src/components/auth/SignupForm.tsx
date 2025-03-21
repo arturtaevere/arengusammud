@@ -12,10 +12,12 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { CardContent, CardFooter } from '@/components/ui/card';
 import { SignupFormValues, signupSchema } from './schemas';
 import { SCHOOLS } from '@/context/auth/constants';
+import { useState } from 'react';
 
 const SignupForm = () => {
   const { signup, isLoading } = useAuth();
   const { toast } = useToast();
+  const [localLoading, setLocalLoading] = useState(false);
 
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
@@ -32,14 +34,21 @@ const SignupForm = () => {
   const role = form.watch('role');
 
   const handleSignup = async (values: SignupFormValues) => {
+    setLocalLoading(true);
     try {
       await signup(values.name, values.email, values.password, values.role, values.school);
+      toast({
+        title: "Registreerimine õnnestus",
+        description: "Konto on loodud. Palun kontrolli oma e-posti kinnitusvõite saamiseks.",
+      });
     } catch (error) {
       toast({
         variant: "destructive",
         title: "Registreerimine ebaõnnestus",
         description: error instanceof Error ? error.message : "Midagi läks valesti",
       });
+    } finally {
+      setLocalLoading(false);
     }
   };
 
@@ -161,9 +170,9 @@ const SignupForm = () => {
           <Button 
             type="submit" 
             className="w-full transition-all" 
-            disabled={isLoading}
+            disabled={isLoading || localLoading}
           >
-            {isLoading ? "Konto loomine..." : "Loo konto"}
+            {isLoading || localLoading ? "Konto loomine..." : "Loo konto"}
           </Button>
         </CardFooter>
       </form>

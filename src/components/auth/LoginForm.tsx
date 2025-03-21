@@ -8,10 +8,12 @@ import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { CardContent, CardFooter } from '@/components/ui/card';
 import { LoginFormValues, loginSchema } from './schemas';
+import { useState } from 'react';
 
 const LoginForm = () => {
   const { login, isLoading } = useAuth();
   const { toast } = useToast();
+  const [localLoading, setLocalLoading] = useState(false);
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -22,14 +24,21 @@ const LoginForm = () => {
   });
 
   const handleLogin = async (values: LoginFormValues) => {
+    setLocalLoading(true);
     try {
       await login(values.email, values.password);
+      toast({
+        title: "Sisselogimine õnnestus",
+        description: "Tere tulemast tagasi!",
+      });
     } catch (error) {
       toast({
         variant: "destructive",
         title: "Sisselogimine ebaõnnestus",
         description: error instanceof Error ? error.message : "Midagi läks valesti",
       });
+    } finally {
+      setLocalLoading(false);
     }
   };
 
@@ -76,9 +85,9 @@ const LoginForm = () => {
           <Button 
             type="submit" 
             className="w-full transition-all" 
-            disabled={isLoading}
+            disabled={isLoading || localLoading}
           >
-            {isLoading ? "Sisselogimine..." : "Logi sisse"}
+            {isLoading || localLoading ? "Sisselogimine..." : "Logi sisse"}
           </Button>
         </CardFooter>
       </form>
