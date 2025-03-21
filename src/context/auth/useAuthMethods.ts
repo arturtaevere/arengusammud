@@ -90,8 +90,13 @@ export const useAuthMethods = (
 
   // Handle user logout
   const handleLogout = async () => {
-    console.log('Logging out user');
-    await supabase.auth.signOut();
+    try {
+      console.log('Logging out user');
+      await supabase.auth.signOut();
+    } catch (error) {
+      console.error('Error logging out:', error);
+      throw error;
+    }
   };
 
   // Email verification

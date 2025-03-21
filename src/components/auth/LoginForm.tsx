@@ -30,10 +30,10 @@ const LoginForm = () => {
   useEffect(() => {
     if (!authLoading && localLoading) {
       // Give a small delay before resetting the local loading state
-      // to ensure smooth transitions
       const timer = setTimeout(() => {
         setLocalLoading(false);
-      }, 500);
+        setIsButtonDisabled(false);
+      }, 300);
       return () => clearTimeout(timer);
     }
   }, [authLoading, localLoading]);

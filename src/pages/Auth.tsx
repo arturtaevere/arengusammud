@@ -10,28 +10,15 @@ const Auth = () => {
   const navigate = useNavigate();
   const { isAuthenticated, isLoading, pendingVerificationEmail, user, session } = useAuth();
   const [localLoading, setLocalLoading] = useState(true);
-  const [redirectAttempts, setRedirectAttempts] = useState(0);
   
   // Set a maximum loading time to avoid getting stuck in loading state
   useEffect(() => {
     const loadingTimeout = setTimeout(() => {
       setLocalLoading(false);
-    }, 2000); // 2 seconds max loading time
+    }, 1000); // Reduced from 2000ms to 1000ms for faster response
     
     return () => clearTimeout(loadingTimeout);
   }, []);
-  
-  // Forcefully check auth status every 2 seconds (up to 5 attempts)
-  useEffect(() => {
-    if (!isAuthenticated && !isLoading && redirectAttempts < 5) {
-      const redirectCheck = setTimeout(() => {
-        setRedirectAttempts(prev => prev + 1);
-        console.log('Checking auth state again, attempt:', redirectAttempts + 1);
-      }, 2000);
-      
-      return () => clearTimeout(redirectCheck);
-    }
-  }, [isAuthenticated, isLoading, redirectAttempts]);
   
   useEffect(() => {
     // Handle redirect if user is authenticated
@@ -47,7 +34,7 @@ const Auth = () => {
   }, [isAuthenticated, isLoading, localLoading, navigate, pendingVerificationEmail, session, user]);
   
   // Only show loading state if we're still loading
-  if ((isLoading || localLoading) && redirectAttempts < 3) {
+  if (isLoading && localLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
         <div className="flex flex-col items-center space-y-4 w-64">
