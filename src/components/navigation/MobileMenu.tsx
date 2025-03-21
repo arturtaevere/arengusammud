@@ -1,18 +1,18 @@
 
 import { Link, useLocation } from 'react-router-dom';
+import { LogOut, User, BookOpen, ClipboardList, LayoutDashboard, Users, MessageSquare } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
-import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { BookOpen, ClipboardList, LayoutDashboard, Users, MessageSquare } from 'lucide-react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
-interface MobileMenuProps {
+type MobileMenuProps = {
   getInitials: (name: string) => string;
-}
+};
 
 const MobileMenu = ({ getInitials }: MobileMenuProps) => {
   const { user, logout } = useAuth();
   const location = useLocation();
-  const isAdmin = user?.role === 'juht';
+  const isAdmin = user?.role === 'juht' || user?.role === 'coach';
 
   return (
     <div className="md:hidden glass animate-fade-in">
