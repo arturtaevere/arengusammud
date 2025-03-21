@@ -13,6 +13,8 @@ export const useAuthState = () => {
 
   // Initialize auth state and listen for changes
   useEffect(() => {
+    console.log('Initializing auth state');
+    
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, newSession) => {
@@ -37,18 +39,20 @@ export const useAuthState = () => {
           } catch (error) {
             console.error('Failed to load user profile, using basic user data:', error);
             setUser(basicUser);
+            setIsLoading(false);
           }
         } else {
+          console.log('No authenticated user in session');
           setUser(null);
           localStorage.removeItem(USER_STORAGE_KEY);
+          setIsLoading(false);
         }
-        
-        setIsLoading(false);
       }
     );
     
     // THEN check for existing session
     supabase.auth.getSession().then(async ({ data: { session: currentSession } }) => {
+      console.log('Initial session check:', currentSession ? 'Session found' : 'No session');
       setSession(currentSession);
       
       if (currentSession?.user) {
@@ -68,10 +72,15 @@ export const useAuthState = () => {
         } catch (error) {
           console.error('Failed to load user profile, using basic user data:', error);
           setUser(basicUser);
+          setIsLoading(false);
         }
       } else {
+        console.log('No session found during initial check');
         setIsLoading(false);
       }
+    }).catch(error => {
+      console.error('Error checking session:', error);
+      setIsLoading(false);
     });
 
     return () => {
@@ -141,12 +150,12 @@ export const useAuthState = () => {
         setUser(userData);
         localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(userData));
       }
+      setIsLoading(false);
     } catch (error) {
       console.error('Error in loadUserProfile:', error);
+      setIsLoading(false);
       throw error;
     }
-    
-    setIsLoading(false);
   };
 
   return {

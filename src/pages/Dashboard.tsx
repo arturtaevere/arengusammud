@@ -9,15 +9,26 @@ import QuickActions from '@/components/dashboard/QuickActions';
 import { competences } from '@/components/dashboard/CompetencesList';
 
 const Dashboard = () => {
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, isLoading } = useAuth();
   const navigate = useNavigate();
   
-  // Simplified authentication check
+  // Enhanced authentication check
   useEffect(() => {
-    if (!isAuthenticated) {
+    console.log('Dashboard auth state:', { isAuthenticated, isLoading, user });
+    if (!isLoading && !isAuthenticated) {
+      console.log('User not authenticated, redirecting to auth page');
       navigate('/auth');
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, isLoading, navigate, user]);
+
+  // Show loading state while authentication is being checked
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-lg">Laadimine...</p>
+      </div>
+    );
+  }
 
   const stats = {
     actionStepsAssigned: 12,
@@ -31,7 +42,9 @@ const Dashboard = () => {
       
       <main className="container mx-auto px-4 py-24">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Tere tulemast tagasi{user?.name ? `, ${user.name.split(' ')[0]}` : ''}</h1>
+          <h1 className="text-3xl font-bold mb-2">
+            Tere tulemast tagasi{user?.name ? `, ${user.name.split(' ')[0]}` : ''}
+          </h1>
           <p className="text-muted-foreground">
             Siin on ülevaade sinu õppimisest, arengust ja tegevusest õpipartnerina.
           </p>

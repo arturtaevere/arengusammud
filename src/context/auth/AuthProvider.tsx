@@ -37,6 +37,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     resendVerificationEmail,
   } = useAuthMethods(loadUserProfile, setPendingVerificationEmail);
 
+  console.log('AuthProvider state:', { 
+    isAuthenticated: !!user, 
+    isLoading, 
+    user: user ? `${user.name} (${user.email})` : 'null' 
+  });
+
   return (
     <AuthContext.Provider
       value={{
