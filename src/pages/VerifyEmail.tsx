@@ -9,6 +9,7 @@ import { useAuth } from '@/context/AuthContext';
 const VerifyEmail = () => {
   const [searchParams] = useSearchParams();
   const token = searchParams.get('token');
+  const userId = searchParams.get('id');
   const [verifying, setVerifying] = useState(true);
   const [verified, setVerified] = useState(false);
   const { verifyEmail } = useAuth();
@@ -16,13 +17,13 @@ const VerifyEmail = () => {
   
   useEffect(() => {
     const verify = async () => {
-      if (!token) {
+      if (!token || !userId) {
         setVerifying(false);
         return;
       }
       
       try {
-        const success = await verifyEmail(token);
+        const success = await verifyEmail(userId, token);
         setVerified(success);
       } catch (error) {
         console.error('Error verifying email:', error);
@@ -32,7 +33,7 @@ const VerifyEmail = () => {
     };
     
     verify();
-  }, [token, verifyEmail]);
+  }, [token, userId, verifyEmail]);
   
   const handleContinue = () => {
     navigate('/auth');
