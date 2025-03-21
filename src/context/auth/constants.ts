@@ -1,3 +1,4 @@
+
 // Local storage keys
 export const USERS_STORAGE_KEY = 'arengusammud_users';
 export const USER_STORAGE_KEY = 'user';
@@ -8,9 +9,7 @@ export const SCHOOLS = [
   'Arengusammud',
   'Järveküla Kool',
   'Kilingi-Nõmme Gümnaasium',
-  'Tartu Kesklinna Kool',
-  'Tallinna Reaalkool',
-  'Pärnu Koidula Gümnaasium',
+  'Tartu Jaan Poska Gümnaasium',
 ];
 
 // List of test emails that should be removed when resetting user list
@@ -22,7 +21,7 @@ export const TEST_EMAILS = [
   'artur.taevere@gmail.com'
 ];
 
-// Initial user - only keeping Artur
+// Initial users
 export const INITIAL_USERS = [
   {
     id: '3',

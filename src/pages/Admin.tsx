@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import Navbar from '@/components/Navbar';
+import { UsersTable } from '@/components/admin';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 const Admin = () => {
@@ -12,12 +13,12 @@ const Admin = () => {
   useEffect(() => {
     if (!isAuthenticated) {
       navigate('/auth');
-    } else if (user?.role !== 'juht' && user?.role !== 'coach') {
+    } else if (user?.role !== 'juht') {
       navigate('/dashboard');
     }
   }, [isAuthenticated, user, navigate]);
 
-  if (!isAuthenticated || (user?.role !== 'juht' && user?.role !== 'coach')) {
+  if (!isAuthenticated || user?.role !== 'juht') {
     return null;
   }
 
@@ -37,15 +38,11 @@ const Admin = () => {
           <CardHeader>
             <CardTitle>Kasutajate haldus</CardTitle>
             <CardDescription>
-              Kasutajate halduse funktsioon on ajutiselt eemaldatud
+              Siit saad hallata kõiki süsteemi kasutajaid
             </CardDescription>
           </CardHeader>
-          <CardContent className="py-10">
-            <div className="text-center py-8">
-              <p className="text-muted-foreground mb-2">
-                Kasutajate halduse süsteem ehitatakse tulevikus uuesti üles.
-              </p>
-            </div>
+          <CardContent>
+            <UsersTable />
           </CardContent>
         </Card>
       </div>

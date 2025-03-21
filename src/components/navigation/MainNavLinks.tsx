@@ -6,7 +6,7 @@ import { useAuth } from '@/context/AuthContext';
 const MainNavLinks = () => {
   const location = useLocation();
   const { user } = useAuth();
-  const isAdmin = user?.role === 'juht' || user?.role === 'coach';
+  const isAdmin = user?.role === 'juht';
 
   return (
     <nav className="hidden md:flex items-center space-x-6 ml-8">

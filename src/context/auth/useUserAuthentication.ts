@@ -1,3 +1,4 @@
+
 import { useToast } from '@/components/ui/use-toast';
 import { User, UserWithPassword } from './types';
 import { USER_STORAGE_KEY, USERS_STORAGE_KEY, TEST_EMAILS } from './constants';
@@ -46,7 +47,7 @@ export const useUserAuthentication = (
     return userWithoutPassword;
   };
 
-  const signup = async (name: string, email: string, password: string, role: 'juht' | 'õpetaja' | 'coach', school?: string) => {
+  const signup = async (name: string, email: string, password: string, role: 'juht' | 'õpetaja', school?: string) => {
     await new Promise(resolve => setTimeout(resolve, 800));
     
     // First, check if this is a test email that should be rejected
@@ -106,7 +107,7 @@ export const useUserAuthentication = (
       throw new Error('Selle e-posti aadressiga kasutaja on juba olemas');
     }
 
-    if ((role === 'õpetaja' || role === 'coach') && !school) {
+    if (role === 'õpetaja' && !school) {
       throw new Error('Õpetaja peab valima kooli');
     }
 

@@ -33,11 +33,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   
   // Custom hooks for auth functionality
   const {
+    users,
     login,
     signup,
     updateProfileImage,
     getAllUsers,
-    deleteUserByEmail
+    deleteUserByEmail,
+    forceRefreshUsers
   } = useAuthActions();
 
   // Initialize auth state
@@ -75,7 +77,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   // Handle user signup
-  const handleSignup = async (name: string, email: string, password: string, role: 'juht' | 'õpetaja' | 'coach', school?: string) => {
+  const handleSignup = async (name: string, email: string, password: string, role: 'juht' | 'õpetaja', school?: string) => {
     setIsLoading(true);
     try {
       await signup(name, email, password, role, school);
@@ -98,11 +100,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(updatedUser));
       updateProfileImage(user.id, imageUrl);
     }
-  };
-
-  // Simplified stub implementations for user management
-  const refreshUsers = () => {
-    console.log("User management functionality removed");
   };
 
   // Stub implementations for verification functions
@@ -128,7 +125,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         updateProfileImage: handleUpdateProfileImage,
         getAllUsers,
         deleteUserByEmail,
-        refreshUsers,
+        refreshUsers: forceRefreshUsers,
         verifyEmail,
         resendVerificationEmail,
         pendingVerificationEmail,
