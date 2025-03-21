@@ -13,13 +13,13 @@ const Auth = () => {
   useEffect(() => {
     const loadingTimeout = setTimeout(() => {
       setLocalLoading(false);
-    }, 3000); // 3 seconds max loading time (increased from 2s)
+    }, 3000); // 3 seconds max loading time
     
     return () => clearTimeout(loadingTimeout);
   }, []);
   
   useEffect(() => {
-    // More robust check - only navigate if authenticated
+    // Handle redirect if user is authenticated
     if (isAuthenticated && !pendingVerificationEmail) {
       console.log('User is authenticated, redirecting to dashboard');
       navigate('/dashboard');
@@ -28,8 +28,8 @@ const Auth = () => {
     }
   }, [isAuthenticated, isLoading, localLoading, navigate, pendingVerificationEmail]);
   
-  // Simplified loading condition - show loading state ONLY if both are loading
-  // This prevents getting stuck in a loading state if one completes but the other doesn't
+  // Only show loading state if BOTH auth and local loading are true
+  // This prevents getting stuck in a loading state
   if (isLoading && localLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -41,8 +41,7 @@ const Auth = () => {
     );
   }
   
-  // If already authenticated but still here, there might be a redirect issue
-  // Add a button to manually go to dashboard
+  // If authenticated but still here, add a manual redirect button as fallback
   if (isAuthenticated && !pendingVerificationEmail) {
     // This is a fallback to ensure users can always get to the dashboard
     // The useEffect should handle the redirect, but if it fails for some reason

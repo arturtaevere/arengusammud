@@ -12,12 +12,20 @@ export const useAuthMethods = (
   // Handle user login
   const handleLogin = async (email: string, password: string): Promise<void> => {
     try {
+      console.log('Attempting login with email:', email);
+      
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
       
-      if (error) throw error;
+      if (error) {
+        console.error('Login error from Supabase:', error);
+        throw error;
+      }
+      
+      console.log('Login successful, user data:', data.user?.id);
+      
       // No need to return data.user as the onAuthStateChange handler will update the state
     } catch (error: any) {
       console.error('Login error:', error);
@@ -57,13 +65,18 @@ export const useAuthMethods = (
       
       // Check if email verification is needed based on the response
       // When email verification is disabled, identities will be confirmed automatically
-      const isEmailVerificationNeeded = data.user && !data.user.identities?.[0]?.identity_data?.email_verified;
+      const isEmailVerificationNeeded = data.user && 
+        data.user.identities && 
+        data.user.identities.length > 0 && 
+        !data.user.identities[0]?.identity_data?.email_verified;
       
       if (isEmailVerificationNeeded) {
+        console.log('Email verification needed, setting pending email');
         setPendingVerificationEmail(email);
       } else {
         // If email verification is not needed, we don't need to set pendingVerificationEmail
         // The auth state change will handle the redirection
+        console.log('Email verification not needed, proceeding with auto-login');
         toast({
           title: "Registreerimine õnnestus",
           description: "Konto on loodud. Sisselogimine toimub automaatselt...",
@@ -77,6 +90,7 @@ export const useAuthMethods = (
 
   // Handle user logout
   const handleLogout = async () => {
+    console.log('Logging out user');
     await supabase.auth.signOut();
   };
 

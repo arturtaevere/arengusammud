@@ -10,13 +10,11 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { CardContent, CardFooter } from '@/components/ui/card';
 import { LoginFormValues, loginSchema } from './schemas';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 const LoginForm = () => {
   const { login, isLoading } = useAuth();
   const { toast } = useToast();
   const [localLoading, setLocalLoading] = useState(false);
-  const navigate = useNavigate();
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -42,9 +40,9 @@ const LoginForm = () => {
         description: "Suuname teid töölauale...",
       });
       
-      // Navigate programmatically to dashboard
-      navigate('/dashboard');
+      // No need to manually navigate - AuthContext will handle this
     } catch (error) {
+      console.error('Login error:', error);
       toast({
         variant: "destructive",
         title: "Sisselogimine ebaõnnestus",
