@@ -28,14 +28,14 @@ const Admin = () => {
   useEffect(() => {
     if (!isAuthenticated) {
       navigate('/auth');
-    } else if (user?.role !== 'juht') {
+    } else if (user?.role !== 'juht' && user?.role !== 'coach') {
       navigate('/dashboard');
     }
   }, [isAuthenticated, user, navigate]);
 
   // Refresh users whenever this component renders or mounts
   useEffect(() => {
-    if (isAuthenticated && user?.role === 'juht') {
+    if (isAuthenticated && (user?.role === 'juht' || user?.role === 'coach')) {
       console.log('Admin page - Initial load, forcing refresh from context');
       refreshUsers(); // Call context refresh first
       setTimeout(() => {
@@ -46,7 +46,7 @@ const Admin = () => {
 
   // Set up interval to check for updates
   useEffect(() => {
-    if (isAuthenticated && user?.role === 'juht') {
+    if (isAuthenticated && (user?.role === 'juht' || user?.role === 'coach')) {
       const intervalId = setInterval(() => {
         console.log('Admin page - Periodic refresh');
         refreshUsersList();
@@ -56,7 +56,7 @@ const Admin = () => {
     }
   }, [isAuthenticated, user, refreshUsersList]);
 
-  if (!isAuthenticated || user?.role !== 'juht') {
+  if (!isAuthenticated || (user?.role !== 'juht' && user?.role !== 'coach')) {
     return null;
   }
 

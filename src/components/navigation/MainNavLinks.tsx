@@ -6,7 +6,7 @@ import { useAuth } from '@/context/AuthContext';
 const MainNavLinks = () => {
   const location = useLocation();
   const { user } = useAuth();
-  const isJuht = user?.role === 'juht';
+  const isAdmin = user?.role === 'juht' || user?.role === 'coach';
 
   return (
     <nav className="hidden md:flex items-center space-x-6 ml-8">
@@ -54,7 +54,7 @@ const MainNavLinks = () => {
         <LayoutDashboard className="mr-2 h-4 w-4" />
         <span>Töölaud</span>
       </Link>
-      {isJuht && (
+      {isAdmin && (
         <Link 
           to="/admin" 
           className={`flex items-center transition-colors ${
