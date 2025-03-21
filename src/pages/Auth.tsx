@@ -22,11 +22,11 @@ const Auth = () => {
   
   useEffect(() => {
     // Handle redirect if user is authenticated
-    if (session && !pendingVerificationEmail) {
-      console.log('User session exists, redirecting to dashboard');
-      navigate('/dashboard');
-    } else if (isAuthenticated && !pendingVerificationEmail) {
+    if (isAuthenticated && !pendingVerificationEmail) {
       console.log('User is authenticated, redirecting to dashboard');
+      navigate('/dashboard');
+    } else if (session && !pendingVerificationEmail) {
+      console.log('User session exists, redirecting to dashboard');
       navigate('/dashboard');
     } else if (!isLoading && !localLoading) {
       console.log('Auth state resolved, ready to show auth form');
@@ -34,7 +34,7 @@ const Auth = () => {
   }, [isAuthenticated, isLoading, localLoading, navigate, pendingVerificationEmail, session, user]);
   
   // Only show loading state if we're still loading
-  if (isLoading && localLoading) {
+  if (isLoading || localLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
         <div className="flex flex-col items-center space-y-4 w-64">
@@ -47,9 +47,8 @@ const Auth = () => {
     );
   }
   
-  // If authenticated but still here, add a manual redirect button as fallback
-  if (session || isAuthenticated || (user && !pendingVerificationEmail)) {
-    // This is a fallback to ensure users can always get to the dashboard
+  // If user is authenticated but still here (e.g., during redirect), show a manual redirect button
+  if (isAuthenticated && !pendingVerificationEmail) {
     return (
       <div className="flex items-center justify-center h-screen">
         <div className="flex flex-col items-center">
