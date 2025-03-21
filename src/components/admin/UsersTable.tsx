@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useToast } from '@/components/ui/use-toast';
-import { AlertCircle, Trash2 } from 'lucide-react';
+import { AlertCircle, RefreshCw, Trash2 } from 'lucide-react';
 import { 
   AlertDialog,
   AlertDialogAction,
@@ -23,23 +23,24 @@ const UsersTable = () => {
   const { getAllUsers, deleteUserByEmail, refreshUsers } = useAuth();
   const [users, setUsers] = useState<User[]>([]);
   const [userToDelete, setUserToDelete] = useState<string | null>(null);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const { toast } = useToast();
 
-  useEffect(() => {
-    const loadUsers = () => {
-      try {
-        const allUsers = getAllUsers();
-        setUsers(allUsers);
-      } catch (error) {
-        console.error('Error loading users:', error);
-        toast({
-          variant: "destructive",
-          title: "Kasutajate laadimine ebaõnnestus",
-          description: "Viga kasutajate nimekirja laadimisel",
-        });
-      }
-    };
+  const loadUsers = () => {
+    try {
+      const allUsers = getAllUsers();
+      setUsers(allUsers);
+    } catch (error) {
+      console.error('Error loading users:', error);
+      toast({
+        variant: "destructive",
+        title: "Kasutajate laadimine ebaõnnestus",
+        description: "Viga kasutajate nimekirja laadimisel",
+      });
+    }
+  };
 
+  useEffect(() => {
     // Initial load
     loadUsers();
 
@@ -79,6 +80,30 @@ const UsersTable = () => {
     }
   };
 
+  const handleManualRefresh = () => {
+    setIsRefreshing(true);
+    
+    try {
+      refreshUsers();
+      const freshUsers = getAllUsers();
+      setUsers(freshUsers);
+      
+      toast({
+        title: "Kasutajate nimekiri värskendatud",
+        description: `Laeti ${freshUsers.length} kasutajat.`,
+      });
+    } catch (error) {
+      console.error('Error refreshing users:', error);
+      toast({
+        variant: "destructive",
+        title: "Värskendamine ebaõnnestus",
+        description: "Viga kasutajate nimekirja värskendamisel",
+      });
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
+
   // If no users (which shouldn't happen since we have initial users)
   if (users.length === 0) {
     return (
@@ -99,73 +124,88 @@ const UsersTable = () => {
   }
 
   return (
-    <div className="overflow-x-auto">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Nimi</TableHead>
-            <TableHead>Email</TableHead>
-            <TableHead>Roll</TableHead>
-            <TableHead>Kool</TableHead>
-            <TableHead>Liitumiskuupäev</TableHead>
-            <TableHead>Tegevused</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {users.map((user) => (
-            <TableRow key={user.id}>
-              <TableCell className="font-medium">
-                <div className="flex items-center gap-2">
-                  {user.name}
-                </div>
-              </TableCell>
-              <TableCell>{user.email}</TableCell>
-              <TableCell>
-                <Badge variant={user.role === 'juht' ? "default" : "secondary"}>
-                  {user.role === 'juht' ? 'Juht' : 'Õpetaja'}
-                </Badge>
-              </TableCell>
-              <TableCell>{user.school || '-'}</TableCell>
-              <TableCell>{new Date(user.createdAt).toLocaleDateString('et-EE')}</TableCell>
-              <TableCell>
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <Button 
-                      variant="outline" 
-                      size="icon" 
-                      className="text-destructive hover:bg-destructive/10"
-                      onClick={() => setUserToDelete(user.email)}
-                      disabled={user.email === 'artur@arengusammud.ee'} // Protect main admin
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>Kas oled kindel?</AlertDialogTitle>
-                      <AlertDialogDescription>
-                        See tegevus kustutab kasutaja {userToDelete} jäädavalt.
-                        Seda tegevust ei saa tagasi võtta.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel onClick={() => setUserToDelete(null)}>
-                        Tühista
-                      </AlertDialogCancel>
-                      <AlertDialogAction 
-                        onClick={handleDeleteUser}
-                        className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                      >
-                        Kustuta
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-              </TableCell>
+    <div>
+      <div className="flex justify-end mb-4">
+        <Button
+          onClick={handleManualRefresh}
+          variant="outline"
+          size="sm"
+          disabled={isRefreshing}
+          className="gap-2"
+        >
+          <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+          Värskenda nimekirja
+        </Button>
+      </div>
+
+      <div className="overflow-x-auto">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Nimi</TableHead>
+              <TableHead>Email</TableHead>
+              <TableHead>Roll</TableHead>
+              <TableHead>Kool</TableHead>
+              <TableHead>Liitumiskuupäev</TableHead>
+              <TableHead>Tegevused</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {users.map((user) => (
+              <TableRow key={user.id}>
+                <TableCell className="font-medium">
+                  <div className="flex items-center gap-2">
+                    {user.name}
+                  </div>
+                </TableCell>
+                <TableCell>{user.email}</TableCell>
+                <TableCell>
+                  <Badge variant={user.role === 'juht' ? "default" : "secondary"}>
+                    {user.role === 'juht' ? 'Juht' : 'Õpetaja'}
+                  </Badge>
+                </TableCell>
+                <TableCell>{user.school || '-'}</TableCell>
+                <TableCell>{new Date(user.createdAt).toLocaleDateString('et-EE')}</TableCell>
+                <TableCell>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button 
+                        variant="outline" 
+                        size="icon" 
+                        className="text-destructive hover:bg-destructive/10"
+                        onClick={() => setUserToDelete(user.email)}
+                        disabled={user.email === 'artur@arengusammud.ee'} // Protect main admin
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Kas oled kindel?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          See tegevus kustutab kasutaja {userToDelete} jäädavalt.
+                          Seda tegevust ei saa tagasi võtta.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel onClick={() => setUserToDelete(null)}>
+                          Tühista
+                        </AlertDialogCancel>
+                        <AlertDialogAction 
+                          onClick={handleDeleteUser}
+                          className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                        >
+                          Kustuta
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 };
