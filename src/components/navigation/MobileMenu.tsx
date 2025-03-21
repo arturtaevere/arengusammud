@@ -90,8 +90,8 @@ const MobileMenu = ({ getInitials }: MobileMenuProps) => {
                   </Avatar>
                 </div>
                 <div className="ml-3">
-                  <div className="text-base font-medium">{user?.name}</div>
-                  <div className="text-sm text-muted-foreground">{user?.email}</div>
+                  <div className="text-base font-medium">{user?.name || 'User'}</div>
+                  <div className="text-sm text-muted-foreground">{user?.email || ''}</div>
                 </div>
               </div>
               <div className="mt-3 px-2 space-y-1">

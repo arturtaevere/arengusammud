@@ -12,6 +12,7 @@ const Dashboard = () => {
   const { user, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   
+  // Simplified authentication check
   useEffect(() => {
     if (!isAuthenticated) {
       navigate('/auth');
@@ -30,7 +31,7 @@ const Dashboard = () => {
       
       <main className="container mx-auto px-4 py-24">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Tere tulemast tagasi, {user?.name?.split(' ')[0]}</h1>
+          <h1 className="text-3xl font-bold mb-2">Tere tulemast tagasi{user?.name ? `, ${user.name.split(' ')[0]}` : ''}</h1>
           <p className="text-muted-foreground">
             Siin on ülevaade sinu õppimisest, arengust ja tegevusest õpipartnerina.
           </p>

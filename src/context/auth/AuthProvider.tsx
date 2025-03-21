@@ -22,7 +22,6 @@ export const AuthContext = createContext<AuthContextType>({
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { 
     user, 
-    setUser, 
     isLoading, 
     session,
     pendingVerificationEmail, 
