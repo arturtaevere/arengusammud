@@ -3,10 +3,8 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import Navbar from '@/components/Navbar';
-import CompetencesGrid from '@/components/dashboard/CompetencesGrid';
 import StatsCards from '@/components/dashboard/StatsCards';
 import QuickActions from '@/components/dashboard/QuickActions';
-import { competences } from '@/components/dashboard/CompetencesList';
 
 const Dashboard = () => {
   const { user, isAuthenticated } = useAuth();
@@ -35,8 +33,6 @@ const Dashboard = () => {
             Siin on ülevaade sinu õppimisest, arengust ja tegevusest õpipartnerina.
           </p>
         </div>
-        
-        <CompetencesGrid competences={competences} />
         
         <StatsCards stats={stats} />
         
