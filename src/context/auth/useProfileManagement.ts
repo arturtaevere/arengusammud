@@ -1,5 +1,5 @@
 
-import { User } from './types';
+import { User, UserWithPassword } from './types';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
 import { USER_STORAGE_KEY } from './constants';
@@ -8,7 +8,7 @@ export const useProfileManagement = (user: User | null, setUser: (user: User | n
   const { toast } = useToast();
 
   // Handle profile image update
-  const handleUpdateProfileImage = async (imageUrl: string) => {
+  const handleUpdateProfileImage = async (imageUrl: string): Promise<void> => {
     if (user) {
       try {
         // Update in Supabase
@@ -28,14 +28,13 @@ export const useProfileManagement = (user: User | null, setUser: (user: User | n
         throw error;
       }
     }
+    return Promise.resolve();
   };
 
   // Get all users (admin only)
-  const getAllUsers = (): User[] => {
-    // Modified to return an empty array immediately
-    // The actual implementation will fetch data asynchronously but 
-    // we're conforming to the type definition which expects a synchronous return
-    return [];
+  const getAllUsers = (): UserWithPassword[] => {
+    // Modified to return an empty array of UserWithPassword type
+    return [] as UserWithPassword[];
   };
 
   // Delete user by email (admin only)

@@ -13,8 +13,8 @@ export const AuthContext = createContext<AuthContextType>({
   session: null,
   login: async () => {},
   signup: async () => {},
-  logout: () => {},
-  updateProfileImage: () => {},
+  logout: async () => {}, // Changed to return Promise<void>
+  updateProfileImage: async () => {}, // Changed to return Promise<void>
   getAllUsers: () => [],
   deleteUserByEmail: async () => false,
   refreshUsers: () => {}, 
