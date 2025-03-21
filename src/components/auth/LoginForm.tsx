@@ -9,12 +9,14 @@ import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { CardContent, CardFooter } from '@/components/ui/card';
 import { LoginFormValues, loginSchema } from './schemas';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { Loader2 } from 'lucide-react';
 
 const LoginForm = () => {
-  const { login, isLoading } = useAuth();
+  const { login, isLoading: authLoading } = useAuth();
   const { toast } = useToast();
   const [localLoading, setLocalLoading] = useState(false);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -24,34 +26,54 @@ const LoginForm = () => {
     },
   });
 
+  // Reset local loading state if auth loading state changes
+  useEffect(() => {
+    if (!authLoading && localLoading) {
+      // Give a small delay before resetting the local loading state
+      // to ensure smooth transitions
+      const timer = setTimeout(() => {
+        setLocalLoading(false);
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [authLoading, localLoading]);
+
   const handleLogin = async (values: LoginFormValues) => {
     setLocalLoading(true);
+    setIsButtonDisabled(true);
+    
     try {
+      console.log('Attempting login for:', values.email);
       await login(values.email, values.password);
       
-      // Show a toast notification
+      // Show success toasts
       toast({
         title: "Sisselogimine õnnestus",
         description: "Tere tulemast tagasi!",
       });
       
-      // Also use sonner toast for more visibility
       sonnerToast.success("Sisselogimine õnnestus", {
         description: "Suuname teid töölauale...",
       });
-      
-      // No need to manually navigate - AuthContext will handle this
+
     } catch (error) {
       console.error('Login error:', error);
+      
+      // Show error toast
       toast({
         variant: "destructive",
         title: "Sisselogimine ebaõnnestus",
         description: error instanceof Error ? error.message : "Midagi läks valesti",
       });
-    } finally {
+      
+      // Reset loading states
       setLocalLoading(false);
+      setIsButtonDisabled(false);
     }
   };
+
+  // Determine if button should show loading state
+  const showLoading = localLoading || authLoading;
 
   return (
     <Form {...form}>
@@ -67,6 +89,7 @@ const LoginForm = () => {
                   <Input 
                     placeholder="sinu.email@näide.ee" 
                     type="email"
+                    disabled={showLoading}
                     {...field}
                   />
                 </FormControl>
@@ -84,6 +107,7 @@ const LoginForm = () => {
                 <FormControl>
                   <Input 
                     type="password"
+                    disabled={showLoading}
                     {...field}
                   />
                 </FormControl>
@@ -96,9 +120,14 @@ const LoginForm = () => {
           <Button 
             type="submit" 
             className="w-full transition-all" 
-            disabled={isLoading || localLoading}
+            disabled={isButtonDisabled || showLoading}
           >
-            {isLoading || localLoading ? "Sisselogimine..." : "Logi sisse"}
+            {showLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Sisselogimine...
+              </>
+            ) : "Logi sisse"}
           </Button>
         </CardFooter>
       </form>

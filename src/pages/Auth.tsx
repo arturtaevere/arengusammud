@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import AuthForm from '@/components/auth/AuthForm';
 import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const Auth = () => {
   const navigate = useNavigate();
@@ -49,9 +50,11 @@ const Auth = () => {
   if ((isLoading || localLoading) && redirectAttempts < 3) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <div className="animate-pulse flex flex-col items-center">
-          <div className="w-10 h-10 bg-primary/60 rounded-full mb-3"></div>
-          <p className="text-gray-500">Laadimine...</p>
+        <div className="flex flex-col items-center space-y-4 w-64">
+          <Skeleton className="w-full h-8 rounded-full" />
+          <Skeleton className="w-3/4 h-8 rounded-full" />
+          <Skeleton className="w-1/2 h-8 rounded-full" />
+          <p className="text-gray-500 mt-2">Laadimine...</p>
         </div>
       </div>
     );
