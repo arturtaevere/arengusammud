@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -12,7 +13,6 @@ import ActionSteps from "./pages/ActionSteps";
 import ActionStepDetail from "./pages/ActionStepDetail";
 import Profile from "./pages/Profile";
 import Observations from "./pages/Observations";
-import Admin from "./pages/Admin";
 import VerifyEmail from "./pages/VerifyEmail";
 import StudyCircles from "./pages/StudyCircles";
 import StudyCircleSession from "./pages/StudyCircleSession";
@@ -37,7 +37,6 @@ const App = () => (
             <Route path="/action-steps" element={<ActionSteps />} />
             <Route path="/action-steps/:stepId" element={<ActionStepDetail />} />
             <Route path="/profile" element={<Profile />} />
-            <Route path="/admin" element={<Admin />} />
             <Route path="/study-circles" element={<StudyCircles />} />
             <Route path="/study-circles/session/:sessionId" element={<StudyCircleSession />} />
             <Route path="/observations" element={<Observations />} />
