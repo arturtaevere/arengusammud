@@ -29,10 +29,16 @@ const UsersTable = () => {
 
   const loadUsers = useCallback(() => {
     try {
-      console.log('Loading users from storage...');
+      console.log('Loading users directly from localStorage...');
       const allUsers = getAllUsers();
-      console.log('Users loaded:', allUsers.length, 'users found');
-      console.log('User emails:', allUsers.map(u => u.email).join(', '));
+      console.log('Users loaded directly:', allUsers.length, 'users found');
+      
+      if (allUsers.length > 0) {
+        console.log('User emails:', allUsers.map(u => u.email).join(', '));
+      } else {
+        console.log('No users found in the loaded data');
+      }
+      
       setUsers(allUsers);
       setLastRefreshed(new Date());
     } catch (error) {
@@ -45,22 +51,27 @@ const UsersTable = () => {
     }
   }, [getAllUsers, toast]);
 
+  // Load users on initial mount and when refreshUsers is called
   useEffect(() => {
     // Initial load
     loadUsers();
     
-    // Set up event listeners
-    const handleStorageEvent = () => {
-      console.log('Storage event detected, reloading users...');
-      loadUsers();
+    // Set up event listeners for storage changes
+    const handleStorageEvent = (event: StorageEvent) => {
+      if (event.key === 'arengusammud_users' || event.key === null) {
+        console.log('Storage event detected, reloading users...');
+        loadUsers();
+      }
     };
     
+    // Listen for storage events (from other tabs)
     window.addEventListener('storage', handleStorageEvent);
-    window.addEventListener('users-updated', handleStorageEvent);
+    // Listen for custom events (from this tab)
+    window.addEventListener('users-updated', loadUsers);
     
     return () => {
       window.removeEventListener('storage', handleStorageEvent);
-      window.removeEventListener('users-updated', handleStorageEvent);
+      window.removeEventListener('users-updated', loadUsers);
     };
   }, [loadUsers]);
 
@@ -100,16 +111,11 @@ const UsersTable = () => {
       // Small delay to ensure storage is updated
       setTimeout(() => {
         // Get fresh users directly
-        const freshUsers = getAllUsers();
-        console.log('Fresh users loaded:', freshUsers.length);
-        console.log('User emails after refresh:', freshUsers.map(u => u.email).join(', '));
-        
-        setUsers(freshUsers);
-        setLastRefreshed(new Date());
+        loadUsers();
         
         toast({
           title: "Kasutajate nimekiri värskendatud",
-          description: `Laeti ${freshUsers.length} kasutajat.`,
+          description: `Laeti ${users.length} kasutajat.`,
         });
         setIsRefreshing(false);
       }, 300);
@@ -138,7 +144,10 @@ const UsersTable = () => {
         try {
           const storedUsers = JSON.parse(storedUsersString);
           console.log('Direct localStorage read:', storedUsers.length, 'users found');
-          console.log('Direct storage user emails:', storedUsers.map((u: User) => u.email).join(', '));
+          
+          if (storedUsers.length > 0) {
+            console.log('Direct storage user emails:', storedUsers.map((u: User) => u.email).join(', '));
+          }
           
           // Remove passwords
           const cleanUsers = storedUsers.map(({ password, ...rest }: any) => rest);
@@ -255,7 +264,7 @@ const UsersTable = () => {
                 <TableCell>{user.email}</TableCell>
                 <TableCell>
                   <Badge variant={user.role === 'juht' ? "default" : "secondary"}>
-                    {user.role === 'juht' ? 'Juht' : 'Õpetaja'}
+                    {user.role}
                   </Badge>
                 </TableCell>
                 <TableCell>{user.school || '-'}</TableCell>

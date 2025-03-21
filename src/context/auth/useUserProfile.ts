@@ -9,9 +9,9 @@ export const useUserProfile = (
 ) => {
   const { toast } = useToast();
 
-  const updateProfileImage = (userId: string, imageUrl: string) => {
+  const updateProfileImage = (imageUrl: string) => {
     const updatedUsers = users.map(u => {
-      if (u.id === userId) {
+      if (u.id === users.id) {
         return { ...u, profileImage: imageUrl };
       }
       return u;
@@ -24,7 +24,7 @@ export const useUserProfile = (
     if (currentUserStr) {
       try {
         const currentUser = JSON.parse(currentUserStr);
-        if (currentUser.id === userId) {
+        if (currentUser.id === users.id) {
           const updatedUser = { ...currentUser, profileImage: imageUrl };
           localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(updatedUser));
         }
@@ -38,23 +38,27 @@ export const useUserProfile = (
       description: "Sinu profiilipilt on edukalt uuendatud.",
     });
     
-    return updatedUsers.find(u => u.id === userId);
+    return updatedUsers.find(u => u.id === users.id);
   };
 
   const getAllUsers = () => {
-    // Always get the most up-to-date users from localStorage
+    // Always directly read from localStorage to get the most up-to-date data
     const storedUsersStr = localStorage.getItem(USERS_STORAGE_KEY);
-    let latestUsers = users; // Default to state
+    let latestUsers = [];
     
     if (storedUsersStr) {
       try {
         latestUsers = JSON.parse(storedUsersStr);
+        console.log('getAllUsers - direct localStorage read:', latestUsers.length, 'users found');
+        console.log('User emails in localStorage:', latestUsers.map((u: any) => u.email).join(', '));
       } catch (e) {
         console.error('Error parsing users in getAllUsers:', e);
+        latestUsers = users; // Fallback to state
       }
+    } else {
+      console.log('No users found in localStorage, falling back to state');
+      latestUsers = users;
     }
-    
-    console.log('getAllUsers called, returning users:', latestUsers.length);
     
     // Deep clone the users array and remove passwords
     return latestUsers.map(({ password, ...user }: UserWithPassword) => user);
