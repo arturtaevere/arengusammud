@@ -2,82 +2,79 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
-import AuthForm from '@/components/AuthForm';
-import Navbar from '@/components/Navbar';
-import { Loader2 } from 'lucide-react';
+import AuthForm from '@/components/auth/AuthForm';
 
 const Auth = () => {
-  const { isAuthenticated, isLoading } = useAuth();
   const navigate = useNavigate();
+  const { isAuthenticated, isLoading, pendingVerificationEmail } = useAuth();
   const [localLoading, setLocalLoading] = useState(true);
   
-  // Redirect authenticated users to dashboard
+  // Set a maximum loading time to avoid getting stuck in loading state
   useEffect(() => {
-    console.log('Auth component mounted, auth state:', { isAuthenticated, isLoading });
-    
-    // Add a small delay to ensure auth state is fully loaded
-    const timer = setTimeout(() => {
+    const loadingTimeout = setTimeout(() => {
       setLocalLoading(false);
-      if (isAuthenticated) {
+    }, 2000); // 2 seconds max loading time
+    
+    return () => clearTimeout(loadingTimeout);
+  }, []);
+  
+  useEffect(() => {
+    // Initialize with a small delay to allow auth state to settle
+    const initTimeout = setTimeout(() => {
+      // If authenticated and not waiting for email verification, redirect to dashboard
+      if (isAuthenticated && !pendingVerificationEmail) {
         console.log('User is authenticated, redirecting to dashboard');
         navigate('/dashboard');
-      } else {
+      } else if (!isLoading && !localLoading) {
         console.log('User is not authenticated, staying on auth page');
       }
-    }, 1000); // Increased timeout to ensure auth state is resolved
+    }, 500);
     
-    return () => clearTimeout(timer);
-  }, [isAuthenticated, navigate, isLoading]);
+    return () => clearTimeout(initTimeout);
+  }, [isAuthenticated, isLoading, localLoading, navigate, pendingVerificationEmail]);
   
-  // Force exit loading state after 3 seconds maximum to prevent stalling
-  useEffect(() => {
-    const maxLoadingTimer = setTimeout(() => {
-      if (localLoading) {
-        console.log('Forcing exit from loading state after timeout');
-        setLocalLoading(false);
-      }
-    }, 3000);
-    
-    return () => clearTimeout(maxLoadingTimer);
-  }, [localLoading]);
-  
-  if (isLoading && localLoading) {
+  // Show loading indicator while checking auth state
+  if (isLoading || localLoading) {
     return (
-      <div className="min-h-screen flex flex-col">
-        <Navbar />
-        <div className="flex-1 flex flex-col items-center justify-center">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          <p className="mt-4 text-muted-foreground">Loading...</p>
+      <div className="flex items-center justify-center h-screen">
+        <div className="animate-pulse flex flex-col items-center">
+          <div className="w-10 h-10 bg-primary/60 rounded-full mb-3"></div>
+          <p className="text-gray-500">Laadimine...</p>
         </div>
       </div>
     );
   }
   
-  // Only show the auth form if the user is not authenticated
-  if (!isAuthenticated) {
+  // If already authenticated but still here, there might be a redirect issue
+  // Add a button to manually go to dashboard
+  if (isAuthenticated && !pendingVerificationEmail) {
+    // This is a fallback to ensure users can always get to the dashboard
+    // The useEffect should handle the redirect, but if it fails for some reason
+    // this gives users a way out
+    setTimeout(() => navigate('/dashboard'), 500);
+    
     return (
-      <div className="min-h-screen flex flex-col">
-        <Navbar />
-        <div className="flex-1 flex flex-col items-center justify-center p-4 pt-24">
-          {/* Background elements */}
-          <div className="absolute inset-0 -z-10">
-            <div className="absolute top-0 left-20 w-72 h-72 bg-blue-50 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float"></div>
-            <div className="absolute bottom-20 right-20 w-96 h-96 bg-purple-50 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float" style={{ animationDelay: '2s' }}></div>
-          </div>
-          
-          <div className="w-full max-w-md animate-fade-in">
-            <AuthForm />
-          </div>
+      <div className="flex items-center justify-center h-screen">
+        <div className="flex flex-col items-center">
+          <p className="text-green-600 mb-3">Sisselogimine õnnestus!</p>
+          <p className="text-gray-500 mb-3">Ümbersuunamine...</p>
+          <button 
+            onClick={() => navigate('/dashboard')}
+            className="bg-primary text-white px-4 py-2 rounded"
+          >
+            Mine avalehele
+          </button>
         </div>
       </div>
     );
   }
   
-  // If we get here, user is authenticated but hasn't been redirected yet
-  // This ensures we don't get stuck in a loading state
-  console.log('Authenticated but not redirected yet, forcing redirect');
-  navigate('/dashboard');
-  return null;
+  // Show auth form if not authenticated
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <AuthForm />
+    </div>
+  );
 };
 
 export default Auth;

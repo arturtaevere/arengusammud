@@ -46,6 +46,7 @@ export const useAuthMethods = (
             role,
             school,
           },
+          // We'll handle redirect based on auth config
           emailRedirectTo: `${window.location.origin}/verify-email`,
         },
       });
@@ -53,7 +54,21 @@ export const useAuthMethods = (
       if (error) throw error;
       
       console.log('Signup response:', data);
-      setPendingVerificationEmail(email);
+      
+      // Check if email verification is needed based on the response
+      // When email verification is disabled, identities will be confirmed automatically
+      const isEmailVerificationNeeded = data.user && !data.user.identities?.[0]?.identity_data?.email_verified;
+      
+      if (isEmailVerificationNeeded) {
+        setPendingVerificationEmail(email);
+      } else {
+        // If email verification is not needed, we don't need to set pendingVerificationEmail
+        // The auth state change will handle the redirection
+        toast({
+          title: "Registreerimine õnnestus",
+          description: "Konto on loodud. Sisselogimine toimub automaatselt...",
+        });
+      }
     } catch (error: any) {
       console.error('Signup error:', error);
       throw new Error(error.message || 'Registreerimine ebaõnnestus');

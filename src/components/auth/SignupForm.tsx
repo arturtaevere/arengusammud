@@ -13,11 +13,13 @@ import { CardContent, CardFooter } from '@/components/ui/card';
 import { SignupFormValues, signupSchema } from './schemas';
 import { SCHOOLS } from '@/context/auth/constants';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const SignupForm = () => {
-  const { signup, isLoading } = useAuth();
+  const { signup, pendingVerificationEmail, isLoading } = useAuth();
   const { toast } = useToast();
   const [localLoading, setLocalLoading] = useState(false);
+  const navigate = useNavigate();
 
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
@@ -37,10 +39,21 @@ const SignupForm = () => {
     setLocalLoading(true);
     try {
       await signup(values.name, values.email, values.password, values.role, values.school);
-      toast({
-        title: "Registreerimine õnnestus",
-        description: "Konto on loodud. Palun kontrolli oma e-posti kinnitusvõite saamiseks.",
-      });
+      
+      // If we don't have a pending verification email, it means auth is disabled
+      // and we can redirect directly to dashboard
+      if (!pendingVerificationEmail) {
+        // The onAuthStateChange event will handle the redirection
+        toast({
+          title: "Registreerimine õnnestus",
+          description: "Konto on loodud, tere tulemast!",
+        });
+      } else {
+        toast({
+          title: "Registreerimine õnnestus",
+          description: "Konto on loodud. Palun kontrolli oma e-posti kinnitusvõite saamiseks.",
+        });
+      }
     } catch (error) {
       toast({
         variant: "destructive",

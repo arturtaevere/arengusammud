@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import LoginForm from './LoginForm';
@@ -9,11 +9,15 @@ import VerificationMessage from '@/components/VerificationMessage';
 
 const AuthForm = () => {
   const [formType, setFormType] = useState<'login' | 'signup'>('login');
-  const { pendingVerificationEmail } = useAuth();
+  const { pendingVerificationEmail, isAuthenticated } = useAuth();
+  
+  // If the user is already authenticated, don't show the verification message
+  // This helps avoid the case where user has auto-verified but we still have a pendingVerificationEmail
+  const shouldShowVerification = pendingVerificationEmail && !isAuthenticated;
   
   return (
     <div className="w-full max-w-md mx-auto p-4">
-      {pendingVerificationEmail ? (
+      {shouldShowVerification ? (
         <VerificationMessage email={pendingVerificationEmail} />
       ) : (
         <Card className="w-full glass">
