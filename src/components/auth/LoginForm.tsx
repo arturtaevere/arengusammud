@@ -3,17 +3,20 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/components/ui/use-toast';
+import { toast as sonnerToast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { CardContent, CardFooter } from '@/components/ui/card';
 import { LoginFormValues, loginSchema } from './schemas';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const LoginForm = () => {
   const { login, isLoading } = useAuth();
   const { toast } = useToast();
   const [localLoading, setLocalLoading] = useState(false);
+  const navigate = useNavigate();
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -27,10 +30,20 @@ const LoginForm = () => {
     setLocalLoading(true);
     try {
       await login(values.email, values.password);
+      
+      // Show a toast notification
       toast({
         title: "Sisselogimine õnnestus",
         description: "Tere tulemast tagasi!",
       });
+      
+      // Also use sonner toast for more visibility
+      sonnerToast.success("Sisselogimine õnnestus", {
+        description: "Suuname teid töölauale...",
+      });
+      
+      // Navigate programmatically to dashboard
+      navigate('/dashboard');
     } catch (error) {
       toast({
         variant: "destructive",
