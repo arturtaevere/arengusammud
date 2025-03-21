@@ -13,28 +13,24 @@ const Auth = () => {
   useEffect(() => {
     const loadingTimeout = setTimeout(() => {
       setLocalLoading(false);
-    }, 2000); // 2 seconds max loading time
+    }, 3000); // 3 seconds max loading time (increased from 2s)
     
     return () => clearTimeout(loadingTimeout);
   }, []);
   
   useEffect(() => {
-    // Initialize with a small delay to allow auth state to settle
-    const initTimeout = setTimeout(() => {
-      // If authenticated and not waiting for email verification, redirect to dashboard
-      if (isAuthenticated && !pendingVerificationEmail) {
-        console.log('User is authenticated, redirecting to dashboard');
-        navigate('/dashboard');
-      } else if (!isLoading && !localLoading) {
-        console.log('User is not authenticated, staying on auth page');
-      }
-    }, 500);
-    
-    return () => clearTimeout(initTimeout);
+    // More robust check - only navigate if authenticated
+    if (isAuthenticated && !pendingVerificationEmail) {
+      console.log('User is authenticated, redirecting to dashboard');
+      navigate('/dashboard');
+    } else if (!isLoading && !localLoading) {
+      console.log('Auth state resolved, ready to show auth form');
+    }
   }, [isAuthenticated, isLoading, localLoading, navigate, pendingVerificationEmail]);
   
-  // Show loading indicator while checking auth state
-  if (isLoading || localLoading) {
+  // Simplified loading condition - show loading state ONLY if both are loading
+  // This prevents getting stuck in a loading state if one completes but the other doesn't
+  if (isLoading && localLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
         <div className="animate-pulse flex flex-col items-center">
