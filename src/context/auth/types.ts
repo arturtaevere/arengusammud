@@ -4,7 +4,7 @@ export type User = {
   id: string;
   name: string;
   email: string;
-  role: 'juht' | 'õpetaja';
+  role: 'juht' | 'õpetaja' | 'coach';
   school?: string;
   createdAt: string;
   emailVerified: boolean;

@@ -13,12 +13,12 @@ const Admin = () => {
   useEffect(() => {
     if (!isAuthenticated) {
       navigate('/auth');
-    } else if (user?.role !== 'juht' && user?.role !== 'coach') {
+    } else if (user?.role !== 'juht') {
       navigate('/dashboard');
     }
   }, [isAuthenticated, user, navigate]);
 
-  if (!isAuthenticated || (user?.role !== 'juht' && user?.role !== 'coach')) {
+  if (!isAuthenticated || user?.role !== 'juht') {
     return null;
   }
 
