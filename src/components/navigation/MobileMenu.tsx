@@ -20,6 +20,19 @@ const MobileMenu = ({ getInitials }: MobileMenuProps) => {
         {user ? (
           <>
             <Link 
+              to="/dashboard" 
+              className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
+                location.pathname === '/dashboard' 
+                  ? 'bg-primary text-primary-foreground' 
+                  : 'hover:bg-gray-100'
+              }`}
+            >
+              <div className="flex items-center">
+                <LayoutDashboard className="mr-2 h-5 w-5" />
+                Avaleht
+              </div>
+            </Link>
+            <Link 
               to="/competences" 
               className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
                 location.pathname === '/competences' || location.pathname === '/action-steps' || location.pathname.includes('/action-steps/') 
@@ -56,19 +69,6 @@ const MobileMenu = ({ getInitials }: MobileMenuProps) => {
               <div className="flex items-center">
                 <ClipboardList className="mr-2 h-5 w-5" />
                 Õpipartnerlus
-              </div>
-            </Link>
-            <Link 
-              to="/dashboard" 
-              className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
-                location.pathname === '/dashboard' 
-                  ? 'bg-primary text-primary-foreground' 
-                  : 'hover:bg-gray-100'
-              }`}
-            >
-              <div className="flex items-center">
-                <LayoutDashboard className="mr-2 h-5 w-5" />
-                Töölaud
               </div>
             </Link>
             {isJuht && (

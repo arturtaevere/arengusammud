@@ -11,6 +11,17 @@ const MainNavLinks = () => {
   return (
     <nav className="hidden md:flex items-center space-x-6 ml-8">
       <Link 
+        to="/dashboard" 
+        className={`flex items-center transition-colors ${
+          location.pathname === '/dashboard' 
+            ? 'text-primary font-medium' 
+            : 'text-foreground/70 hover:text-foreground'
+        }`}
+      >
+        <LayoutDashboard className="mr-2 h-4 w-4" />
+        <span>Avaleht</span>
+      </Link>
+      <Link 
         to="/competences" 
         className={`flex items-center transition-colors ${
           location.pathname === '/competences' || location.pathname === '/action-steps' || location.pathname.includes('/action-steps/') 
@@ -42,17 +53,6 @@ const MainNavLinks = () => {
       >
         <ClipboardList className="mr-2 h-4 w-4" />
         <span>Õpipartnerlus</span>
-      </Link>
-      <Link 
-        to="/dashboard" 
-        className={`flex items-center transition-colors ${
-          location.pathname === '/dashboard' 
-            ? 'text-primary font-medium' 
-            : 'text-foreground/70 hover:text-foreground'
-        }`}
-      >
-        <LayoutDashboard className="mr-2 h-4 w-4" />
-        <span>Töölaud</span>
       </Link>
       {isJuht && (
         <Link 
