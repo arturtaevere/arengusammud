@@ -9,9 +9,9 @@ export const useUserProfile = (
 ) => {
   const { toast } = useToast();
 
-  const updateProfileImage = (imageUrl: string) => {
+  const updateProfileImage = (userId: string, imageUrl: string) => {
     const updatedUsers = users.map(u => {
-      if (u.id === users.id) {
+      if (u.id === userId) {
         return { ...u, profileImage: imageUrl };
       }
       return u;
@@ -24,7 +24,7 @@ export const useUserProfile = (
     if (currentUserStr) {
       try {
         const currentUser = JSON.parse(currentUserStr);
-        if (currentUser.id === users.id) {
+        if (currentUser.id === userId) {
           const updatedUser = { ...currentUser, profileImage: imageUrl };
           localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(updatedUser));
         }
@@ -38,7 +38,7 @@ export const useUserProfile = (
       description: "Sinu profiilipilt on edukalt uuendatud.",
     });
     
-    return updatedUsers.find(u => u.id === users.id);
+    return updatedUsers.find(u => u.id === userId);
   };
 
   const getAllUsers = () => {

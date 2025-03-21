@@ -7,10 +7,12 @@ import { UsersTable } from '@/components/admin';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { RefreshCw } from 'lucide-react';
+import { useToast } from '@/components/ui/use-toast';
 
 const Admin = () => {
   const { user, isAuthenticated, refreshUsers } = useAuth();
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   useEffect(() => {
@@ -23,17 +25,37 @@ const Admin = () => {
 
   const handleRefresh = () => {
     setIsRefreshing(true);
+    
+    // First refresh users from localStorage
     refreshUsers();
+    
+    // Show toast to confirm action
+    toast({
+      title: "Kasutajate nimekiri värskendatakse",
+      description: "Kasutajate nimekiri uuendatakse...",
+    });
+    
     // Add a small delay to ensure state is updated
     setTimeout(() => {
       setIsRefreshing(false);
-    }, 500);
+      // Dispatch a custom event to notify components
+      window.dispatchEvent(new Event('storage'));
+      window.dispatchEvent(new CustomEvent('users-updated'));
+      
+      toast({
+        title: "Kasutajate nimekiri värskendatud",
+        description: "Kasutajate nimekiri on edukalt uuendatud.",
+      });
+    }, 800);
   };
 
   // When admin page loads, refresh users list
   useEffect(() => {
     if (isAuthenticated && (user?.role === 'juht' || user?.role === 'coach')) {
-      handleRefresh();
+      // Set a short timeout to ensure components are mounted
+      setTimeout(() => {
+        handleRefresh();
+      }, 100);
     }
   }, [isAuthenticated, user]);
 
