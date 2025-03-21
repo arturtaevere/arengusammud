@@ -12,7 +12,7 @@ interface MobileMenuProps {
 const MobileMenu = ({ getInitials }: MobileMenuProps) => {
   const { user, logout } = useAuth();
   const location = useLocation();
-  const isAdmin = user?.role === 'juht';
+  const isAdmin = user?.role === 'juht' || user?.role === 'coach';
 
   return (
     <div className="md:hidden glass animate-fade-in">
