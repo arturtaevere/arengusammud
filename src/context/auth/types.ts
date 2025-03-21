@@ -24,10 +24,6 @@ export type AuthContextType = {
   login: (email: string, password: string) => Promise<void>;
   signup: (name: string, email: string, password: string, role: 'juht' | 'õpetaja' | 'coach', school?: string) => Promise<void>;
   logout: () => Promise<void>;
-  updateProfileImage: (url: string) => Promise<void>;
-  getAllUsers: () => UserWithPassword[];
-  deleteUserByEmail: (email: string) => Promise<boolean>;
-  refreshUsers: () => void;
   
   // Email verification support
   verifyEmail: (userId: string, token: string) => Promise<boolean>;

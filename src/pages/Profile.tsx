@@ -1,23 +1,18 @@
 
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
-import { User, Mail, ArrowLeft, Camera, School, Calendar } from 'lucide-react';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
+import { User, Mail, ArrowLeft, School, Calendar } from 'lucide-react';
 import { format } from 'date-fns';
 import { et } from 'date-fns/locale';
 import Navbar from '@/components/Navbar';
 
 const Profile = () => {
-  const { user, updateProfileImage } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [isUploading, setIsUploading] = useState(false);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [showUploadDialog, setShowUploadDialog] = useState(false);
 
   // Get initials for avatar fallback
   const getInitials = (name: string) => {
@@ -36,46 +31,6 @@ const Profile = () => {
       console.error('Error formatting date:', error);
       return dateString;
     }
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      
-      // Create preview for the dialog
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        if (event.target?.result) {
-          setImagePreview(event.target.result as string);
-          setShowUploadDialog(true);
-        }
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleUploadClick = () => {
-    fileInputRef.current?.click();
-  };
-
-  const confirmUpload = () => {
-    if (imagePreview) {
-      setIsUploading(true);
-      
-      // In a real app, we would upload the file to a server here
-      // For demo purposes, we'll just simulate a delay and use the preview as the image
-      setTimeout(() => {
-        updateProfileImage(imagePreview);
-        setIsUploading(false);
-        setShowUploadDialog(false);
-        setImagePreview(null);
-      }, 800);
-    }
-  };
-
-  const cancelUpload = () => {
-    setShowUploadDialog(false);
-    setImagePreview(null);
   };
 
   if (!user) {
@@ -125,22 +80,6 @@ const Profile = () => {
                     {user.name ? getInitials(user.name) : 'U'}
                   </AvatarFallback>
                 </Avatar>
-                
-                <Button 
-                  className="absolute bottom-4 right-0 rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity"
-                  size="icon"
-                  onClick={handleUploadClick}
-                >
-                  <Camera className="h-4 w-4" />
-                </Button>
-                
-                <input
-                  type="file"
-                  ref={fileInputRef}
-                  className="hidden"
-                  accept="image/*"
-                  onChange={handleFileChange}
-                />
               </div>
               <h2 className="text-xl font-semibold">{user.name}</h2>
               <span className="px-3 py-1 mt-2 text-sm rounded-full bg-primary/10 text-primary">
@@ -187,37 +126,6 @@ const Profile = () => {
             </div>
           </CardContent>
         </Card>
-
-        <AlertDialog open={showUploadDialog} onOpenChange={setShowUploadDialog}>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Profiilipildi üleslaadimine</AlertDialogTitle>
-              <AlertDialogDescription>
-                See uuendab sinu profiilipilti kogu saidil.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            
-            {imagePreview && (
-              <div className="flex justify-center my-4">
-                <img 
-                  src={imagePreview} 
-                  alt="Eelvaade" 
-                  className="w-32 h-32 rounded-full object-cover"
-                />
-              </div>
-            )}
-            
-            <AlertDialogFooter>
-              <AlertDialogCancel onClick={cancelUpload}>Tühista</AlertDialogCancel>
-              <AlertDialogAction 
-                onClick={confirmUpload}
-                disabled={isUploading}
-              >
-                {isUploading ? 'Üleslaadimine...' : 'Laadi üles'}
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
       </div>
     </div>
   );

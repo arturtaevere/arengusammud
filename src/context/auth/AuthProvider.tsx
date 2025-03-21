@@ -3,7 +3,6 @@ import React, { createContext } from 'react';
 import { AuthContextType } from './types';
 import { useAuthState } from './useAuthState';
 import { useAuthMethods } from './useAuthMethods';
-import { useProfileManagement } from './useProfileManagement';
 
 // Create the context with default values
 export const AuthContext = createContext<AuthContextType>({
@@ -14,12 +13,6 @@ export const AuthContext = createContext<AuthContextType>({
   login: async () => {},
   signup: async () => {},
   logout: async () => {}, 
-  updateProfileImage: async () => {}, 
-  getAllUsers: () => [],
-  deleteUserByEmail: async () => false,
-  refreshUsers: () => {}, 
-  
-  // Add the stub verification functions
   verifyEmail: async () => false,
   resendVerificationEmail: async () => false,
   pendingVerificationEmail: null,
@@ -45,13 +38,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     resendVerificationEmail,
   } = useAuthMethods(loadUserProfile, setPendingVerificationEmail);
 
-  const {
-    updateProfileImage,
-    getAllUsers,
-    deleteUserByEmail,
-    refreshUsers,
-  } = useProfileManagement(user, setUser);
-
   return (
     <AuthContext.Provider
       value={{
@@ -62,10 +48,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         login,
         signup,
         logout,
-        updateProfileImage,
-        getAllUsers,
-        deleteUserByEmail,
-        refreshUsers,
         verifyEmail,
         resendVerificationEmail,
         pendingVerificationEmail,
