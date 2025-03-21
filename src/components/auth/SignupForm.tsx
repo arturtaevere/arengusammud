@@ -1,7 +1,7 @@
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth, SCHOOLS } from '@/context/AuthContext';
 import { useToast } from '@/components/ui/use-toast';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,15 +11,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { CardContent, CardFooter } from '@/components/ui/card';
 import { SignupFormValues, signupSchema } from './schemas';
-import { SCHOOLS } from '@/context/auth/constants';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 const SignupForm = () => {
-  const { signup, pendingVerificationEmail, isLoading } = useAuth();
+  const { signup, isLoading } = useAuth();
   const { toast } = useToast();
-  const [localLoading, setLocalLoading] = useState(false);
-  const navigate = useNavigate();
 
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
@@ -36,32 +31,14 @@ const SignupForm = () => {
   const role = form.watch('role');
 
   const handleSignup = async (values: SignupFormValues) => {
-    setLocalLoading(true);
     try {
       await signup(values.name, values.email, values.password, values.role, values.school);
-      
-      // If we don't have a pending verification email, it means auth is disabled
-      // and we can redirect directly to dashboard
-      if (!pendingVerificationEmail) {
-        // The onAuthStateChange event will handle the redirection
-        toast({
-          title: "Registreerimine õnnestus",
-          description: "Konto on loodud, tere tulemast!",
-        });
-      } else {
-        toast({
-          title: "Registreerimine õnnestus",
-          description: "Konto on loodud. Palun kontrolli oma e-posti kinnitusvõite saamiseks.",
-        });
-      }
     } catch (error) {
       toast({
         variant: "destructive",
         title: "Registreerimine ebaõnnestus",
         description: error instanceof Error ? error.message : "Midagi läks valesti",
       });
-    } finally {
-      setLocalLoading(false);
     }
   };
 
@@ -183,9 +160,9 @@ const SignupForm = () => {
           <Button 
             type="submit" 
             className="w-full transition-all" 
-            disabled={isLoading || localLoading}
+            disabled={isLoading}
           >
-            {isLoading || localLoading ? "Konto loomine..." : "Loo konto"}
+            {isLoading ? "Konto loomine..." : "Loo konto"}
           </Button>
         </CardFooter>
       </form>

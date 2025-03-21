@@ -1,18 +1,18 @@
 
 import { Link, useLocation } from 'react-router-dom';
-import { LogOut, User, BookOpen, ClipboardList, LayoutDashboard, MessageSquare } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { BookOpen, ClipboardList, LayoutDashboard, Users, MessageSquare } from 'lucide-react';
 
-type MobileMenuProps = {
+interface MobileMenuProps {
   getInitials: (name: string) => string;
-};
+}
 
 const MobileMenu = ({ getInitials }: MobileMenuProps) => {
   const { user, logout } = useAuth();
   const location = useLocation();
+  const isJuht = user?.role === 'juht';
 
   return (
     <div className="md:hidden glass animate-fade-in">
@@ -71,6 +71,21 @@ const MobileMenu = ({ getInitials }: MobileMenuProps) => {
                 Töölaud
               </div>
             </Link>
+            {isJuht && (
+              <Link 
+                to="/admin" 
+                className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
+                  location.pathname === '/admin' 
+                    ? 'bg-primary text-primary-foreground' 
+                    : 'hover:bg-gray-100'
+                }`}
+              >
+                <div className="flex items-center">
+                  <Users className="mr-2 h-5 w-5" />
+                  Haldus
+                </div>
+              </Link>
+            )}
             <div className="pt-4 pb-2">
               <div className="flex items-center px-3">
                 <div className="flex-shrink-0">
@@ -90,8 +105,8 @@ const MobileMenu = ({ getInitials }: MobileMenuProps) => {
                   </Avatar>
                 </div>
                 <div className="ml-3">
-                  <div className="text-base font-medium">{user?.name || 'User'}</div>
-                  <div className="text-sm text-muted-foreground">{user?.email || ''}</div>
+                  <div className="text-base font-medium">{user?.name}</div>
+                  <div className="text-sm text-muted-foreground">{user?.email}</div>
                 </div>
               </div>
               <div className="mt-3 px-2 space-y-1">

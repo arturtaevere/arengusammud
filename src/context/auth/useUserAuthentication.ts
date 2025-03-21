@@ -1,6 +1,7 @@
+
 import { useToast } from '@/components/ui/use-toast';
 import { User, UserWithPassword } from './types';
-import { USER_STORAGE_KEY, USERS_STORAGE_KEY, TEST_EMAILS } from './constants';
+import { USER_STORAGE_KEY, USERS_STORAGE_KEY } from './constants';
 
 export const useUserAuthentication = (
   users: UserWithPassword[],
@@ -11,32 +12,36 @@ export const useUserAuthentication = (
   const login = async (email: string, password: string) => {
     await new Promise(resolve => setTimeout(resolve, 800));
     
-    console.log('Attempting login for:', email);
+    // Convert any 'coach' role users to 'juht'
+    const updatedUsers = users.map((u: UserWithPassword) => {
+      // Use type assertions to fix the type comparison issues
+      if (u.role === 'coach' as any) {
+        return {...u, role: 'juht' as const};
+      }
+      if (u.role === 'teacher' as any) {
+        return {...u, role: 'õpetaja' as const};
+      }
+      return u;
+    });
     
-    // Get the latest users from localStorage in case another browser tab has updated it
-    const storedUsersStr = localStorage.getItem(USERS_STORAGE_KEY);
-    const latestUsers: UserWithPassword[] = storedUsersStr ? JSON.parse(storedUsersStr) : users;
+    // Save the updated users with the new roles if there are changes
+    if (JSON.stringify(updatedUsers) !== JSON.stringify(users)) {
+      saveUsers(updatedUsers);
+    }
     
-    const normalizedEmail = email.toLowerCase().trim();
-    const foundUser = latestUsers.find((u: UserWithPassword) => 
-      u.email.toLowerCase().trim() === normalizedEmail
-    );
+    const foundUser = updatedUsers.find((u: UserWithPassword) => u.email.toLowerCase() === email.toLowerCase());
     
     if (!foundUser) {
-      console.log('User not found for email:', normalizedEmail);
       throw new Error('Vale e-post või parool');
     }
     
     if (foundUser.password !== password) {
-      console.log('Invalid password for user:', normalizedEmail);
       throw new Error('Vale e-post või parool');
     }
     
     const { password: _, ...userWithoutPassword } = foundUser;
     
     localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(userWithoutPassword));
-    
-    console.log('Login successful for user:', userWithoutPassword.name);
     
     toast({
       title: "Sisselogimine õnnestus",
@@ -49,44 +54,18 @@ export const useUserAuthentication = (
   const signup = async (name: string, email: string, password: string, role: 'juht' | 'õpetaja', school?: string) => {
     await new Promise(resolve => setTimeout(resolve, 800));
     
-    // First, check if this is a test email that should be rejected
-    const normalizedNewEmail = email.toLowerCase().trim();
-    
-    // Check against normalized test emails
-    const isTestEmail = TEST_EMAILS.some(testEmail => 
-      testEmail.toLowerCase().trim() === normalizedNewEmail
-    );
-    
-    if (isTestEmail) {
-      console.log('Attempted to sign up with a test email:', normalizedNewEmail);
-      throw new Error('Selle e-posti aadressiga ei saa kontot luua');
-    }
-    
-    // IMPORTANT: Always get the fresh users list from localStorage for signup
+    // Get the latest users from localStorage
     const storedUsersStr = localStorage.getItem(USERS_STORAGE_KEY);
-    let currentUsers: UserWithPassword[] = [];
+    const currentUsers = storedUsersStr ? JSON.parse(storedUsersStr) : users;
     
-    if (storedUsersStr) {
-      try {
-        currentUsers = JSON.parse(storedUsersStr);
-        console.log('Retrieved users from localStorage during signup:', currentUsers.length);
-      } catch (e) {
-        console.error('Error parsing stored users during signup:', e);
-        currentUsers = users; // Fallback to state if localStorage parse fails
-      }
-    } else {
-      console.log('No users found in localStorage, using state users');
-      currentUsers = users;
-    }
+    console.log('Signup - Current users in storage:', {
+      count: currentUsers.length,
+      emails: currentUsers.map((u: UserWithPassword) => u.email)
+    });
     
-    console.log('Attempting signup for email:', email);
-    
-    const existingUserIndex = currentUsers.findIndex(
-      (u: UserWithPassword) => u.email.toLowerCase().trim() === normalizedNewEmail
-    );
-    
-    if (existingUserIndex !== -1) {
-      console.log('Found existing user with email:', email);
+    const existingUser = currentUsers.find((u: UserWithPassword) => u.email.toLowerCase() === email.toLowerCase());
+    if (existingUser) {
+      console.log('Found existing user with email:', existingUser);
       throw new Error('Selle e-posti aadressiga kasutaja on juba olemas');
     }
 
@@ -98,7 +77,7 @@ export const useUserAuthentication = (
     const newUser = {
       id: userId,
       name,
-      email: normalizedNewEmail, // Store normalized email
+      email,
       password,
       role,
       school,
@@ -106,24 +85,22 @@ export const useUserAuthentication = (
       emailVerified: true,
     };
     
+    console.log('Creating new user:', newUser);
+    
     const updatedUsers = [...currentUsers, newUser];
     
-    console.log('New user signup - adding user:', {
-      email: newUser.email,
-      role: newUser.role,
-      totalUsersAfter: updatedUsers.length
-    });
-    
     try {
-      // First update localStorage directly
+      // First update localStorage
       localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(updatedUsers));
-      console.log('Successfully saved new user to localStorage');
+      console.log('Successfully saved to localStorage. Updated users:', {
+        count: updatedUsers.length,
+        emails: updatedUsers.map(u => u.email)
+      });
       
-      // Then update state via context
+      // Then update state through saveUsers
       saveUsers(updatedUsers);
-      console.log('Successfully updated state via saveUsers');
       
-      // Force refresh by dispatching multiple events
+      // Dispatch events to notify other components
       window.dispatchEvent(new Event('storage'));
       window.dispatchEvent(new CustomEvent('users-updated'));
       
@@ -144,3 +121,4 @@ export const useUserAuthentication = (
     signup
   };
 };
+

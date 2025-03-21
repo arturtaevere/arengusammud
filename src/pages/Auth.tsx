@@ -2,57 +2,34 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
-import AuthForm from '@/components/auth/AuthForm';
-import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
+import AuthForm from '@/components/AuthForm';
+import Navbar from '@/components/Navbar';
 
 const Auth = () => {
+  const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
-  const { isAuthenticated, isLoading, pendingVerificationEmail } = useAuth();
   
+  // Redirect authenticated users to dashboard
   useEffect(() => {
-    // Handle redirect if user is authenticated
-    if (isAuthenticated && !pendingVerificationEmail) {
-      console.log('User is authenticated, redirecting to dashboard');
+    if (isAuthenticated) {
       navigate('/dashboard');
     }
-  }, [isAuthenticated, navigate, pendingVerificationEmail]);
+  }, [isAuthenticated, navigate]);
   
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="flex flex-col items-center space-y-4 w-64">
-          <Skeleton className="w-full h-8 rounded-full" />
-          <Skeleton className="w-3/4 h-8 rounded-full" />
-          <Skeleton className="w-1/2 h-8 rounded-full" />
-          <p className="text-gray-500 mt-2">Laadimine...</p>
-        </div>
-      </div>
-    );
-  }
-  
-  // If user is authenticated but still here (e.g., during redirect), show a manual redirect button
-  if (isAuthenticated && !pendingVerificationEmail) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="flex flex-col items-center">
-          <p className="text-green-600 mb-3">Sisselogimine õnnestus!</p>
-          <p className="text-gray-500 mb-3">Ümbersuunamine...</p>
-          <Button 
-            onClick={() => navigate('/dashboard')}
-            className="bg-primary text-white px-4 py-2 rounded"
-          >
-            Mine avalehele
-          </Button>
-        </div>
-      </div>
-    );
-  }
-  
-  // Show auth form if not authenticated
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <AuthForm />
+    <div className="min-h-screen flex flex-col">
+      <Navbar />
+      <div className="flex-1 flex flex-col items-center justify-center p-4 pt-24">
+        {/* Background elements */}
+        <div className="absolute inset-0 -z-10">
+          <div className="absolute top-0 left-20 w-72 h-72 bg-blue-50 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float"></div>
+          <div className="absolute bottom-20 right-20 w-96 h-96 bg-purple-50 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float" style={{ animationDelay: '2s' }}></div>
+        </div>
+        
+        <div className="w-full max-w-md animate-fade-in">
+          <AuthForm />
+        </div>
+      </div>
     </div>
   );
 };
