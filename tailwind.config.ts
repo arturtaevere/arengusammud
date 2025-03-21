@@ -66,6 +66,18 @@ export default {
           'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
           border: 'hsl(var(--sidebar-border))',
           ring: 'hsl(var(--sidebar-ring))'
+        },
+        // New custom colors based on the image
+        orange: {
+          DEFAULT: '#F97316', // Bright orange from the image
+          light: '#FEC6A1',   // Softer version
+        },
+        pink: {
+          DEFAULT: '#D946EF', // Bright pink from the image
+          light: '#FFDEE2',   // Softer version
+        },
+        peach: {
+          DEFAULT: '#FDE1D3', // Soft peach color
         }
       },
       borderRadius: {

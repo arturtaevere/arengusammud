@@ -10,7 +10,7 @@ const AuthForm = () => {
   
   return (
     <div className="w-full max-w-md mx-auto p-4">
-      <Card className="w-full glass">
+      <Card className="w-full glass border-orange-light/30">
         <CardHeader>
           <CardTitle className="text-3xl text-center">Arengusammud</CardTitle>
           <CardDescription className="text-center">
