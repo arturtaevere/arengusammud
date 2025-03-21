@@ -1,7 +1,8 @@
 
 import { Link, useLocation } from 'react-router-dom';
-import { BookOpen, ClipboardList, LayoutDashboard, Users, MessageSquare } from 'lucide-react';
+import { BookOpen, ClipboardList, Users, MessageSquare } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
+import { Home } from 'lucide-react';
 
 const MainNavLinks = () => {
   const location = useLocation();
@@ -18,7 +19,7 @@ const MainNavLinks = () => {
             : 'text-foreground/70 hover:text-foreground'
         }`}
       >
-        <LayoutDashboard className="mr-2 h-4 w-4" />
+        <Home className="mr-2 h-4 w-4" />
         <span>Avaleht</span>
       </Link>
       <Link 

@@ -3,7 +3,8 @@ import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { BookOpen, ClipboardList, LayoutDashboard, Users, MessageSquare } from 'lucide-react';
+import { BookOpen, ClipboardList, Users, MessageSquare } from 'lucide-react';
+import { Home } from 'lucide-react';
 
 interface MobileMenuProps {
   getInitials: (name: string) => string;
@@ -28,7 +29,7 @@ const MobileMenu = ({ getInitials }: MobileMenuProps) => {
               }`}
             >
               <div className="flex items-center">
-                <LayoutDashboard className="mr-2 h-5 w-5" />
+                <Home className="mr-2 h-5 w-5" />
                 Avaleht
               </div>
             </Link>
