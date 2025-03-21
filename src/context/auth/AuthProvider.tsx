@@ -148,7 +148,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             role,
             school,
           },
-          emailRedirectTo: `${window.location.origin}/auth`,
+          emailRedirectTo: `${window.location.origin}/verify-email`,
         },
       });
       
@@ -226,16 +226,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   // Email verification
-  const verifyEmail = async (token: string): Promise<boolean> => {
+  const verifyEmail = async (userId: string, token: string): Promise<boolean> => {
     try {
-      // Actually verify the token
-      const { error } = await supabase.auth.verifyOtp({
-        token_hash: token,
-        type: 'email',
-      });
+      // Update the profile's email_verified status in the database
+      const { error } = await supabase
+        .from('profiles')
+        .update({ email_verified: true })
+        .eq('id', userId);
       
       if (error) {
-        console.error('Error verifying email:', error);
+        console.error('Error updating email_verified status:', error);
         return false;
       }
       
@@ -252,7 +252,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         type: 'signup',
         email,
         options: {
-          emailRedirectTo: `${window.location.origin}/auth`,
+          emailRedirectTo: `${window.location.origin}/verify-email`,
         },
       });
       
