@@ -10,6 +10,7 @@ export const AuthContext = createContext<AuthContextType>({
   user: null,
   isAuthenticated: false,
   isLoading: true,
+  session: null,
   login: async () => {},
   signup: async () => {},
   logout: () => {},
@@ -30,6 +31,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     user, 
     setUser, 
     isLoading, 
+    session,
     pendingVerificationEmail, 
     setPendingVerificationEmail,
     loadUserProfile 
@@ -56,6 +58,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         user,
         isAuthenticated: !!user,
         isLoading,
+        session,
         login,
         signup,
         logout,

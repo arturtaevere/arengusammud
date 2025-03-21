@@ -1,38 +1,37 @@
 
-// Define User types
+import { Session } from '@supabase/supabase-js';
+
 export type User = {
   id: string;
   name: string;
   email: string;
   role: 'juht' | 'õpetaja' | 'coach';
   school?: string;
-  createdAt: string;
-  emailVerified: boolean;
   profileImage?: string;
+  createdAt: string;
+  emailVerified?: boolean;
 };
 
 export type UserWithPassword = User & {
   password: string;
 };
 
-// Define Auth Context type
-export interface AuthContextType {
+export type AuthContextType = {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  session: Session | null;
   login: (email: string, password: string) => Promise<void>;
   signup: (name: string, email: string, password: string, role: 'juht' | 'õpetaja' | 'coach', school?: string) => Promise<void>;
-  logout: () => void;
-  updateProfileImage: (imageUrl: string) => void;
-  
-  // User management functions
-  getAllUsers: () => User[];
+  logout: () => Promise<void>;
+  updateProfileImage: (url: string) => Promise<void>;
+  getAllUsers: () => UserWithPassword[];
   deleteUserByEmail: (email: string) => Promise<boolean>;
   refreshUsers: () => void;
   
-  // Email verification functions
-  verifyEmail: (id: string, token: string) => Promise<boolean>;
+  // Email verification support
+  verifyEmail: (userId: string, token: string) => Promise<boolean>;
   resendVerificationEmail: (email: string) => Promise<boolean>;
   pendingVerificationEmail: string | null;
   setPendingVerificationEmail: (email: string | null) => void;
-}
+};
