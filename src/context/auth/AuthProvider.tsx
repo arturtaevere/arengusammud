@@ -69,6 +69,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Load user profile from the profiles table
   const loadUserProfile = async (supabaseUser: SupabaseUser) => {
     try {
+      console.log('Loading profile for user:', supabaseUser.id);
       const { data: profile, error } = await supabase
         .from('profiles')
         .select('*')
@@ -82,6 +83,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
       
       if (profile) {
+        console.log('Profile loaded:', profile);
         const userData: User = {
           id: profile.id,
           name: profile.name,
@@ -95,6 +97,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         
         setUser(userData);
         localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(userData));
+      } else {
+        console.log('No profile found for user:', supabaseUser.id);
       }
     } catch (error) {
       console.error('Error in loadUserProfile:', error);
@@ -132,6 +136,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   ): Promise<void> => {
     setIsLoading(true);
     try {
+      console.log('Signing up user with data:', { name, email, role, school });
+      
       // Use Supabase signUp with metadata for the trigger
       const { data, error } = await supabase.auth.signUp({
         email,
@@ -142,13 +148,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             role,
             school,
           },
+          emailRedirectTo: `${window.location.origin}/auth`,
         },
       });
       
       if (error) throw error;
       
+      console.log('Signup response:', data);
       setPendingVerificationEmail(email);
-      // Don't return email, just return void
     } catch (error: any) {
       console.error('Signup error:', error);
       throw new Error(error.message || 'Registreerimine ebaõnnestus');
@@ -218,13 +225,47 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return;
   };
 
-  // Email verification (just stubs for now)
-  const verifyEmail = async (): Promise<boolean> => {
-    return false;
+  // Email verification
+  const verifyEmail = async (token: string): Promise<boolean> => {
+    try {
+      // Actually verify the token
+      const { error } = await supabase.auth.verifyOtp({
+        token_hash: token,
+        type: 'email',
+      });
+      
+      if (error) {
+        console.error('Error verifying email:', error);
+        return false;
+      }
+      
+      return true;
+    } catch (error) {
+      console.error('Error in verifyEmail:', error);
+      return false;
+    }
   };
 
-  const resendVerificationEmail = async (): Promise<boolean> => {
-    return false;
+  const resendVerificationEmail = async (email: string): Promise<boolean> => {
+    try {
+      const { error } = await supabase.auth.resend({
+        type: 'signup',
+        email,
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth`,
+        },
+      });
+      
+      if (error) {
+        console.error('Error resending verification email:', error);
+        return false;
+      }
+      
+      return true;
+    } catch (error) {
+      console.error('Error in resendVerificationEmail:', error);
+      return false;
+    }
   };
 
   return (

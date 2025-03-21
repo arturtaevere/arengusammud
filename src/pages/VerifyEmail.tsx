@@ -1,71 +1,88 @@
 
 import { useEffect, useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { useAuth } from '@/context/AuthContext';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import Navbar from '@/components/Navbar';
-import { Mail, CheckCircle, AlertCircle } from 'lucide-react';
-import { useToast } from '@/components/ui/use-toast';
+import { Loader2, CheckCircle, XCircle } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
 
 const VerifyEmail = () => {
-  const { verifyEmail, resendVerificationEmail, pendingVerificationEmail, setPendingVerificationEmail } = useAuth();
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get('token');
+  const [verifying, setVerifying] = useState(true);
+  const [verified, setVerified] = useState(false);
+  const { verifyEmail } = useAuth();
   const navigate = useNavigate();
-  const { toast } = useToast();
-  
-  const [verifying, setVerifying] = useState(false);
-  const [resending, setResending] = useState(false);
-  const [verificationStatus, setVerificationStatus] = useState<'verifying' | 'success' | 'error' | 'pending'>('pending');
-  const [email, setEmail] = useState(pendingVerificationEmail || '');
   
   useEffect(() => {
-    // Show toast notifying that verification is disabled
-    toast({
-      title: "Email Verification Disabled",
-      description: "Email verification is currently disabled. You can proceed with using the application.",
-    });
-  }, [toast]);
+    const verify = async () => {
+      if (!token) {
+        setVerifying(false);
+        return;
+      }
+      
+      try {
+        const success = await verifyEmail(token);
+        setVerified(success);
+      } catch (error) {
+        console.error('Error verifying email:', error);
+      } finally {
+        setVerifying(false);
+      }
+    };
+    
+    verify();
+  }, [token, verifyEmail]);
+  
+  const handleContinue = () => {
+    navigate('/auth');
+  };
+  
+  if (verifying) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen p-4">
+        <Card className="w-full max-w-md">
+          <CardHeader className="text-center">
+            <CardTitle className="text-2xl">Kinnitame teie e-posti...</CardTitle>
+          </CardHeader>
+          <CardContent className="flex justify-center p-6">
+            <Loader2 className="h-16 w-16 text-primary animate-spin" />
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
   
   return (
-    <div className="min-h-screen flex flex-col">
-      <Navbar />
-      <div className="flex-1 flex flex-col items-center justify-center p-4 pt-24">
-        {/* Background elements */}
-        <div className="absolute inset-0 -z-10">
-          <div className="absolute top-0 left-20 w-72 h-72 bg-blue-50 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float"></div>
-          <div className="absolute bottom-20 right-20 w-96 h-96 bg-purple-50 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float" style={{ animationDelay: '2s' }}></div>
-        </div>
-        
-        <div className="w-full max-w-md animate-fade-in">
-          <Card className="w-full glass">
-            <CardHeader className="text-center">
-              <div className="mx-auto mb-4">
-                <Mail className="h-12 w-12 text-primary" />
-              </div>
-              
-              <CardTitle className="text-2xl">
-                Email Verification Disabled
-              </CardTitle>
-              
-              <CardDescription>
-                Email verification is currently disabled
-              </CardDescription>
-            </CardHeader>
-            
-            <CardContent>
-              <p className="text-center text-muted-foreground">
-                Email verification has been temporarily disabled. You can proceed with using the application.
-              </p>
-            </CardContent>
-            
-            <CardFooter className="flex flex-col space-y-2">
-              <Button className="w-full" onClick={() => navigate('/auth')}>
-                Back to Login
-              </Button>
-            </CardFooter>
-          </Card>
-        </div>
-      </div>
+    <div className="flex flex-col items-center justify-center min-h-screen p-4">
+      <Card className="w-full max-w-md">
+        <CardHeader className="text-center">
+          <div className="mx-auto mb-4">
+            {verified ? (
+              <CheckCircle className="h-16 w-16 text-green-500" />
+            ) : (
+              <XCircle className="h-16 w-16 text-red-500" />
+            )}
+          </div>
+          <CardTitle className="text-2xl">
+            {verified 
+              ? 'E-post on kinnitatud!' 
+              : 'E-posti kinnitamine ebaõnnestus'}
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-center text-muted-foreground">
+            {verified 
+              ? 'Teie e-post on edukalt kinnitatud. Nüüd saate sisse logida.' 
+              : 'Kahjuks ei õnnestunud teie e-posti kinnitada. Link võib olla aegunud või vigane.'}
+          </p>
+        </CardContent>
+        <CardFooter>
+          <Button className="w-full" onClick={handleContinue}>
+            {verified ? 'Jätka sisselogimisega' : 'Tagasi sisselogimisse'}
+          </Button>
+        </CardFooter>
+      </Card>
     </div>
   );
 };
