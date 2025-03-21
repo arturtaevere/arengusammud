@@ -2,6 +2,7 @@
 import { Link, useLocation } from 'react-router-dom';
 import { LogOut, User, BookOpen, ClipboardList, LayoutDashboard, Users, MessageSquare } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
+import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
