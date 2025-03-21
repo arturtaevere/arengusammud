@@ -13,6 +13,8 @@ const Auth = () => {
   
   // Redirect authenticated users to dashboard
   useEffect(() => {
+    console.log('Auth component mounted, auth state:', { isAuthenticated, isLoading });
+    
     // Add a small delay to ensure auth state is fully loaded
     const timer = setTimeout(() => {
       setLocalLoading(false);
@@ -22,12 +24,24 @@ const Auth = () => {
       } else {
         console.log('User is not authenticated, staying on auth page');
       }
-    }, 500);
+    }, 1000); // Increased timeout to ensure auth state is resolved
     
     return () => clearTimeout(timer);
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, navigate, isLoading]);
   
-  if (isLoading || localLoading) {
+  // Force exit loading state after 3 seconds maximum to prevent stalling
+  useEffect(() => {
+    const maxLoadingTimer = setTimeout(() => {
+      if (localLoading) {
+        console.log('Forcing exit from loading state after timeout');
+        setLocalLoading(false);
+      }
+    }, 3000);
+    
+    return () => clearTimeout(maxLoadingTimer);
+  }, [localLoading]);
+  
+  if (isLoading && localLoading) {
     return (
       <div className="min-h-screen flex flex-col">
         <Navbar />
@@ -59,7 +73,11 @@ const Auth = () => {
     );
   }
   
-  return null; // This should never render as we redirect authenticated users
+  // If we get here, user is authenticated but hasn't been redirected yet
+  // This ensures we don't get stuck in a loading state
+  console.log('Authenticated but not redirected yet, forcing redirect');
+  navigate('/dashboard');
+  return null;
 };
 
 export default Auth;
