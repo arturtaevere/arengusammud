@@ -21,16 +21,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-
-type User = {
-  id: string;
-  name: string;
-  email: string;
-  role: 'juht' | 'õpetaja';
-  profileImage?: string;
-  school?: string;
-  createdAt: string;
-};
+import { User } from '@/context/auth/types';
 
 interface UserTableRowProps {
   user: User;
@@ -52,6 +43,32 @@ const UserTableRow = ({ user, onDeleteUser }: UserTableRowProps) => {
       .map(part => part[0])
       .join('')
       .toUpperCase();
+  };
+
+  const getRoleBadgeVariant = (role: string) => {
+    switch (role) {
+      case 'juht':
+        return 'default';
+      case 'õpetaja':
+        return 'secondary';
+      case 'coach':
+        return 'outline';
+      default:
+        return 'secondary';
+    }
+  };
+
+  const getRoleDisplayName = (role: string) => {
+    switch (role) {
+      case 'juht':
+        return 'Juht';
+      case 'õpetaja':
+        return 'Õpetaja';
+      case 'coach':
+        return 'Coach';
+      default:
+        return role;
+    }
   };
 
   return (
@@ -76,8 +93,8 @@ const UserTableRow = ({ user, onDeleteUser }: UserTableRowProps) => {
         </div>
       </TableCell>
       <TableCell>
-        <Badge variant={user.role === 'juht' ? 'default' : 'secondary'}>
-          {user.role === 'juht' ? 'Juht' : 'Õpetaja'}
+        <Badge variant={getRoleBadgeVariant(user.role)}>
+          {getRoleDisplayName(user.role)}
         </Badge>
       </TableCell>
       <TableCell>{user.school || 'N/A'}</TableCell>
