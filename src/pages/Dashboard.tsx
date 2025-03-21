@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import Navbar from '@/components/Navbar';
 import StatsCards from '@/components/dashboard/StatsCards';
-import QuickActions from '@/components/dashboard/QuickActions';
 
 const Dashboard = () => {
   const { user, isAuthenticated } = useAuth();
@@ -35,8 +34,6 @@ const Dashboard = () => {
         </div>
         
         <StatsCards stats={stats} />
-        
-        <QuickActions />
       </main>
     </div>
   );
