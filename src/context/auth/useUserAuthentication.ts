@@ -1,4 +1,3 @@
-
 import { useToast } from '@/components/ui/use-toast';
 import { User, UserWithPassword } from './types';
 import { USER_STORAGE_KEY, USERS_STORAGE_KEY, TEST_EMAILS } from './constants';
@@ -63,47 +62,31 @@ export const useUserAuthentication = (
       throw new Error('Selle e-posti aadressiga ei saa kontot luua');
     }
     
-    // Important: Always get the fresh users list from localStorage for signup
-    // This ensures we catch users added in other tabs/sessions
+    // IMPORTANT: Always get the fresh users list from localStorage for signup
     const storedUsersStr = localStorage.getItem(USERS_STORAGE_KEY);
     let currentUsers: UserWithPassword[] = [];
     
     if (storedUsersStr) {
       try {
         currentUsers = JSON.parse(storedUsersStr);
+        console.log('Retrieved users from localStorage during signup:', currentUsers.length);
       } catch (e) {
         console.error('Error parsing stored users during signup:', e);
         currentUsers = users; // Fallback to state if localStorage parse fails
       }
     } else {
+      console.log('No users found in localStorage, using state users');
       currentUsers = users;
     }
     
     console.log('Attempting signup for email:', email);
-    console.log('Current users in system:', {
-      fromStorage: storedUsersStr ? 'yes' : 'no',
-      count: currentUsers.length,
-      emails: currentUsers.map(u => u.email)
-    });
-    
-    console.log('Checking if user exists with normalized email:', normalizedNewEmail);
-    console.log('All normalized emails in system:', currentUsers.map(u => u.email.toLowerCase().trim()));
-    
-    // Dump entire users list for debugging
-    currentUsers.forEach((user, index) => {
-      console.log(`User ${index + 1}:`, {
-        email: user.email,
-        normalizedEmail: user.email.toLowerCase().trim(),
-        matches: user.email.toLowerCase().trim() === normalizedNewEmail
-      });
-    });
     
     const existingUserIndex = currentUsers.findIndex(
       (u: UserWithPassword) => u.email.toLowerCase().trim() === normalizedNewEmail
     );
     
     if (existingUserIndex !== -1) {
-      console.log('Found existing user with email:', email, currentUsers[existingUserIndex]);
+      console.log('Found existing user with email:', email);
       throw new Error('Selle e-posti aadressiga kasutaja on juba olemas');
     }
 
@@ -125,31 +108,24 @@ export const useUserAuthentication = (
     
     const updatedUsers = [...currentUsers, newUser];
     
-    console.log('New user signup - attempting to save:', {
-      newUser: { ...newUser, password: '[REDACTED]' },
-      totalUsersAfterAdd: updatedUsers.length
+    console.log('New user signup - adding user:', {
+      email: newUser.email,
+      role: newUser.role,
+      totalUsersAfter: updatedUsers.length
     });
     
     try {
-      // Update localStorage directly first for immediate access
+      // First update localStorage directly
       localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(updatedUsers));
-      console.log('Successfully saved to localStorage');
+      console.log('Successfully saved new user to localStorage');
       
-      // Update state via context
+      // Then update state via context
       saveUsers(updatedUsers);
       console.log('Successfully updated state via saveUsers');
       
-      // Force refresh by dispatching multiple events to ensure all listeners update
+      // Force refresh by dispatching multiple events
       window.dispatchEvent(new Event('storage'));
       window.dispatchEvent(new CustomEvent('users-updated'));
-      
-      // Add a slight delay and dispatch again to ensure components have time to set up listeners
-      setTimeout(() => {
-        window.dispatchEvent(new Event('storage'));
-        window.dispatchEvent(new CustomEvent('users-updated'));
-      }, 500);
-      
-      console.log('Dispatched storage and users-updated events');
       
       toast({
         title: "Registreerimine õnnestus",
