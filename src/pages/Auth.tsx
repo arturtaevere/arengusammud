@@ -6,15 +6,18 @@ import AuthForm from '@/components/AuthForm';
 import Navbar from '@/components/Navbar';
 
 const Auth = () => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isLoading } = useAuth();
   const navigate = useNavigate();
   
   // Redirect authenticated users to dashboard
   useEffect(() => {
-    if (isAuthenticated) {
+    console.log('Auth page - isAuthenticated:', isAuthenticated, 'isLoading:', isLoading);
+    
+    if (isAuthenticated && !isLoading) {
+      console.log('Redirecting to dashboard from Auth page');
       navigate('/dashboard');
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, isLoading, navigate]);
   
   return (
     <div className="min-h-screen flex flex-col">

@@ -8,10 +8,12 @@ import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { CardContent, CardFooter } from '@/components/ui/card';
 import { LoginFormValues, loginSchema } from './schemas';
+import { useNavigate } from 'react-router-dom';
 
 const LoginForm = () => {
-  const { login, isLoading } = useAuth();
+  const { login, isLoading, isAuthenticated } = useAuth();
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -24,6 +26,20 @@ const LoginForm = () => {
   const handleLogin = async (values: LoginFormValues) => {
     try {
       await login(values.email, values.password);
+      
+      // Show success toast
+      toast({
+        title: "Sisselogimine õnnestus",
+        description: "Suuname Sind peatselt edasi...",
+      });
+      
+      // Force navigation to dashboard
+      setTimeout(() => {
+        if (isAuthenticated) {
+          navigate('/dashboard');
+        }
+      }, 1000);
+      
     } catch (error) {
       toast({
         variant: "destructive",
