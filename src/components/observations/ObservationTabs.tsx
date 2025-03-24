@@ -18,16 +18,17 @@ const ObservationTabs = ({ observations, onFeedbackGiven }: ObservationTabsProps
   const { user } = useAuth();
   const [receivedFeedback, setReceivedFeedback] = useState<Observation[]>([]);
   const [conductedObservations, setConductedObservations] = useState<Observation[]>([]);
-  const [combinedItems, setCombinedItems] = useState<CombinedFeedbackItem[]>([]);
+  const [teacherCombinedItems, setTeacherCombinedItems] = useState<CombinedFeedbackItem[]>([]);
+  const [coachCombinedItems, setCoachCombinedItems] = useState<CombinedFeedbackItem[]>([]);
   
   useEffect(() => {
-    // For demonstration purposes, let's simulate observations where the current user is the teacher
-    // Normally this would be filtered by a proper backend
+    // Get all stored observations
     const storedObservations = getStoredObservations();
     
     // Use user's name or email as fallback to match with teacher field
     const teacherName = user?.name || user?.email?.split('@')[0] || '';
     
+    // The observations where the current user is the teacher
     const received = observations.filter(obs => 
       obs.teacher.toLowerCase().includes(teacherName.toLowerCase()) && 
       obs.status === 'Lõpetatud' && 
@@ -48,8 +49,8 @@ const ObservationTabs = ({ observations, onFeedbackGiven }: ObservationTabsProps
     setReceivedFeedback(received);
     setConductedObservations(conducted);
     
-    // Create combined items for the teacher view
-    const feedbackItems: CombinedFeedbackItem[] = received.map(obs => {
+    // Create combined items for the teacher view (Mina õpetajana)
+    const teacherFeedbackItems: CombinedFeedbackItem[] = received.map(obs => {
       // Find the full observation data to get the action step
       const fullObsData = storedObservations.find(storedObs => storedObs.id === obs.id);
       
@@ -71,7 +72,7 @@ const ObservationTabs = ({ observations, onFeedbackGiven }: ObservationTabsProps
       };
     });
     
-    const reflectionItems: CombinedFeedbackItem[] = reflections.map(obs => ({
+    const teacherReflectionItems: CombinedFeedbackItem[] = reflections.map(obs => ({
       id: `${obs.id}-reflection`,
       teacher: obs.teacher,
       subject: obs.subject,
@@ -81,15 +82,43 @@ const ObservationTabs = ({ observations, onFeedbackGiven }: ObservationTabsProps
       createdAt: obs.teacherReflection?.submittedAt || obs.date
     }));
     
+    // Create combined items for the coach view (Mina õpipartnerina)
+    const coachFeedbackItems: CombinedFeedbackItem[] = conducted.map(obs => {
+      // Find the full observation data to get the action step
+      const fullObsData = storedObservations.find(storedObs => storedObs.id === obs.id);
+      
+      return {
+        id: obs.id,
+        teacher: obs.teacher,
+        subject: obs.subject,
+        date: obs.date,
+        type: 'feedback',
+        status: obs.status,
+        hasFeedback: obs.hasFeedback,
+        competences: obs.competences,
+        coach: teacherName, // The current user is the coach
+        actionStep: fullObsData?.actionStep,
+        createdAt: obs.date
+      };
+    });
+    
     // Helper function to validate date strings
     const isValidDate = (dateString: string) => {
       const date = new Date(dateString);
       return !isNaN(date.getTime());
     };
     
-    // Combine and sort all items by date (newest first)
-    // Ensure we're only sorting with valid dates
-    const allItems = [...feedbackItems, ...reflectionItems].sort((a, b) => {
+    // Combine and sort all items for teacher view by date (newest first)
+    const allTeacherItems = [...teacherFeedbackItems, ...teacherReflectionItems].sort((a, b) => {
+      // Validate dates before comparing
+      const dateA = isValidDate(a.createdAt) ? new Date(a.createdAt).getTime() : 0;
+      const dateB = isValidDate(b.createdAt) ? new Date(b.createdAt).getTime() : 0;
+      
+      return dateB - dateA;
+    });
+    
+    // Combine and sort all items for coach view by date (newest first)
+    const allCoachItems = [...coachFeedbackItems].sort((a, b) => {
       // Validate dates before comparing
       const dateA = isValidDate(a.createdAt) ? new Date(a.createdAt).getTime() : 0;
       const dateB = isValidDate(b.createdAt) ? new Date(b.createdAt).getTime() : 0;
@@ -98,9 +127,11 @@ const ObservationTabs = ({ observations, onFeedbackGiven }: ObservationTabsProps
     });
     
     // Log the combined items to debug
-    console.log('Combined items for teacher view:', allItems);
+    console.log('Combined items for teacher view:', allTeacherItems);
+    console.log('Combined items for coach view:', allCoachItems);
     
-    setCombinedItems(allItems);
+    setTeacherCombinedItems(allTeacherItems);
+    setCoachCombinedItems(allCoachItems);
   }, [observations, user]);
 
   return (
@@ -120,17 +151,19 @@ const ObservationTabs = ({ observations, onFeedbackGiven }: ObservationTabsProps
         </TabsList>
         
         <TabsContent value="conducted" className="mt-0">
-          <ObservationsList 
-            observations={conductedObservations} 
-            onFeedbackGiven={onFeedbackGiven}
-            title="Vaatlused ja tagasisidekohtumised, mille mina olen läbi viinud"
+          <TeacherFeedbackList 
+            items={coachCombinedItems} 
+            title="Tagasiside ja vaatlused, mille mina olen läbi viinud"
             emptyMessage="Sa pole veel ühtegi vaatlust läbi viinud"
-            role="observer"
           />
         </TabsContent>
         
         <TabsContent value="received" className="mt-0">
-          <TeacherFeedbackList items={combinedItems} />
+          <TeacherFeedbackList 
+            items={teacherCombinedItems}
+            title="Tagasiside minule ja minu refleksioonid" 
+            emptyMessage="Sa pole veel tagasisidet ega refleksioone lisanud"
+          />
         </TabsContent>
       </Tabs>
     </Card>
