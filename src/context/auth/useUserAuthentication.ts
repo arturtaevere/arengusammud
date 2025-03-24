@@ -88,6 +88,23 @@ export const useUserAuthentication = (
     console.log('Attempting to signup with Supabase:', { name, email, role, school });
 
     try {
+      // First check if the email is already in use
+      const { data: existingUsers, error: existingUsersError } = await supabase
+        .from('profiles')
+        .select('email')
+        .eq('email', email)
+        .maybeSingle();
+        
+      if (existingUsersError) {
+        console.error('Error checking existing user:', existingUsersError);
+        // Don't throw here, proceed with signup attempt
+      }
+      
+      if (existingUsers) {
+        console.error('User with this email already exists:', email);
+        throw new Error('Selle e-posti aadressiga kasutaja on juba olemas');
+      }
+
       // Register with Supabase
       const { data, error } = await supabase.auth.signUp({
         email,
@@ -103,6 +120,13 @@ export const useUserAuthentication = (
 
       if (error) {
         console.error('Signup error from Supabase:', error);
+        
+        // Handle specific error types
+        if (error.message.includes('already registered')) {
+          throw new Error('Selle e-posti aadressiga kasutaja on juba olemas');
+        }
+        
+        // General error
         throw new Error(error.message || 'Registreerimine ebaõnnestus');
       }
       

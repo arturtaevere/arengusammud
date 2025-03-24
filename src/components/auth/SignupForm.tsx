@@ -21,11 +21,12 @@ const SignupForm = () => {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [signupSuccess, setSignupSuccess] = useState(false);
+  const [signupError, setSignupError] = useState<string | null>(null);
 
   // Add debug logging for form state
   useEffect(() => {
-    console.log("Signup form state:", { authLoading, isSubmitting, signupSuccess });
-  }, [authLoading, isSubmitting, signupSuccess]);
+    console.log("Signup form state:", { authLoading, isSubmitting, signupSuccess, signupError });
+  }, [authLoading, isSubmitting, signupSuccess, signupError]);
 
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
@@ -58,6 +59,7 @@ const SignupForm = () => {
     try {
       setIsSubmitting(true);
       setSignupSuccess(false);
+      setSignupError(null);
       
       console.log("Calling signup function with:", values.name, values.email, "[password omitted]", values.role, values.school);
       const result = await signup(values.name, values.email, values.password, values.role, values.school);
@@ -77,12 +79,20 @@ const SignupForm = () => {
         description: "Konto on loodud. Võid nüüd sisse logida.",
       });
       
+      // Navigate to login tab after a short delay
+      setTimeout(() => {
+        document.getElementById('login-tab')?.click();
+      }, 1500);
+      
     } catch (error) {
       console.error('Signup error in form handler:', error);
+      const errorMessage = error instanceof Error ? error.message : "Midagi läks valesti";
+      setSignupError(errorMessage);
+      
       toast({
         variant: "destructive",
         title: "Registreerimine ebaõnnestus",
-        description: error instanceof Error ? error.message : "Midagi läks valesti",
+        description: errorMessage,
       });
       setSignupSuccess(false);
     } finally {
@@ -206,6 +216,12 @@ const SignupForm = () => {
               </FormItem>
             )}
           />
+          
+          {signupError && (
+            <div className="bg-red-50 text-red-800 p-3 rounded-md text-sm">
+              {signupError}
+            </div>
+          )}
         </CardContent>
         <CardFooter>
           <Button 

@@ -177,6 +177,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoading(true);
     console.log('AuthProvider: handleSignup called with', { name, email, role, school });
     try {
+      if (!email || !password || !name || !role || !school) {
+        console.error('Signup error: Missing required fields', { 
+          hasEmail: !!email, 
+          hasPassword: !!password, 
+          hasName: !!name, 
+          hasRole: !!role,
+          hasSchool: !!school 
+        });
+        throw new Error('Kõik väljad on kohustuslikud');
+      }
+      
       const result = await signup(name, email, password, role, school);
       console.log('AuthProvider: signup result', result);
       // Store the email for verification purposes
