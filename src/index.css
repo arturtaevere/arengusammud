@@ -3,145 +3,53 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-
-    /* Changed primary color to orange */
-    --primary: 30 96% 53%;
-    --primary-foreground: 0 0% 100%;
-
-    /* Secondary color to light orange/peach */
-    --secondary: 30 100% 97%;
-    --secondary-foreground: 30 96% 53%;
-
-    --muted: 30 10% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    /* Accent to pink */
-    --accent: 317 97% 61%;
-    --accent-foreground: 0 0% 100%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 30 10% 90%;
-    --input: 30 10% 90%;
-    --ring: 30 96% 53%;
-
-    --radius: 0.5rem;
-
-    /* Keep sidebar colors as is for logo blue consistency */
-    --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 222.2 84% 4.9%;
-    --sidebar-primary: 210 100% 50%;
-    --sidebar-primary-foreground: 210 40% 98%;
-    --sidebar-accent: 210 40% 96.1%;
-    --sidebar-accent-foreground: 222.2 47.4% 11.2%;
-    --sidebar-border: 214.3 31.8% 91.4%;
-    --sidebar-ring: 210 100% 50%;
+@layer utilities {
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
   }
 
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+  }
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+  @keyframes float {
+    0% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+    100% {
+      transform: translateY(0px);
+    }
+  }
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    /* Changed primary color to orange for dark mode */
-    --primary: 30 96% 53%;
-    --primary-foreground: 0 0% 100%;
-
-    /* Secondary color adjusted for dark mode */
-    --secondary: 30 30% 20%;
-    --secondary-foreground: 30 96% 53%;
-
-    --muted: 30 30% 20%;
-    --muted-foreground: 30 20% 65%;
-
-    /* Accent to pink for dark mode */
-    --accent: 317 97% 61%;
-    --accent-foreground: 0 0% 100%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 30 30% 20%;
-    --input: 30 30% 20%;
-    --ring: 30 96% 53%;
-
-    /* Keep sidebar colors as is for logo blue consistency in dark mode */
-    --sidebar-background: 222.2 84% 4.9%;
-    --sidebar-foreground: 210 40% 98%;
-    --sidebar-primary: 210 100% 50%;
-    --sidebar-primary-foreground: 210 40% 98%;
-    --sidebar-accent: 217.2 32.6% 17.5%;
-    --sidebar-accent-foreground: 210 40% 98%;
-    --sidebar-border: 217.2 32.6% 17.5%;
-    --sidebar-ring: 210 100% 50%;
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 }
 
-@layer base {
-  * {
-    @apply border-border;
-  }
+/* Custom colors for the theme */
+:root {
+  --orange-light: #ffb74d;
+  --pink-light: #f06292;
+}
 
-  body {
-    @apply bg-background text-foreground antialiased;
-    font-feature-settings: "rlig" 1, "calt" 1;
-  }
+.bg-orange-light {
+  background-color: var(--orange-light);
+}
 
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-medium tracking-tight;
-  }
+.bg-pink-light {
+  background-color: var(--pink-light);
+}
 
-  h1 {
-    @apply text-4xl sm:text-5xl md:text-6xl;
-  }
-
-  h2 {
-    @apply text-3xl sm:text-4xl;
-  }
-
-  h3 {
-    @apply text-2xl sm:text-3xl;
-  }
-
-  h4 {
-    @apply text-xl sm:text-2xl;
-  }
-
-  p {
-    @apply leading-relaxed;
-  }
-  
-  /* Glass effect with new colors */
-  .glass {
-    @apply bg-white bg-opacity-70 backdrop-blur-md border border-orange-light/30 shadow-sm;
-  }
-  
-  .glass-dark {
-    @apply bg-gray-900 bg-opacity-70 backdrop-blur-md border border-orange/20 shadow-sm;
-  }
-  
-  /* Transitions */
-  .page-transition-enter {
-    @apply animate-enter;
-  }
-  
-  .page-transition-exit {
-    @apply animate-exit;
-  }
+.border-orange-light {
+  border-color: var(--orange-light);
 }
