@@ -1,10 +1,18 @@
 
-import { Link } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
+import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu';
+import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { useToast } from '@/components/ui/use-toast';
+import { Button } from '@/components/ui/button';
 
 interface MobileUserProfileProps {
   getInitials: (name: string) => string;
@@ -18,7 +26,6 @@ const MobileUserProfile = ({ getInitials }: MobileUserProfileProps) => {
   const handleLogout = async () => {
     setIsLoggingOut(true);
     try {
-      // Use the context's logout function
       const success = await logout();
       
       if (!success) {
@@ -48,48 +55,46 @@ const MobileUserProfile = ({ getInitials }: MobileUserProfileProps) => {
     }
   };
 
-  if (!user) return null;
-
   return (
-    <div className="pt-4 pb-2">
-      <div className="flex items-center px-3">
-        <div className="flex-shrink-0">
-          <Avatar>
-            {user?.profileImage ? (
-              <AvatarImage 
-                src={user.profileImage} 
-                alt={user?.name || 'User'} 
-              />
-            ) : (
-              <AvatarImage 
-                src={`https://avatar.vercel.sh/${user?.email}.png`} 
-                alt={user?.name || 'User'} 
-              />
-            )}
-            <AvatarFallback>{user?.name ? getInitials(user.name) : 'U'}</AvatarFallback>
-          </Avatar>
-        </div>
-        <div className="ml-3">
-          <div className="text-base font-medium">{user?.name}</div>
-          <div className="text-sm text-muted-foreground">{user?.email}</div>
+    <div className="mt-4 border-t pt-4 px-3">
+      <div className="flex items-center mb-3">
+        <Avatar className="h-10 w-10 mr-3">
+          {user?.profileImage ? (
+            <AvatarImage 
+              src={user.profileImage} 
+              alt={user?.name || 'User'}
+            />
+          ) : (
+            <AvatarImage 
+              src={`https://avatar.vercel.sh/${user?.email}.png`} 
+              alt={user?.name || 'User'} 
+            />
+          )}
+          <AvatarFallback>{user?.name ? getInitials(user.name) : 'U'}</AvatarFallback>
+        </Avatar>
+        <div>
+          <div className="font-medium">{user?.name}</div>
+          <div className="text-xs text-muted-foreground">
+            {user?.role === 'juht' ? 'Juht' : 'Õpetaja'}
+            {user?.school && ` • ${user.school}`}
+          </div>
         </div>
       </div>
-      <div className="mt-3 px-2 space-y-1">
-        <Link 
-          to="/profile"
-          className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100 transition-colors"
-        >
-          Profiil
+      
+      <div className="space-y-2">
+        <Link to="/profile" className="block w-full">
+          <Button variant="outline" className="w-full justify-start">
+            Profiil
+          </Button>
         </Link>
-        <Link 
-          to="/settings"
-          className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100 transition-colors"
-        >
-          Seaded
+        <Link to="/settings" className="block w-full">
+          <Button variant="outline" className="w-full justify-start">
+            Seaded
+          </Button>
         </Link>
         <Button 
-          variant="ghost" 
-          className="w-full justify-start px-3 py-2 text-base font-medium text-red-500 hover:bg-gray-100 transition-colors"
+          variant="destructive" 
+          className="w-full" 
           onClick={handleLogout}
           disabled={isLoggingOut}
         >
