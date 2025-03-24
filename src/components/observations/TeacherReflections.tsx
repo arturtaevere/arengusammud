@@ -55,8 +55,12 @@ const TeacherReflections = ({
             </CardHeader>
             <CardContent className="pb-4">
               <p className="text-sm text-gray-700 line-clamp-2">
-                {observation.teacherReflection?.reflection.substring(0, 150)}
-                {observation.teacherReflection && observation.teacherReflection.reflection.length > 150 ? '...' : ''}
+                {observation.teacherReflection?.reflection && (
+                  <>
+                    {observation.teacherReflection.reflection.substring(0, 150)}
+                    {observation.teacherReflection.reflection.length > 150 ? '...' : ''}
+                  </>
+                )}
               </p>
               <div className="flex justify-end mt-4">
                 <Link to={`/observations/${observation.id}`}>
