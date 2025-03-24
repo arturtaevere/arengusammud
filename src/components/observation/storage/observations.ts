@@ -11,15 +11,6 @@ import {
 // Get all stored observations
 export const getStoredObservations = async (): Promise<StoredObservation[]> => {
   try {
-    // Check if we have a user session
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
-      console.log('No active session, returning fallback data');
-      return getFallbackObservations();
-    }
-    
-    console.log('Fetching observations with user ID:', session.user.id);
-    
     // Get observations from Supabase
     const { data: observations, error } = await supabase
       .from('observations')
@@ -42,15 +33,12 @@ export const getStoredObservations = async (): Promise<StoredObservation[]> => {
         coach_name,
         created_at,
         user_id
-      `)
-      .eq('user_id', session.user.id);
+      `);
 
     if (error) {
       console.error('Error fetching observations from Supabase:', error);
       return getFallbackObservations();
     }
-
-    console.log('Fetched observations from Supabase:', observations);
 
     // Get reflections for these observations
     const { data: reflections, error: reflectionsError } = await supabase
@@ -102,18 +90,10 @@ export const getStoredObservations = async (): Promise<StoredObservation[]> => {
 // Save a new observation
 export const saveObservation = async (observation: StoredObservation): Promise<void> => {
   try {
-    // Check if we have a user session
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
-      console.error('Cannot save observation without an active session');
-      saveToLocalStorageFallback(observation);
-      return;
+    if (!observation.user_id) {
+      console.error('Cannot save observation without user_id');
+      throw new Error('Missing user_id in observation');
     }
-    
-    // Make sure the user_id is set to the current user
-    observation.user_id = session.user.id;
-    
-    console.log('Saving observation to Supabase:', observation);
     
     // Format the data for Supabase
     const { data, error } = await supabase
@@ -136,7 +116,7 @@ export const saveObservation = async (observation: StoredObservation): Promise<v
         selected_action_step_text: observation.selectedActionStepText,
         coach_name: observation.coachName,
         created_at: new Date(observation.createdAt).toISOString(),
-        user_id: session.user.id
+        user_id: observation.user_id
       })
       .select();
 
@@ -156,18 +136,10 @@ export const saveObservation = async (observation: StoredObservation): Promise<v
 // Update an existing observation
 export const updateObservation = async (updatedObservation: StoredObservation): Promise<void> => {
   try {
-    // Check if we have a user session
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
-      console.error('Cannot update observation without an active session');
-      updateInLocalStorageFallback(updatedObservation);
-      return;
+    if (!updatedObservation.user_id) {
+      console.error('Cannot update observation without user_id');
+      throw new Error('Missing user_id in observation');
     }
-    
-    // Make sure the user_id is set to the current user
-    updatedObservation.user_id = session.user.id;
-    
-    console.log('Updating observation in Supabase:', updatedObservation);
     
     // Format the data for Supabase
     const { error } = await supabase
@@ -188,7 +160,7 @@ export const updateObservation = async (updatedObservation: StoredObservation): 
         selected_action_step_id: updatedObservation.selectedActionStepId,
         selected_action_step_text: updatedObservation.selectedActionStepText,
         coach_name: updatedObservation.coachName,
-        user_id: session.user.id
+        user_id: updatedObservation.user_id
       })
       .eq('id', updatedObservation.id);
 
@@ -208,16 +180,6 @@ export const updateObservation = async (updatedObservation: StoredObservation): 
 // Delete an observation
 export const deleteObservation = async (id: string): Promise<void> => {
   try {
-    // Check if we have a user session
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
-      console.error('Cannot delete observation without an active session');
-      deleteFromLocalStorageFallback(id);
-      return;
-    }
-    
-    console.log('Deleting observation from Supabase with ID:', id);
-    
     // Delete from Supabase
     const { error } = await supabase
       .from('observations')
