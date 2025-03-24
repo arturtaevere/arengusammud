@@ -18,6 +18,7 @@ export interface StoredObservation {
   actionStep: string;
   nextActionStep: string;
   selectedActionStepId?: string | null;
+  selectedActionStepText?: string; // Added this field to match what's being used in the FeedbackCard
   createdAt: string;
   coachName?: string;
   teacherReflection?: {
@@ -114,6 +115,7 @@ export const generateSampleObservations = (teacherName: string): void => {
       actionStep: "Kasutada rohkem avatud küsimusi, mis suunavad õpilasi ise lahendusi leidma.",
       nextActionStep: "Katsetada uut küsimuste esitamise tehnikat, mis suunab õpilasi iseseisvalt mõtlema. Valmistada ette 2-3 probleemülesannet, mida saab lahendada erinevate lähenemistega.",
       selectedActionStepId: "step10", // Updated to use a valid action step ID
+      selectedActionStepText: "Klassis liikumine: Liigu tunni jooksul teadlikult klassiruumis ringi, et jõuda kõigi õpilasteni.", // Added this field
       coachName: "Mari Mets",
       createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString() // 1 week ago
     },
@@ -132,6 +134,7 @@ export const generateSampleObservations = (teacherName: string): void => {
       actionStep: "Kasutada hindamismudeleid, mis võimaldavad õpilastel oma tööd ise hinnata enne õpetaja tagasisidet.",
       nextActionStep: "Koostada enesehindamise küsimustik, mida õpilased saavad kasutada enne lõplikku töö esitamist. Tutvustada seda järgmises tunnis ja lasta õpilastel katsetada.",
       selectedActionStepId: "step1", // Updated to use a valid action step ID
+      selectedActionStepText: "Tunni alguses reeglite meeldetuletus: Tuleta tunni alguses meelde klassi reeglid, et luua toetav õpikeskkond.", // Added this field
       coachName: "Jaan Tamm",
       createdAt: new Date(Date.now() - 21 * 24 * 60 * 60 * 1000).toISOString(), // 3 weeks ago
       teacherReflection: {
