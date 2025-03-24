@@ -6,7 +6,10 @@ import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { observationFormSchema } from './schemas';
 import { ObservationFormValues } from './types';
-import { generateObservationId, saveObservation } from './storage';
+import { 
+  generateObservationId, 
+  saveObservation 
+} from './storage';
 import { useAuth } from '@/context/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 

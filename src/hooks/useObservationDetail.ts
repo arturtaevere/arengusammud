@@ -1,7 +1,11 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getStoredObservations, StoredObservation, updateObservation } from '@/components/observation/storage';
+import { 
+  getStoredObservations, 
+  StoredObservation, 
+  updateObservation 
+} from '@/components/observation/storage';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/context/AuthContext';
 
