@@ -2,7 +2,7 @@
 import React from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { MessageSquare, CheckCircle2 } from 'lucide-react';
+import { MessageSquare, CheckCircle2, UserCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 
@@ -14,6 +14,7 @@ interface Observation {
   status: string;
   hasFeedback: boolean;
   competences: string[];
+  coach?: string;
 }
 
 interface ObservationsListProps {
@@ -79,6 +80,12 @@ const ObservationsList = ({
                 </span>
               </div>
               <CardDescription>{observation.date}</CardDescription>
+              {observation.coach && (
+                <div className="flex items-center text-xs text-gray-500 mt-1">
+                  <UserCircle className="mr-1 h-3 w-3" />
+                  Õpipartner: {observation.coach}
+                </div>
+              )}
             </CardHeader>
             <CardContent className="pb-2">
               <div className="flex flex-wrap gap-1 text-xs">

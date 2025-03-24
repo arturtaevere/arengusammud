@@ -7,6 +7,7 @@ export interface Observation {
   status: string;
   hasFeedback: boolean;
   competences: string[];
+  coach?: string; // Added coach field
 }
 
 export interface Feedback {
