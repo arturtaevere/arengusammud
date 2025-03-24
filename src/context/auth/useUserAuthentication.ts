@@ -2,7 +2,6 @@
 import { useToast } from '@/components/ui/use-toast';
 import { User, UserWithPassword } from './types';
 import { USER_STORAGE_KEY, USERS_STORAGE_KEY } from './constants';
-import { supabase } from '@/integrations/supabase/client';
 
 export const useUserAuthentication = (
   users: UserWithPassword[],
@@ -11,138 +10,109 @@ export const useUserAuthentication = (
   const { toast } = useToast();
 
   const login = async (email: string, password: string) => {
-    try {
-      console.log('Attempting to login with Supabase:', { email });
-      
-      // Authenticate with Supabase
-      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-        email,
-        password
-      });
-
-      if (authError) {
-        console.error('Supabase auth error:', authError);
-        throw new Error(authError.message || 'Vale e-post või parool');
+    await new Promise(resolve => setTimeout(resolve, 800));
+    
+    // Convert any 'coach' role users to 'juht'
+    const updatedUsers = users.map((u: UserWithPassword) => {
+      // Use type assertions to fix the type comparison issues
+      if (u.role === 'coach' as any) {
+        return {...u, role: 'juht' as const};
       }
-      
-      if (!authData.user) {
-        console.error('No user data returned from Supabase');
-        throw new Error('Kasutajat ei leitud');
+      if (u.role === 'teacher' as any) {
+        return {...u, role: 'õpetaja' as const};
       }
-      
-      console.log('Auth successful, fetching profile');
-      
-      // Get the user profile from the profiles table
-      const { data: profileData, error: profileError } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', authData.user.id)
-        .maybeSingle();
-      
-      if (profileError) {
-        console.error('Error fetching profile:', profileError);
-        throw new Error('Profiili laadimine ebaõnnestus');
-      }
-      
-      if (!profileData) {
-        console.error('No profile found for user:', authData.user.id);
-        throw new Error('Kasutaja profiili ei leitud');
-      }
-      
-      console.log('Profile data retrieved:', profileData);
-      
-      // Map Supabase profile to our User type
-      const userWithoutPassword: User = {
-        id: profileData.id,
-        name: profileData.name,
-        email: profileData.email,
-        role: profileData.role as 'juht' | 'õpetaja',
-        school: profileData.school,
-        createdAt: profileData.created_at,
-        emailVerified: profileData.email_verified,
-        profileImage: profileData.profile_image
-      };
-      
-      // Store user in localStorage for persistence
-      localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(userWithoutPassword));
-      
-      toast({
-        title: "Sisselogimine õnnestus",
-        description: `Tere tulemast, ${userWithoutPassword.name}!`,
-      });
-      
-      return userWithoutPassword;
-    } catch (error) {
-      console.error('Login error:', error);
-      throw error;
+      return u;
+    });
+    
+    // Save the updated users with the new roles if there are changes
+    if (JSON.stringify(updatedUsers) !== JSON.stringify(users)) {
+      saveUsers(updatedUsers);
     }
+    
+    const foundUser = updatedUsers.find((u: UserWithPassword) => u.email.toLowerCase() === email.toLowerCase());
+    
+    if (!foundUser) {
+      throw new Error('Vale e-post või parool');
+    }
+    
+    if (foundUser.password !== password) {
+      throw new Error('Vale e-post või parool');
+    }
+    
+    const { password: _, ...userWithoutPassword } = foundUser;
+    
+    localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(userWithoutPassword));
+    
+    toast({
+      title: "Sisselogimine õnnestus",
+      description: `Tere tulemast, ${userWithoutPassword.name}!`,
+    });
+    
+    return userWithoutPassword;
   };
 
-  const signup = async (name: string, email: string, password: string, role: 'juht' | 'õpetaja', school: string) => {
-    // School is now required for all users, so we validate it here
-    if (!school || school.trim() === '') {
-      console.error('School is required but was not provided');
-      throw new Error('Kooli valimine on kohustuslik');
+  const signup = async (name: string, email: string, password: string, role: 'juht' | 'õpetaja', school?: string) => {
+    await new Promise(resolve => setTimeout(resolve, 800));
+    
+    // Get the latest users from localStorage
+    const storedUsersStr = localStorage.getItem(USERS_STORAGE_KEY);
+    const currentUsers = storedUsersStr ? JSON.parse(storedUsersStr) : users;
+    
+    console.log('Signup - Current users in storage:', {
+      count: currentUsers.length,
+      emails: currentUsers.map((u: UserWithPassword) => u.email)
+    });
+    
+    const existingUser = currentUsers.find((u: UserWithPassword) => u.email.toLowerCase() === email.toLowerCase());
+    if (existingUser) {
+      console.log('Found existing user with email:', existingUser);
+      throw new Error('Selle e-posti aadressiga kasutaja on juba olemas');
     }
 
-    console.log('Attempting to signup with Supabase:', { name, email, role, school });
+    if (role === 'õpetaja' && !school) {
+      throw new Error('Õpetaja peab valima kooli');
+    }
 
+    const userId = Math.random().toString(36).substr(2, 9);
+    const newUser = {
+      id: userId,
+      name,
+      email,
+      password,
+      role,
+      school,
+      createdAt: new Date().toISOString(),
+      emailVerified: true,
+    };
+    
+    console.log('Creating new user:', newUser);
+    
+    const updatedUsers = [...currentUsers, newUser];
+    
     try {
-      // First check if the email is already in use
-      const { data: existingUsers, error: existingUsersError } = await supabase
-        .from('profiles')
-        .select('email')
-        .eq('email', email)
-        .maybeSingle();
-        
-      if (existingUsersError) {
-        console.error('Error checking existing user:', existingUsersError);
-        // Don't throw here, proceed with signup attempt
-      }
-      
-      if (existingUsers) {
-        console.error('User with this email already exists:', email);
-        throw new Error('Selle e-posti aadressiga kasutaja on juba olemas');
-      }
-
-      // Register with Supabase
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: {
-            name,
-            role,
-            school
-          }
-        }
+      // First update localStorage
+      localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(updatedUsers));
+      console.log('Successfully saved to localStorage. Updated users:', {
+        count: updatedUsers.length,
+        emails: updatedUsers.map(u => u.email)
       });
-
-      if (error) {
-        console.error('Signup error from Supabase:', error);
-        
-        // Handle specific error types
-        if (error.message.includes('already registered')) {
-          throw new Error('Selle e-posti aadressiga kasutaja on juba olemas');
-        }
-        
-        // General error
-        throw new Error(error.message || 'Registreerimine ebaõnnestus');
-      }
       
-      if (!data || !data.user) {
-        console.error('No user data returned from Supabase signup');
-        throw new Error('Kasutaja loomine ebaõnnestus');
-      }
-
-      console.log('Signup successful, user created:', data.user.id);
+      // Then update state through saveUsers
+      saveUsers(updatedUsers);
       
-      // If we reach here, the signup was successful
+      // Dispatch events to notify other components
+      window.dispatchEvent(new Event('storage'));
+      window.dispatchEvent(new CustomEvent('users-updated'));
+      
+      toast({
+        title: "Registreerimine õnnestus",
+        description: "Konto on loodud. Võid nüüd sisse logida.",
+      });
+      
       return email;
     } catch (error) {
-      console.error('Signup error in useUserAuthentication:', error);
-      // Rethrow the error so it can be caught by the caller
-      throw error;
+      console.error('Error during signup:', error);
+      throw new Error('Kasutaja salvestamine ebaõnnestus');
     }
   };
 
@@ -151,3 +121,4 @@ export const useUserAuthentication = (
     signup
   };
 };
+

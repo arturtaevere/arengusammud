@@ -12,7 +12,13 @@ export const signupSchema = z.object({
   email: z.string().email('Palun sisesta korrektne e-posti aadress'),
   password: z.string().min(6, 'Parool peab olema vähemalt 6 tähemärki pikk'),
   role: z.enum(['juht', 'õpetaja']),
-  school: z.string().min(1, 'Kooli valimine on kohustuslik'),
+  school: z.string().optional(),
+}).refine(data => {
+  // School is required only for teachers
+  return data.role !== 'õpetaja' || (data.role === 'õpetaja' && !!data.school);
+}, {
+  message: "Õpetaja peab valima kooli",
+  path: ["school"],
 });
 
 export type LoginFormValues = z.infer<typeof loginSchema>;
