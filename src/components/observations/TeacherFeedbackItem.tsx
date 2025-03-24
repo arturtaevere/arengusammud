@@ -2,7 +2,7 @@
 import React from 'react';
 import { Card } from '@/components/ui/card';
 import { CombinedFeedbackItem } from './types';
-import { UserCircle } from 'lucide-react';
+import { UserCircle, MessageCircle, BookOpen } from 'lucide-react';
 
 interface TeacherFeedbackItemProps {
   item: CombinedFeedbackItem;
@@ -26,9 +26,16 @@ const TeacherFeedbackItem = ({ item }: TeacherFeedbackItemProps) => {
   return (
     <Card key={item.id} className="transition-all hover:shadow-md">
       <div className="p-4 pb-2">
-        <div className="flex justify-between">
-          <div className="text-lg font-medium">
-            {item.type === 'reflection' ? 'Minu refleksioon' : 'Tagasiside'}
+        <div className="flex justify-between items-center">
+          <div className="flex items-center">
+            {item.type === 'reflection' ? (
+              <BookOpen className="mr-2 h-5 w-5 text-pink-500" />
+            ) : (
+              <MessageCircle className="mr-2 h-5 w-5 text-orange-500" />
+            )}
+            <div className="text-lg font-medium">
+              {item.type === 'reflection' ? 'Minu refleksioon' : 'Tagasiside'}
+            </div>
           </div>
         </div>
         <div className="text-sm text-gray-500 mt-1">
