@@ -38,6 +38,14 @@ const SignupForm = () => {
     },
   });
 
+  // Debug form state
+  useEffect(() => {
+    const subscription = form.watch((value) => {
+      console.log("Form values changed:", { ...value, password: value.password ? '[PRESENT]' : '[EMPTY]' });
+    });
+    return () => subscription.unsubscribe();
+  }, [form]);
+
   const handleSignup = async (values: SignupFormValues) => {
     console.log("Signup attempt with values:", { ...values, password: '[REDACTED]' });
     
@@ -82,9 +90,9 @@ const SignupForm = () => {
     }
   };
 
-  // Prevent submitting the form while loading
-  // We should NOT disable the form fields during loading, only the submit button
-  const isButtonDisabled = isSubmitting || authLoading || signupSuccess;
+  // Prevent submitting the form while loading or when signup was successful
+  // Only disable the submit button, not the form fields
+  const isButtonDisabled = isSubmitting || signupSuccess;
 
   return (
     <Form {...form}>
@@ -101,7 +109,6 @@ const SignupForm = () => {
                   <Input 
                     placeholder="Sinu Nimi"
                     {...field}
-                    // Important: Don't disable the input field
                   />
                 </FormControl>
                 <FormMessage />
@@ -120,7 +127,6 @@ const SignupForm = () => {
                     type="email" 
                     placeholder="sinu.email@näide.ee"
                     {...field}
-                    // Important: Don't disable the input field
                   />
                 </FormControl>
                 <FormMessage />
@@ -139,7 +145,6 @@ const SignupForm = () => {
                     type="password"
                     placeholder="Vähemalt 6 tähemärki"
                     {...field}
-                    // Important: Don't disable the input field
                   />
                 </FormControl>
                 <FormMessage />
@@ -158,7 +163,6 @@ const SignupForm = () => {
                     onValueChange={field.onChange} 
                     value={field.value}
                     className="flex space-x-4"
-                    // Important: Don't disable the radio buttons
                   >
                     <div className="flex items-center space-x-2">
                       <RadioGroupItem value="juht" id="juht" />
@@ -185,7 +189,6 @@ const SignupForm = () => {
                   <Select 
                     onValueChange={field.onChange}
                     value={field.value}
-                    // Important: Don't disable the select field
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Vali oma kool" />

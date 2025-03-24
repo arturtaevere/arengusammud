@@ -81,6 +81,7 @@ export const useUserAuthentication = (
   const signup = async (name: string, email: string, password: string, role: 'juht' | 'õpetaja', school: string) => {
     // School is now required for all users, so we validate it here
     if (!school || school.trim() === '') {
+      console.error('School is required but was not provided');
       throw new Error('Kooli valimine on kohustuslik');
     }
 
