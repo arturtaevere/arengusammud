@@ -48,7 +48,7 @@ const Admin = () => {
   const handleCreateUser = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!name || !email || !password || !role) {
+    if (!name || !email || !password || !role || !school) {
       toast({
         variant: "destructive",
         title: "Täida kõik väljad",

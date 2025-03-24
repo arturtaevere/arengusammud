@@ -27,7 +27,7 @@ const SignupForm = () => {
     },
   });
 
-  // Watch role to conditionally display school selection
+  // Watch role to conditionally display school selection - no longer needed as school is required for both roles
   const role = form.watch('role');
 
   const handleSignup = async (values: SignupFormValues) => {
@@ -126,35 +126,34 @@ const SignupForm = () => {
             )}
           />
 
-          {role === 'õpetaja' && (
-            <FormField
-              control={form.control}
-              name="school"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Kool</FormLabel>
-                  <FormControl>
-                    <Select 
-                      onValueChange={field.onChange}
-                      value={field.value}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Vali oma kool" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {SCHOOLS.map((school) => (
-                          <SelectItem key={school} value={school}>
-                            {school}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          )}
+          {/* School selection is now shown for both roles */}
+          <FormField
+            control={form.control}
+            name="school"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Kool</FormLabel>
+                <FormControl>
+                  <Select 
+                    onValueChange={field.onChange}
+                    value={field.value}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Vali oma kool" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {SCHOOLS.map((school) => (
+                        <SelectItem key={school} value={school}>
+                          {school}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </CardContent>
         <CardFooter>
           <Button 
