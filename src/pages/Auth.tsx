@@ -2,7 +2,7 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/auth';
-import { AuthForm } from '@/components/auth'; // Updated import path to use the direct import from the auth folder
+import { AuthForm, AuthDebug } from '@/components/auth';
 import Navbar from '@/components/Navbar';
 
 const Auth = () => {
@@ -36,6 +36,7 @@ const Auth = () => {
         ) : (
           <div className="w-full max-w-md animate-fade-in">
             <AuthForm />
+            {process.env.NODE_ENV !== 'production' && <AuthDebug />}
           </div>
         )}
       </div>
