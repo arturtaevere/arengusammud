@@ -41,6 +41,9 @@ const StatsCards = ({ stats }: StatsCardsProps) => {
     }
   }, [user]);
   
+  // Generate an array for feedback hearts
+  const feedbackHearts = Array.from({ length: completedFeedbackCount }, (_, i) => i);
+  
   // This would typically come from your API or state
   // For now we're hard-coding step10-1 as that's a valid action step from your data
   const currentActionStepId = "step10-1";
@@ -115,7 +118,17 @@ const StatsCards = ({ stats }: StatsCardsProps) => {
           <div className="space-y-6">
             <div>
               <h4 className="text-xs text-muted-foreground mb-1">Tagasisidekohtumist läbi viidud</h4>
-              <span className="text-xl font-bold">{completedFeedbackCount}</span>
+              <div className="flex items-center gap-2">
+                <span className="text-xl font-bold">{completedFeedbackCount}</span>
+                <div className="flex">
+                  {feedbackHearts.map((_, index) => (
+                    <Heart 
+                      key={index} 
+                      className="h-5 w-5 fill-orange-500 text-orange-500" 
+                    />
+                  ))}
+                </div>
+              </div>
             </div>
             
             <div className="mt-4">
