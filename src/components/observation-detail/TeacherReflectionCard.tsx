@@ -23,27 +23,8 @@ const TeacherReflectionCard = ({ observation, isObserved }: TeacherReflectionCar
           {formattedDate && <span className="text-sm font-normal text-gray-500">Lisatud: {formattedDate}</span>}
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <div>
-          <h3 className="text-sm font-medium text-gray-500">
-            1. Kuidas on see uus õpetamistehnika mõjutanud õpilaste õppimist või kaasatust? Palun too konkreetseid näiteid.
-          </h3>
-          <p className="mt-1 whitespace-pre-wrap">{observation.teacherReflection.positiveImpact}</p>
-        </div>
-        
-        <div>
-          <h3 className="text-sm font-medium text-gray-500">
-            2. Milliste raskustega puutusin kokku selle arengusammu rakendamisel ja kuidas nendega edaspidi toime tulla?
-          </h3>
-          <p className="mt-1 whitespace-pre-wrap">{observation.teacherReflection.challengesFaced}</p>
-        </div>
-        
-        <div>
-          <h3 className="text-sm font-medium text-gray-500">
-            3. Mida teha, et selle arengusammu kasutamine muutuks mul harjumuspäraseks?
-          </h3>
-          <p className="mt-1 whitespace-pre-wrap">{observation.teacherReflection.habitFormation}</p>
-        </div>
+      <CardContent>
+        <div className="whitespace-pre-wrap">{observation.teacherReflection.reflection}</div>
       </CardContent>
     </Card>
   );

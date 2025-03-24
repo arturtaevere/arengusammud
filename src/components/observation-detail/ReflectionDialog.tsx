@@ -20,9 +20,7 @@ interface ReflectionDialogProps {
   onOpenChange: (open: boolean) => void;
   observation: StoredObservation;
   saveReflection: (reflection: {
-    positiveImpact: string;
-    challengesFaced: string;
-    habitFormation: string;
+    reflection: string;
   }) => void;
 }
 
@@ -34,27 +32,20 @@ const ReflectionDialog = ({
 }: ReflectionDialogProps) => {
   const { toast } = useToast();
   const [reflectionData, setReflectionData] = useState({
-    positiveImpact: observation.teacherReflection?.positiveImpact || "",
-    challengesFaced: observation.teacherReflection?.challengesFaced || "",
-    habitFormation: observation.teacherReflection?.habitFormation || "",
+    reflection: observation.teacherReflection?.reflection || "",
   });
 
-  const handleInputChange = (field: keyof typeof reflectionData, value: string) => {
-    setReflectionData(prev => ({
-      ...prev,
-      [field]: value
-    }));
+  const handleInputChange = (value: string) => {
+    setReflectionData({ reflection: value });
   };
 
   const handleSubmit = () => {
     // Basic validation
-    if (!reflectionData.positiveImpact.trim() || 
-        !reflectionData.challengesFaced.trim() || 
-        !reflectionData.habitFormation.trim()) {
+    if (!reflectionData.reflection.trim()) {
       toast({
         variant: "destructive",
         title: "Täida kõik väljad",
-        description: "Palun vasta kõigile küsimustele enne salvestamist",
+        description: "Palun lisa refleksioon enne salvestamist",
       });
       return;
     }
@@ -77,43 +68,15 @@ const ReflectionDialog = ({
 
         <div className="space-y-6 py-3">
           <div className="space-y-2">
-            <Label htmlFor="positiveImpact" className="text-base font-medium">
-              1. Kuidas on see uus õpetamistehnika mõjutanud õpilaste õppimist või kaasatust? Palun too konkreetseid näiteid.
+            <Label htmlFor="reflection" className="text-base font-medium">
+              Katsetused, kogemused, õnnestumised, ebaõnnestumised, mõtted, tunded, analüüs, järeldused, taipamised, õppimiskohad, hinnang, valikud, edasised plaanid:
             </Label>
             <Textarea
-              id="positiveImpact"
-              value={reflectionData.positiveImpact}
-              onChange={(e) => handleInputChange("positiveImpact", e.target.value)}
-              rows={4}
+              id="reflection"
+              value={reflectionData.reflection}
+              onChange={(e) => handleInputChange(e.target.value)}
+              rows={10}
               placeholder="Kirjelda oma tähelepanekuid..."
-              className="resize-none focus:ring-primary"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="challengesFaced" className="text-base font-medium">
-              2. Milliste raskustega puutusin kokku selle arengusammu rakendamisel ja kuidas nendega edaspidi toime tulla?
-            </Label>
-            <Textarea
-              id="challengesFaced"
-              value={reflectionData.challengesFaced}
-              onChange={(e) => handleInputChange("challengesFaced", e.target.value)}
-              rows={4}
-              placeholder="Kirjelda raskusi ja lahendusi..."
-              className="resize-none focus:ring-primary"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="habitFormation" className="text-base font-medium">
-              3. Mida teha, et selle arengusammu kasutamine muutuks mul harjumuspäraseks?
-            </Label>
-            <Textarea
-              id="habitFormation"
-              value={reflectionData.habitFormation}
-              onChange={(e) => handleInputChange("habitFormation", e.target.value)}
-              rows={4}
-              placeholder="Kirjelda oma plaani..."
               className="resize-none focus:ring-primary"
             />
           </div>
