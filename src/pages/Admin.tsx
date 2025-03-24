@@ -13,8 +13,8 @@ const Admin = () => {
   const navigate = useNavigate();
   const [users, setUsers] = useState<User[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
-  const [filterRole, setFilterRole] = useState<string>('all');
-  const [filterSchool, setFilterSchool] = useState<string>('all');
+  const [filterRole, setFilterRole] = useState<string>('');
+  const [filterSchool, setFilterSchool] = useState<string>('');
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
@@ -70,11 +70,11 @@ const Admin = () => {
   useEffect(() => {
     let result = users;
     
-    if (filterRole !== 'all') {
+    if (filterRole !== '') {
       result = result.filter(user => user.role === filterRole);
     }
     
-    if (filterSchool !== 'all') {
+    if (filterSchool !== '') {
       result = result.filter(user => user.school === filterSchool);
     }
     
@@ -95,6 +95,12 @@ const Admin = () => {
     if (success) {
       loadUsers();
     }
+  };
+
+  const handleClearFilters = () => {
+    setSearchTerm('');
+    setFilterRole('');
+    setFilterSchool('');
   };
 
   if (!isAuthenticated || user?.role !== 'juht') {
@@ -132,6 +138,7 @@ const Admin = () => {
           onSearchChange={setSearchTerm}
           onRoleChange={setFilterRole}
           onSchoolChange={setFilterSchool}
+          onClearFilters={handleClearFilters}
         />
 
         <UserTable 

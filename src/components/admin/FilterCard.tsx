@@ -1,24 +1,45 @@
-import { useState } from 'react';
+
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Button } from '@/components/ui/button';
 import { Search, X } from 'lucide-react';
 import { SCHOOLS } from '@/context/auth/constants';
 
+type FilterCardProps = {
+  searchTerm?: string;
+  filterRole?: string;
+  filterSchool?: string;
+  onSearchChange?: (value: string) => void;
+  onRoleChange?: (value: string) => void;
+  onSchoolChange?: (value: string) => void;
+  onFilterChange?: (filters: any) => void;
+  onClearFilters?: () => void;
+};
+
 const FilterCard = ({ 
-  onFilterChange, 
-  onClearFilters 
-}: { 
-  onFilterChange: (filters: any) => void;
-  onClearFilters: () => void;
-}) => {
-  const [name, setName] = useState('');
+  searchTerm = '',
+  filterRole = '',
+  filterSchool = '',
+  onSearchChange,
+  onRoleChange,
+  onSchoolChange,
+  onFilterChange,
+  onClearFilters
+}: FilterCardProps) => {
+  const [name, setName] = useState(searchTerm || '');
   const [email, setEmail] = useState('');
-  const [role, setRole] = useState('');
-  const [school, setSchool] = useState('');
+  const [role, setRole] = useState(filterRole || '');
+  const [school, setSchool] = useState(filterSchool || '');
+
+  // Apply changes if the external state changes
+  useEffect(() => {
+    if (searchTerm !== undefined) setName(searchTerm);
+    if (filterRole !== undefined) setRole(filterRole);
+    if (filterSchool !== undefined) setSchool(filterSchool);
+  }, [searchTerm, filterRole, filterSchool]);
 
   const handleFilterChange = () => {
     const filters = {
@@ -27,7 +48,22 @@ const FilterCard = ({
       role,
       school,
     };
-    onFilterChange(filters);
+    
+    // Support both old and new API
+    if (onFilterChange) {
+      onFilterChange(filters);
+    }
+    
+    // Support new API
+    if (onSearchChange && name !== searchTerm) {
+      onSearchChange(name);
+    }
+    if (onRoleChange && role !== filterRole) {
+      onRoleChange(role);
+    }
+    if (onSchoolChange && school !== filterSchool) {
+      onSchoolChange(school);
+    }
   };
 
   const handleClearFilters = () => {
@@ -35,7 +71,21 @@ const FilterCard = ({
     setEmail('');
     setRole('');
     setSchool('');
-    onClearFilters();
+    
+    // Support both APIs
+    if (onClearFilters) {
+      onClearFilters();
+    }
+    
+    if (onSearchChange) {
+      onSearchChange('');
+    }
+    if (onRoleChange) {
+      onRoleChange('');
+    }
+    if (onSchoolChange) {
+      onSchoolChange('');
+    }
   };
 
   return (
@@ -53,6 +103,9 @@ const FilterCard = ({
               value={name}
               onChange={(e) => {
                 setName(e.target.value);
+                if (onSearchChange) {
+                  onSearchChange(e.target.value);
+                }
                 handleFilterChange();
               }}
             />
@@ -73,10 +126,16 @@ const FilterCard = ({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <Label htmlFor="role">Roll</Label>
-            <Select onValueChange={(value) => {
+            <Select 
+              onValueChange={(value) => {
                 setRole(value);
+                if (onRoleChange) {
+                  onRoleChange(value);
+                }
                 handleFilterChange();
-              }} value={role}>
+              }} 
+              value={role}
+            >
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Filtreeri rolli järgi" />
               </SelectTrigger>
@@ -89,10 +148,16 @@ const FilterCard = ({
           </div>
           <div>
             <Label htmlFor="school">Kool</Label>
-            <Select onValueChange={(value) => {
+            <Select 
+              onValueChange={(value) => {
                 setSchool(value);
+                if (onSchoolChange) {
+                  onSchoolChange(value);
+                }
                 handleFilterChange();
-              }} value={school}>
+              }} 
+              value={school}
+            >
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Filtreeri kooli järgi" />
               </SelectTrigger>
