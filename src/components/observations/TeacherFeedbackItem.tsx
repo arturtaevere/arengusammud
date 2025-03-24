@@ -33,6 +33,11 @@ const TeacherFeedbackItem = ({ item }: TeacherFeedbackItemProps) => {
         <div className="text-sm text-gray-500 mt-1">
           {formatDate(item.date)}
         </div>
+        {item.type === 'feedback' && item.coach && (
+          <div className="text-sm text-gray-500 mt-1">
+            Õpipartner: {item.coach}
+          </div>
+        )}
       </div>
       
       <div className="px-4 pb-2">
