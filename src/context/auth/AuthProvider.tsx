@@ -1,3 +1,4 @@
+
 import React, { createContext, useState, useEffect } from 'react';
 import { AuthContextType, User } from './types';
 import { supabase } from '@/integrations/supabase/client';
@@ -95,6 +96,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         
         // If we have a session, get the user profile
         if (session?.user) {
+          console.log('Found existing session for user:', session.user.id);
           const { data: profile, error } = await supabase
             .from('profiles')
             .select('*')
@@ -123,6 +125,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             setUser(null);
           }
         } else {
+          console.log('No existing session found');
           setUser(null);
         }
       } catch (error) {

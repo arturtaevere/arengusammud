@@ -29,9 +29,15 @@ const Auth = () => {
           <div className="absolute bottom-20 right-20 w-96 h-96 bg-pink-light rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float" style={{ animationDelay: '2s' }}></div>
         </div>
         
-        <div className="w-full max-w-md animate-fade-in">
-          <AuthForm />
-        </div>
+        {isLoading ? (
+          <div className="flex items-center justify-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-light"></div>
+          </div>
+        ) : (
+          <div className="w-full max-w-md animate-fade-in">
+            <AuthForm />
+          </div>
+        )}
       </div>
     </div>
   );
