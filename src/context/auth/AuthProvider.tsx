@@ -15,7 +15,7 @@ export const AuthContext = createContext<AuthContextType>({
   signup: async () => {},
   logout: () => {},
   updateProfileImage: () => {},
-  getAllUsers: () => [],
+  getAllUsers: async () => Promise.resolve([]), // Fix: Return a Promise that resolves to an empty array
   deleteUserByEmail: async () => false,
   
   // Add the stub verification functions
