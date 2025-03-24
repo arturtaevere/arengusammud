@@ -33,12 +33,19 @@ const Observations = () => {
   // Load observations from Supabase on component mount and when showing form changes
   useEffect(() => {
     loadObservations();
-  }, [showForm]);
+  }, [showForm, user]);
 
   const loadObservations = async () => {
     setIsLoading(true);
     try {
-      console.log('Loading observations...');
+      if (!user) {
+        console.log('No user logged in, skipping observations loading');
+        setObservations([]);
+        setIsLoading(false);
+        return;
+      }
+      
+      console.log('Loading observations for user:', user.id);
       const storedObservations = await getStoredObservations();
       console.log('Loaded observations from storage:', storedObservations);
       
@@ -201,11 +208,25 @@ const Observations = () => {
               <div className="flex justify-center items-center h-64">
                 <p className="text-muted-foreground">Vaatluste laadimine...</p>
               </div>
+            ) : user ? (
+              observations.length > 0 ? (
+                <ObservationTabs 
+                  observations={observations} 
+                  onFeedbackGiven={handleFeedbackGiven} 
+                />
+              ) : (
+                <div className="flex flex-col items-center justify-center h-64">
+                  <p className="text-muted-foreground mb-4">Sul pole veel vaatlusi läbi viidud</p>
+                  <Button onClick={handleNewObservation}>
+                    <Plus className="mr-2 h-4 w-4" />
+                    Lisa oma esimene vaatlus
+                  </Button>
+                </div>
+              )
             ) : (
-              <ObservationTabs 
-                observations={observations} 
-                onFeedbackGiven={handleFeedbackGiven} 
-              />
+              <div className="flex justify-center items-center h-64">
+                <p className="text-muted-foreground">Vaatluste nägemiseks pead olema sisse logitud</p>
+              </div>
             )}
           </>
         )}
