@@ -10,11 +10,13 @@ import { CardContent, CardFooter } from '@/components/ui/card';
 import { LoginFormValues, loginSchema } from './schemas';
 import { useState } from 'react';
 import { Loader2 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const LoginForm = () => {
   const { login } = useAuth();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -33,6 +35,12 @@ const LoginForm = () => {
     try {
       await login(values.email, values.password);
       console.log('Login successful');
+      
+      // Add a slight delay before redirecting to ensure auth state is updated
+      setTimeout(() => {
+        navigate('/dashboard');
+      }, 500);
+      
     } catch (error) {
       console.error('Login error:', error);
       let errorMessage = 'Midagi läks valesti';
@@ -60,7 +68,7 @@ const LoginForm = () => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleLogin)}>
+      <form onSubmit={form.handleSubmit(handleLogin)} className="space-y-4">
         <CardContent className="space-y-4">
           <FormField
             control={form.control}
@@ -73,6 +81,7 @@ const LoginForm = () => {
                     placeholder="sinu.email@näide.ee" 
                     type="email"
                     disabled={isLoading}
+                    autoComplete="email"
                     {...field}
                   />
                 </FormControl>
@@ -91,6 +100,7 @@ const LoginForm = () => {
                   <Input 
                     type="password"
                     disabled={isLoading}
+                    autoComplete="current-password"
                     {...field}
                   />
                 </FormControl>

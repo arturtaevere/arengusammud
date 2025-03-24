@@ -16,8 +16,13 @@ export const useUserAuthentication = (
       // Add a small delay to simulate network request
       await new Promise(resolve => setTimeout(resolve, 800));
       
+      // Get the most up-to-date users list from localStorage
+      const storedUsersStr = localStorage.getItem(USERS_STORAGE_KEY);
+      const currentUsers = storedUsersStr ? JSON.parse(storedUsersStr) : users;
+      console.log('Current users from localStorage:', currentUsers.length);
+      
       // Convert any 'coach' role users to 'juht'
-      const updatedUsers = users.map((u: UserWithPassword) => {
+      const updatedUsers = currentUsers.map((u: UserWithPassword) => {
         // Use type assertions to fix the type comparison issues
         if (u.role === 'coach' as any) {
           return {...u, role: 'juht' as const};
@@ -52,6 +57,9 @@ export const useUserAuthentication = (
       
       console.log('Login successful, saving user to localStorage:', userWithoutPassword.name);
       localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(userWithoutPassword));
+      
+      // Dispatch a custom event to notify about login
+      window.dispatchEvent(new Event('auth-login'));
       
       toast({
         title: "Sisselogimine õnnestus",
@@ -100,7 +108,7 @@ export const useUserAuthentication = (
         role,
         school,
         createdAt: new Date().toISOString(),
-        emailVerified: true,
+        emailVerified: true, // Set to true to allow immediate login
       };
       
       console.log('Creating new user:', newUser);
