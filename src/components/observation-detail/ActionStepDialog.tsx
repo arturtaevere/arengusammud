@@ -1,18 +1,20 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   Dialog, 
   DialogContent, 
   DialogHeader, 
-  DialogTitle, 
+  DialogTitle,
   DialogDescription 
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Info, Video, ClipboardList, ExternalLink } from 'lucide-react';
+import { Info, Video, CheckSquare, BookOpen, ListTodo, ExternalLink } from 'lucide-react';
 import { getActionStepById } from '@/components/observation/types';
 import { Badge } from '@/components/ui/badge';
 import VideoPlayer from '../VideoPlayer';
 import { Separator } from '@/components/ui/separator';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card, CardContent } from '@/components/ui/card';
 
 interface ActionStepDialogProps {
   open: boolean;
@@ -61,74 +63,113 @@ const ActionStepDialog: React.FC<ActionStepDialogProps> = ({
             </Badge>
           )}
           
-          {/* Rationale Section */}
-          <div className="space-y-2">
-            <h3 className="font-semibold flex items-center gap-2">
-              <Info className="h-4 w-4" />
-              Põhjendus
-            </h3>
-            <p className="text-sm text-muted-foreground">
-              Selgitab miks see arengusamm on oluline ja kuidas see mõjutab õpilaste õppimist.
-            </p>
-          </div>
-
-          <Separator />
-          
-          {/* Success Criteria */}
-          <div className="space-y-2">
-            <h3 className="font-semibold flex items-center gap-2">
-              <ClipboardList className="h-4 w-4" />
-              Edukriteeriumid
-            </h3>
-            <ul className="text-sm pl-5 list-disc space-y-1">
-              {actionStep.resources.map((resource, index) => (
-                <li key={index}>
-                  {resource.title}
-                  {resource.url && (
-                    <Button 
-                      variant="link" 
-                      size="sm" 
-                      className="h-auto p-0 ml-1"
-                      asChild
-                    >
-                      <a href={resource.url} target="_blank" rel="noopener noreferrer">
-                        <ExternalLink className="h-3 w-3 inline" />
-                      </a>
-                    </Button>
+          <Tabs defaultValue="reason" className="w-full">
+            <TabsList className="mb-6 w-full justify-start overflow-x-auto">
+              <TabsTrigger value="reason" className="flex items-center">
+                <Info className="h-4 w-4 mr-2" />
+                Põhjendus
+              </TabsTrigger>
+              <TabsTrigger value="criteria" className="flex items-center">
+                <CheckSquare className="h-4 w-4 mr-2" />
+                Edukriteeriumid
+              </TabsTrigger>
+              <TabsTrigger value="practice" className="flex items-center">
+                <ListTodo className="h-4 w-4 mr-2" />
+                Harjutusülesanne
+              </TabsTrigger>
+              <TabsTrigger value="examples" className="flex items-center">
+                <BookOpen className="h-4 w-4 mr-2" />
+                Näited
+              </TabsTrigger>
+              {videoUrl && (
+                <TabsTrigger value="video" className="flex items-center">
+                  <Video className="h-4 w-4 mr-2" />
+                  Video
+                </TabsTrigger>
+              )}
+            </TabsList>
+            
+            <TabsContent value="reason" className="animate-fade-in">
+              <Card>
+                <CardContent className="pt-6">
+                  <div className="space-y-2">
+                    <h3 className="text-lg font-medium mb-4">Põhjendus</h3>
+                    <p className="text-sm text-muted-foreground">
+                      Selgitab miks see arengusamm on oluline ja kuidas see mõjutab õpilaste õppimist.
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+            
+            <TabsContent value="criteria" className="animate-fade-in">
+              <Card>
+                <CardContent className="pt-6">
+                  <h3 className="text-lg font-medium mb-4">Edukriteeriumid</h3>
+                  <ul className="text-sm pl-5 list-disc space-y-1">
+                    {actionStep.resources.map((resource, index) => (
+                      <li key={index}>
+                        {resource.title}
+                        {resource.url && (
+                          <Button 
+                            variant="link" 
+                            size="sm" 
+                            className="h-auto p-0 ml-1"
+                            asChild
+                          >
+                            <a href={resource.url} target="_blank" rel="noopener noreferrer">
+                              <ExternalLink className="h-3 w-3 inline" />
+                            </a>
+                          </Button>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </CardContent>
+              </Card>
+            </TabsContent>
+            
+            <TabsContent value="practice" className="animate-fade-in">
+              <Card>
+                <CardContent className="pt-6">
+                  <h3 className="text-lg font-medium mb-4">Harjutusülesanne</h3>
+                  {actionStep.practiceTasks && actionStep.practiceTasks.length > 0 ? (
+                    <ul className="text-sm pl-5 list-decimal space-y-1">
+                      {actionStep.practiceTasks.map((task, index) => (
+                        <li key={index}>{task}</li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="text-sm text-muted-foreground">
+                      Harjutusülesanne pole veel lisatud
+                    </p>
                   )}
-                </li>
-              ))}
-            </ul>
-          </div>
-          
-          {/* Practice Tasks */}
-          {actionStep.practiceTasks && actionStep.practiceTasks.length > 0 && (
-            <>
-              <Separator />
-              <div className="space-y-2">
-                <h3 className="font-semibold">Harjutusülesanne</h3>
-                <ul className="text-sm pl-5 list-decimal space-y-1">
-                  {actionStep.practiceTasks.map((task, index) => (
-                    <li key={index}>{task}</li>
-                  ))}
-                </ul>
-              </div>
-            </>
-          )}
-          
-          {/* Video Example */}
-          {videoUrl && (
-            <>
-              <Separator />
-              <div className="space-y-2">
-                <h3 className="font-semibold flex items-center gap-2">
-                  <Video className="h-4 w-4" />
-                  Näidisvideo
-                </h3>
-                <VideoPlayer src={videoUrl} title="Arengusammu näidisvideo" />
-              </div>
-            </>
-          )}
+                </CardContent>
+              </Card>
+            </TabsContent>
+            
+            <TabsContent value="examples" className="animate-fade-in">
+              <Card>
+                <CardContent className="pt-6">
+                  <h3 className="text-lg font-medium mb-4">Näited</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Praktilised näited arengusammu rakendamisest
+                  </p>
+                </CardContent>
+              </Card>
+            </TabsContent>
+            
+            {videoUrl && (
+              <TabsContent value="video" className="animate-fade-in">
+                <Card>
+                  <CardContent className="pt-6">
+                    <h3 className="text-lg font-medium mb-4">Näidisvideo</h3>
+                    <VideoPlayer src={videoUrl} title="Arengusammu näidisvideo" />
+                  </CardContent>
+                </Card>
+              </TabsContent>
+            )}
+          </Tabs>
         </div>
       </DialogContent>
     </Dialog>
