@@ -8,18 +8,32 @@ import { ArrowLeft } from 'lucide-react';
 import GeneralInfoSection from './observation/GeneralInfoSection';
 import ObservationNotesSection from './observation/ObservationNotesSection';
 import { useObservationForm } from './observation/useObservationForm';
-import { mockTeachers } from './observation/types';
+import { mockTeachers } from './observation/mockTeachers';
 
 const ObservationForm = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { form, isSubmitting, onSubmit } = useObservationForm();
-  const [teachersInSchool, setTeachersInSchool] = useState<Array<{ id: string, name: string, developmentGoal: string }>>([]);
+  const [teachersInSchool, setTeachersInSchool] = useState<Array<{ id: string, name: string, developmentGoal: string, actionStep?: string }>>([]);
   
   // Get teachers for the user's school
   useEffect(() => {
-    if (user?.school && mockTeachers[user.school as keyof typeof mockTeachers]) {
-      setTeachersInSchool(mockTeachers[user.school as keyof typeof mockTeachers]);
+    if (user?.school) {
+      console.log('User school:', user.school);
+      console.log('Available schools in mockTeachers:', Object.keys(mockTeachers));
+      
+      if (mockTeachers[user.school as keyof typeof mockTeachers]) {
+        console.log('Found teachers for school:', mockTeachers[user.school as keyof typeof mockTeachers]);
+        setTeachersInSchool(mockTeachers[user.school as keyof typeof mockTeachers]);
+      } else {
+        console.log('No teachers found for this school');
+        // If no specific teachers for this school, provide a default set
+        setTeachersInSchool(mockTeachers['Arengusammud']);
+      }
+    } else {
+      console.log('No school set for user, using default teachers');
+      // Default to Arengusammud if no school is set
+      setTeachersInSchool(mockTeachers['Arengusammud']);
     }
   }, [user]);
   

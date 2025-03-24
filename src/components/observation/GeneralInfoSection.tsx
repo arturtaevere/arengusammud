@@ -1,4 +1,5 @@
 
+import { useEffect } from 'react';
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -8,6 +9,7 @@ import { User, Calendar, Target, ClipboardList, UserPlus } from 'lucide-react';
 import { UseFormReturn } from 'react-hook-form';
 import { ObservationFormValues } from './types';
 import { useAuth } from '@/context/AuthContext';
+import { getTeacherDevelopmentGoal, getTeacherActionStep } from './mockTeachers';
 
 interface GeneralInfoSectionProps {
   form: UseFormReturn<ObservationFormValues>;
@@ -16,6 +18,18 @@ interface GeneralInfoSectionProps {
 
 const GeneralInfoSection = ({ form, teachersInSchool }: GeneralInfoSectionProps) => {
   const { user } = useAuth();
+  
+  // Update development goal and action step when teacher changes
+  useEffect(() => {
+    const teacherName = form.watch('teacherName');
+    if (teacherName) {
+      const developmentGoal = getTeacherDevelopmentGoal(teacherName);
+      const actionStep = getTeacherActionStep(teacherName);
+      
+      form.setValue('developmentGoal', developmentGoal);
+      form.setValue('actionStep', actionStep);
+    }
+  }, [form.watch('teacherName')]);
   
   return (
     <Card>
@@ -36,7 +50,14 @@ const GeneralInfoSection = ({ form, teachersInSchool }: GeneralInfoSectionProps)
                   </span>
                 </FormLabel>
                 <Select 
-                  onValueChange={field.onChange} 
+                  onValueChange={(value) => {
+                    field.onChange(value);
+                    // Update development goal and action step when teacher changes
+                    const developmentGoal = getTeacherDevelopmentGoal(value);
+                    const actionStep = getTeacherActionStep(value);
+                    form.setValue('developmentGoal', developmentGoal);
+                    form.setValue('actionStep', actionStep);
+                  }} 
                   defaultValue={field.value}
                 >
                   <FormControl>
@@ -45,7 +66,7 @@ const GeneralInfoSection = ({ form, teachersInSchool }: GeneralInfoSectionProps)
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    {teachersInSchool.map(teacher => (
+                    {teachersInSchool && teachersInSchool.map(teacher => (
                       <SelectItem key={teacher.id} value={teacher.name}>
                         {teacher.name}
                       </SelectItem>
