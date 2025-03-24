@@ -4,9 +4,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import ObservationsList from './ObservationsList';
 import { Observation } from './types';
 import { Card } from '@/components/ui/card';
-import { UserCheck, UserCog } from 'lucide-react';
+import { UserCheck, UserCog, BookOpen } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
-import { getStoredObservations } from '../observation/storage';
+import { getStoredObservations, StoredObservation } from '../observation/storage';
+import TeacherReflections from './TeacherReflections';
 
 interface ObservationTabsProps {
   observations: Observation[];
@@ -17,6 +18,7 @@ const ObservationTabs = ({ observations, onFeedbackGiven }: ObservationTabsProps
   const { user } = useAuth();
   const [receivedFeedback, setReceivedFeedback] = useState<Observation[]>([]);
   const [conductedObservations, setConductedObservations] = useState<Observation[]>([]);
+  const [teacherReflections, setTeacherReflections] = useState<StoredObservation[]>([]);
   
   useEffect(() => {
     // For demonstration purposes, let's simulate observations where the current user is the teacher
@@ -37,14 +39,21 @@ const ObservationTabs = ({ observations, onFeedbackGiven }: ObservationTabsProps
       !obs.teacher.toLowerCase().includes(teacherName.toLowerCase())
     );
     
+    // Get teacher reflections
+    const reflections = storedObservations.filter(obs => 
+      obs.teacher.toLowerCase().includes(teacherName.toLowerCase()) && 
+      obs.teacherReflection !== undefined
+    );
+    
     setReceivedFeedback(received);
     setConductedObservations(conducted);
+    setTeacherReflections(reflections);
   }, [observations, user]);
 
   return (
     <Card className="p-4">
       <Tabs defaultValue="received" className="w-full">
-        <TabsList className="grid w-full grid-cols-2 mb-4">
+        <TabsList className="grid w-full grid-cols-3 mb-4">
           <TabsTrigger value="conducted" className="flex items-center justify-center gap-2">
             <UserCheck className="h-4 w-4" />
             <span className="hidden sm:inline">Vaatlused, mille olen läbi viinud</span>
@@ -54,6 +63,11 @@ const ObservationTabs = ({ observations, onFeedbackGiven }: ObservationTabsProps
             <UserCog className="h-4 w-4" />
             <span className="hidden sm:inline">Tagasiside minule</span>
             <span className="sm:hidden">Saadud</span>
+          </TabsTrigger>
+          <TabsTrigger value="reflections" className="flex items-center justify-center gap-2">
+            <BookOpen className="h-4 w-4" />
+            <span className="hidden sm:inline">Minu refleksioonid</span>
+            <span className="sm:hidden">Refleksioonid</span>
           </TabsTrigger>
         </TabsList>
         
@@ -74,6 +88,14 @@ const ObservationTabs = ({ observations, onFeedbackGiven }: ObservationTabsProps
             title="Tagasiside minule"
             emptyMessage="Sa pole veel tagasisidet saanud"
             role="observed"
+          />
+        </TabsContent>
+        
+        <TabsContent value="reflections" className="mt-0">
+          <TeacherReflections 
+            reflections={teacherReflections}
+            title="Minu refleksioonid"
+            emptyMessage="Sul pole veel ühtegi refleksiooni"
           />
         </TabsContent>
       </Tabs>

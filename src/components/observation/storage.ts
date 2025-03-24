@@ -21,9 +21,7 @@ export interface StoredObservation {
   createdAt: string;
   coachName?: string;
   teacherReflection?: {
-    positiveImpact: string;
-    challengesFaced: string;
-    habitFormation: string;
+    reflection: string;
     submittedAt: string;
   };
 }
@@ -137,9 +135,7 @@ export const generateSampleObservations = (teacherName: string): void => {
       coachName: "Jaan Tamm",
       createdAt: new Date(Date.now() - 21 * 24 * 60 * 60 * 1000).toISOString(), // 3 weeks ago
       teacherReflection: {
-        positiveImpact: "Märkasin, et õpilased hakkasid oma töid põhjalikumalt üle vaatama enne esitamist. Eriti oli näha arengut nõrgemate õpilaste puhul, kes varem ei osanud oma vigu märgata.",
-        challengesFaced: "Alguses oli keeruline õpilasi motiveerida enesehindamisega tegelema, kuna see tundus neile lisatööna. Samuti oli väljakutse leida tasakaal liiga kriitilise ja liiga pealiskaudse enesehindamise vahel.",
-        habitFormation: "Plaanin jätkata igas tunnis 5-minutilise eneserefleksiooni ajaga. Samuti olen loonud klassile veebikeskkonna, kus nad saavad oma arengut jälgida ja tagasisidet anda.",
+        reflection: "Märkasin, et õpilased hakkasid oma töid põhjalikumalt üle vaatama enne esitamist. Eriti oli näha arengut nõrgemate õpilaste puhul, kes varem ei osanud oma vigu märgata.",
         submittedAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString() // 10 days ago
       }
     }
