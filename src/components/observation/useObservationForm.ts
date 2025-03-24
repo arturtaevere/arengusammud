@@ -11,6 +11,7 @@ import { useAuth } from '@/context/AuthContext';
 
 export const useObservationForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [feedbackProvided, setFeedbackProvided] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user } = useAuth();
@@ -31,6 +32,15 @@ export const useObservationForm = () => {
     }
   });
   
+  const handleFeedbackProvided = () => {
+    setFeedbackProvided(true);
+    
+    toast({
+      title: "Tagasiside märgitud",
+      description: "Tagasisidekohtumine on märgitud toimunuks",
+    });
+  };
+  
   const onSubmit = async (values: ObservationFormValues) => {
     setIsSubmitting(true);
     
@@ -42,7 +52,7 @@ export const useObservationForm = () => {
         subject: 'Tund', // Default subject
         date: values.date,
         status: 'Vaadeldud',
-        hasFeedback: false,
+        hasFeedback: feedbackProvided, // Use the feedback toggle state
         coachName: values.coachName,
         competences: [],
         teacherNotes: values.combinedNotes, // Map combined notes to teacherNotes for compatibility
@@ -83,5 +93,7 @@ export const useObservationForm = () => {
     form,
     isSubmitting,
     onSubmit,
+    feedbackProvided,
+    handleFeedbackProvided,
   };
 };

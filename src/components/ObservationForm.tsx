@@ -4,16 +4,17 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, CalendarCheck } from 'lucide-react';
 import GeneralInfoSection from './observation/GeneralInfoSection';
 import ObservationNotesSection from './observation/ObservationNotesSection';
 import { useObservationForm } from './observation/useObservationForm';
 import { mockTeachers } from './observation/mockTeachers';
+import { Switch } from '@/components/ui/switch';
 
 const ObservationForm = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { form, isSubmitting, onSubmit } = useObservationForm();
+  const { form, isSubmitting, onSubmit, feedbackProvided, handleFeedbackProvided } = useObservationForm();
   const [teachersInSchool, setTeachersInSchool] = useState<Array<{ id: string, name: string, developmentGoal: string, actionStep?: string }>>([]);
   
   // Get teachers for the user's school
@@ -56,6 +57,33 @@ const ObservationForm = () => {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <GeneralInfoSection form={form} teachersInSchool={teachersInSchool} />
           <ObservationNotesSection form={form} isSubmitting={isSubmitting} />
+          
+          {/* Feedback Meeting Toggle */}
+          <div className="p-6 bg-secondary rounded-lg border border-border mt-8">
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex flex-col">
+                <span className="font-medium text-lg text-primary">Tagasisidekohtumine on toimunud</span>
+                <span className="text-sm text-muted-foreground">
+                  Pärast valimist jagatakse märkmed õpetajaga
+                </span>
+              </div>
+              <div className="flex items-center gap-2 rounded-md">
+                <span className={`text-sm ${!feedbackProvided ? 'font-medium text-red-500' : 'text-muted-foreground'}`}>
+                  Ei
+                </span>
+                <Switch 
+                  checked={feedbackProvided}
+                  onCheckedChange={(checked) => {
+                    if (checked) handleFeedbackProvided();
+                  }}
+                  disabled={feedbackProvided}
+                />
+                <span className={`text-sm ${feedbackProvided ? 'font-medium text-green-600' : 'text-muted-foreground'}`}>
+                  Jah
+                </span>
+              </div>
+            </div>
+          </div>
         </form>
       </Form>
     </div>
