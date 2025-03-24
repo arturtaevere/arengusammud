@@ -12,45 +12,22 @@ interface TeacherStudentNotesSectionProps {
 
 const TeacherStudentNotesSection = ({ form }: TeacherStudentNotesSectionProps) => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-0 overflow-hidden">
+    <div className="grid grid-cols-1 gap-0 overflow-hidden">
       <FormField
         control={form.control}
-        name="teacherNotes"
+        name="combinedNotes"
         render={({ field }) => (
-          <FormItem className="md:pr-1">
+          <FormItem>
             <FormLabel>
               <span className="flex items-center">
                 <MessageSquare className="h-4 w-4 mr-2" />
-                Mida õpetaja tegi
+                Konkreetsed, mõõdetavad, neutraalsed andmed õpetaja ja õpilaste tegude, sõnade, reaktsioonide, liikumise, ajakasutuse kohta, nt tegevuse kirjeldus, tsitaat, mõõdetud aeg (kui pikk oli paus), numbrid (mitu õpilast vastas)
               </span>
             </FormLabel>
             <FormControl>
               <Textarea 
-                placeholder="Kirjeldage õpetaja tegevusi tunni jooksul..." 
-                className="min-h-[200px]"
-                {...field} 
-              />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-      
-      <FormField
-        control={form.control}
-        name="studentNotes"
-        render={({ field }) => (
-          <FormItem className="md:pl-1">
-            <FormLabel>
-              <span className="flex items-center">
-                <MessageSquare className="h-4 w-4 mr-2" />
-                Mida õpilased tegid
-              </span>
-            </FormLabel>
-            <FormControl>
-              <Textarea 
-                placeholder="Kirjeldage õpilaste tegevusi tunni jooksul..." 
-                className="min-h-[200px]"
+                placeholder="Kirjeldage oma märkamisi..." 
+                className="min-h-[300px]"
                 {...field} 
               />
             </FormControl>
