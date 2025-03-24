@@ -80,7 +80,7 @@ const ObservationTabs = ({ observations, onFeedbackGiven }: ObservationTabsProps
           <ObservationsList 
             observations={receivedFeedback} 
             onFeedbackGiven={onFeedbackGiven}
-            title="Tagasiside minule"
+            title="Tagasiside minule ja minu refleksioonid"
             emptyMessage="Sa pole veel tagasisidet saanud"
             role="observed"
           />
