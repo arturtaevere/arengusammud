@@ -51,7 +51,12 @@ export const useUserAuthentication = (
     return userWithoutPassword;
   };
 
-  const signup = async (name: string, email: string, password: string, role: 'juht' | 'õpetaja', school?: string) => {
+  const signup = async (name: string, email: string, password: string, role: 'juht' | 'õpetaja', school: string) => {
+    // School is now required for all users, so we validate it here
+    if (!school || school.trim() === '') {
+      throw new Error('Kooli valimine on kohustuslik');
+    }
+
     await new Promise(resolve => setTimeout(resolve, 800));
     
     // Get the latest users from localStorage
@@ -69,10 +74,6 @@ export const useUserAuthentication = (
       throw new Error('Selle e-posti aadressiga kasutaja on juba olemas');
     }
 
-    if (role === 'õpetaja' && !school) {
-      throw new Error('Õpetaja peab valima kooli');
-    }
-
     const userId = Math.random().toString(36).substr(2, 9);
     const newUser = {
       id: userId,
@@ -80,7 +81,7 @@ export const useUserAuthentication = (
       email,
       password,
       role,
-      school,
+      school, // School is now saved for all users
       createdAt: new Date().toISOString(),
       emailVerified: true,
     };
@@ -121,4 +122,3 @@ export const useUserAuthentication = (
     signup
   };
 };
-
