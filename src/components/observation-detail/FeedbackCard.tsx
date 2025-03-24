@@ -33,7 +33,7 @@ const FeedbackCard = ({
       </CardHeader>
       <CardContent className="space-y-4">
         <div>
-          <h3 className="text-sm font-medium text-gray-500">Tunnustus ja küsimus</h3>
+          <h3 className="text-sm font-bold text-gray-700">Tunnustus ja küsimus</h3>
           <p className="text-sm text-gray-500 mb-2">
             Tõsta esile üht positiivset näidet õpetamisoskusest, mis tunnivaatlusel silma jäi ja mida õpetaja võiks edaspidi samamoodi teha. Valmista ette küsimus, mis kutsub õpetajat rääkima, mis selle mõju õpilastele oli.
           </p>
@@ -50,7 +50,7 @@ const FeedbackCard = ({
         </div>
         
         <div>
-          <h3 className="text-sm font-medium text-gray-500">Järgmise sammu valimine</h3>
+          <h3 className="text-sm font-bold text-gray-700">Järgmise sammu valimine</h3>
           <p className="text-sm text-gray-500 mb-2">
             Vali mõni konkreetne märkamine tunnist, mille puhul oleks õpetaja praktika võinud tõhusam olla. Valmista ette küsimus, mis suunaks õpetajat reflekteerima ja arengule mõtlema.
           </p>

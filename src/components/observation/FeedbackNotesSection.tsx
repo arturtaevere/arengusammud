@@ -18,11 +18,9 @@ const FeedbackNotesSection = ({ form }: FeedbackNotesSectionProps) => {
         name="specificPraise"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>
-              <span className="flex items-center">
-                <ThumbsUp className="h-4 w-4 mr-2" />
-                Tunnustus ja küsimus
-              </span>
+            <FormLabel className="font-bold flex items-center">
+              <ThumbsUp className="h-4 w-4 mr-2" />
+              Tunnustus ja küsimus
             </FormLabel>
             <p className="text-sm text-gray-500 mb-2">
               Tõsta esile üht positiivset näidet õpetamisoskusest, mis tunnivaatlusel silma jäi ja mida õpetaja võiks edaspidi samamoodi teha. Valmista ette küsimus, mis kutsub õpetajat rääkima, mis selle mõju õpilastele oli.

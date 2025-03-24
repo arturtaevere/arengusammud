@@ -28,11 +28,9 @@ const NextActionStepSection = ({ form, onOpenActionStepSelector }: NextActionSte
         name="nextActionStep"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>
-              <span className="flex items-center">
-                <ArrowRight className="h-4 w-4 mr-2" />
-                Järgmise sammu valimine
-              </span>
+            <FormLabel className="font-bold flex items-center">
+              <ArrowRight className="h-4 w-4 mr-2" />
+              Järgmise sammu valimine
             </FormLabel>
             <p className="text-sm text-gray-500 mb-2">
               Vali mõni konkreetne märkamine tunnist, mille puhul oleks õpetaja praktika võinud tõhusam olla. Valmista ette küsimus, mis suunaks õpetajat reflekteerima ja arengule mõtlema.
