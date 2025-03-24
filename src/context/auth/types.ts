@@ -20,11 +20,10 @@ export interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  signup: (name: string, email: string, password: string, role: 'juht' | 'õpetaja', school?: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<User>; // Updated return type
+  signup: (name: string, email: string, password: string, role: 'juht' | 'õpetaja', school: string) => Promise<string>; // Updated return type and made school required
   logout: () => void;
   updateProfileImage: (imageUrl: string) => void;
-  // Change the return type to Promise<User[]> to match implementation
   getAllUsers: () => Promise<User[]>;
   deleteUserByEmail: (email: string) => Promise<boolean>;
   

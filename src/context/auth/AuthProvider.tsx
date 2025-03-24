@@ -11,11 +11,11 @@ export const AuthContext = createContext<AuthContextType>({
   user: null,
   isAuthenticated: false,
   isLoading: true,
-  login: async () => {},
-  signup: async () => {},
+  login: async () => { throw new Error('Not implemented'); }, // Updated return type
+  signup: async () => { throw new Error('Not implemented'); }, // Updated return type
   logout: () => {},
   updateProfileImage: () => {},
-  getAllUsers: async () => Promise.resolve([]), // Fix: Return a Promise that resolves to an empty array
+  getAllUsers: async () => Promise.resolve([]),
   deleteUserByEmail: async () => false,
   
   // Add the stub verification functions
