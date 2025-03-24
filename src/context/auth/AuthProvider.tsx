@@ -4,6 +4,7 @@ import { AuthContextType, User, UserWithPassword } from './types';
 import { USER_STORAGE_KEY, USERS_STORAGE_KEY } from './constants';
 import { useAuthInit } from './useAuthInit';
 import { useAuthActions } from './useAuthActions';
+import { supabase } from '@/integrations/supabase/client';
 
 // Create the context with default values
 export const AuthContext = createContext<AuthContextType>({
@@ -47,15 +48,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoading
   );
 
-  // Immediately trigger a users-updated event when the component mounts
-  useEffect(() => {
-    // Dispatch an event to notify listeners that AuthProvider has mounted
-    console.log('AuthProvider mounted, dispatching users-updated event');
-    setTimeout(() => {
-      window.dispatchEvent(new CustomEvent('users-updated'));
-    }, 500); // Small delay to ensure other components are ready
-  }, []);
-
   // Handle user login
   const handleLogin = async (email: string, password: string) => {
     setIsLoading(true);
@@ -68,42 +60,51 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   // Handle user signup
-  const handleSignup = async (name: string, email: string, password: string, role: 'juht' | 'õpetaja', school?: string) => {
+  const handleSignup = async (name: string, email: string, password: string, role: 'juht' | 'õpetaja', school: string) => {
     setIsLoading(true);
     try {
       await signup(name, email, password, role, school);
-      // Force-refresh users list after signup
-      console.log('Signup successful, dispatching users-updated event');
-      window.dispatchEvent(new CustomEvent('users-updated'));
     } finally {
       setIsLoading(false);
     }
   };
 
   // Handle user logout
-  const handleLogout = () => {
-    setUser(null);
-    localStorage.removeItem(USER_STORAGE_KEY);
+  const handleLogout = async () => {
+    setIsLoading(true);
+    try {
+      // Sign out from Supabase
+      await supabase.auth.signOut();
+      
+      // Clear user from state and localStorage
+      setUser(null);
+      localStorage.removeItem(USER_STORAGE_KEY);
+    } catch (error) {
+      console.error('Logout error:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // Handle profile image update
-  const handleUpdateProfileImage = (imageUrl: string) => {
+  const handleUpdateProfileImage = async (imageUrl: string) => {
     if (user) {
-      const updatedUser = { ...user, profileImage: imageUrl };
-      setUser(updatedUser);
-      localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(updatedUser));
-      updateProfileImage(user.id, imageUrl);
+      const updatedUser = await updateProfileImage(user.id, imageUrl);
+      if (updatedUser) {
+        setUser({ ...user, profileImage: imageUrl });
+        localStorage.setItem(USER_STORAGE_KEY, JSON.stringify({ ...user, profileImage: imageUrl }));
+      }
     }
   };
 
   // Stub implementations for verification functions
   const verifyEmail = async () => {
-    console.log("Email verification is disabled");
+    console.log("Email verification is using Supabase's built-in verification");
     return false;
   };
 
   const resendVerificationEmail = async () => {
-    console.log("Email verification is disabled");
+    console.log("Email verification is using Supabase's built-in verification");
     return false;
   };
 

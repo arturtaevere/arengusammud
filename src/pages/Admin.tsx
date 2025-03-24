@@ -6,7 +6,6 @@ import Navbar from '@/components/Navbar';
 import { useToast } from '@/components/ui/use-toast';
 import { FilterCard, UserTable } from '@/components/admin';
 import { User } from '@/context/auth/types';
-import { USERS_STORAGE_KEY } from '@/context/auth/constants';
 
 const Admin = () => {
   const { user, isAuthenticated, getAllUsers, deleteUserByEmail } = useAuth();
@@ -16,35 +15,32 @@ const Admin = () => {
   const [filterRole, setFilterRole] = useState<string>('all');
   const [filterSchool, setFilterSchool] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState<string>('');
+  const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
 
-  const loadUsers = () => {
+  const loadUsers = async () => {
     if (isAuthenticated && user?.role === 'juht') {
-      // Get users directly from localStorage to ensure we have the latest data
-      const storedUsersStr = localStorage.getItem(USERS_STORAGE_KEY);
-      let allUsers = [];
-      
-      if (storedUsersStr) {
-        try {
-          const storedUsers = JSON.parse(storedUsersStr);
-          // Remove passwords before setting to state
-          allUsers = storedUsers.map(({ password, ...user }: any) => user);
-        } catch (error) {
-          console.error('Error parsing stored users:', error);
-          allUsers = getAllUsers();
-        }
-      } else {
-        allUsers = getAllUsers();
+      setIsLoading(true);
+      try {
+        // Load users from Supabase
+        const fetchedUsers = await getAllUsers();
+        console.log('Admin page - Loading users:', {
+          count: fetchedUsers.length,
+          emails: fetchedUsers.map((u: User) => u.email)
+        });
+        
+        setUsers(fetchedUsers);
+        setFilteredUsers(fetchedUsers);
+      } catch (error) {
+        console.error('Error loading users:', error);
+        toast({
+          variant: "destructive",
+          title: "Kasutajate laadimine ebaõnnestus",
+          description: error instanceof Error ? error.message : "Midagi läks valesti",
+        });
+      } finally {
+        setIsLoading(false);
       }
-      
-      console.log('Admin page - Loading users:', {
-        fromStorage: !!storedUsersStr,
-        count: allUsers.length,
-        emails: allUsers.map((u: User) => u.email)
-      });
-      
-      setUsers(allUsers);
-      setFilteredUsers(allUsers);
     }
   };
 
@@ -59,24 +55,6 @@ const Admin = () => {
   useEffect(() => {
     console.log('Admin component mounted, loading initial users');
     loadUsers();
-    
-    const handleUsersUpdated = () => {
-      console.log('Admin page - users-updated event received, reloading users');
-      loadUsers();
-    };
-    
-    window.addEventListener('users-updated', handleUsersUpdated);
-    window.addEventListener('storage', (e) => {
-      if (e.key === USERS_STORAGE_KEY) {
-        console.log('Admin page - storage event received, reloading users');
-        handleUsersUpdated();
-      }
-    });
-    
-    return () => {
-      window.removeEventListener('users-updated', handleUsersUpdated);
-      window.removeEventListener('storage', handleUsersUpdated);
-    };
   }, [isAuthenticated, user]);
 
   useEffect(() => {
@@ -133,7 +111,7 @@ const Admin = () => {
             }}
             className="mt-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
           >
-            Värskenda kasutajate nimekirja
+            {isLoading ? "Laadimine..." : "Värskenda kasutajate nimekirja"}
           </button>
         </div>
 
@@ -146,10 +124,16 @@ const Admin = () => {
           onSchoolChange={setFilterSchool}
         />
 
-        <UserTable 
-          users={filteredUsers} 
-          onDeleteUser={handleDeleteUser} 
-        />
+        {isLoading ? (
+          <div className="text-center py-10">
+            <p>Kasutajate laadimine...</p>
+          </div>
+        ) : (
+          <UserTable 
+            users={filteredUsers} 
+            onDeleteUser={handleDeleteUser} 
+          />
+        )}
       </div>
     </div>
   );
