@@ -1,4 +1,3 @@
-
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuth } from '@/context/AuthContext';
@@ -14,6 +13,7 @@ import { SignupFormValues, signupSchema } from './schemas';
 import { useState } from 'react';
 import { AlertCircle, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { SCHOOLS } from '@/context/auth/constants';
 
 const SignupForm = () => {
   const { signup, setPendingVerificationEmail } = useAuth();
