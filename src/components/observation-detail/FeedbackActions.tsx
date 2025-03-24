@@ -60,16 +60,16 @@ const FeedbackActions = ({
     <>
       {/* Feedback Meeting Toggle - only visible to coaches */}
       {isCoach && (
-        <div className="flex justify-end mt-8">
-          <div className="flex items-center gap-4 p-4 border rounded-md bg-gray-50">
+        <div className="p-6 bg-secondary rounded-lg border border-border mt-8">
+          <div className="flex items-center justify-between gap-4">
             <div className="flex flex-col">
-              <span className="font-medium">Tagasisidekohtumine on toimunud</span>
-              <span className="text-sm text-gray-500">
+              <span className="font-medium text-lg text-primary">Tagasisidekohtumine on toimunud</span>
+              <span className="text-sm text-muted-foreground">
                 Pärast valimist jagatakse märkmed õpetajaga
               </span>
             </div>
             <div className="flex items-center gap-2 rounded-md">
-              <span className={`text-sm ${!feedbackProvided ? 'font-medium text-red-500' : 'text-gray-500'}`}>
+              <span className={`text-sm ${!feedbackProvided ? 'font-medium text-red-500' : 'text-muted-foreground'}`}>
                 Ei
               </span>
               <Switch 
@@ -79,7 +79,7 @@ const FeedbackActions = ({
                 }}
                 disabled={feedbackProvided}
               />
-              <span className={`text-sm ${feedbackProvided ? 'font-medium text-green-600' : 'text-gray-500'}`}>
+              <span className={`text-sm ${feedbackProvided ? 'font-medium text-green-600' : 'text-muted-foreground'}`}>
                 Jah
               </span>
             </div>
@@ -105,9 +105,9 @@ const FeedbackActions = ({
       
       {/* Message for teachers when feedback is not yet provided */}
       {isObserved && !observation.hasFeedback && (
-        <Card className="bg-blue-50 border-blue-200">
-          <CardContent className="p-4">
-            <p className="text-blue-800">
+        <Card className="mt-8 border-orange-light bg-orange/5">
+          <CardContent className="p-6">
+            <p className="text-orange-foreground">
               Tagasiside kuvatakse siin pärast seda, kui õpipartner on märkinud tagasisidekohtumise toimunuks.
             </p>
           </CardContent>

@@ -8,6 +8,7 @@ import FeedbackCard from '@/components/observation-detail/FeedbackCard';
 import FeedbackActions from '@/components/observation-detail/FeedbackActions';
 import TeacherReflectionCard from '@/components/observation-detail/TeacherReflectionCard';
 import { Button } from '@/components/ui/button';
+import { ArrowLeft } from 'lucide-react';
 
 const ObservationDetail = () => {
   const {
@@ -39,7 +40,9 @@ const ObservationDetail = () => {
       <div className="min-h-screen bg-gray-50">
         <Navbar />
         <div className="container mx-auto pt-24 pb-12 px-4">
-          <div className="text-center">Laadin...</div>
+          <div className="flex justify-center items-center h-[60vh]">
+            <div className="animate-pulse text-primary font-medium">Laadimine...</div>
+          </div>
         </div>
       </div>
     );
@@ -52,7 +55,10 @@ const ObservationDetail = () => {
         <div className="container mx-auto pt-24 pb-12 px-4">
           <div className="text-center">
             <h2 className="text-2xl font-semibold mb-4">Vaatlust ei leitud</h2>
-            <Button onClick={() => navigate('/observations')}>Tagasi vaatluste juurde</Button>
+            <Button onClick={() => navigate('/observations')}>
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Tagasi vaatluste juurde
+            </Button>
           </div>
         </div>
       </div>
@@ -64,7 +70,19 @@ const ObservationDetail = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
-      <div className="container mx-auto pt-24 pb-12 px-4 max-w-4xl">
+      <div className="container mx-auto pt-20 pb-12 px-4 max-w-4xl fade-in">
+        <div className="mb-8 flex items-center">
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="mr-4"
+            onClick={() => navigate('/observations')}
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Tagasi
+          </Button>
+        </div>
+        
         <ObservationDetailHeader 
           canEdit={canEdit} 
           isEditing={isEditing}
@@ -72,7 +90,7 @@ const ObservationDetail = () => {
           saveChanges={saveChanges}
         />
 
-        <div className="space-y-6">
+        <div className="space-y-6 mt-6">
           {/* General Information */}
           <GeneralInfoCard 
             observation={observation}
