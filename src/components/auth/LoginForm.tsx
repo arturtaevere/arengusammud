@@ -46,9 +46,6 @@ const LoginForm = () => {
     }
   };
 
-  // Force button to be enabled regardless of state for testing
-  const buttonDisabled = false; // Override disabled state for debugging
-
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleLogin)}>
@@ -92,7 +89,7 @@ const LoginForm = () => {
           <Button 
             type="submit" 
             className="w-full transition-all" 
-            disabled={buttonDisabled}
+            disabled={isSubmitting || isLoading}
           >
             {isSubmitting || isLoading ? "Sisselogimine..." : "Logi sisse"}
           </Button>

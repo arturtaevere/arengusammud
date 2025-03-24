@@ -1,4 +1,3 @@
-
 import { useToast } from '@/components/ui/use-toast';
 import { User, UserWithPassword } from './types';
 import { USER_STORAGE_KEY, USERS_STORAGE_KEY } from './constants';
@@ -12,15 +11,25 @@ export const useUserAuthentication = (
 
   const login = async (email: string, password: string) => {
     try {
+      console.log('Attempting to login with Supabase:', { email });
+      
       // Authenticate with Supabase
       const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
         email,
         password
       });
 
-      if (authError) throw new Error(authError.message || 'Vale e-post või parool');
+      if (authError) {
+        console.error('Supabase auth error:', authError);
+        throw new Error(authError.message || 'Vale e-post või parool');
+      }
       
-      if (!authData.user) throw new Error('Kasutajat ei leitud');
+      if (!authData.user) {
+        console.error('No user data returned from Supabase');
+        throw new Error('Kasutajat ei leitud');
+      }
+      
+      console.log('Auth successful, fetching profile');
       
       // Get the user profile from the profiles table
       const { data: profileData, error: profileError } = await supabase
@@ -38,6 +47,8 @@ export const useUserAuthentication = (
         console.error('No profile found for user:', authData.user.id);
         throw new Error('Kasutaja profiili ei leitud');
       }
+      
+      console.log('Profile data retrieved:', profileData);
       
       // Map Supabase profile to our User type
       const userWithoutPassword: User = {
