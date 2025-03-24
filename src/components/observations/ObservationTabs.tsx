@@ -49,18 +49,24 @@ const ObservationTabs = ({ observations, onFeedbackGiven }: ObservationTabsProps
     setConductedObservations(conducted);
     
     // Create combined items for the teacher view
-    const feedbackItems: CombinedFeedbackItem[] = received.map(obs => ({
-      id: obs.id,
-      teacher: obs.teacher,
-      subject: obs.subject,
-      date: obs.date,
-      type: 'feedback',
-      status: obs.status,
-      hasFeedback: obs.hasFeedback,
-      competences: obs.competences,
-      coach: obs.coach, // Ensure coach is mapped from observations to feedbackItems
-      createdAt: obs.date // Use date as createdAt for sorting
-    }));
+    const feedbackItems: CombinedFeedbackItem[] = received.map(obs => {
+      // Find the full observation data to get the action step
+      const fullObsData = storedObservations.find(storedObs => storedObs.id === obs.id);
+      
+      return {
+        id: obs.id,
+        teacher: obs.teacher,
+        subject: obs.subject,
+        date: obs.date,
+        type: 'feedback',
+        status: obs.status,
+        hasFeedback: obs.hasFeedback,
+        competences: obs.competences,
+        coach: obs.coach,
+        actionStep: fullObsData?.actionStep,
+        createdAt: obs.date
+      };
+    });
     
     const reflectionItems: CombinedFeedbackItem[] = reflections.map(obs => ({
       id: `${obs.id}-reflection`,
@@ -69,7 +75,7 @@ const ObservationTabs = ({ observations, onFeedbackGiven }: ObservationTabsProps
       date: obs.teacherReflection?.submittedAt || obs.date,
       type: 'reflection',
       teacherReflection: obs.teacherReflection,
-      createdAt: obs.teacherReflection?.submittedAt || obs.date // Use reflection date for sorting
+      createdAt: obs.teacherReflection?.submittedAt || obs.date
     }));
     
     // Helper function to validate date strings

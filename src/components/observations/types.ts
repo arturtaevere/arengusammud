@@ -34,5 +34,6 @@ export interface CombinedFeedbackItem {
     submittedAt: string;
   };
   createdAt: string;
-  coach?: string; // Added coach property for feedback items
+  coach?: string;
+  actionStep?: string; // Added action step property
 }

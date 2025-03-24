@@ -61,7 +61,11 @@ const TeacherFeedbackItem = ({ item }: TeacherFeedbackItemProps) => {
           </p>
         ) : (
           <p className="text-sm text-gray-700 line-clamp-2">
-            Tagasiside
+            {item.actionStep ? (
+              <>Arengusamm: {item.actionStep}</>
+            ) : (
+              <>Tagasiside</>
+            )}
           </p>
         )}
       </div>
