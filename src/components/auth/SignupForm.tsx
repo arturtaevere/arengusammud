@@ -83,7 +83,8 @@ const SignupForm = () => {
   };
 
   // Prevent submitting the form while loading
-  const isFormDisabled = isSubmitting || authLoading;
+  // We should NOT disable the form fields during loading, only the submit button
+  const isButtonDisabled = isSubmitting || authLoading || signupSuccess;
 
   return (
     <Form {...form}>
@@ -100,7 +101,7 @@ const SignupForm = () => {
                   <Input 
                     placeholder="Sinu Nimi"
                     {...field}
-                    disabled={isFormDisabled}
+                    // Important: Don't disable the input field
                   />
                 </FormControl>
                 <FormMessage />
@@ -119,7 +120,7 @@ const SignupForm = () => {
                     type="email" 
                     placeholder="sinu.email@näide.ee"
                     {...field}
-                    disabled={isFormDisabled}
+                    // Important: Don't disable the input field
                   />
                 </FormControl>
                 <FormMessage />
@@ -138,7 +139,7 @@ const SignupForm = () => {
                     type="password"
                     placeholder="Vähemalt 6 tähemärki"
                     {...field}
-                    disabled={isFormDisabled}
+                    // Important: Don't disable the input field
                   />
                 </FormControl>
                 <FormMessage />
@@ -157,7 +158,7 @@ const SignupForm = () => {
                     onValueChange={field.onChange} 
                     value={field.value}
                     className="flex space-x-4"
-                    disabled={isFormDisabled}
+                    // Important: Don't disable the radio buttons
                   >
                     <div className="flex items-center space-x-2">
                       <RadioGroupItem value="juht" id="juht" />
@@ -184,7 +185,7 @@ const SignupForm = () => {
                   <Select 
                     onValueChange={field.onChange}
                     value={field.value}
-                    disabled={isFormDisabled}
+                    // Important: Don't disable the select field
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Vali oma kool" />
@@ -207,7 +208,7 @@ const SignupForm = () => {
           <Button 
             type="submit" 
             className="w-full transition-all" 
-            disabled={isFormDisabled || signupSuccess}
+            disabled={isButtonDisabled}
           >
             {isSubmitting ? (
               <>
