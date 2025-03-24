@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
@@ -77,7 +76,8 @@ const VerifyEmail = () => {
     
     setResending(true);
     try {
-      const success = await resendVerificationEmail();
+      // Pass the email parameter to the resendVerificationEmail function
+      const success = await resendVerificationEmail(email);
       
       if (success) {
         toast({

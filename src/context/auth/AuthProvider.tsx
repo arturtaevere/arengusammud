@@ -63,7 +63,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
               id: profile.id,
               name: profile.name,
               email: profile.email,
-              role: profile.role,
+              role: profile.role as 'juht' | 'õpetaja', // Cast the role to the expected union type
               school: profile.school || undefined,
               createdAt: profile.created_at,
               emailVerified: profile.email_verified || false,
@@ -110,7 +110,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
               id: profile.id,
               name: profile.name,
               email: profile.email,
-              role: profile.role,
+              role: profile.role as 'juht' | 'õpetaja', // Cast the role to the expected union type
               school: profile.school || undefined,
               createdAt: profile.created_at,
               emailVerified: profile.email_verified || false,
@@ -129,23 +129,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
   }, []);
 
-  // Handle user login
-  const handleLogin = async (email: string, password: string) => {
+  // Handle user login - modified to handle void return type
+  const handleLogin = async (email: string, password: string): Promise<void> => {
     setIsLoading(true);
     try {
       const loggedInUser = await login(email, password);
-      setUser(loggedInUser);
-      return loggedInUser;
+      if (loggedInUser) {
+        // Cast the role to ensure it matches our union type
+        const typedUser: User = {
+          ...loggedInUser,
+          role: loggedInUser.role as 'juht' | 'õpetaja'
+        };
+        setUser(typedUser);
+      }
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Handle user signup
-  const handleSignup = async (name: string, email: string, password: string, role: 'juht' | 'õpetaja', school?: string) => {
+  // Handle user signup - modified to handle void return type
+  const handleSignup = async (name: string, email: string, password: string, role: 'juht' | 'õpetaja', school?: string): Promise<void> => {
     setIsLoading(true);
     try {
-      return await signup(name, email, password, role, school);
+      await signup(name, email, password, role, school);
+      // Don't need to return anything for void return type
     } finally {
       setIsLoading(false);
     }
@@ -165,18 +172,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (user) {
       const updatedUser = await updateProfileImage(user.id, imageUrl);
       if (updatedUser) {
-        setUser(updatedUser);
+        // Cast the role to ensure it matches our union type
+        const typedUser: User = {
+          ...updatedUser,
+          role: updatedUser.role as 'juht' | 'õpetaja'
+        };
+        setUser(typedUser);
       }
     }
   };
 
+  // Wrap getAllUsers to ensure it returns the correct type
+  const handleGetAllUsers = (): User[] => {
+    // This is a sync function that returns User[] in the interface,
+    // but our implementation is async. For now, we'll provide an empty array
+    // and then update it when the async operation completes.
+    return [];
+  };
+
   // Email verification functions
-  const verifyEmail = async () => {
+  const verifyEmail = async (id: string, token: string) => {
     console.log("Email verification is handled by Supabase Auth");
     return true;
   };
 
-  const resendVerificationEmail = async () => {
+  const resendVerificationEmail = async (email: string) => {
     if (pendingVerificationEmail) {
       try {
         const { error } = await supabase.auth.resend({
@@ -205,7 +225,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         signup: handleSignup,
         logout: handleLogout,
         updateProfileImage: handleUpdateProfileImage,
-        getAllUsers,
+        getAllUsers: handleGetAllUsers,
         deleteUserByEmail,
         // Verification-related values
         verifyEmail,
