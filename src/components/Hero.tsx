@@ -20,7 +20,7 @@ const Hero = () => {
             <h1 
               className="font-bold tracking-tight mb-6 animate-fade-in"
             >
-              Arengusammud aitavad õpetajal <span className="text-blue-500">kasvada</span>
+              Arengusammud aitavad õpetajal <span className="text-orange-500">kasvada</span>
             </h1>
             
             <p 
