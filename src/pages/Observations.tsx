@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
@@ -14,8 +15,19 @@ import { useAuth } from '@/context/AuthContext';
 const Observations = () => {
   const { toast } = useToast();
   const { user } = useAuth();
+  const location = useLocation();
   const [showForm, setShowForm] = useState(false);
   const [observations, setObservations] = useState<Observation[]>([]);
+  
+  // Check if we should show the form based on URL
+  useEffect(() => {
+    // If the URL contains "new", show the form automatically
+    if (location.pathname.includes('/new')) {
+      setShowForm(true);
+    } else {
+      setShowForm(false);
+    }
+  }, [location]);
   
   // Load observations from localStorage on component mount
   useEffect(() => {
@@ -95,24 +107,26 @@ const Observations = () => {
     <div className="min-h-screen bg-gray-50">
       <Navbar />
       <div className="container mx-auto pt-24 pb-12 px-4">
-        <div className="flex justify-between items-center mb-6">
-          <div>
-            <h1 className="text-3xl font-bold mb-2">Õpipartnerlus</h1>
+        {!showForm && (
+          <div className="flex justify-between items-center mb-6">
+            <div>
+              <h1 className="text-3xl font-bold mb-2">Õpipartnerlus</h1>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-2">
+              <Button onClick={handleNewObservation}>
+                <Plus className="mr-2 h-4 w-4" />
+                Uus vaatlus
+              </Button>
+              <Button 
+                variant="outline" 
+                onClick={handleGenerateSampleData}
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                Lisa näidisvaatlused
+              </Button>
+            </div>
           </div>
-          <div className="flex flex-col sm:flex-row gap-2">
-            <Button onClick={handleNewObservation}>
-              <Plus className="mr-2 h-4 w-4" />
-              Uus vaatlus
-            </Button>
-            <Button 
-              variant="outline" 
-              onClick={handleGenerateSampleData}
-            >
-              <Plus className="mr-2 h-4 w-4" />
-              Lisa näidisvaatlused
-            </Button>
-          </div>
-        </div>
+        )}
 
         {showForm ? (
           <div className="mb-8">
