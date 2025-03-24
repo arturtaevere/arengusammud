@@ -16,6 +16,7 @@ interface NextActionStepSectionProps {
 const NextActionStepSection = ({ form, onOpenActionStepSelector }: NextActionStepSectionProps) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const selectedActionStepId = form.getValues().selectedActionStepId;
+  const actionStepText = form.watch('nextActionStep');
   
   return (
     <>
@@ -52,6 +53,19 @@ const NextActionStepSection = ({ form, onOpenActionStepSelector }: NextActionSte
                   Vali uus samm
                 </Button>
               </div>
+              
+              {/* Box for selected action step */}
+              {selectedActionStepId && (
+                <div className="mt-3">
+                  <Textarea
+                    placeholder="Sammu sõnastust saad vajadusel muuta"
+                    className="min-h-[80px]"
+                    value={actionStepText || ""}
+                    onChange={(e) => form.setValue('nextActionStep', e.target.value)}
+                  />
+                </div>
+              )}
+              
               {selectedActionStepId && (
                 <Button
                   type="button"

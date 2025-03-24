@@ -55,12 +55,22 @@ const FeedbackCard = ({
             Vali mõni konkreetne märkamine tunnist, mille puhul oleks õpetaja praktika võinud tõhusam olla. Valmista ette küsimus, mis suunaks õpetajat reflekteerima ja arengule mõtlema.
           </p>
           {isEditing ? (
-            <Textarea
-              value={editedObservation.nextActionStep || ''}
-              onChange={(e) => handleInputChange('nextActionStep', e.target.value)}
-              className="mt-1"
-              placeholder="Kirjelda oma märkamist"
-            />
+            <>
+              <Textarea
+                value={editedObservation.nextActionStep || ''}
+                onChange={(e) => handleInputChange('nextActionStep', e.target.value)}
+                className="mt-1"
+                placeholder="Kirjelda oma märkamist"
+              />
+              {observation.selectedActionStepId && (
+                <Textarea
+                  value={editedObservation.nextActionStep || ''}
+                  onChange={(e) => handleInputChange('nextActionStep', e.target.value)}
+                  className="mt-3"
+                  placeholder="Sammu sõnastust saad vajadusel muuta"
+                />
+              )}
+            </>
           ) : (
             <>
               <p className="mt-1 whitespace-pre-wrap">{observation.nextActionStep}</p>
