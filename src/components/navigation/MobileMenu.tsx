@@ -5,15 +5,46 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { BookOpen, Users, Lightbulb, MessageCircle } from 'lucide-react';
 import { Home } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { useState } from 'react';
+import { useToast } from '@/components/ui/use-toast';
 
 interface MobileMenuProps {
   getInitials: (name: string) => string;
 }
 
 const MobileMenu = ({ getInitials }: MobileMenuProps) => {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const location = useLocation();
   const isJuht = user?.role === 'juht';
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const { toast } = useToast();
+  
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+    try {
+      // Directly use supabase client to ensure logout works properly
+      const { error } = await supabase.auth.signOut();
+      
+      if (error) {
+        console.error('Logout error:', error);
+        toast({
+          title: "Väljalogimine ebaõnnestus",
+          description: error.message || "Proovi uuesti",
+          variant: "destructive"
+        });
+      } else {
+        toast({
+          title: "Oled välja logitud",
+          description: "Täname, et kasutasid meie rakendust!"
+        });
+      }
+    } catch (error) {
+      console.error('Error during logout:', error);
+    } finally {
+      setIsLoggingOut(false);
+    }
+  };
 
   return (
     <div className="md:hidden glass animate-fade-in">
@@ -126,9 +157,10 @@ const MobileMenu = ({ getInitials }: MobileMenuProps) => {
                 <Button 
                   variant="ghost" 
                   className="w-full justify-start px-3 py-2 text-base font-medium text-red-500 hover:bg-gray-100 transition-colors"
-                  onClick={logout}
+                  onClick={handleLogout}
+                  disabled={isLoggingOut}
                 >
-                  Logi välja
+                  {isLoggingOut ? 'Väljalogimine...' : 'Logi välja'}
                 </Button>
               </div>
             </div>

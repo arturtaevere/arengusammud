@@ -11,6 +11,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
+import { supabase } from '@/integrations/supabase/client';
+import { useState } from 'react';
+import { useToast } from '@/components/ui/use-toast';
 
 interface UserMenuProps {
   getInitials: (name: string) => string;
@@ -18,6 +21,34 @@ interface UserMenuProps {
 
 const UserMenu = ({ getInitials }: UserMenuProps) => {
   const { user, logout } = useAuth();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const { toast } = useToast();
+
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+    try {
+      // Directly use supabase client to ensure logout works properly
+      const { error } = await supabase.auth.signOut();
+      
+      if (error) {
+        console.error('Logout error:', error);
+        toast({
+          title: "Väljalogimine ebaõnnestus",
+          description: error.message || "Proovi uuesti",
+          variant: "destructive"
+        });
+      } else {
+        toast({
+          title: "Oled välja logitud",
+          description: "Täname, et kasutasid meie rakendust!"
+        });
+      }
+    } catch (error) {
+      console.error('Error during logout:', error);
+    } finally {
+      setIsLoggingOut(false);
+    }
+  };
 
   return (
     <DropdownMenu>
@@ -53,10 +84,11 @@ const UserMenu = ({ getInitials }: UserMenuProps) => {
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem 
-          onClick={logout}
+          onClick={handleLogout}
           className="text-red-500 focus:text-red-500 cursor-pointer"
+          disabled={isLoggingOut}
         >
-          Logi välja
+          {isLoggingOut ? 'Väljalogimine...' : 'Logi välja'}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
