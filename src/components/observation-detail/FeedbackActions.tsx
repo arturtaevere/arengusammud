@@ -1,11 +1,13 @@
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { CalendarCheck, BookOpen } from 'lucide-react';
+import { CalendarCheck, BookOpen, Check, X } from 'lucide-react';
 import { useState } from 'react';
 import ReflectionDialog from './ReflectionDialog';
 import { StoredObservation, updateObservation } from '@/components/observation/storage';
 import { useToast } from '@/hooks/use-toast';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 
 interface FeedbackActionsProps {
   isObserved: boolean;
@@ -49,19 +51,32 @@ const FeedbackActions = ({
 
   return (
     <>
-      {/* Feedback Meeting Button - only visible to coaches */}
+      {/* Feedback Meeting Toggle - only visible to coaches */}
       {!isObserved && (
         <div className="flex justify-end mt-8">
-          <Button 
-            onClick={handleFeedbackProvided}
-            disabled={feedbackProvided}
-            className="gap-2 bg-pink-500 hover:bg-pink-600 text-white"
-          >
-            <CalendarCheck className="h-4 w-4" />
-            {feedbackProvided 
-              ? "Tagasisidekohtumine on toimunud" 
-              : "Tagasisidekohtumine on toimunud"}
-          </Button>
+          <div className="flex items-center gap-4 p-4 border rounded-md bg-gray-50">
+            <div className="flex flex-col">
+              <span className="font-medium">Tagasisidekohtumine on toimunud</span>
+              <span className="text-sm text-gray-500">
+                Pärast valimist jagatakse märkmed õpetajaga
+              </span>
+            </div>
+            <div className="flex items-center gap-2 rounded-md">
+              <span className={`text-sm ${!feedbackProvided ? 'font-medium text-red-500' : 'text-gray-500'}`}>
+                Ei
+              </span>
+              <Switch 
+                checked={feedbackProvided}
+                onCheckedChange={(checked) => {
+                  if (checked) handleFeedbackProvided();
+                }}
+                disabled={feedbackProvided}
+              />
+              <span className={`text-sm ${feedbackProvided ? 'font-medium text-green-600' : 'text-gray-500'}`}>
+                Jah
+              </span>
+            </div>
+          </div>
         </div>
       )}
       
