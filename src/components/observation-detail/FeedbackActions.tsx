@@ -1,4 +1,3 @@
-
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { CalendarCheck, BookOpen } from 'lucide-react';
@@ -28,9 +27,7 @@ const FeedbackActions = ({
   const hasReflection = !!observation.teacherReflection;
 
   const saveReflection = (reflection: {
-    positiveImpact: string;
-    challengesFaced: string;
-    habitFormation: string;
+    reflection: string;
   }) => {
     const updatedObservation = {
       ...observation,
