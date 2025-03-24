@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import { Button } from '@/components/ui/button';
-import { Check, Plus } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import ObservationForm from '@/components/ObservationForm';
 import { useToast } from '@/hooks/use-toast';
 import ObservationHeader from '@/components/observations/ObservationHeader';
@@ -117,12 +117,6 @@ const Observations = () => {
         {showForm ? (
           <div className="mb-8">
             <ObservationForm />
-            <div className="flex justify-end mt-4">
-              <Button onClick={handleSubmitForm} className="bg-pink-500 hover:bg-pink-600 text-white">
-                <Check className="mr-2 h-4 w-4" />
-                Salvesta märkmed
-              </Button>
-            </div>
           </div>
         ) : (
           <ObservationTabs 
