@@ -61,7 +61,7 @@ const ObservationTabs = ({ observations, onFeedbackGiven }: ObservationTabsProps
           </TabsTrigger>
           <TabsTrigger value="received" className="flex items-center justify-center gap-2">
             <UserCog className="h-4 w-4" />
-            <span className="hidden sm:inline">Mina õpetajana</span>
+            <span className="hidden sm:inline">Tagasiside minule ja minu refleksioonid</span>
             <span className="sm:hidden">Õpetaja</span>
           </TabsTrigger>
         </TabsList>
