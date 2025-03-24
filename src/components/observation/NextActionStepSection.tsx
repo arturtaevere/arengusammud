@@ -27,11 +27,21 @@ const NextActionStepSection = ({ form, onOpenActionStepSelector }: NextActionSte
             <FormLabel>
               <span className="flex items-center">
                 <ArrowRight className="h-4 w-4 mr-2" />
-                Järgmine võimalik arengusamm
+                Järgmise sammu valimine
               </span>
             </FormLabel>
-            <div className="space-y-2">
-              <div className="flex gap-2 mb-2">
+            <p className="text-sm text-gray-500 mb-2">
+              Vali mõni konkreetne märkamine tunnist, mille puhul oleks õpetaja praktika võinud tõhusam olla. Valmista ette küsimus, mis suunaks õpetajat reflekteerima ja arengule mõtlema.
+            </p>
+            <div className="space-y-2 mt-2">
+              <FormControl>
+                <Textarea 
+                  placeholder="Kirjelda oma märkamist" 
+                  className="min-h-[120px]"
+                  {...field} 
+                />
+              </FormControl>
+              <div className="flex gap-2 mt-2">
                 <Button
                   type="button"
                   variant="outline"
@@ -42,13 +52,6 @@ const NextActionStepSection = ({ form, onOpenActionStepSelector }: NextActionSte
                   Vali uus samm
                 </Button>
               </div>
-              <FormControl>
-                <Textarea 
-                  placeholder="Soovi korral saad valitud sammu sõnastust muuta" 
-                  className="min-h-[120px]"
-                  {...field} 
-                />
-              </FormControl>
               {selectedActionStepId && (
                 <Button
                   type="button"

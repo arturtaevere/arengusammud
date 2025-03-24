@@ -50,12 +50,16 @@ const FeedbackCard = ({
         </div>
         
         <div>
-          <h3 className="text-sm font-medium text-gray-500">Järgmine arengusamm</h3>
+          <h3 className="text-sm font-medium text-gray-500">Järgmise sammu valimine</h3>
+          <p className="text-sm text-gray-500 mb-2">
+            Vali mõni konkreetne märkamine tunnist, mille puhul oleks õpetaja praktika võinud tõhusam olla. Valmista ette küsimus, mis suunaks õpetajat reflekteerima ja arengule mõtlema.
+          </p>
           {isEditing ? (
             <Textarea
               value={editedObservation.nextActionStep || ''}
               onChange={(e) => handleInputChange('nextActionStep', e.target.value)}
               className="mt-1"
+              placeholder="Kirjelda oma märkamist"
             />
           ) : (
             <>
