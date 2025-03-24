@@ -80,7 +80,8 @@ const FeedbackCard = ({
               </div>
               {observation.selectedActionStepId && (
                 <>
-                  <div className="p-4 mt-3 rounded-md bg-secondary/50 border border-border min-h-[80px] whitespace-pre-wrap">
+                  <h4 className="text-sm font-medium text-gray-700 mt-3 mb-1">Valitud arengusamm</h4>
+                  <div className="p-4 rounded-md bg-secondary/50 border border-border min-h-[80px] whitespace-pre-wrap">
                     {observation.selectedActionStepText}
                   </div>
                   <Button
