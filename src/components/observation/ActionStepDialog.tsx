@@ -56,10 +56,10 @@ const ActionStepDialog: React.FC<ActionStepDialogProps> = ({
         </DialogHeader>
         
         <div className="space-y-4 mt-4">
-          {/* Category Badge */}
-          {actionStep.category && (
+          {/* Display competency name instead of category number */}
+          {actionStep.competencyName && (
             <Badge variant="outline" className="mb-2">
-              Kategooria {actionStep.category}
+              {actionStep.competencyName}
             </Badge>
           )}
           
