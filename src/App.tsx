@@ -38,6 +38,8 @@ const App = () => (
             <Route path="/competency/:id" element={<CompetencyDetail />} />
             <Route path="/action-steps" element={<ActionSteps />} />
             <Route path="/action-steps/:stepId" element={<ActionStepDetail />} />
+            {/* Add new route for singular form */}
+            <Route path="/action-step/:stepId" element={<ActionStepDetail />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/study-circles" element={<StudyCircles />} />
             <Route path="/study-circles/session/:sessionId" element={<StudyCircleSession />} />
