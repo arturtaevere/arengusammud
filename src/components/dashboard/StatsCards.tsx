@@ -5,7 +5,8 @@ import { Button } from '@/components/ui/button';
 import { 
   ClipboardList, 
   MessageSquare, 
-  Plus 
+  Plus,
+  Heart 
 } from 'lucide-react';
 
 interface StatsCardsProps {
@@ -23,25 +24,34 @@ const StatsCards = ({ stats }: StatsCardsProps) => {
         <CardHeader className="pb-2">
           <CardTitle className="text-lg font-medium flex items-center">
             <ClipboardList className="mr-2 h-5 w-5 text-primary" />
-            Arengusammud
+            Õpetajana
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex justify-between items-center">
+          <div className="space-y-6">
             <div>
-              <p className="text-3xl font-bold">{stats.actionStepsAssigned}</p>
-              <p className="text-sm text-muted-foreground">Valitud</p>
+              <h4 className="text-xs text-muted-foreground mb-1">Minu arengueesmärk</h4>
+              <p className="text-sm font-medium">Õpilaste individuaalse arengu toetamine</p>
             </div>
-            <div className="text-right">
-              <p className="text-3xl font-bold text-orange-500">{stats.actionStepsCompleted}</p>
-              <p className="text-sm text-muted-foreground">Saavutatud</p>
+            
+            <div>
+              <h4 className="text-xs text-muted-foreground mb-1">Minu arengusamm</h4>
+              <p className="text-sm font-medium">Tagasiside andmine õppimisprotsessile</p>
             </div>
-          </div>
-          <div className="mt-4 h-2 bg-gray-100 rounded-full">
-            <div 
-              className="h-2 bg-orange-500 rounded-full" 
-              style={{ width: `${(stats.actionStepsCompleted / stats.actionStepsAssigned) * 100}%` }}
-            ></div>
+            
+            <div>
+              <h4 className="text-xs text-muted-foreground mb-1">Arengusamme saavutatud</h4>
+              <div className="flex items-center gap-2">
+                <span className="text-xl font-bold">{stats.actionStepsCompleted}</span>
+                <Heart className="h-5 w-5 fill-orange-500 text-orange-500" />
+              </div>
+              <div className="mt-2 h-2 bg-gray-100 rounded-full">
+                <div 
+                  className="h-2 bg-orange-500 rounded-full" 
+                  style={{ width: `${(stats.actionStepsCompleted / stats.actionStepsAssigned) * 100}%` }}
+                ></div>
+              </div>
+            </div>
           </div>
         </CardContent>
       </Card>
