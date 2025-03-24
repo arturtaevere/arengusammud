@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { BookOpen, Users, Lightbulb, MessageCircle } from 'lucide-react';
 import { Home } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
 import { useState } from 'react';
 import { useToast } from '@/components/ui/use-toast';
 
@@ -14,7 +13,7 @@ interface MobileMenuProps {
 }
 
 const MobileMenu = ({ getInitials }: MobileMenuProps) => {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const location = useLocation();
   const isJuht = user?.role === 'juht';
   const [isLoggingOut, setIsLoggingOut] = useState(false);
@@ -23,14 +22,13 @@ const MobileMenu = ({ getInitials }: MobileMenuProps) => {
   const handleLogout = async () => {
     setIsLoggingOut(true);
     try {
-      // Directly use supabase client to ensure logout works properly
-      const { error } = await supabase.auth.signOut();
+      // Use the context's logout function
+      const success = await logout();
       
-      if (error) {
-        console.error('Logout error:', error);
+      if (!success) {
         toast({
           title: "Väljalogimine ebaõnnestus",
-          description: error.message || "Proovi uuesti",
+          description: "Proovi uuesti",
           variant: "destructive"
         });
       } else {
@@ -38,9 +36,17 @@ const MobileMenu = ({ getInitials }: MobileMenuProps) => {
           title: "Oled välja logitud",
           description: "Täname, et kasutasid meie rakendust!"
         });
+        
+        // Force page refresh to ensure clean state
+        window.location.href = '/';
       }
     } catch (error) {
       console.error('Error during logout:', error);
+      toast({
+        title: "Väljalogimine ebaõnnestus",
+        description: "Proovi uuesti",
+        variant: "destructive"
+      });
     } finally {
       setIsLoggingOut(false);
     }

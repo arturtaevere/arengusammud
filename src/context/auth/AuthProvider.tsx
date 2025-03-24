@@ -1,3 +1,4 @@
+
 import React, { createContext, useState, useEffect } from 'react';
 import { AuthContextType, User } from './types';
 import { useAuthInit } from './useAuthInit';
@@ -11,7 +12,7 @@ export const AuthContext = createContext<AuthContextType>({
   isLoading: true,
   login: async () => {},
   signup: async () => {},
-  logout: () => {},
+  logout: async () => false, // Update return type to Promise<boolean>
   updateProfileImage: () => {},
   getAllUsers: async () => [], // Updated to return a Promise
   deleteUserByEmail: async () => false,
@@ -63,13 +64,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  // Handle user logout
+  // Handle user logout - modify to return success status
   const handleLogout = async () => {
     try {
-      await supabase.auth.signOut();
-      // Auth state change listener will handle the rest
+      // Clear local user state first
+      setUser(null);
+      
+      // Then attempt to sign out from Supabase
+      const { error } = await supabase.auth.signOut();
+      
+      if (error) {
+        console.error('Error during logout:', error);
+        return false;
+      }
+      
+      return true;
     } catch (error) {
       console.error('Error during logout:', error);
+      return false;
     }
   };
 
