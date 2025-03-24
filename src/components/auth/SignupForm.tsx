@@ -11,10 +11,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { CardContent, CardFooter } from '@/components/ui/card';
 import { SignupFormValues, signupSchema } from './schemas';
+import { useState } from 'react';
 
 const SignupForm = () => {
-  const { signup, isLoading } = useAuth();
+  const { signup, setPendingVerificationEmail } = useAuth();
   const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
@@ -31,14 +33,40 @@ const SignupForm = () => {
   const role = form.watch('role');
 
   const handleSignup = async (values: SignupFormValues) => {
+    setIsLoading(true);
+    
     try {
       await signup(values.name, values.email, values.password, values.role, values.school);
+      
+      // Store the email for verification purposes
+      setPendingVerificationEmail(values.email);
+      
+      toast({
+        title: "Registreerimine õnnestus",
+        description: "Konto on loodud. Kontrolli oma e-posti kinnituslingi saamiseks.",
+      });
+      
+      // Reset the form
+      form.reset();
     } catch (error) {
+      console.error('Signup error:', error);
+      let errorMessage = 'Midagi läks valesti';
+      
+      if (error instanceof Error) {
+        if (error.message.includes('already registered')) {
+          errorMessage = 'Selle e-posti aadressiga kasutaja on juba olemas';
+        } else {
+          errorMessage = error.message;
+        }
+      }
+      
       toast({
         variant: "destructive",
         title: "Registreerimine ebaõnnestus",
-        description: error instanceof Error ? error.message : "Midagi läks valesti",
+        description: errorMessage,
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 

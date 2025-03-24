@@ -11,13 +11,15 @@ import {
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import UserTableRow from './UserTableRow';
 import { User } from '@/context/auth/types';
+import { Loader2 } from 'lucide-react';
 
 interface UserTableProps {
   users: User[];
   onDeleteUser: (email: string) => void;
+  isLoading?: boolean;
 }
 
-const UserTable = ({ users, onDeleteUser }: UserTableProps) => {
+const UserTable = ({ users, onDeleteUser, isLoading = false }: UserTableProps) => {
   return (
     <Card>
       <CardHeader>
@@ -27,34 +29,41 @@ const UserTable = ({ users, onDeleteUser }: UserTableProps) => {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Kasutaja</TableHead>
-              <TableHead>Roll</TableHead>
-              <TableHead>Kool</TableHead>
-              <TableHead>Liitumiskuupäev</TableHead>
-              <TableHead>Tegevused</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {users.length > 0 ? (
-              users.map((user) => (
-                <UserTableRow 
-                  key={user.id} 
-                  user={user} 
-                  onDeleteUser={onDeleteUser}
-                />
-              ))
-            ) : (
+        {isLoading ? (
+          <div className="py-8 flex flex-col items-center justify-center">
+            <Loader2 className="h-8 w-8 animate-spin mb-2" />
+            <p className="text-muted-foreground">Laen kasutajaid...</p>
+          </div>
+        ) : (
+          <Table>
+            <TableHeader>
               <TableRow>
-                <TableCell colSpan={5} className="text-center py-8">
-                  Kasutajaid ei leitud
-                </TableCell>
+                <TableHead>Kasutaja</TableHead>
+                <TableHead>Roll</TableHead>
+                <TableHead>Kool</TableHead>
+                <TableHead>Liitumiskuupäev</TableHead>
+                <TableHead>Tegevused</TableHead>
               </TableRow>
-            )}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {users.length > 0 ? (
+                users.map((user) => (
+                  <UserTableRow 
+                    key={user.id} 
+                    user={user} 
+                    onDeleteUser={onDeleteUser}
+                  />
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={5} className="text-center py-8">
+                    Kasutajaid ei leitud
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        )}
       </CardContent>
     </Card>
   );

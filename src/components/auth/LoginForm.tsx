@@ -8,10 +8,12 @@ import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { CardContent, CardFooter } from '@/components/ui/card';
 import { LoginFormValues, loginSchema } from './schemas';
+import { useState } from 'react';
 
 const LoginForm = () => {
-  const { login, isLoading } = useAuth();
+  const { login } = useAuth();
   const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -22,14 +24,32 @@ const LoginForm = () => {
   });
 
   const handleLogin = async (values: LoginFormValues) => {
+    setIsLoading(true);
+    
     try {
       await login(values.email, values.password);
     } catch (error) {
+      console.error('Login error:', error);
+      let errorMessage = 'Midagi läks valesti';
+      
+      if (error instanceof Error) {
+        // Handle Supabase error messages
+        if (error.message.includes('Invalid login credentials')) {
+          errorMessage = 'Vale e-post või parool';
+        } else if (error.message.includes('Email not confirmed')) {
+          errorMessage = 'Palun kinnita oma e-posti aadress';
+        } else {
+          errorMessage = error.message;
+        }
+      }
+      
       toast({
         variant: "destructive",
         title: "Sisselogimine ebaõnnestus",
-        description: error instanceof Error ? error.message : "Midagi läks valesti",
+        description: errorMessage,
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 

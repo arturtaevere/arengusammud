@@ -1,30 +1,105 @@
 
 import { useEffect, useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import Navbar from '@/components/Navbar';
-import { Mail, CheckCircle, AlertCircle } from 'lucide-react';
+import { Mail, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
 const VerifyEmail = () => {
   const { verifyEmail, resendVerificationEmail, pendingVerificationEmail, setPendingVerificationEmail } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const [searchParams] = useSearchParams();
   
   const [verifying, setVerifying] = useState(false);
   const [resending, setResending] = useState(false);
   const [verificationStatus, setVerificationStatus] = useState<'verifying' | 'success' | 'error' | 'pending'>('pending');
   const [email, setEmail] = useState(pendingVerificationEmail || '');
-  
+
+  // Handle token verification
   useEffect(() => {
-    // Show toast notifying that verification is disabled
-    toast({
-      title: "Email Verification Disabled",
-      description: "Email verification is currently disabled. You can proceed with using the application.",
-    });
-  }, [toast]);
+    const confirmToken = async () => {
+      // Check if we have a token in the URL
+      const token = searchParams.get('token');
+      const type = searchParams.get('type');
+      
+      if (token && type === 'signup') {
+        setVerifying(true);
+        setVerificationStatus('verifying');
+        
+        try {
+          // Verify with Supabase
+          const { error } = await supabase.auth.verifyOtp({
+            token_hash: token,
+            type: 'signup'
+          });
+          
+          if (error) throw error;
+          
+          setVerificationStatus('success');
+          toast({
+            title: "E-posti aadress kinnitatud",
+            description: "Sinu e-posti aadress on edukalt kinnitatud. Võid nüüd sisse logida.",
+          });
+          
+          // Redirect after a delay
+          setTimeout(() => {
+            navigate('/auth');
+          }, 3000);
+        } catch (error) {
+          console.error('Error verifying email:', error);
+          setVerificationStatus('error');
+          toast({
+            variant: "destructive",
+            title: "Kinnitamine ebaõnnestus",
+            description: error instanceof Error ? error.message : "Midagi läks valesti",
+          });
+        } finally {
+          setVerifying(false);
+        }
+      } else {
+        // Check if we have a pending verification email
+        if (pendingVerificationEmail) {
+          setEmail(pendingVerificationEmail);
+        }
+      }
+    };
+    
+    confirmToken();
+  }, [searchParams, navigate, toast, pendingVerificationEmail]);
+  
+  const handleResend = async () => {
+    if (!email) return;
+    
+    setResending(true);
+    try {
+      const success = await resendVerificationEmail();
+      
+      if (success) {
+        toast({
+          title: "E-kiri saadetud",
+          description: "Kinnituskiri on uuesti saadetud sinu e-posti aadressile.",
+        });
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Saatmine ebaõnnestus",
+          description: "Ei õnnestunud kinnituskirja saata. Proovi hiljem uuesti.",
+        });
+      }
+    } finally {
+      setResending(false);
+    }
+  };
+  
+  const handleDismiss = () => {
+    setPendingVerificationEmail(null);
+    navigate('/auth');
+  };
   
   return (
     <div className="min-h-screen flex flex-col">
@@ -40,28 +115,92 @@ const VerifyEmail = () => {
           <Card className="w-full glass">
             <CardHeader className="text-center">
               <div className="mx-auto mb-4">
-                <Mail className="h-12 w-12 text-primary" />
+                {verificationStatus === 'success' ? (
+                  <CheckCircle className="h-12 w-12 text-green-500" />
+                ) : verificationStatus === 'error' ? (
+                  <AlertCircle className="h-12 w-12 text-red-500" />
+                ) : (
+                  <Mail className="h-12 w-12 text-primary" />
+                )}
               </div>
               
               <CardTitle className="text-2xl">
-                Email Verification Disabled
+                {verificationStatus === 'success' 
+                  ? "E-post kinnitatud" 
+                  : verificationStatus === 'error'
+                  ? "Kinnitamine ebaõnnestus"
+                  : "E-posti aadress vajab kinnitamist"}
               </CardTitle>
               
               <CardDescription>
-                Email verification is currently disabled
+                {verificationStatus === 'success'
+                  ? "Täname! Sinu e-posti aadress on nüüd kinnitatud."
+                  : verificationStatus === 'error'
+                  ? "Tekkis probleem e-posti aadressi kinnitamisel."
+                  : "Palun kontrolli oma e-posti ja kinnita oma konto."}
               </CardDescription>
             </CardHeader>
             
             <CardContent>
-              <p className="text-center text-muted-foreground">
-                Email verification has been temporarily disabled. You can proceed with using the application.
-              </p>
+              {verificationStatus === 'verifying' ? (
+                <div className="text-center py-4">
+                  <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
+                  <p className="text-muted-foreground">Kontrollime sinu e-posti aadressi...</p>
+                </div>
+              ) : verificationStatus === 'success' ? (
+                <p className="text-center text-muted-foreground">
+                  Sinu e-posti aadress on nüüd kinnitatud. Sind suunatakse kohe sisselogimisele.
+                </p>
+              ) : verificationStatus === 'error' ? (
+                <p className="text-center text-muted-foreground">
+                  Kinnituslink on aegunud või vigane. Palun proovi uuesti või palu uus kinnitusmeil.
+                </p>
+              ) : (
+                <p className="text-center text-muted-foreground">
+                  Oleme saatnud kinnituslingi aadressile <span className="font-medium">{email}</span>. 
+                  Palun kontrolli oma e-posti ja kliki lingil oma konto aktiveerimiseks.
+                </p>
+              )}
             </CardContent>
             
             <CardFooter className="flex flex-col space-y-2">
-              <Button className="w-full" onClick={() => navigate('/auth')}>
-                Back to Login
-              </Button>
+              {verificationStatus === 'success' ? (
+                <Button className="w-full" onClick={() => navigate('/auth')}>
+                  Sisselogimisele
+                </Button>
+              ) : verificationStatus === 'error' ? (
+                <>
+                  <Button className="w-full" onClick={handleResend} disabled={resending}>
+                    {resending ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Saadan...
+                      </>
+                    ) : (
+                      "Saada uus kinnitusmeil"
+                    )}
+                  </Button>
+                  <Button variant="ghost" className="w-full" onClick={handleDismiss}>
+                    Tagasi sisselogimisele
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button className="w-full" onClick={handleResend} disabled={resending || !email}>
+                    {resending ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Saadan...
+                      </>
+                    ) : (
+                      "Saada uuesti"
+                    )}
+                  </Button>
+                  <Button variant="ghost" className="w-full" onClick={handleDismiss}>
+                    Tagasi sisselogimisele
+                  </Button>
+                </>
+              )}
             </CardFooter>
           </Card>
         </div>

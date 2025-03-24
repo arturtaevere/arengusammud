@@ -6,7 +6,7 @@ import Navbar from '@/components/Navbar';
 import { useToast } from '@/components/ui/use-toast';
 import { FilterCard, UserTable } from '@/components/admin';
 import { User } from '@/context/auth/types';
-import { USERS_STORAGE_KEY } from '@/context/auth/constants';
+import { supabase } from '@/integrations/supabase/client';
 
 const Admin = () => {
   const { user, isAuthenticated, getAllUsers, deleteUserByEmail } = useAuth();
@@ -16,35 +16,32 @@ const Admin = () => {
   const [filterRole, setFilterRole] = useState<string>('all');
   const [filterSchool, setFilterSchool] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState<string>('');
+  const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
-  const loadUsers = () => {
+  const loadUsers = async () => {
     if (isAuthenticated && user?.role === 'juht') {
-      // Get users directly from localStorage to ensure we have the latest data
-      const storedUsersStr = localStorage.getItem(USERS_STORAGE_KEY);
-      let allUsers = [];
-      
-      if (storedUsersStr) {
-        try {
-          const storedUsers = JSON.parse(storedUsersStr);
-          // Remove passwords before setting to state
-          allUsers = storedUsers.map(({ password, ...user }: any) => user);
-        } catch (error) {
-          console.error('Error parsing stored users:', error);
-          allUsers = getAllUsers();
-        }
-      } else {
-        allUsers = getAllUsers();
+      setIsLoading(true);
+      try {
+        // Load users from Supabase profiles
+        const allUsers = await getAllUsers();
+        console.log('Admin page - Loading users:', {
+          count: allUsers.length,
+          emails: allUsers.map((u: User) => u.email)
+        });
+        
+        setUsers(allUsers);
+        setFilteredUsers(allUsers);
+      } catch (error) {
+        console.error('Error loading users:', error);
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Failed to load users",
+        });
+      } finally {
+        setIsLoading(false);
       }
-      
-      console.log('Admin page - Loading users:', {
-        fromStorage: !!storedUsersStr,
-        count: allUsers.length,
-        emails: allUsers.map((u: User) => u.email)
-      });
-      
-      setUsers(allUsers);
-      setFilteredUsers(allUsers);
     }
   };
 
@@ -60,22 +57,13 @@ const Admin = () => {
     console.log('Admin component mounted, loading initial users');
     loadUsers();
     
-    const handleUsersUpdated = () => {
-      console.log('Admin page - users-updated event received, reloading users');
+    // Listen for auth changes to refresh users list
+    const authListener = supabase.auth.onAuthStateChange(() => {
       loadUsers();
-    };
-    
-    window.addEventListener('users-updated', handleUsersUpdated);
-    window.addEventListener('storage', (e) => {
-      if (e.key === USERS_STORAGE_KEY) {
-        console.log('Admin page - storage event received, reloading users');
-        handleUsersUpdated();
-      }
     });
     
     return () => {
-      window.removeEventListener('users-updated', handleUsersUpdated);
-      window.removeEventListener('storage', handleUsersUpdated);
+      authListener.data.subscription.unsubscribe();
     };
   }, [isAuthenticated, user]);
 
@@ -149,6 +137,7 @@ const Admin = () => {
         <UserTable 
           users={filteredUsers} 
           onDeleteUser={handleDeleteUser} 
+          isLoading={isLoading}
         />
       </div>
     </div>

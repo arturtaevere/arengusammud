@@ -19,6 +19,13 @@ const Profile = () => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [showUploadDialog, setShowUploadDialog] = useState(false);
 
+  // Redirect to auth page if not logged in
+  useEffect(() => {
+    if (!user && !isUploading) {
+      navigate('/auth');
+    }
+  }, [user, navigate, isUploading]);
+
   // Get initials for avatar fallback
   const getInitials = (name: string) => {
     return name
@@ -62,7 +69,6 @@ const Profile = () => {
     if (imagePreview) {
       setIsUploading(true);
       
-      // In a real app, we would upload the file to a server here
       // For demo purposes, we'll just simulate a delay and use the preview as the image
       setTimeout(() => {
         updateProfileImage(imagePreview);
