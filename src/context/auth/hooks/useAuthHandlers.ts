@@ -68,7 +68,16 @@ export const useAuthHandlers = (
 
   // Handle profile image update
   const handleUpdateProfileImage = async (imageUrl: string) => {
-    const updatedUser = await updateProfileImageAction(imageUrl);
+    // Get the current user ID from the session
+    const { data: { session } } = await supabase.auth.getSession();
+    const userId = session?.user?.id;
+    
+    if (!userId) {
+      console.error('No user ID available for profile image update');
+      return;
+    }
+    
+    const updatedUser = await updateProfileImageAction(userId, imageUrl);
     if (updatedUser) {
       // Cast the role to ensure it matches our union type
       const typedUser: User = {
