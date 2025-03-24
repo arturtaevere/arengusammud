@@ -39,6 +39,7 @@ const FeedbackCard = ({
               value={editedObservation.specificPraise || ''}
               onChange={(e) => handleInputChange('specificPraise', e.target.value)}
               className="mt-1"
+              placeholder="Tõsta esile üht positiivset näidet õpetamisoskusest, mis tunnivaatlusel silma jäi ja mida õpetaja võiks edaspidi samamoodi teha. Valmista ette küsimus, mis kutsub õpetajat rääkima, mis selle mõju õpilastele oli."
             />
           ) : (
             <p className="mt-1 whitespace-pre-wrap">{observation.specificPraise}</p>
