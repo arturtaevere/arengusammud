@@ -1,7 +1,7 @@
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useAuth, SCHOOLS } from '@/context/AuthContext';
+import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/components/ui/use-toast';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,11 +12,14 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { CardContent, CardFooter } from '@/components/ui/card';
 import { SignupFormValues, signupSchema } from './schemas';
 import { useState } from 'react';
+import { AlertCircle, Loader2 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const SignupForm = () => {
   const { signup, setPendingVerificationEmail } = useAuth();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
@@ -33,6 +36,8 @@ const SignupForm = () => {
   const role = form.watch('role');
 
   const handleSignup = async (values: SignupFormValues) => {
+    if (isLoading) return; // Prevent multiple submissions
+    
     setIsLoading(true);
     
     try {
@@ -48,12 +53,15 @@ const SignupForm = () => {
       
       // Reset the form
       form.reset();
+      
+      // Navigate to verification page
+      navigate('/verify-email');
     } catch (error) {
       console.error('Signup error:', error);
       let errorMessage = 'Midagi läks valesti';
       
       if (error instanceof Error) {
-        if (error.message.includes('already registered')) {
+        if (error.message.includes('already registered') || error.message.includes('user_already_exists')) {
           errorMessage = 'Selle e-posti aadressiga kasutaja on juba olemas';
         } else {
           errorMessage = error.message;
@@ -84,6 +92,7 @@ const SignupForm = () => {
                   <Input 
                     placeholder="Sinu Nimi"
                     {...field}
+                    disabled={isLoading}
                   />
                 </FormControl>
                 <FormMessage />
@@ -102,6 +111,7 @@ const SignupForm = () => {
                     type="email" 
                     placeholder="sinu.email@näide.ee"
                     {...field}
+                    disabled={isLoading}
                   />
                 </FormControl>
                 <FormMessage />
@@ -120,6 +130,7 @@ const SignupForm = () => {
                     type="password"
                     placeholder="Vähemalt 6 tähemärki"
                     {...field}
+                    disabled={isLoading}
                   />
                 </FormControl>
                 <FormMessage />
@@ -138,6 +149,7 @@ const SignupForm = () => {
                     onValueChange={field.onChange} 
                     value={field.value}
                     className="flex space-x-4"
+                    disabled={isLoading}
                   >
                     <div className="flex items-center space-x-2">
                       <RadioGroupItem value="juht" id="juht" />
@@ -165,6 +177,7 @@ const SignupForm = () => {
                     <Select 
                       onValueChange={field.onChange}
                       value={field.value}
+                      disabled={isLoading}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Vali oma kool" />
@@ -190,7 +203,14 @@ const SignupForm = () => {
             className="w-full transition-all" 
             disabled={isLoading}
           >
-            {isLoading ? "Konto loomine..." : "Loo konto"}
+            {isLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Konto loomine...
+              </>
+            ) : (
+              "Loo konto"
+            )}
           </Button>
         </CardFooter>
       </form>

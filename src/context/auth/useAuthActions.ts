@@ -79,7 +79,10 @@ export const useAuthActions = () => {
         password
       });
       
-      if (error) throw error;
+      if (error) {
+        console.error('Login error:', error);
+        throw error;
+      }
       
       if (!data.user) {
         throw new Error('No user returned from login');
@@ -120,6 +123,8 @@ export const useAuthActions = () => {
 
   const signup = async (name: string, email: string, password: string, role: 'juht' | 'õpetaja', school?: string) => {
     try {
+      console.log(`Attempting to sign up user with email: ${email}, role: ${role}, school: ${school || 'Not specified'}`);
+      
       // Sign up with Supabase Auth
       const { data, error } = await supabase.auth.signUp({
         email,
@@ -128,27 +133,34 @@ export const useAuthActions = () => {
           data: {
             name,
             role,
-            school
+            school: school || ''
           }
         }
       });
       
-      if (error) throw error;
+      if (error) {
+        console.error('Signup error (Supabase):', error);
+        throw error;
+      }
       
       if (!data.user) {
+        console.error('No user returned from signup');
         throw new Error('No user returned from signup');
       }
       
+      // Registration was successful
+      console.log('Signup successful, user ID:', data.user.id);
+      
       toast({
         title: "Registreerimine õnnestus",
-        description: "Konto on loodud. Võid nüüd sisse logida.",
+        description: "Konto on loodud. Kontrolli oma e-posti kinnituslingi saamiseks.",
       });
       
       await fetchProfiles(); // Refresh the profiles list
       
       return email;
     } catch (error) {
-      console.error('Signup error:', error);
+      console.error('Signup error in useAuthActions:', error);
       throw error;
     }
   };

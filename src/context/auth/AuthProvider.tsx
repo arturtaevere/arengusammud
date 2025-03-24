@@ -34,7 +34,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     login,
     signup,
     updateProfileImage,
-    getAllUsers,
+    getAllUsers: fetchAllUsers,
     deleteUserByEmail
   } = useAuthActions();
 
@@ -58,7 +58,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           if (error) {
             console.error('Error fetching user profile:', error);
             setUser(null);
-          } else {
+          } else if (profile) {
             const userProfile: User = {
               id: profile.id,
               name: profile.name,
@@ -70,6 +70,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
               profileImage: profile.profile_image || undefined
             };
             setUser(userProfile);
+          } else {
+            // Profile not found, logout
+            await supabase.auth.signOut();
+            setUser(null);
           }
         } else {
           setUser(null);
@@ -105,7 +109,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           if (error) {
             console.error('Error fetching user profile on auth change:', error);
             setUser(null);
-          } else {
+          } else if (profile) {
             const userProfile: User = {
               id: profile.id,
               name: profile.name,
@@ -129,7 +133,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
   }, []);
 
-  // Handle user login - modified to handle void return type
+  // Handle user login - returns void as per interface
   const handleLogin = async (email: string, password: string): Promise<void> => {
     setIsLoading(true);
     try {
@@ -147,12 +151,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  // Handle user signup - modified to handle void return type
+  // Handle user signup - returns void as per interface
   const handleSignup = async (name: string, email: string, password: string, role: 'juht' | 'õpetaja', school?: string): Promise<void> => {
     setIsLoading(true);
     try {
-      await signup(name, email, password, role, school);
-      // Don't need to return anything for void return type
+      const emailResult = await signup(name, email, password, role, school);
+      if (emailResult) {
+        setPendingVerificationEmail(emailResult);
+      }
+    } catch (error) {
+      console.error('Signup error in AuthProvider:', error);
+      throw error; // Re-throw to handle in the UI
     } finally {
       setIsLoading(false);
     }
@@ -160,11 +169,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Handle user logout
   const handleLogout = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      console.error('Error signing out:', error);
+    setIsLoading(true);
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        console.error('Error signing out:', error);
+        throw error;
+      }
+      setUser(null);
+    } finally {
+      setIsLoading(false);
     }
-    setUser(null);
   };
 
   // Handle profile image update
