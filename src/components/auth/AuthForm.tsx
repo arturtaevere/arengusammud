@@ -5,7 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import LoginForm from './LoginForm';
 import SignupForm from './SignupForm';
 
-const AuthForm = () => {
+export const AuthForm = () => {
   const [formType, setFormType] = useState<'login' | 'signup'>('login');
   
   return (
@@ -39,5 +39,3 @@ const AuthForm = () => {
     </div>
   );
 };
-
-export default AuthForm;
