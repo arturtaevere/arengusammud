@@ -8,10 +8,12 @@ import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { CardContent, CardFooter } from '@/components/ui/card';
 import { LoginFormValues, loginSchema } from './schemas';
+import { useState } from 'react';
 
 const LoginForm = () => {
   const { login, isLoading } = useAuth();
   const { toast } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -23,13 +25,17 @@ const LoginForm = () => {
 
   const handleLogin = async (values: LoginFormValues) => {
     try {
+      setIsSubmitting(true);
       await login(values.email, values.password);
+      // Login successful - no need to show toast as the user will be redirected
     } catch (error) {
       toast({
         variant: "destructive",
         title: "Sisselogimine ebaõnnestus",
         description: error instanceof Error ? error.message : "Midagi läks valesti",
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -76,9 +82,9 @@ const LoginForm = () => {
           <Button 
             type="submit" 
             className="w-full transition-all" 
-            disabled={isLoading}
+            disabled={isSubmitting || isLoading}
           >
-            {isLoading ? "Sisselogimine..." : "Logi sisse"}
+            {isSubmitting || isLoading ? "Sisselogimine..." : "Logi sisse"}
           </Button>
         </CardFooter>
       </form>
