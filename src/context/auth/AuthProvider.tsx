@@ -1,4 +1,3 @@
-
 import React, { createContext, useState, useEffect } from 'react';
 import { AuthContextType, User } from './types';
 import { useAuthInit } from './useAuthInit';
@@ -14,7 +13,7 @@ export const AuthContext = createContext<AuthContextType>({
   signup: async () => {},
   logout: () => {},
   updateProfileImage: () => {},
-  getAllUsers: () => [],
+  getAllUsers: async () => [], // Updated to return a Promise
   deleteUserByEmail: async () => false,
   
   // Verification functions

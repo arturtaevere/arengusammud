@@ -1,156 +1,207 @@
-
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/context/AuthContext';
-import Navbar from '@/components/Navbar';
-import { useToast } from '@/components/ui/use-toast';
-import { FilterCard, UserTable } from '@/components/admin';
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '@/context/auth';
 import { User } from '@/context/auth/types';
-import { USERS_STORAGE_KEY } from '@/context/auth/constants';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { SCHOOLS } from '@/context/auth/constants';
+import UserTable from '@/components/admin/UserTable';
+import { useToast } from '@/components/ui/use-toast';
 
 const Admin = () => {
-  const { user, isAuthenticated, getAllUsers, deleteUserByEmail } = useAuth();
-  const navigate = useNavigate();
-  const [users, setUsers] = useState<User[]>([]);
-  const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
-  const [filterRole, setFilterRole] = useState<string>('all');
-  const [filterSchool, setFilterSchool] = useState<string>('all');
-  const [searchTerm, setSearchTerm] = useState<string>('');
+  const { getAllUsers, signup, deleteUserByEmail } = useAuth();
   const { toast } = useToast();
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(true);
+  
+  // Form state
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [role, setRole] = useState<'juht' | 'õpetaja'>('õpetaja');
+  const [school, setSchool] = useState<string>('');
 
-  const loadUsers = () => {
-    if (isAuthenticated && user?.role === 'juht') {
-      // Get users directly from localStorage to ensure we have the latest data
-      const storedUsersStr = localStorage.getItem(USERS_STORAGE_KEY);
-      let allUsers = [];
-      
-      if (storedUsersStr) {
-        try {
-          const storedUsers = JSON.parse(storedUsersStr);
-          // Remove passwords before setting to state
-          allUsers = storedUsers.map(({ password, ...user }: any) => user);
-        } catch (error) {
-          console.error('Error parsing stored users:', error);
-          allUsers = getAllUsers();
-        }
-      } else {
-        allUsers = getAllUsers();
+  // Load users on component mount
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const fetchedUsers = await getAllUsers();
+        setUsers(fetchedUsers);
+      } catch (error) {
+        console.error('Error fetching users:', error);
+        toast({
+          variant: "destructive",
+          title: "Viga kasutajate laadimisel",
+          description: "Proovi lehte värskendada.",
+        });
+      } finally {
+        setLoading(false);
       }
-      
-      console.log('Admin page - Loading users:', {
-        fromStorage: !!storedUsersStr,
-        count: allUsers.length,
-        emails: allUsers.map((u: User) => u.email)
+    };
+
+    fetchUsers();
+  }, [getAllUsers, toast]);
+
+  const handleCreateUser = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!name || !email || !password || !role) {
+      toast({
+        variant: "destructive",
+        title: "Täida kõik väljad",
+        description: "Kõik väljad on kohustuslikud.",
       });
+      return;
+    }
+    
+    try {
+      await signup(name, email, password, role, school);
       
-      setUsers(allUsers);
-      setFilteredUsers(allUsers);
+      // Refresh user list
+      const updatedUsers = await getAllUsers();
+      setUsers(updatedUsers);
+      
+      // Reset form
+      setName('');
+      setEmail('');
+      setPassword('');
+      setRole('õpetaja');
+      setSchool('');
+      
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Viga kasutaja loomisel",
+        description: error.message || "Proovi uuesti.",
+      });
     }
   };
-
-  useEffect(() => {
-    if (!isAuthenticated) {
-      navigate('/auth');
-    } else if (user?.role !== 'juht') {
-      navigate('/dashboard');
-    }
-  }, [isAuthenticated, user, navigate]);
-
-  useEffect(() => {
-    console.log('Admin component mounted, loading initial users');
-    loadUsers();
-    
-    const handleUsersUpdated = () => {
-      console.log('Admin page - users-updated event received, reloading users');
-      loadUsers();
-    };
-    
-    window.addEventListener('users-updated', handleUsersUpdated);
-    window.addEventListener('storage', (e) => {
-      if (e.key === USERS_STORAGE_KEY) {
-        console.log('Admin page - storage event received, reloading users');
-        handleUsersUpdated();
-      }
-    });
-    
-    return () => {
-      window.removeEventListener('users-updated', handleUsersUpdated);
-      window.removeEventListener('storage', handleUsersUpdated);
-    };
-  }, [isAuthenticated, user]);
-
-  useEffect(() => {
-    let result = users;
-    
-    if (filterRole !== 'all') {
-      result = result.filter(user => user.role === filterRole);
-    }
-    
-    if (filterSchool !== 'all') {
-      result = result.filter(user => user.school === filterSchool);
-    }
-    
-    if (searchTerm) {
-      const term = searchTerm.toLowerCase();
-      result = result.filter(
-        user => 
-          user.name.toLowerCase().includes(term) || 
-          user.email.toLowerCase().includes(term)
-      );
-    }
-    
-    setFilteredUsers(result);
-  }, [users, filterRole, filterSchool, searchTerm]);
 
   const handleDeleteUser = async (email: string) => {
-    const success = await deleteUserByEmail(email);
-    if (success) {
-      loadUsers();
+    try {
+      const success = await deleteUserByEmail(email);
+      if (success) {
+        // Update the users list by filtering out the deleted user
+        setUsers(users.filter(user => user.email !== email));
+      }
+    } catch (error) {
+      console.error('Error deleting user:', error);
     }
   };
 
-  if (!isAuthenticated || user?.role !== 'juht') {
-    return null;
-  }
-
   return (
-    <div className="min-h-screen bg-gray-50/50">
-      <Navbar />
+    <div className="container mx-auto py-10">
+      <h1 className="text-3xl font-bold mb-8">Administreerimine</h1>
       
-      <div className="container mx-auto px-4 py-24">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Kasutajate haldus</h1>
-          <p className="text-muted-foreground">
-            Siit leiad kõik registreeritud kasutajad ja nende info.
-          </p>
-          <button 
-            onClick={() => {
-              loadUsers();
-              toast({
-                title: "Kasutajate nimekiri värskendatud",
-                description: "Näed nüüd kõige uuemaid andmeid.",
-              });
-            }}
-            className="mt-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
-          >
-            Värskenda kasutajate nimekirja
-          </button>
-        </div>
-
-        <FilterCard 
-          searchTerm={searchTerm}
-          filterRole={filterRole}
-          filterSchool={filterSchool}
-          onSearchChange={setSearchTerm}
-          onRoleChange={setFilterRole}
-          onSchoolChange={setFilterSchool}
-        />
-
-        <UserTable 
-          users={filteredUsers} 
-          onDeleteUser={handleDeleteUser} 
-        />
-      </div>
+      <Tabs defaultValue="users">
+        <TabsList className="mb-6">
+          <TabsTrigger value="users">Kasutajad</TabsTrigger>
+          <TabsTrigger value="create">Lisa kasutaja</TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="users">
+          {loading ? (
+            <div className="text-center py-10">Laadin kasutajaid...</div>
+          ) : (
+            <UserTable 
+              users={users} 
+              onDeleteUser={handleDeleteUser} 
+            />
+          )}
+        </TabsContent>
+        
+        <TabsContent value="create">
+          <Card>
+            <CardHeader>
+              <CardTitle>Lisa uus kasutaja</CardTitle>
+              <CardDescription>
+                Loo uus kasutajakonto õpetajale või juhile
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleCreateUser} className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="name">Nimi</Label>
+                    <Input 
+                      id="name" 
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder="Eesnimi Perenimi" 
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="email">E-post</Label>
+                    <Input 
+                      id="email" 
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="kasutaja@kool.ee" 
+                    />
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="password">Parool</Label>
+                    <Input 
+                      id="password" 
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="Vähemalt 6 tähemärki" 
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="role">Roll</Label>
+                    <Select 
+                      value={role} 
+                      onValueChange={(value) => setRole(value as 'juht' | 'õpetaja')}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Vali roll" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="õpetaja">Õpetaja</SelectItem>
+                        <SelectItem value="juht">Juht</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="school">Kool</Label>
+                  <Select 
+                    value={school} 
+                    onValueChange={setSchool}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Vali kool" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {SCHOOLS.map((school) => (
+                        <SelectItem key={school} value={school}>
+                          {school}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                <Button type="submit" className="w-full">
+                  Lisa kasutaja
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
