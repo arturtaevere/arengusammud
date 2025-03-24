@@ -7,7 +7,8 @@ import {
   MessageSquare, 
   Plus,
   Heart,
-  ArrowRight
+  ArrowRight,
+  PenLine
 } from 'lucide-react';
 
 interface StatsCardsProps {
@@ -65,6 +66,20 @@ const StatsCards = ({ stats }: StatsCardsProps) => {
               >
                 <p className="text-sm font-medium">Tagasiside andmine õppimisprotsessile</p>
                 <ArrowRight className="h-4 w-4 ml-1 text-primary" />
+              </Link>
+            </div>
+            
+            {/* New reflection link */}
+            <div>
+              <Link 
+                to="/observations/new?type=reflection" 
+                className="flex items-center justify-between text-sm font-medium text-orange-500 hover:text-orange-600 transition-colors"
+              >
+                <span className="flex items-center">
+                  <PenLine className="h-4 w-4 mr-2" />
+                  Lisa reflektsioon
+                </span>
+                <ArrowRight className="h-4 w-4 text-orange-500" />
               </Link>
             </div>
           </div>
