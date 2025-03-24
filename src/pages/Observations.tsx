@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
@@ -20,9 +19,7 @@ const Observations = () => {
   const [observations, setObservations] = useState<Observation[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   
-  // Check if we should show the form based on URL
   useEffect(() => {
-    // If the URL contains "new", show the form automatically
     if (location.pathname.includes('/new')) {
       setShowForm(true);
     } else {
@@ -30,7 +27,6 @@ const Observations = () => {
     }
   }, [location]);
   
-  // Load observations from Supabase on component mount and when showing form changes
   useEffect(() => {
     loadObservations();
   }, [showForm]);
@@ -48,7 +44,6 @@ const Observations = () => {
         return;
       }
       
-      // Map stored observations to the format expected by the UI
       const formattedObservations = storedObservations.map(obs => ({
         id: obs.id,
         teacher: obs.teacher,
@@ -86,7 +81,6 @@ const Observations = () => {
     });
     setShowForm(false);
     
-    // Reload observations to refresh the list
     loadObservations();
   };
 
@@ -101,7 +95,6 @@ const Observations = () => {
     }
     
     try {
-      // Get the observation from Supabase
       const storedObservations = await getStoredObservations();
       const storedObs = storedObservations.find(obs => obs.id === id);
       
@@ -110,13 +103,11 @@ const Observations = () => {
           ...storedObs,
           hasFeedback: true,
           status: 'Lõpetatud',
-          user_id: user.id // Make sure user_id is set
+          user_id: user.id
         };
         
-        // Update in Supabase
         await updateObservation(updatedObs);
         
-        // Update the UI state
         setObservations(prevObservations => 
           prevObservations.map(obs => 
             obs.id === id 
@@ -166,7 +157,7 @@ const Observations = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-orange-light/10">
       <Navbar />
       <div className="container mx-auto pt-24 pb-12 px-4">
         {!showForm && (
