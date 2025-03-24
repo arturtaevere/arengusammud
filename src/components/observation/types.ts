@@ -1,6 +1,9 @@
 
 import { ActionStep } from '@/data/action-steps/types';
 import { competencies } from './data/competenciesData';
+import { classroomPositioningSteps } from '@/data/action-steps/classroom-environment/classroom-positioning';
+import { classroomRulesSteps } from '@/data/action-steps/classroom-environment/classroom-rules';
+import { classroomEnvironmentSteps } from '@/data/action-steps/classroom-environment';
 
 // Define the types used in the observation components
 export interface Competency {
@@ -57,7 +60,6 @@ export const mockTeachers = {
 // Helper function to get action step by id
 export const getActionStepById = (id: string): EnrichedActionStep | null => {
   // First, try to find in the classroom positioning steps (contains step10)
-  const { classroomPositioningSteps } = require('@/data/action-steps/classroom-environment/classroom-positioning');
   const positioningStep = classroomPositioningSteps.find((step: ActionStep) => step.id === id);
   
   if (positioningStep) {
@@ -70,7 +72,6 @@ export const getActionStepById = (id: string): EnrichedActionStep | null => {
   }
   
   // Then try other action steps collections
-  const { classroomRulesSteps } = require('@/data/action-steps/classroom-environment/classroom-rules');
   const rulesStep = classroomRulesSteps.find((step: ActionStep) => step.id === id);
   
   if (rulesStep) {
@@ -83,7 +84,6 @@ export const getActionStepById = (id: string): EnrichedActionStep | null => {
   }
   
   // Then try the classroomEnvironmentSteps
-  const { classroomEnvironmentSteps } = require('@/data/action-steps/classroom-environment');
   const envStep = classroomEnvironmentSteps.find((step: ActionStep) => step.id === id);
   
   if (envStep) {
