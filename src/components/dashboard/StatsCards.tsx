@@ -4,12 +4,15 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { 
   ClipboardList, 
-  MessageSquare, 
+  UserCheck,
   Plus,
   Heart,
   ArrowRight,
   PenLine
 } from 'lucide-react';
+import { getStoredObservations } from '@/components/observation/storage';
+import { useEffect, useState } from 'react';
+import { useAuth } from '@/context/AuthContext';
 
 interface StatsCardsProps {
   stats: {
@@ -22,6 +25,21 @@ interface StatsCardsProps {
 const StatsCards = ({ stats }: StatsCardsProps) => {
   // Generate an array of the length of completed steps to render hearts
   const completedHearts = Array.from({ length: stats.actionStepsCompleted }, (_, i) => i);
+  const { user } = useAuth();
+  const [completedFeedbackCount, setCompletedFeedbackCount] = useState(0);
+  
+  // Count completed feedback meetings for the current user
+  useEffect(() => {
+    if (user) {
+      const observations = getStoredObservations();
+      const completed = observations.filter(obs => 
+        obs.coachName === user.name && 
+        obs.hasFeedback === true
+      ).length;
+      
+      setCompletedFeedbackCount(completed);
+    }
+  }, [user]);
   
   // This would typically come from your API or state
   // For now we're hard-coding step10-1 as that's a valid action step from your data
@@ -89,12 +107,12 @@ const StatsCards = ({ stats }: StatsCardsProps) => {
       <Card className="hover:shadow-md transition-all">
         <CardHeader className="pb-2">
           <CardTitle className="text-lg font-medium flex items-center">
-            <MessageSquare className="mr-2 h-5 w-5 text-primary" />
-            Tagasiside
+            <UserCheck className="mr-2 h-5 w-5 text-primary" />
+            Õpipartnerina
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-3xl font-bold">{stats.feedbackCount}</p>
+          <p className="text-3xl font-bold">{completedFeedbackCount}</p>
           <p className="text-sm text-muted-foreground">Tagasisidekohtumist läbi viidud</p>
           <div className="mt-4">
             <Button variant="outline" size="sm" className="w-full" asChild>
