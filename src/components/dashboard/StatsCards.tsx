@@ -6,7 +6,8 @@ import {
   ClipboardList, 
   MessageSquare, 
   Plus,
-  Heart 
+  Heart,
+  ArrowRight
 } from 'lucide-react';
 
 interface StatsCardsProps {
@@ -20,6 +21,10 @@ interface StatsCardsProps {
 const StatsCards = ({ stats }: StatsCardsProps) => {
   // Generate an array of the length of completed steps to render hearts
   const completedHearts = Array.from({ length: stats.actionStepsCompleted }, (_, i) => i);
+  
+  // This would typically come from your API or state
+  // For now we're hard-coding step10-1 as that's a valid action step from your data
+  const currentActionStepId = "step10-1";
   
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-10">
@@ -54,7 +59,13 @@ const StatsCards = ({ stats }: StatsCardsProps) => {
             
             <div>
               <h4 className="text-xs text-muted-foreground mb-1">Minu arengusamm</h4>
-              <p className="text-sm font-medium">Tagasiside andmine õppimisprotsessile</p>
+              <Link 
+                to={`/action-step/${currentActionStepId}`} 
+                className="group flex items-center justify-between hover:text-primary transition-colors"
+              >
+                <p className="text-sm font-medium">Tagasiside andmine õppimisprotsessile</p>
+                <ArrowRight className="h-4 w-4 ml-1 opacity-0 group-hover:opacity-100 transition-opacity" />
+              </Link>
             </div>
           </div>
         </CardContent>
