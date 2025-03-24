@@ -53,6 +53,9 @@ const ObservationTabs = ({ observations, onFeedbackGiven }: ObservationTabsProps
       // Find the full observation data to get the action step
       const fullObsData = storedObservations.find(storedObs => storedObs.id === obs.id);
       
+      // Make sure we're explicitly logging this to debug
+      console.log('Coach for observation:', obs.id, obs.coach, fullObsData?.coachName);
+      
       return {
         id: obs.id,
         teacher: obs.teacher,
@@ -62,7 +65,7 @@ const ObservationTabs = ({ observations, onFeedbackGiven }: ObservationTabsProps
         status: obs.status,
         hasFeedback: obs.hasFeedback,
         competences: obs.competences,
-        coach: obs.coach,
+        coach: obs.coach || fullObsData?.coachName, // Try to use coachName if coach is undefined
         actionStep: fullObsData?.actionStep,
         createdAt: obs.date
       };
@@ -93,6 +96,9 @@ const ObservationTabs = ({ observations, onFeedbackGiven }: ObservationTabsProps
       
       return dateB - dateA;
     });
+    
+    // Log the combined items to debug
+    console.log('Combined items for teacher view:', allItems);
     
     setCombinedItems(allItems);
   }, [observations, user]);

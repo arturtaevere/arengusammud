@@ -8,6 +8,7 @@ export interface Observation {
   hasFeedback: boolean;
   competences: string[];
   coach?: string; // Added coach field
+  coachName?: string; // Alternative field name for coach
 }
 
 export interface Feedback {
