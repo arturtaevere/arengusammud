@@ -33,7 +33,7 @@ const StatsCards = ({ stats }: StatsCardsProps) => {
         <CardContent>
           <div className="space-y-6">
             <div>
-              <h4 className="text-xs text-muted-foreground mb-1">Arengusamme saavutatud</h4>
+              <h4 className="text-xs text-muted-foreground mb-1">Samme astutud</h4>
               <div className="flex items-center gap-2">
                 <span className="text-xl font-bold">{stats.actionStepsCompleted}</span>
                 <div className="flex">
