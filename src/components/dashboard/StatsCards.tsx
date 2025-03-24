@@ -30,16 +30,6 @@ const StatsCards = ({ stats }: StatsCardsProps) => {
         <CardContent>
           <div className="space-y-6">
             <div>
-              <h4 className="text-xs text-muted-foreground mb-1">Minu arengueesmärk</h4>
-              <p className="text-sm font-medium">Õpilaste individuaalse arengu toetamine</p>
-            </div>
-            
-            <div>
-              <h4 className="text-xs text-muted-foreground mb-1">Minu arengusamm</h4>
-              <p className="text-sm font-medium">Tagasiside andmine õppimisprotsessile</p>
-            </div>
-            
-            <div>
               <h4 className="text-xs text-muted-foreground mb-1">Arengusamme saavutatud</h4>
               <div className="flex items-center gap-2">
                 <span className="text-xl font-bold">{stats.actionStepsCompleted}</span>
@@ -51,6 +41,16 @@ const StatsCards = ({ stats }: StatsCardsProps) => {
                   style={{ width: `${(stats.actionStepsCompleted / stats.actionStepsAssigned) * 100}%` }}
                 ></div>
               </div>
+            </div>
+            
+            <div>
+              <h4 className="text-xs text-muted-foreground mb-1">Minu arengueesmärk</h4>
+              <p className="text-sm font-medium">Õpilaste individuaalse arengu toetamine</p>
+            </div>
+            
+            <div>
+              <h4 className="text-xs text-muted-foreground mb-1">Minu arengusamm</h4>
+              <p className="text-sm font-medium">Tagasiside andmine õppimisprotsessile</p>
             </div>
           </div>
         </CardContent>
