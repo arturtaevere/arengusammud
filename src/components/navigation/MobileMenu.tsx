@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { BookOpen, Users, Lightbulb, Messagecircle } from 'lucide-react';
+import { BookOpen, Users, Lightbulb, MessageCircle } from 'lucide-react';
 import { Home } from 'lucide-react';
 
 interface MobileMenuProps {
@@ -68,7 +68,7 @@ const MobileMenu = ({ getInitials }: MobileMenuProps) => {
               }`}
             >
               <div className="flex items-center">
-                <Messagecircle className="mr-2 h-5 w-5" />
+                <MessageCircle className="mr-2 h-5 w-5" />
                 Õpipartnerlus
               </div>
             </Link>
