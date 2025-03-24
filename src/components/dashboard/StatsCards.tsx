@@ -64,7 +64,7 @@ const StatsCards = ({ stats }: StatsCardsProps) => {
                 className="group flex items-center justify-between hover:text-primary transition-colors"
               >
                 <p className="text-sm font-medium">Tagasiside andmine õppimisprotsessile</p>
-                <ArrowRight className="h-4 w-4 ml-1 opacity-0 group-hover:opacity-100 transition-opacity" />
+                <ArrowRight className="h-4 w-4 ml-1 text-primary" />
               </Link>
             </div>
           </div>
