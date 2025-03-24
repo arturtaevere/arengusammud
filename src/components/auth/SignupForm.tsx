@@ -11,10 +11,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { CardContent, CardFooter } from '@/components/ui/card';
 import { SignupFormValues, signupSchema } from './schemas';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const SignupForm = () => {
-  const { signup, isLoading } = useAuth();
+  const { signup, isLoading, setPendingVerificationEmail } = useAuth();
   const { toast } = useToast();
+  const navigate = useNavigate();
+  const [signupSuccess, setSignupSuccess] = useState(false);
 
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
@@ -29,8 +33,26 @@ const SignupForm = () => {
 
   const handleSignup = async (values: SignupFormValues) => {
     try {
+      setSignupSuccess(false);
       await signup(values.name, values.email, values.password, values.role, values.school);
+      setSignupSuccess(true);
+      
+      // Store pending verification email
+      setPendingVerificationEmail(values.email);
+      
+      // Reset form
+      form.reset();
+      
+      // Display success message
+      toast({
+        title: "Registreerimine õnnestus",
+        description: "Konto on loodud. Võid nüüd sisse logida.",
+      });
+      
+      // Optional: redirect to login tab
+      // You could add a callback to the parent component to switch tabs
     } catch (error) {
+      console.error('Signup error in form handler:', error);
       toast({
         variant: "destructive",
         title: "Registreerimine ebaõnnestus",
@@ -156,9 +178,9 @@ const SignupForm = () => {
           <Button 
             type="submit" 
             className="w-full transition-all" 
-            disabled={isLoading}
+            disabled={isLoading || signupSuccess}
           >
-            {isLoading ? "Konto loomine..." : "Loo konto"}
+            {isLoading ? "Konto loomine..." : signupSuccess ? "Konto loodud!" : "Loo konto"}
           </Button>
         </CardFooter>
       </form>

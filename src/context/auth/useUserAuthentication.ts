@@ -86,9 +86,15 @@ export const useUserAuthentication = (
         }
       });
 
-      if (error) throw new Error(error.message);
+      if (error) {
+        console.error('Signup error from Supabase:', error);
+        throw new Error(error.message || 'Registreerimine ebaõnnestus');
+      }
       
-      if (!data || !data.user) throw new Error('Kasutaja loomine ebaõnnestus');
+      if (!data || !data.user) {
+        console.error('No user data returned from Supabase signup');
+        throw new Error('Kasutaja loomine ebaõnnestus');
+      }
       
       toast({
         title: "Registreerimine õnnestus",

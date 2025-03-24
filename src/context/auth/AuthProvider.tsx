@@ -54,6 +54,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const loggedInUser = await login(email, password);
       setUser(loggedInUser);
+      return loggedInUser;
+    } catch (error) {
+      console.error('Login error:', error);
+      throw error;
     } finally {
       setIsLoading(false);
     }
@@ -63,7 +67,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const handleSignup = async (name: string, email: string, password: string, role: 'juht' | 'õpetaja', school: string) => {
     setIsLoading(true);
     try {
-      await signup(name, email, password, role, school);
+      const result = await signup(name, email, password, role, school);
+      // Store the email for verification purposes
+      setPendingVerificationEmail(email);
+      return result;
+    } catch (error) {
+      console.error('Signup error:', error);
+      throw error;
     } finally {
       setIsLoading(false);
     }
