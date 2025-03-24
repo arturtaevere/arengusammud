@@ -23,8 +23,7 @@ export const useObservationForm = () => {
       coachName: user?.name || '', // Default to current user's name
       developmentGoal: '',
       actionStep: '',
-      teacherNotes: '',
-      studentNotes: '',
+      combinedNotes: '',
       specificPraise: '',
       nextActionStep: '',
       selectedActionStepId: null, // Add this to track the selected action step
@@ -45,13 +44,13 @@ export const useObservationForm = () => {
         hasFeedback: false,
         coachName: values.coachName,
         competences: [],
-        teacherNotes: values.teacherNotes,
-        studentNotes: values.studentNotes,
+        teacherNotes: values.combinedNotes, // Map combined notes to teacherNotes for compatibility
+        studentNotes: '', // Leave empty since we're not using it anymore
         specificPraise: values.specificPraise,
         developmentGoal: values.developmentGoal,
         actionStep: values.actionStep,
         nextActionStep: values.nextActionStep,
-        selectedActionStepId: values.selectedActionStepId, // Add this to save the selected action step ID
+        selectedActionStepId: values.selectedActionStepId,
         createdAt: new Date().toISOString(),
       };
       

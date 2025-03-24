@@ -23,7 +23,7 @@ const ObservationNotesCard = ({
       </CardHeader>
       <CardContent className="space-y-4">
         <div>
-          <h3 className="text-sm font-medium text-gray-500">Õpetaja tegevus</h3>
+          <h3 className="text-sm font-medium text-gray-500">Tunnivaatluse märkmed</h3>
           {isEditing ? (
             <Textarea
               value={editedObservation.teacherNotes || ''}
@@ -32,19 +32,6 @@ const ObservationNotesCard = ({
             />
           ) : (
             <p className="mt-1 whitespace-pre-wrap">{observation.teacherNotes}</p>
-          )}
-        </div>
-        
-        <div>
-          <h3 className="text-sm font-medium text-gray-500">Õpilaste tegevus</h3>
-          {isEditing ? (
-            <Textarea
-              value={editedObservation.studentNotes || ''}
-              onChange={(e) => handleInputChange('studentNotes', e.target.value)}
-              className="mt-1"
-            />
-          ) : (
-            <p className="mt-1 whitespace-pre-wrap">{observation.studentNotes}</p>
           )}
         </div>
       </CardContent>

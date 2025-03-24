@@ -38,8 +38,7 @@ export interface ObservationFormValues {
   coachName: string;
   actionStep: string;
   developmentGoal: string;
-  teacherNotes: string;  // Changed from what
-  studentNotes: string;  // Changed from why
+  combinedNotes: string;  // Added combined notes field
   specificPraise: string;
   nextActionStep: string;
   selectedActionStepId: string | null;

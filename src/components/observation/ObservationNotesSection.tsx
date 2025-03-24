@@ -1,5 +1,5 @@
 
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Save } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -8,7 +8,7 @@ import { ObservationFormValues } from './types';
 import { useNavigate } from 'react-router-dom';
 import CompetencyActionStepSelector from './CompetencyActionStepSelector';
 import { useState } from 'react';
-import TeacherStudentNotesSection from './TeacherStudentNotesSection';
+import CombinedNotesSection from './CombinedNotesSection';
 import FeedbackNotesSection from './FeedbackNotesSection';
 import NextActionStepSection from './NextActionStepSection';
 
@@ -29,7 +29,7 @@ const ObservationNotesSection = ({ form, isSubmitting }: ObservationNotesSection
         <CardTitle>Tunnivaatluse märkmed</CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
-        <TeacherStudentNotesSection form={form} />
+        <CombinedNotesSection form={form} />
         
         <Separator className="my-6" />
         
