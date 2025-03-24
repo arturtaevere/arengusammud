@@ -78,7 +78,7 @@ const FeedbackActions = ({
             <div className="flex flex-col">
               <span className="font-medium text-lg text-primary">Tagasisidekohtumine on toimunud</span>
               <span className="text-sm text-muted-foreground">
-                Pärast valimist jagatakse märkmed õpetajaga
+                Kui kohtumine on märgitud toimunuks, jagatakse märkmeid õpetajaga
               </span>
             </div>
             <div className="flex items-center gap-2 rounded-md">
