@@ -1,81 +1,71 @@
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
+import React from 'react';
+import { Filter } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Button } from '@/components/ui/button';
-import { X } from 'lucide-react';
-import { SCHOOLS } from '@/context/auth/constants';
-import { useFilters } from './hooks/useFilters';
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { SCHOOLS } from '@/context/AuthContext';
 
-type FilterCardProps = {
-  searchTerm?: string;
-  filterRole?: string;
-  filterSchool?: string;
-  onSearchChange?: (value: string) => void;
-  onRoleChange?: (value: string) => void;
-  onSchoolChange?: (value: string) => void;
-  onFilterChange?: (filters: any) => void;
-  onClearFilters?: () => void;
-};
+interface FilterCardProps {
+  searchTerm: string;
+  filterRole: string;
+  filterSchool: string;
+  onSearchChange: (value: string) => void;
+  onRoleChange: (value: string) => void;
+  onSchoolChange: (value: string) => void;
+}
 
-const FilterCard = (props: FilterCardProps) => {
-  const { filters, handlers } = useFilters(props);
-  
+const FilterCard = ({ 
+  searchTerm, 
+  filterRole, 
+  filterSchool, 
+  onSearchChange, 
+  onRoleChange, 
+  onSchoolChange 
+}: FilterCardProps) => {
   return (
-    <Card className="w-full">
+    <Card className="mb-8">
       <CardHeader>
-        <CardTitle>Filtreeri kasutajaid</CardTitle>
+        <CardTitle>Filtrid</CardTitle>
+        <CardDescription>Filtreeri kasutajaid rolli ja kooli järgi</CardDescription>
       </CardHeader>
-      <CardContent className="grid gap-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <Label htmlFor="name">Nimi</Label>
+      <CardContent>
+        <div className="flex flex-col md:flex-row gap-4">
+          <div className="w-full md:w-1/3">
             <Input
-              id="name"
-              placeholder="Filtreeri nime järgi"
-              value={filters.name}
-              onChange={(e) => handlers.handleNameChange(e.target.value)}
+              placeholder="Otsi nime või e-posti järgi..."
+              value={searchTerm}
+              onChange={(e) => onSearchChange(e.target.value)}
+              className="w-full"
             />
           </div>
-          <div>
-            <Label htmlFor="email">E-post</Label>
-            <Input
-              id="email"
-              placeholder="Filtreeri e-posti järgi"
-              value={filters.email}
-              onChange={(e) => handlers.handleEmailChange(e.target.value)}
-            />
-          </div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <Label htmlFor="role">Roll</Label>
-            <Select 
-              onValueChange={handlers.handleRoleChange} 
-              value={filters.role}
-            >
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Filtreeri rolli järgi" />
+          <div className="w-full md:w-1/3">
+            <Select value={filterRole} onValueChange={onRoleChange}>
+              <SelectTrigger>
+                <Filter className="h-4 w-4 mr-2" />
+                <SelectValue placeholder="Roll" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Kõik</SelectItem>
-                <SelectItem value="juht">Juht</SelectItem>
+                <SelectItem value="all">Kõik rollid</SelectItem>
+                <SelectItem value="juht">Juhendaja</SelectItem>
                 <SelectItem value="õpetaja">Õpetaja</SelectItem>
               </SelectContent>
             </Select>
           </div>
-          <div>
-            <Label htmlFor="school">Kool</Label>
-            <Select 
-              onValueChange={handlers.handleSchoolChange} 
-              value={filters.school}
-            >
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Filtreeri kooli järgi" />
+          <div className="w-full md:w-1/3">
+            <Select value={filterSchool} onValueChange={onSchoolChange}>
+              <SelectTrigger>
+                <Filter className="h-4 w-4 mr-2" />
+                <SelectValue placeholder="Kool" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Kõik</SelectItem>
+                <SelectItem value="all">Kõik koolid</SelectItem>
                 {SCHOOLS.map((school) => (
                   <SelectItem key={school} value={school}>
                     {school}
@@ -85,10 +75,6 @@ const FilterCard = (props: FilterCardProps) => {
             </Select>
           </div>
         </div>
-        <Button variant="secondary" className="w-full justify-start" onClick={handlers.handleClearFilters}>
-          <X className="mr-2 h-4 w-4" />
-          Tühista filtrid
-        </Button>
       </CardContent>
     </Card>
   );

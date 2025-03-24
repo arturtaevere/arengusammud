@@ -1,291 +1,98 @@
 
 import { useState, useEffect } from 'react';
 import { useToast } from '@/components/ui/use-toast';
-import { User } from './types';
-import { supabase } from '@/integrations/supabase/client';
+import { UserWithPassword } from './types';
+import { USERS_STORAGE_KEY, INITIAL_USERS } from './constants';
+import { useUserAuthentication } from './useUserAuthentication';
+import { useUserProfile } from './useUserProfile';
 
 export const useAuthActions = () => {
-  const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<UserWithPassword[]>([]);
   const { toast } = useToast();
   
-  // Load user profiles from Supabase
-  const fetchProfiles = async () => {
+  const saveUsers = (updatedUsers: UserWithPassword[]) => {
+    console.log('Saving users to state and localStorage:', {
+      currentUsers: users.length,
+      updatedUsers: updatedUsers.length,
+      emails: updatedUsers.map(u => u.email)
+    });
+    
     try {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('*');
-        
-      if (error) {
-        console.error('Error fetching profiles:', error);
-        toast({
-          variant: "destructive",
-          title: "Error",
-          description: "Failed to load user profiles",
-        });
-        return [];
-      }
+      // First update localStorage
+      localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(updatedUsers));
       
-      console.log('Loaded profiles from Supabase:', data);
+      // Then update state
+      setUsers(updatedUsers);
       
-      // Transform profiles to the expected User format
-      const transformedUsers = data.map(profile => ({
-        id: profile.id,
-        name: profile.name,
-        email: profile.email,
-        role: profile.role as 'juht' | 'õpetaja',
-        school: profile.school || undefined,
-        createdAt: profile.created_at,
-        emailVerified: profile.email_verified || false,
-        profileImage: profile.profile_image || undefined
-      }));
+      // Dispatch events to notify other components
+      window.dispatchEvent(new Event('storage'));
+      window.dispatchEvent(new CustomEvent('users-updated'));
       
-      return transformedUsers;
+      console.log('Successfully saved users and dispatched events');
     } catch (error) {
-      console.error('Error in fetchProfiles:', error);
+      console.error('Error in saveUsers:', error);
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to fetch user profiles",
+        description: "Failed to save user data",
       });
-      return [];
     }
   };
 
   useEffect(() => {
-    const loadUsers = async () => {
-      const profiles = await fetchProfiles();
-      setUsers(profiles);
+    const loadUsers = () => {
+      try {
+        const storedUsers = localStorage.getItem(USERS_STORAGE_KEY);
+        if (storedUsers) {
+          const parsedUsers = JSON.parse(storedUsers);
+          console.log('Loading users in useAuthActions:', {
+            count: parsedUsers.length,
+            emails: parsedUsers.map((u: UserWithPassword) => u.email)
+          });
+          setUsers(parsedUsers);
+        } else {
+          // If no users in localStorage, load initial users
+          console.log('No users found in localStorage, loading initial users');
+          saveUsers(INITIAL_USERS);
+        }
+      } catch (error) {
+        console.error('Error loading users:', error);
+        // If there's an error, load initial users as fallback
+        console.log('Error occurred, loading initial users as fallback');
+        saveUsers(INITIAL_USERS);
+      }
     };
-    
+
+    // Load initial users
     loadUsers();
     
-    // Listen for auth state changes to refresh users list
-    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
-      console.log('Auth state changed:', event, session?.user?.id);
-      if (event === 'SIGNED_IN' || event === 'SIGNED_OUT' || event === 'USER_UPDATED') {
+    // Set up event listeners
+    const handleUsersUpdated = () => {
+      console.log('users-updated event received in useAuthActions');
+      loadUsers();
+    };
+    
+    window.addEventListener('users-updated', handleUsersUpdated);
+    window.addEventListener('storage', (e) => {
+      if (e.key === USERS_STORAGE_KEY) {
+        console.log('storage event received for users in useAuthActions');
         loadUsers();
       }
     });
     
     return () => {
-      authListener.subscription.unsubscribe();
+      window.removeEventListener('users-updated', handleUsersUpdated);
+      window.removeEventListener('storage', handleUsersUpdated);
     };
   }, []);
 
-  const login = async (email: string, password: string) => {
-    try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password
-      });
-      
-      if (error) {
-        console.error('Login error:', error);
-        throw error;
-      }
-      
-      if (!data.user) {
-        throw new Error('No user returned from login');
-      }
-      
-      // Get the user profile
-      const { data: profileData, error: profileError } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', data.user.id)
-        .single();
-        
-      if (profileError) {
-        console.error('Error fetching user profile:', profileError);
-        throw new Error('Failed to load user profile');
-      }
-      
-      toast({
-        title: "Sisselogimine õnnestus",
-        description: `Tere tulemast, ${profileData.name}!`,
-      });
-      
-      return {
-        id: profileData.id,
-        name: profileData.name,
-        email: profileData.email,
-        role: profileData.role,
-        school: profileData.school || undefined,
-        createdAt: profileData.created_at,
-        emailVerified: profileData.email_verified || false,
-        profileImage: profileData.profile_image || undefined
-      };
-    } catch (error) {
-      console.error('Login error:', error);
-      throw error;
-    }
-  };
-
-  const signup = async (name: string, email: string, password: string, role: 'juht' | 'õpetaja', school?: string) => {
-    try {
-      console.log(`Attempting to sign up user with email: ${email}, role: ${role}, school: ${school || 'Not specified'}`);
-      
-      // Sign up with Supabase Auth
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: {
-            name,
-            role,
-            school: school || ''
-          }
-        }
-      });
-      
-      if (error) {
-        console.error('Signup error (Supabase):', error);
-        throw error;
-      }
-      
-      if (!data.user) {
-        console.error('No user returned from signup');
-        throw new Error('No user returned from signup');
-      }
-      
-      // Registration was successful
-      console.log('Signup successful, user ID:', data.user.id);
-      
-      toast({
-        title: "Registreerimine õnnestus",
-        description: "Konto on loodud. Kontrolli oma e-posti kinnituslingi saamiseks.",
-      });
-      
-      await fetchProfiles(); // Refresh the profiles list
-      
-      return email;
-    } catch (error) {
-      console.error('Signup error in useAuthActions:', error);
-      throw error;
-    }
-  };
-
-  const updateProfileImage = async (userId: string, imageUrl: string) => {
-    try {
-      const { error } = await supabase
-        .from('profiles')
-        .update({ profile_image: imageUrl })
-        .eq('id', userId);
-        
-      if (error) throw error;
-      
-      toast({
-        title: "Profiilipilt uuendatud",
-        description: "Sinu profiilipilt on edukalt uuendatud.",
-      });
-      
-      // Refresh local users state
-      const updatedUsers = users.map(u => {
-        if (u.id === userId) {
-          return { ...u, profileImage: imageUrl };
-        }
-        return u;
-      });
-      
-      setUsers(updatedUsers);
-      
-      // Get the updated user profile
-      const { data, error: profileError } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', userId)
-        .single();
-        
-      if (profileError) {
-        console.error('Error fetching updated profile:', profileError);
-        return updatedUsers.find(u => u.id === userId);
-      }
-      
-      return {
-        id: data.id,
-        name: data.name,
-        email: data.email,
-        role: data.role,
-        school: data.school || undefined,
-        createdAt: data.created_at,
-        emailVerified: data.email_verified || false,
-        profileImage: data.profile_image || undefined
-      };
-    } catch (error) {
-      console.error('Error updating profile image:', error);
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Failed to update profile image",
-      });
-      return users.find(u => u.id === userId);
-    }
-  };
-
-  const getAllUsers = async () => {
-    const profiles = await fetchProfiles();
-    return profiles;
-  };
-
-  const deleteUserByEmail = async (email: string) => {
-    try {
-      // Find the user ID by email
-      const { data: userData, error: userError } = await supabase
-        .from('profiles')
-        .select('id')
-        .eq('email', email)
-        .single();
-        
-      if (userError) {
-        toast({
-          variant: "destructive",
-          title: "Kasutaja kustutamine ebaõnnestus",
-          description: "Kasutajat selle e-posti aadressiga ei leitud.",
-        });
-        return false;
-      }
-      
-      // Only admins should be able to delete users through the admin panel
-      // This is a client-side operation so we also need Row Level Security for proper security
-      const { error } = await supabase
-        .from('profiles')
-        .delete()
-        .eq('id', userData.id);
-        
-      if (error) {
-        console.error('Error deleting user:', error);
-        toast({
-          variant: "destructive",
-          title: "Kasutaja kustutamine ebaõnnestus",
-          description: error.message,
-        });
-        return false;
-      }
-      
-      toast({
-        title: "Kasutaja kustutatud",
-        description: `Kasutaja e-postiga ${email} on edukalt kustutatud.`,
-      });
-      
-      // Refresh the users list
-      const updatedProfiles = await fetchProfiles();
-      setUsers(updatedProfiles);
-      
-      return true;
-    } catch (error) {
-      console.error('Error deleting user:', error);
-      toast({
-        variant: "destructive",
-        title: "Kasutaja kustutamine ebaõnnestus",
-        description: "Midagi läks valesti, proovi hiljem uuesti.",
-      });
-      return false;
-    }
-  };
+  const { login, signup } = useUserAuthentication(users, saveUsers);
+  const { updateProfileImage, getAllUsers, deleteUserByEmail } = useUserProfile(users, saveUsers);
 
   return {
     users,
     setUsers,
+    saveUsers,
     login,
     signup,
     updateProfileImage,
@@ -293,3 +100,4 @@ export const useAuthActions = () => {
     deleteUserByEmail,
   };
 };
+

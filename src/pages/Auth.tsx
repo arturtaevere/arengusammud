@@ -1,23 +1,20 @@
 
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/context/auth';
-import { AuthForm, AuthDebug } from '@/components/auth';
+import { useAuth } from '@/context/AuthContext';
+import AuthForm from '@/components/AuthForm';
 import Navbar from '@/components/Navbar';
 
 const Auth = () => {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
   
   // Redirect authenticated users to dashboard
   useEffect(() => {
-    if (isAuthenticated && !isLoading) {
-      console.log('User is authenticated, redirecting to dashboard');
+    if (isAuthenticated) {
       navigate('/dashboard');
     }
-  }, [isAuthenticated, isLoading, navigate]);
-  
-  console.log('Auth page rendered, isAuthenticated:', isAuthenticated, 'isLoading:', isLoading);
+  }, [isAuthenticated, navigate]);
   
   return (
     <div className="min-h-screen flex flex-col">
@@ -29,16 +26,9 @@ const Auth = () => {
           <div className="absolute bottom-20 right-20 w-96 h-96 bg-pink-light rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float" style={{ animationDelay: '2s' }}></div>
         </div>
         
-        {isLoading ? (
-          <div className="flex items-center justify-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-light"></div>
-          </div>
-        ) : (
-          <div className="w-full max-w-md animate-fade-in">
-            <AuthForm />
-            {process.env.NODE_ENV !== 'production' && <AuthDebug />}
-          </div>
-        )}
+        <div className="w-full max-w-md animate-fade-in">
+          <AuthForm />
+        </div>
       </div>
     </div>
   );

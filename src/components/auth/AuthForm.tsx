@@ -1,11 +1,11 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import LoginForm from './LoginForm';
 import SignupForm from './SignupForm';
 
-export const AuthForm = () => {
+const AuthForm = () => {
   const [formType, setFormType] = useState<'login' | 'signup'>('login');
   
   return (
@@ -39,3 +39,5 @@ export const AuthForm = () => {
     </div>
   );
 };
+
+export default AuthForm;

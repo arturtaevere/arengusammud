@@ -17,7 +17,6 @@ const VerificationMessage = ({ email }: VerificationMessageProps) => {
   const handleResend = async () => {
     setResending(true);
     try {
-      // Make sure to pass the email parameter
       await resendVerificationEmail(email);
     } finally {
       setResending(false);

@@ -1,22 +1,17 @@
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useAuth } from '@/context/auth';
+import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/components/ui/use-toast';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { CardContent, CardFooter } from '@/components/ui/card';
 import { LoginFormValues, loginSchema } from './schemas';
-import { useState } from 'react';
-import { Loader2 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 
 const LoginForm = () => {
-  const { login } = useAuth();
+  const { login, isLoading } = useAuth();
   const { toast } = useToast();
-  const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate();
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -27,47 +22,20 @@ const LoginForm = () => {
   });
 
   const handleLogin = async (values: LoginFormValues) => {
-    if (isLoading) return; // Prevent multiple submissions
-    
-    setIsLoading(true);
-    console.log('Login attempt with email:', values.email);
-    
     try {
       await login(values.email, values.password);
-      console.log('Login successful, redirecting to dashboard');
-      // Add a small delay before navigating to ensure state updates are processed
-      setTimeout(() => {
-        navigate('/dashboard');
-      }, 100);
     } catch (error) {
-      console.error('Login error details:', error);
-      let errorMessage = 'Midagi läks valesti';
-      
-      if (error instanceof Error) {
-        console.log('Error message:', error.message);
-        // Handle Supabase error messages
-        if (error.message.includes('Invalid login credentials')) {
-          errorMessage = 'Vale e-post või parool';
-        } else if (error.message.includes('Email not confirmed')) {
-          errorMessage = 'Palun kinnita oma e-posti aadress';
-        } else {
-          errorMessage = error.message;
-        }
-      }
-      
       toast({
         variant: "destructive",
         title: "Sisselogimine ebaõnnestus",
-        description: errorMessage,
+        description: error instanceof Error ? error.message : "Midagi läks valesti",
       });
-    } finally {
-      setIsLoading(false);
     }
   };
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleLogin)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(handleLogin)}>
         <CardContent className="space-y-4">
           <FormField
             control={form.control}
@@ -79,8 +47,6 @@ const LoginForm = () => {
                   <Input 
                     placeholder="sinu.email@näide.ee" 
                     type="email"
-                    disabled={isLoading}
-                    autoComplete="email"
                     {...field}
                   />
                 </FormControl>
@@ -98,8 +64,6 @@ const LoginForm = () => {
                 <FormControl>
                   <Input 
                     type="password"
-                    disabled={isLoading}
-                    autoComplete="current-password"
                     {...field}
                   />
                 </FormControl>
@@ -114,12 +78,7 @@ const LoginForm = () => {
             className="w-full transition-all" 
             disabled={isLoading}
           >
-            {isLoading ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Sisselogimine...
-              </>
-            ) : "Logi sisse"}
+            {isLoading ? "Sisselogimine..." : "Logi sisse"}
           </Button>
         </CardFooter>
       </form>

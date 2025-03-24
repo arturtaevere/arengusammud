@@ -1,7 +1,7 @@
 
 import { Link, useLocation } from 'react-router-dom';
 import { BookOpen, ClipboardList, Users, MessageSquare } from 'lucide-react';
-import { useAuth } from '@/context/auth';
+import { useAuth } from '@/context/AuthContext';
 import { Home } from 'lucide-react';
 
 const MainNavLinks = () => {
