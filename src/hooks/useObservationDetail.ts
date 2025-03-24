@@ -18,8 +18,8 @@ export const useObservationDetail = () => {
   const [editedObservation, setEditedObservation] = useState<Partial<StoredObservation>>({});
 
   useEffect(() => {
-    const loadObservation = () => {
-      const observations = getStoredObservations();
+    const loadObservation = async () => {
+      const observations = await getStoredObservations();
       const found = observations.find(obs => obs.id === id);
       
       if (found) {
@@ -45,7 +45,7 @@ export const useObservationDetail = () => {
     loadObservation();
   }, [id, user]);
 
-  const handleFeedbackProvided = () => {
+  const handleFeedbackProvided = async () => {
     if (!observation) return;
     
     console.log('handleFeedbackProvided called');
@@ -56,7 +56,7 @@ export const useObservationDetail = () => {
       status: 'Lõpetatud'
     };
     
-    updateObservation(updatedObservation);
+    await updateObservation(updatedObservation);
     setObservation(updatedObservation);
     setFeedbackProvided(true);
     
@@ -80,7 +80,7 @@ export const useObservationDetail = () => {
   };
 
   // Save edited observation
-  const saveChanges = () => {
+  const saveChanges = async () => {
     if (!observation || !editedObservation) return;
     
     const updatedObservation = {
@@ -88,7 +88,7 @@ export const useObservationDetail = () => {
       ...editedObservation
     };
     
-    updateObservation(updatedObservation);
+    await updateObservation(updatedObservation);
     setObservation(updatedObservation);
     setIsEditing(false);
     

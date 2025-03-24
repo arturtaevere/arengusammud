@@ -9,6 +9,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/context/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
 
 interface FeedbackActionsProps {
   isObserved: boolean;
@@ -34,24 +35,36 @@ const FeedbackActions = ({
   // Determine if current user is a coach (not the observed teacher)
   const isCoach = !isObserved;
 
-  const saveReflection = (reflection: {
+  const saveReflection = async (reflection: {
     reflection: string;
   }) => {
-    const updatedObservation = {
-      ...observation,
-      teacherReflection: {
-        ...reflection,
-        submittedAt: new Date().toISOString(),
-      }
-    };
+    try {
+      const updatedObservation = {
+        ...observation,
+        teacherReflection: {
+          ...reflection,
+          submittedAt: new Date().toISOString(),
+        }
+      };
 
-    updateObservation(updatedObservation);
-    setObservation(updatedObservation);
-    
-    toast({
-      title: "Refleksioon salvestatud",
-      description: "Sinu refleksioon on edukalt salvestatud",
-    });
+      // Save the updated observation
+      await updateObservation(updatedObservation);
+      
+      // Update the UI state
+      setObservation(updatedObservation);
+      
+      toast({
+        title: "Refleksioon salvestatud",
+        description: "Sinu refleksioon on edukalt salvestatud",
+      });
+    } catch (error) {
+      console.error('Error saving reflection:', error);
+      toast({
+        title: "Viga",
+        description: "Refleksiooni salvestamine ebaõnnestus",
+        variant: "destructive",
+      });
+    }
   };
 
   console.log("FeedbackActions rendering:", { isObserved, feedbackProvided, isCoach });

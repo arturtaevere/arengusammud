@@ -11,10 +11,14 @@ import { useObservationForm } from './observation/useObservationForm';
 import { mockTeachers } from './observation/mockTeachers';
 import { Switch } from '@/components/ui/switch';
 
-const ObservationForm = () => {
+interface ObservationFormProps {
+  onSubmit?: () => void;
+}
+
+const ObservationForm = ({ onSubmit }: ObservationFormProps) => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { form, isSubmitting, onSubmit, feedbackProvided, handleFeedbackProvided } = useObservationForm();
+  const { form, isSubmitting, onSubmit: handleFormSubmit, feedbackProvided, handleFeedbackProvided } = useObservationForm();
   const [teachersInSchool, setTeachersInSchool] = useState<Array<{ id: string, name: string, developmentGoal: string, actionStep?: string }>>([]);
   
   // Get teachers for the user's school
@@ -38,6 +42,11 @@ const ObservationForm = () => {
     }
   }, [user]);
   
+  const handleSubmit = async (values: any) => {
+    await handleFormSubmit(values);
+    if (onSubmit) onSubmit();
+  };
+  
   return (
     <div className="max-w-4xl mx-auto p-4">
       <div className="flex items-center mb-6">
@@ -54,7 +63,7 @@ const ObservationForm = () => {
       </div>
       
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
           <GeneralInfoSection form={form} teachersInSchool={teachersInSchool} />
           <ObservationNotesSection form={form} isSubmitting={isSubmitting} />
           

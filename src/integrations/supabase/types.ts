@@ -9,6 +9,69 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      observations: {
+        Row: {
+          action_step: string | null
+          coach_name: string | null
+          competences: string[] | null
+          created_at: string
+          date: string
+          development_goal: string | null
+          has_feedback: boolean
+          id: string
+          next_action_step: string | null
+          selected_action_step_id: string | null
+          selected_action_step_text: string | null
+          specific_praise: string | null
+          status: string
+          student_notes: string | null
+          subject: string | null
+          teacher: string
+          teacher_notes: string | null
+          user_id: string
+        }
+        Insert: {
+          action_step?: string | null
+          coach_name?: string | null
+          competences?: string[] | null
+          created_at?: string
+          date?: string
+          development_goal?: string | null
+          has_feedback?: boolean
+          id?: string
+          next_action_step?: string | null
+          selected_action_step_id?: string | null
+          selected_action_step_text?: string | null
+          specific_praise?: string | null
+          status?: string
+          student_notes?: string | null
+          subject?: string | null
+          teacher: string
+          teacher_notes?: string | null
+          user_id: string
+        }
+        Update: {
+          action_step?: string | null
+          coach_name?: string | null
+          competences?: string[] | null
+          created_at?: string
+          date?: string
+          development_goal?: string | null
+          has_feedback?: boolean
+          id?: string
+          next_action_step?: string | null
+          selected_action_step_id?: string | null
+          selected_action_step_text?: string | null
+          specific_praise?: string | null
+          status?: string
+          student_notes?: string | null
+          subject?: string | null
+          teacher?: string
+          teacher_notes?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string | null
@@ -41,6 +104,38 @@ export type Database = {
           school?: string | null
         }
         Relationships: []
+      }
+      reflections: {
+        Row: {
+          id: string
+          observation_id: string
+          reflection: string
+          submitted_at: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          observation_id: string
+          reflection: string
+          submitted_at?: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          observation_id?: string
+          reflection?: string
+          submitted_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reflections_observation_id_fkey"
+            columns: ["observation_id"]
+            isOneToOne: false
+            referencedRelation: "observations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {

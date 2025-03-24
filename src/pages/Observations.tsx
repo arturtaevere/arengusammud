@@ -18,6 +18,7 @@ const Observations = () => {
   const location = useLocation();
   const [showForm, setShowForm] = useState(false);
   const [observations, setObservations] = useState<Observation[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   
   // Check if we should show the form based on URL
   useEffect(() => {
@@ -29,26 +30,39 @@ const Observations = () => {
     }
   }, [location]);
   
-  // Load observations from localStorage on component mount
+  // Load observations from Supabase on component mount
   useEffect(() => {
     loadObservations();
   }, []);
 
-  const loadObservations = () => {
-    const storedObservations = getStoredObservations();
-    
-    // Map stored observations to the format expected by the UI
-    const formattedObservations = storedObservations.map(obs => ({
-      id: obs.id,
-      teacher: obs.teacher,
-      subject: obs.subject || 'Tund',
-      date: new Date(obs.date).toLocaleDateString('et-EE'),
-      status: obs.status,
-      hasFeedback: obs.hasFeedback,
-      competences: obs.competences || []
-    }));
-    
-    setObservations(formattedObservations);
+  const loadObservations = async () => {
+    setIsLoading(true);
+    try {
+      const storedObservations = await getStoredObservations();
+      
+      // Map stored observations to the format expected by the UI
+      const formattedObservations = storedObservations.map(obs => ({
+        id: obs.id,
+        teacher: obs.teacher,
+        subject: obs.subject || 'Tund',
+        date: new Date(obs.date).toLocaleDateString('et-EE'),
+        status: obs.status,
+        hasFeedback: obs.hasFeedback,
+        competences: obs.competences || [],
+        coachName: obs.coachName
+      }));
+      
+      setObservations(formattedObservations);
+    } catch (error) {
+      console.error('Error loading observations:', error);
+      toast({
+        title: "Viga",
+        description: "Vaatluste laadimine ebaõnnestus",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleNewObservation = () => {
@@ -56,7 +70,6 @@ const Observations = () => {
   };
 
   const handleSubmitForm = () => {
-    // This is a placeholder for future functionality
     toast({
       title: "Vaatlus salvestatud",
       description: "Tunnivaatlus on edukalt salvestatud",
@@ -68,38 +81,68 @@ const Observations = () => {
     loadObservations();
   };
 
-  const handleFeedbackGiven = (id: string) => {
-    // Update both the UI state and the persisted data
-    setObservations(prevObservations => 
-      prevObservations.map(obs => 
-        obs.id === id 
-          ? { ...obs, hasFeedback: true, status: 'Lõpetatud' } 
-          : obs
-      )
-    );
-    
-    // Update in localStorage
-    const storedObs = getStoredObservations().find(obs => obs.id === id);
-    if (storedObs) {
-      const updatedObs: StoredObservation = {
-        ...storedObs,
-        hasFeedback: true,
-        status: 'Lõpetatud'
-      };
-      updateObservation(updatedObs);
+  const handleFeedbackGiven = async (id: string) => {
+    try {
+      // Get the observation from Supabase
+      const storedObservations = await getStoredObservations();
+      const storedObs = storedObservations.find(obs => obs.id === id);
+      
+      if (storedObs) {
+        const updatedObs: StoredObservation = {
+          ...storedObs,
+          hasFeedback: true,
+          status: 'Lõpetatud'
+        };
+        
+        // Update in Supabase
+        await updateObservation(updatedObs);
+        
+        // Update the UI state
+        setObservations(prevObservations => 
+          prevObservations.map(obs => 
+            obs.id === id 
+              ? { ...obs, hasFeedback: true, status: 'Lõpetatud' } 
+              : obs
+          )
+        );
+        
+        toast({
+          title: "Tagasiside antud",
+          description: "Õpetajale on saadetud tagasiside",
+        });
+      }
+    } catch (error) {
+      console.error('Error updating feedback status:', error);
+      toast({
+        title: "Viga",
+        description: "Tagasiside märkimine ebaõnnestus",
+        variant: "destructive",
+      });
     }
   };
 
-  const handleGenerateSampleData = () => {
+  const handleGenerateSampleData = async () => {
     if (user) {
-      const teacherName = user.name || user.email?.split('@')[0] || 'Õpetaja';
-      generateSampleObservations(teacherName);
-      loadObservations();
-      
-      toast({
-        title: "Näidisandmed lisatud",
-        description: "Testkasutamiseks on lisatud vaatlused koos tagasisidega",
-      });
+      setIsLoading(true);
+      try {
+        const teacherName = user.name || user.email?.split('@')[0] || 'Õpetaja';
+        await generateSampleObservations(teacherName);
+        await loadObservations();
+        
+        toast({
+          title: "Näidisandmed lisatud",
+          description: "Testkasutamiseks on lisatud vaatlused koos tagasisidega",
+        });
+      } catch (error) {
+        console.error('Error generating sample data:', error);
+        toast({
+          title: "Viga",
+          description: "Näidisandmete lisamine ebaõnnestus",
+          variant: "destructive",
+        });
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -120,9 +163,10 @@ const Observations = () => {
               <Button 
                 variant="outline" 
                 onClick={handleGenerateSampleData}
+                disabled={isLoading}
               >
                 <Plus className="mr-2 h-4 w-4" />
-                Lisa näidisvaatlused
+                {isLoading ? "Laadimine..." : "Lisa näidisvaatlused"}
               </Button>
             </div>
           </div>
@@ -130,13 +174,21 @@ const Observations = () => {
 
         {showForm ? (
           <div className="mb-8">
-            <ObservationForm />
+            <ObservationForm onSubmit={handleSubmitForm} />
           </div>
         ) : (
-          <ObservationTabs 
-            observations={observations} 
-            onFeedbackGiven={handleFeedbackGiven} 
-          />
+          <>
+            {isLoading ? (
+              <div className="flex justify-center items-center h-64">
+                <p className="text-muted-foreground">Vaatluste laadimine...</p>
+              </div>
+            ) : (
+              <ObservationTabs 
+                observations={observations} 
+                onFeedbackGiven={handleFeedbackGiven} 
+              />
+            )}
+          </>
         )}
       </div>
     </div>

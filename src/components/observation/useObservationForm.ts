@@ -8,6 +8,7 @@ import { observationFormSchema } from './schemas';
 import { ObservationFormValues } from './types';
 import { generateObservationId, saveObservation } from './storage';
 import { useAuth } from '@/context/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
 
 export const useObservationForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -42,6 +43,15 @@ export const useObservationForm = () => {
   };
   
   const onSubmit = async (values: ObservationFormValues) => {
+    if (!user) {
+      toast({
+        title: "Viga",
+        description: "Tunnivaatluse salvestamiseks pead olema sisse logitud",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     setIsSubmitting(true);
     
     try {
@@ -66,8 +76,8 @@ export const useObservationForm = () => {
         createdAt: new Date().toISOString(),
       };
       
-      // Save to local storage
-      saveObservation(newObservation);
+      // Save to Supabase
+      await saveObservation(newObservation);
       
       // Show success message
       toast({

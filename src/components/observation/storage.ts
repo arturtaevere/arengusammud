@@ -1,7 +1,10 @@
 
-// Utility functions for storing and retrieving observation data from localStorage
+// Utility functions for storing and retrieving observation data from Supabase
 
-const OBSERVATIONS_STORAGE_KEY = 'observations_data';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/context/AuthContext';
+
+const OBSERVATIONS_STORAGE_KEY = 'observations_data'; // Keep for fallback
 
 export interface StoredObservation {
   id: string;
@@ -18,7 +21,7 @@ export interface StoredObservation {
   actionStep: string;
   nextActionStep: string;
   selectedActionStepId?: string | null;
-  selectedActionStepText?: string; // Added this field to match what's being used in the FeedbackCard
+  selectedActionStepText?: string;
   createdAt: string;
   coachName?: string;
   teacherReflection?: {
@@ -28,7 +31,85 @@ export interface StoredObservation {
 }
 
 // Get all stored observations
-export const getStoredObservations = (): StoredObservation[] => {
+export const getStoredObservations = async (): Promise<StoredObservation[]> => {
+  try {
+    // Get observations from Supabase
+    const { data: observations, error } = await supabase
+      .from('observations')
+      .select(`
+        id,
+        teacher,
+        subject,
+        date,
+        status,
+        has_feedback,
+        competences,
+        teacher_notes,
+        student_notes,
+        specific_praise,
+        development_goal,
+        action_step,
+        next_action_step,
+        selected_action_step_id,
+        selected_action_step_text,
+        coach_name,
+        created_at
+      `);
+
+    if (error) {
+      console.error('Error fetching observations from Supabase:', error);
+      return getFallbackObservations();
+    }
+
+    // Get reflections for these observations
+    const { data: reflections, error: reflectionsError } = await supabase
+      .from('reflections')
+      .select('*');
+
+    if (reflectionsError) {
+      console.error('Error fetching reflections from Supabase:', reflectionsError);
+    }
+
+    // Map to our StoredObservation interface
+    const mappedObservations: StoredObservation[] = observations.map(obs => {
+      // Find the reflection for this observation, if any
+      const reflection = reflections?.find(r => r.observation_id === obs.id);
+      
+      return {
+        id: obs.id,
+        teacher: obs.teacher,
+        subject: obs.subject || undefined,
+        date: new Date(obs.date).toISOString(),
+        status: obs.status,
+        hasFeedback: obs.has_feedback,
+        competences: obs.competences || [],
+        teacherNotes: obs.teacher_notes || '',
+        studentNotes: obs.student_notes || '',
+        specificPraise: obs.specific_praise || '',
+        developmentGoal: obs.development_goal || '',
+        actionStep: obs.action_step || '',
+        nextActionStep: obs.next_action_step || '',
+        selectedActionStepId: obs.selected_action_step_id || null,
+        selectedActionStepText: obs.selected_action_step_text || '',
+        coachName: obs.coach_name || undefined,
+        createdAt: new Date(obs.created_at).toISOString(),
+        teacherReflection: reflection ? {
+          reflection: reflection.reflection,
+          submittedAt: new Date(reflection.submitted_at).toISOString()
+        } : undefined
+      };
+    });
+
+    return mappedObservations;
+  } catch (error) {
+    console.error('Error processing observations from Supabase:', error);
+    return getFallbackObservations();
+  }
+};
+
+// Fallback to localStorage if Supabase fails
+const getFallbackObservations = (): StoredObservation[] => {
+  console.log('Falling back to localStorage for observations');
   const data = localStorage.getItem(OBSERVATIONS_STORAGE_KEY);
   if (!data) return [];
   
@@ -41,8 +122,49 @@ export const getStoredObservations = (): StoredObservation[] => {
 };
 
 // Save a new observation
-export const saveObservation = (observation: StoredObservation): void => {
-  const currentObservations = getStoredObservations();
+export const saveObservation = async (observation: StoredObservation): Promise<void> => {
+  try {
+    // Format the data for Supabase
+    const { data, error } = await supabase
+      .from('observations')
+      .insert({
+        id: observation.id,
+        teacher: observation.teacher,
+        subject: observation.subject,
+        date: new Date(observation.date).toISOString(),
+        status: observation.status,
+        has_feedback: observation.hasFeedback,
+        competences: observation.competences,
+        teacher_notes: observation.teacherNotes,
+        student_notes: observation.studentNotes,
+        specific_praise: observation.specificPraise,
+        development_goal: observation.developmentGoal,
+        action_step: observation.actionStep,
+        next_action_step: observation.nextActionStep,
+        selected_action_step_id: observation.selectedActionStepId,
+        selected_action_step_text: observation.selectedActionStepText,
+        coach_name: observation.coachName,
+        created_at: new Date(observation.createdAt).toISOString()
+      })
+      .select();
+
+    if (error) {
+      console.error('Error saving observation to Supabase:', error);
+      saveToLocalStorageFallback(observation);
+      return;
+    }
+
+    console.log('Observation saved to Supabase:', data);
+  } catch (error) {
+    console.error('Error processing observation save to Supabase:', error);
+    saveToLocalStorageFallback(observation);
+  }
+};
+
+// Fallback to localStorage if Supabase fails
+const saveToLocalStorageFallback = (observation: StoredObservation): void => {
+  console.log('Falling back to localStorage for saving observation');
+  const currentObservations = getFallbackObservations();
   const updatedObservations = [observation, ...currentObservations];
   
   localStorage.setItem(
@@ -52,8 +174,89 @@ export const saveObservation = (observation: StoredObservation): void => {
 };
 
 // Update an existing observation
-export const updateObservation = (updatedObservation: StoredObservation): void => {
-  const currentObservations = getStoredObservations();
+export const updateObservation = async (updatedObservation: StoredObservation): Promise<void> => {
+  try {
+    // Format the data for Supabase
+    const { error } = await supabase
+      .from('observations')
+      .update({
+        teacher: updatedObservation.teacher,
+        subject: updatedObservation.subject,
+        date: new Date(updatedObservation.date).toISOString(),
+        status: updatedObservation.status,
+        has_feedback: updatedObservation.hasFeedback,
+        competences: updatedObservation.competences,
+        teacher_notes: updatedObservation.teacherNotes,
+        student_notes: updatedObservation.studentNotes,
+        specific_praise: updatedObservation.specificPraise,
+        development_goal: updatedObservation.developmentGoal,
+        action_step: updatedObservation.actionStep,
+        next_action_step: updatedObservation.nextActionStep,
+        selected_action_step_id: updatedObservation.selectedActionStepId,
+        selected_action_step_text: updatedObservation.selectedActionStepText,
+        coach_name: updatedObservation.coachName
+      })
+      .eq('id', updatedObservation.id);
+
+    if (error) {
+      console.error('Error updating observation in Supabase:', error);
+      updateInLocalStorageFallback(updatedObservation);
+      return;
+    }
+
+    // If there's a teacher reflection, update or insert it
+    if (updatedObservation.teacherReflection) {
+      // Check if reflection already exists
+      const { data: existingReflection, error: fetchError } = await supabase
+        .from('reflections')
+        .select('id')
+        .eq('observation_id', updatedObservation.id)
+        .maybeSingle();
+
+      if (fetchError) {
+        console.error('Error checking for existing reflection:', fetchError);
+      }
+
+      if (existingReflection) {
+        // Update existing reflection
+        const { error: updateError } = await supabase
+          .from('reflections')
+          .update({
+            reflection: updatedObservation.teacherReflection.reflection,
+            submitted_at: new Date(updatedObservation.teacherReflection.submittedAt).toISOString()
+          })
+          .eq('id', existingReflection.id);
+
+        if (updateError) {
+          console.error('Error updating reflection in Supabase:', updateError);
+        }
+      } else {
+        // Insert new reflection
+        const { error: insertError } = await supabase
+          .from('reflections')
+          .insert({
+            observation_id: updatedObservation.id,
+            reflection: updatedObservation.teacherReflection.reflection,
+            submitted_at: new Date(updatedObservation.teacherReflection.submittedAt).toISOString()
+          });
+
+        if (insertError) {
+          console.error('Error inserting reflection to Supabase:', insertError);
+        }
+      }
+    }
+
+    console.log('Observation updated in Supabase');
+  } catch (error) {
+    console.error('Error processing observation update in Supabase:', error);
+    updateInLocalStorageFallback(updatedObservation);
+  }
+};
+
+// Fallback to localStorage if Supabase fails
+const updateInLocalStorageFallback = (updatedObservation: StoredObservation): void => {
+  console.log('Falling back to localStorage for updating observation');
+  const currentObservations = getFallbackObservations();
   const updatedObservations = currentObservations.map(obs => 
     obs.id === updatedObservation.id ? updatedObservation : obs
   );
@@ -65,8 +268,31 @@ export const updateObservation = (updatedObservation: StoredObservation): void =
 };
 
 // Delete an observation
-export const deleteObservation = (id: string): void => {
-  const currentObservations = getStoredObservations();
+export const deleteObservation = async (id: string): Promise<void> => {
+  try {
+    // Delete from Supabase
+    const { error } = await supabase
+      .from('observations')
+      .delete()
+      .eq('id', id);
+
+    if (error) {
+      console.error('Error deleting observation from Supabase:', error);
+      deleteFromLocalStorageFallback(id);
+      return;
+    }
+
+    console.log('Observation deleted from Supabase');
+  } catch (error) {
+    console.error('Error processing observation deletion in Supabase:', error);
+    deleteFromLocalStorageFallback(id);
+  }
+};
+
+// Fallback to localStorage if Supabase fails
+const deleteFromLocalStorageFallback = (id: string): void => {
+  console.log('Falling back to localStorage for deleting observation');
+  const currentObservations = getFallbackObservations();
   const updatedObservations = currentObservations.filter(obs => obs.id !== id);
   
   localStorage.setItem(
@@ -81,18 +307,29 @@ export const generateObservationId = (): string => {
 };
 
 // Generate sample observations for teacher feedback form demo
-export const generateSampleObservations = (teacherName: string): void => {
-  const currentObservations = getStoredObservations();
-  
-  // Check if we already have observations for this teacher
-  const hasTeacherObservations = currentObservations.some(
-    obs => obs.teacher.toLowerCase() === teacherName.toLowerCase() && obs.hasFeedback
-  );
-  
-  if (hasTeacherObservations) {
-    return; // Don't create duplicates if samples already exist
+export const generateSampleObservations = async (teacherName: string): Promise<void> => {
+  // Check if we already have observations for this teacher in Supabase
+  const { data: existingObservations, error: fetchError } = await supabase
+    .from('observations')
+    .select('id')
+    .eq('teacher', teacherName)
+    .eq('has_feedback', true);
+
+  if (fetchError) {
+    console.error('Error checking for existing observations:', fetchError);
+    // Fall back to localStorage check
+    const storedObservations = getFallbackObservations();
+    const hasTeacherObservations = storedObservations.some(
+      obs => obs.teacher.toLowerCase() === teacherName.toLowerCase() && obs.hasFeedback
+    );
+    
+    if (hasTeacherObservations) {
+      return; // Don't create duplicates if samples already exist
+    }
+  } else if (existingObservations && existingObservations.length > 0) {
+    return; // Don't create duplicates if samples already exist in Supabase
   }
-  
+
   const competencesList = [
     ["Õpikeskkonna kujundamine", "Õppimist toetav suhtlemine"],
     ["Õppimise juhtimine", "Tagasiside ja hindamine"],
@@ -114,8 +351,8 @@ export const generateSampleObservations = (teacherName: string): void => {
       developmentGoal: "Suurendada õpilaste iseseisvust ülesannete lahendamisel.",
       actionStep: "Kasutada rohkem avatud küsimusi, mis suunavad õpilasi ise lahendusi leidma.",
       nextActionStep: "Katsetada uut küsimuste esitamise tehnikat, mis suunab õpilasi iseseisvalt mõtlema. Valmistada ette 2-3 probleemülesannet, mida saab lahendada erinevate lähenemistega.",
-      selectedActionStepId: "step10", // Updated to use a valid action step ID
-      selectedActionStepText: "Klassis liikumine: Liigu tunni jooksul teadlikult klassiruumis ringi, et jõuda kõigi õpilasteni.", // Added this field
+      selectedActionStepId: "step10",
+      selectedActionStepText: "Klassis liikumine: Liigu tunni jooksul teadlikult klassiruumis ringi, et jõuda kõigi õpilasteni.",
       coachName: "Mari Mets",
       createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString() // 1 week ago
     },
@@ -133,8 +370,8 @@ export const generateSampleObservations = (teacherName: string): void => {
       developmentGoal: "Rakendada enesehindamist õppeprotsessis.",
       actionStep: "Kasutada hindamismudeleid, mis võimaldavad õpilastel oma tööd ise hinnata enne õpetaja tagasisidet.",
       nextActionStep: "Koostada enesehindamise küsimustik, mida õpilased saavad kasutada enne lõplikku töö esitamist. Tutvustada seda järgmises tunnis ja lasta õpilastel katsetada.",
-      selectedActionStepId: "step1", // Updated to use a valid action step ID
-      selectedActionStepText: "Tunni alguses reeglite meeldetuletus: Tuleta tunni alguses meelde klassi reeglid, et luua toetav õpikeskkond.", // Added this field
+      selectedActionStepId: "step1",
+      selectedActionStepText: "Tunni alguses reeglite meeldetuletus: Tuleta tunni alguses meelde klassi reeglid, et luua toetav õpikeskkond.",
       coachName: "Jaan Tamm",
       createdAt: new Date(Date.now() - 21 * 24 * 60 * 60 * 1000).toISOString(), // 3 weeks ago
       teacherReflection: {
@@ -144,6 +381,19 @@ export const generateSampleObservations = (teacherName: string): void => {
     }
   ];
   
-  const updatedObservations = [...sampleObservations, ...currentObservations];
-  localStorage.setItem(OBSERVATIONS_STORAGE_KEY, JSON.stringify(updatedObservations));
+  // Save sample observations to Supabase
+  for (const observation of sampleObservations) {
+    await saveObservation(observation);
+    
+    // If there's a teacher reflection, save it separately
+    if (observation.teacherReflection) {
+      await supabase
+        .from('reflections')
+        .insert({
+          observation_id: observation.id,
+          reflection: observation.teacherReflection.reflection,
+          submitted_at: new Date(observation.teacherReflection.submittedAt).toISOString()
+        });
+    }
+  }
 };
