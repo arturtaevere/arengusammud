@@ -27,6 +27,13 @@ const ObservationDetail = () => {
     navigate
   } = useObservationDetail();
 
+  console.log("ObservationDetail rendering:", { 
+    isObserved, 
+    feedbackProvided, 
+    observationId: observation?.id,
+    hasFeedback: observation?.hasFeedback
+  });
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50">

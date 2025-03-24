@@ -32,6 +32,9 @@ export const useObservationDetail = () => {
         const teacherName = user?.name || user?.email?.split('@')[0] || '';
         const isUserObserved = found.teacher.toLowerCase().includes(teacherName.toLowerCase());
         setIsObserved(isUserObserved);
+        
+        console.log('Setting isObserved:', isUserObserved);
+        console.log('Setting feedbackProvided:', found.hasFeedback);
       } else {
         console.log('Observation not found with id:', id);
       }
@@ -44,6 +47,8 @@ export const useObservationDetail = () => {
 
   const handleFeedbackProvided = () => {
     if (!observation) return;
+    
+    console.log('handleFeedbackProvided called');
     
     const updatedObservation = {
       ...observation,

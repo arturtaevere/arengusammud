@@ -49,6 +49,8 @@ const FeedbackActions = ({
     });
   };
 
+  console.log("FeedbackActions rendering:", { isObserved, feedbackProvided });
+
   return (
     <>
       {/* Feedback Meeting Toggle - only visible to coaches */}
