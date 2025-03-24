@@ -41,10 +41,10 @@ const TeacherFeedbackItem = ({ item }: TeacherFeedbackItemProps) => {
         <div className="text-sm text-gray-500 mt-1">
           {formatDate(item.date)}
         </div>
-        {item.type === 'feedback' && item.coach && (
+        {item.type === 'feedback' && (
           <div className="flex items-center text-xs text-gray-500 mt-1">
             <UserCircle className="mr-1 h-3 w-3" />
-            Õpipartner: {item.coach}
+            {item.teacher ? `Õpetaja: ${item.teacher}` : 'Õpetaja: Määramata'}
           </div>
         )}
       </div>
