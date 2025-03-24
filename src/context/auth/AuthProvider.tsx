@@ -1,4 +1,3 @@
-
 import React, { createContext, useState, useEffect } from 'react';
 import { AuthContextType, User, UserWithPassword } from './types';
 import { USER_STORAGE_KEY, USERS_STORAGE_KEY } from './constants';
@@ -28,7 +27,6 @@ export const AuthContext = createContext<AuthContextType>({
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  // Add state for pendingVerificationEmail
   const [pendingVerificationEmail, setPendingVerificationEmail] = useState<string | null>(null);
   const [error, setError] = useState<Error | null>(null);
   
@@ -177,13 +175,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Handle user signup
   const handleSignup = async (name: string, email: string, password: string, role: 'juht' | 'õpetaja', school: string) => {
     setIsLoading(true);
+    console.log('AuthProvider: handleSignup called with', { name, email, role, school });
     try {
       const result = await signup(name, email, password, role, school);
+      console.log('AuthProvider: signup result', result);
       // Store the email for verification purposes
       setPendingVerificationEmail(email);
       return result;
     } catch (error) {
-      console.error('Signup error:', error);
+      console.error('Signup error in AuthProvider:', error);
       throw error;
     } finally {
       setIsLoading(false);

@@ -38,15 +38,15 @@ const SignupForm = () => {
   });
 
   const handleSignup = async (values: SignupFormValues) => {
-    console.log("Signup attempt with values:", values);
+    console.log("Signup attempt with values:", { ...values, password: '[REDACTED]' });
     try {
       setIsSubmitting(true);
       setSignupSuccess(false);
       
-      console.log("Calling signup function with:", values.name, values.email, "password omitted", values.role, values.school);
-      await signup(values.name, values.email, values.password, values.role, values.school);
+      console.log("Calling signup function with:", values.name, values.email, "[password omitted]", values.role, values.school);
+      const result = await signup(values.name, values.email, values.password, values.role, values.school);
       
-      console.log("Signup successful");
+      console.log("Signup successful, result:", result);
       setSignupSuccess(true);
       
       // Store pending verification email
@@ -61,8 +61,6 @@ const SignupForm = () => {
         description: "Konto on loodud. Võid nüüd sisse logida.",
       });
       
-      // Optional: redirect to login tab
-      // You could add a callback to the parent component to switch tabs
     } catch (error) {
       console.error('Signup error in form handler:', error);
       toast({
@@ -160,7 +158,6 @@ const SignupForm = () => {
             )}
           />
 
-          {/* School field is now always shown regardless of role */}
           <FormField
             control={form.control}
             name="school"
@@ -193,7 +190,7 @@ const SignupForm = () => {
           <Button 
             type="submit" 
             className="w-full transition-all" 
-            disabled={isSubmitting}
+            disabled={isSubmitting || signupSuccess}
           >
             {isSubmitting ? "Konto loomine..." : signupSuccess ? "Konto loodud!" : "Loo konto"}
           </Button>
