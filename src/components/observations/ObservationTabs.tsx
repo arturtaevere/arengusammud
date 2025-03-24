@@ -88,13 +88,38 @@ const ObservationTabs = ({ observations, onFeedbackGiven }: ObservationTabsProps
       createdAt: obs.teacherReflection?.submittedAt || obs.date // Use reflection date for sorting
     }));
     
+    // Helper function to validate date strings
+    const isValidDate = (dateString: string) => {
+      const date = new Date(dateString);
+      return !isNaN(date.getTime());
+    };
+    
     // Combine and sort all items by date (newest first)
-    const allItems = [...feedbackItems, ...reflectionItems].sort((a, b) => 
-      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-    );
+    // Ensure we're only sorting with valid dates
+    const allItems = [...feedbackItems, ...reflectionItems].sort((a, b) => {
+      // Validate dates before comparing
+      const dateA = isValidDate(a.createdAt) ? new Date(a.createdAt).getTime() : 0;
+      const dateB = isValidDate(b.createdAt) ? new Date(b.createdAt).getTime() : 0;
+      
+      return dateB - dateA;
+    });
     
     setCombinedItems(allItems);
   }, [observations, user]);
+
+  // Helper function to format dates safely
+  const formatDate = (dateString: string) => {
+    try {
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) {
+        return 'Kuupäev puudub';
+      }
+      return date.toLocaleDateString('et-EE');
+    } catch (e) {
+      console.error('Error formatting date:', dateString, e);
+      return 'Kuupäev puudub';
+    }
+  };
 
   return (
     <Card className="p-4">
@@ -151,7 +176,7 @@ const ObservationTabs = ({ observations, onFeedbackGiven }: ObservationTabsProps
                         </span>
                       </div>
                       <div className="text-sm text-gray-500 mt-1">
-                        {new Date(item.date).toLocaleDateString('et-EE')}
+                        {formatDate(item.date)}
                       </div>
                     </div>
                     
