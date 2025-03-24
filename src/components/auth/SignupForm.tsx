@@ -11,14 +11,20 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { CardContent, CardFooter } from '@/components/ui/card';
 import { SignupFormValues, signupSchema } from './schemas';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const SignupForm = () => {
   const { signup, isLoading, setPendingVerificationEmail } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [signupSuccess, setSignupSuccess] = useState(false);
+
+  // Add debug logging for form state
+  useEffect(() => {
+    console.log("Signup form state:", { isLoading, isSubmitting, signupSuccess });
+  }, [isLoading, isSubmitting, signupSuccess]);
 
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
@@ -32,9 +38,15 @@ const SignupForm = () => {
   });
 
   const handleSignup = async (values: SignupFormValues) => {
+    console.log("Signup attempt with values:", values);
     try {
+      setIsSubmitting(true);
       setSignupSuccess(false);
+      
+      console.log("Calling signup function with:", values.name, values.email, "password omitted", values.role, values.school);
       await signup(values.name, values.email, values.password, values.role, values.school);
+      
+      console.log("Signup successful");
       setSignupSuccess(true);
       
       // Store pending verification email
@@ -58,6 +70,8 @@ const SignupForm = () => {
         title: "Registreerimine ebaõnnestus",
         description: error instanceof Error ? error.message : "Midagi läks valesti",
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -65,6 +79,7 @@ const SignupForm = () => {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSignup)}>
         <CardContent className="space-y-4">
+          {/* Form fields */}
           <FormField
             control={form.control}
             name="name"
@@ -178,9 +193,9 @@ const SignupForm = () => {
           <Button 
             type="submit" 
             className="w-full transition-all" 
-            disabled={isLoading || signupSuccess}
+            disabled={isSubmitting}
           >
-            {isLoading ? "Konto loomine..." : signupSuccess ? "Konto loodud!" : "Loo konto"}
+            {isSubmitting ? "Konto loomine..." : signupSuccess ? "Konto loodud!" : "Loo konto"}
           </Button>
         </CardFooter>
       </form>

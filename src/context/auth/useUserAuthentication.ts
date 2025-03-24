@@ -1,3 +1,4 @@
+
 import { useToast } from '@/components/ui/use-toast';
 import { User, UserWithPassword } from './types';
 import { USER_STORAGE_KEY, USERS_STORAGE_KEY } from './constants';
@@ -83,6 +84,8 @@ export const useUserAuthentication = (
       throw new Error('Kooli valimine on kohustuslik');
     }
 
+    console.log('Attempting to signup with Supabase:', { name, email, role, school });
+
     try {
       // Register with Supabase
       const { data, error } = await supabase.auth.signUp({
@@ -106,6 +109,8 @@ export const useUserAuthentication = (
         console.error('No user data returned from Supabase signup');
         throw new Error('Kasutaja loomine ebaõnnestus');
       }
+
+      console.log('Signup successful, user created:', data.user.id);
       
       toast({
         title: "Registreerimine õnnestus",
