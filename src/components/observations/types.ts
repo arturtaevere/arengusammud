@@ -17,3 +17,20 @@ export interface Feedback {
   type: string;
   preview: string;
 }
+
+// Combined type for unified display of feedback and reflections
+export interface CombinedFeedbackItem {
+  id: string;
+  teacher: string;
+  subject?: string;
+  date: string;
+  type: 'feedback' | 'reflection';
+  status?: string;
+  hasFeedback?: boolean;
+  competences?: string[];
+  teacherReflection?: {
+    reflection: string;
+    submittedAt: string;
+  };
+  createdAt: string;
+}
