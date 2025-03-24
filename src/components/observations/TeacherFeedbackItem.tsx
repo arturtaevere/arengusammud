@@ -27,7 +27,7 @@ const TeacherFeedbackItem = ({ item }: TeacherFeedbackItemProps) => {
       <div className="p-4 pb-2">
         <div className="flex justify-between">
           <div className="text-lg font-medium">
-            {item.subject || 'Tund'}
+            {item.type === 'reflection' ? 'Minu refleksioon' : 'Tagasiside'}
           </div>
         </div>
         <div className="text-sm text-gray-500 mt-1">
