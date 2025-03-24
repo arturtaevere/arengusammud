@@ -21,7 +21,7 @@ const FeedbackNotesSection = ({ form }: FeedbackNotesSectionProps) => {
             <FormLabel>
               <span className="flex items-center">
                 <ThumbsUp className="h-4 w-4 mr-2" />
-                Konkreetne kiitus
+                Tunnustus ja küsimus
               </span>
             </FormLabel>
             <FormControl>

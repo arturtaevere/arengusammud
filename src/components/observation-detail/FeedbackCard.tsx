@@ -33,7 +33,7 @@ const FeedbackCard = ({
       </CardHeader>
       <CardContent className="space-y-4">
         <div>
-          <h3 className="text-sm font-medium text-gray-500">Konkreetne kiitus</h3>
+          <h3 className="text-sm font-medium text-gray-500">Tunnustus ja küsimus</h3>
           {isEditing ? (
             <Textarea
               value={editedObservation.specificPraise || ''}
