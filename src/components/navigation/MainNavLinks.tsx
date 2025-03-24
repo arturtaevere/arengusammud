@@ -1,6 +1,6 @@
 
 import { Link, useLocation } from 'react-router-dom';
-import { BookOpen, ClipboardList, Users, MessageSquare } from 'lucide-react';
+import { BookOpen, ClipboardList, Users, Lightbulb, Messagecircle } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { Home } from 'lucide-react';
 
@@ -41,7 +41,7 @@ const MainNavLinks = () => {
             : 'text-foreground/70 hover:text-foreground'
         }`}
       >
-        <MessageSquare className="mr-2 h-4 w-4" />
+        <Lightbulb className="mr-2 h-4 w-4" />
         <span>Õpiringid</span>
       </Link>
       <Link 
@@ -52,7 +52,7 @@ const MainNavLinks = () => {
             : 'text-foreground/70 hover:text-foreground'
         }`}
       >
-        <ClipboardList className="mr-2 h-4 w-4" />
+        <Messagecircle className="mr-2 h-4 w-4" />
         <span>Õpipartnerlus</span>
       </Link>
       {isJuht && (
