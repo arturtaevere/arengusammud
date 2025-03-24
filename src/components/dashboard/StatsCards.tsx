@@ -112,15 +112,24 @@ const StatsCards = ({ stats }: StatsCardsProps) => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-3xl font-bold">{completedFeedbackCount}</p>
-          <p className="text-sm text-muted-foreground">Tagasisidekohtumist läbi viidud</p>
-          <div className="mt-4">
-            <Button variant="outline" size="sm" className="w-full" asChild>
-              <Link to="/feedback/new">
-                <Plus className="mr-2 h-4 w-4" />
-                Anna tagasisidet
+          <div className="space-y-6">
+            <div>
+              <h4 className="text-xs text-muted-foreground mb-1">Tagasisidekohtumist läbi viidud</h4>
+              <span className="text-xl font-bold">{completedFeedbackCount}</span>
+            </div>
+            
+            <div className="mt-4">
+              <Link 
+                to="/observations/new" 
+                className="flex items-center justify-between text-sm font-medium text-orange-500 hover:text-orange-600 transition-colors"
+              >
+                <span className="flex items-center">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Lisa uus tunnivaatlus
+                </span>
+                <ArrowRight className="h-4 w-4 text-orange-500" />
               </Link>
-            </Button>
+            </div>
           </div>
         </CardContent>
       </Card>
