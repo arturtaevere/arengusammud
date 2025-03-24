@@ -112,14 +112,11 @@ export const useUserAuthentication = (
 
       console.log('Signup successful, user created:', data.user.id);
       
-      toast({
-        title: "Registreerimine õnnestus",
-        description: "Konto on loodud. Võid nüüd sisse logida.",
-      });
-      
+      // If we reach here, the signup was successful
       return email;
     } catch (error) {
-      console.error('Signup error:', error);
+      console.error('Signup error in useUserAuthentication:', error);
+      // Rethrow the error so it can be caught by the caller
       throw error;
     }
   };

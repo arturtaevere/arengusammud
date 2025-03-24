@@ -13,9 +13,10 @@ import { CardContent, CardFooter } from '@/components/ui/card';
 import { SignupFormValues, signupSchema } from './schemas';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Loader2 } from 'lucide-react';
 
 const SignupForm = () => {
-  const { signup, isLoading, setPendingVerificationEmail } = useAuth();
+  const { signup, isLoading: authLoading, setPendingVerificationEmail } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -23,8 +24,8 @@ const SignupForm = () => {
 
   // Add debug logging for form state
   useEffect(() => {
-    console.log("Signup form state:", { isLoading, isSubmitting, signupSuccess });
-  }, [isLoading, isSubmitting, signupSuccess]);
+    console.log("Signup form state:", { authLoading, isSubmitting, signupSuccess });
+  }, [authLoading, isSubmitting, signupSuccess]);
 
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
@@ -39,6 +40,13 @@ const SignupForm = () => {
 
   const handleSignup = async (values: SignupFormValues) => {
     console.log("Signup attempt with values:", { ...values, password: '[REDACTED]' });
+    
+    // Don't try to submit if already submitting
+    if (isSubmitting) {
+      console.log("Already submitting, ignoring click");
+      return;
+    }
+    
     try {
       setIsSubmitting(true);
       setSignupSuccess(false);
@@ -68,10 +76,14 @@ const SignupForm = () => {
         title: "Registreerimine ebaõnnestus",
         description: error instanceof Error ? error.message : "Midagi läks valesti",
       });
+      setSignupSuccess(false);
     } finally {
       setIsSubmitting(false);
     }
   };
+
+  // Prevent submitting the form while loading
+  const isFormDisabled = isSubmitting || authLoading;
 
   return (
     <Form {...form}>
@@ -88,6 +100,7 @@ const SignupForm = () => {
                   <Input 
                     placeholder="Sinu Nimi"
                     {...field}
+                    disabled={isFormDisabled}
                   />
                 </FormControl>
                 <FormMessage />
@@ -106,6 +119,7 @@ const SignupForm = () => {
                     type="email" 
                     placeholder="sinu.email@näide.ee"
                     {...field}
+                    disabled={isFormDisabled}
                   />
                 </FormControl>
                 <FormMessage />
@@ -124,6 +138,7 @@ const SignupForm = () => {
                     type="password"
                     placeholder="Vähemalt 6 tähemärki"
                     {...field}
+                    disabled={isFormDisabled}
                   />
                 </FormControl>
                 <FormMessage />
@@ -142,6 +157,7 @@ const SignupForm = () => {
                     onValueChange={field.onChange} 
                     value={field.value}
                     className="flex space-x-4"
+                    disabled={isFormDisabled}
                   >
                     <div className="flex items-center space-x-2">
                       <RadioGroupItem value="juht" id="juht" />
@@ -168,6 +184,7 @@ const SignupForm = () => {
                   <Select 
                     onValueChange={field.onChange}
                     value={field.value}
+                    disabled={isFormDisabled}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Vali oma kool" />
@@ -190,9 +207,18 @@ const SignupForm = () => {
           <Button 
             type="submit" 
             className="w-full transition-all" 
-            disabled={isSubmitting || signupSuccess}
+            disabled={isFormDisabled || signupSuccess}
           >
-            {isSubmitting ? "Konto loomine..." : signupSuccess ? "Konto loodud!" : "Loo konto"}
+            {isSubmitting ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Konto loomine...
+              </>
+            ) : signupSuccess ? (
+              "Konto loodud!"
+            ) : (
+              "Loo konto"
+            )}
           </Button>
         </CardFooter>
       </form>
