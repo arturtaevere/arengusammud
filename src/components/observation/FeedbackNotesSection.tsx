@@ -24,9 +24,12 @@ const FeedbackNotesSection = ({ form }: FeedbackNotesSectionProps) => {
                 Tunnustus ja küsimus
               </span>
             </FormLabel>
+            <p className="text-sm text-gray-500 mb-2">
+              Tõsta esile üht positiivset näidet õpetamisoskusest, mis tunnivaatlusel silma jäi ja mida õpetaja võiks edaspidi samamoodi teha. Valmista ette küsimus, mis kutsub õpetajat rääkima, mis selle mõju õpilastele oli.
+            </p>
             <FormControl>
               <Textarea 
-                placeholder="Tõsta esile üht positiivset näidet õpetamisoskusest, mis tunnivaatlusel silma jäi ja mida õpetaja võiks edaspidi samamoodi teha. Valmista ette küsimus, mis kutsub õpetajat rääkima, mis selle mõju õpilastele oli." 
+                placeholder="Kirjuta siia tunnustus ja küsimus" 
                 className="min-h-[100px]"
                 {...field} 
               />

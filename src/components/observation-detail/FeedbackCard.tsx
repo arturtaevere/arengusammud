@@ -34,12 +34,15 @@ const FeedbackCard = ({
       <CardContent className="space-y-4">
         <div>
           <h3 className="text-sm font-medium text-gray-500">Tunnustus ja küsimus</h3>
+          <p className="text-sm text-gray-500 mb-2">
+            Tõsta esile üht positiivset näidet õpetamisoskusest, mis tunnivaatlusel silma jäi ja mida õpetaja võiks edaspidi samamoodi teha. Valmista ette küsimus, mis kutsub õpetajat rääkima, mis selle mõju õpilastele oli.
+          </p>
           {isEditing ? (
             <Textarea
               value={editedObservation.specificPraise || ''}
               onChange={(e) => handleInputChange('specificPraise', e.target.value)}
               className="mt-1"
-              placeholder="Tõsta esile üht positiivset näidet õpetamisoskusest, mis tunnivaatlusel silma jäi ja mida õpetaja võiks edaspidi samamoodi teha. Valmista ette küsimus, mis kutsub õpetajat rääkima, mis selle mõju õpilastele oli."
+              placeholder="Kirjuta siia tunnustus ja küsimus"
             />
           ) : (
             <p className="mt-1 whitespace-pre-wrap">{observation.specificPraise}</p>
