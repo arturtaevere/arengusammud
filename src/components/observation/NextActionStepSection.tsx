@@ -16,7 +16,10 @@ interface NextActionStepSectionProps {
 const NextActionStepSection = ({ form, onOpenActionStepSelector }: NextActionStepSectionProps) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const selectedActionStepId = form.getValues().selectedActionStepId;
-  const actionStepText = form.watch('nextActionStep');
+  
+  // Get both values separately
+  const coachNotes = form.watch('nextActionStep');
+  const selectedActionStepText = form.watch('selectedActionStepText');
   
   return (
     <>
@@ -54,14 +57,19 @@ const NextActionStepSection = ({ form, onOpenActionStepSelector }: NextActionSte
                 </Button>
               </div>
               
-              {/* Box for selected action step */}
+              {/* Box for selected action step with its own state */}
               {selectedActionStepId && (
                 <div className="mt-3">
-                  <Textarea
-                    placeholder="Sammu sõnastust saad vajadusel muuta"
-                    className="min-h-[80px]"
-                    value={actionStepText || ""}
-                    onChange={(e) => form.setValue('nextActionStep', e.target.value)}
+                  <FormField
+                    control={form.control}
+                    name="selectedActionStepText"
+                    render={({ field }) => (
+                      <Textarea
+                        placeholder="Sammu sõnastust saad vajadusel muuta"
+                        className="min-h-[80px]"
+                        {...field}
+                      />
+                    )}
                   />
                 </div>
               )}

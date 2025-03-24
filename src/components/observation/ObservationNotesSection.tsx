@@ -1,4 +1,3 @@
-
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Save } from 'lucide-react';
@@ -20,8 +19,6 @@ interface ObservationNotesSectionProps {
 const ObservationNotesSection = ({ form, isSubmitting }: ObservationNotesSectionProps) => {
   const navigate = useNavigate();
   const [sheetOpen, setSheetOpen] = useState(false);
-  
-  const actionStepValue = form.watch('nextActionStep');
   
   return (
     <Card>
@@ -59,11 +56,11 @@ const ObservationNotesSection = ({ form, isSubmitting }: ObservationNotesSection
 
       <CompetencyActionStepSelector
         label="Vali järgmine arengusamm..."
-        value={actionStepValue}
+        value={form.watch('selectedActionStepText')}
         open={sheetOpen}
         onOpenChange={setSheetOpen}
         onSelect={(step) => {
-          form.setValue('nextActionStep', `${step.title}: ${step.description}`);
+          form.setValue('selectedActionStepText', `${step.title}: ${step.description}`);
           form.setValue('selectedActionStepId', step.id);
           setSheetOpen(false);
         }}

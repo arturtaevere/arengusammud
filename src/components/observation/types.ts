@@ -40,8 +40,9 @@ export interface ObservationFormValues {
   developmentGoal: string;
   combinedNotes: string;  // Only using combined notes now
   specificPraise: string;
-  nextActionStep: string;
-  selectedActionStepId: string | null;
+  nextActionStep: string; // Coach's notes about the next action step
+  selectedActionStepText: string; // The actual text of the selected action step
+  selectedActionStepId: string | null; // ID of the selected action step
 }
 
 // Also export the mock teachers used in ObservationForm

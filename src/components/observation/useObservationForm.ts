@@ -26,6 +26,7 @@ export const useObservationForm = () => {
       combinedNotes: '',
       specificPraise: '',
       nextActionStep: '',
+      selectedActionStepText: '',
       selectedActionStepId: null, // Add this to track the selected action step
     }
   });
@@ -50,6 +51,7 @@ export const useObservationForm = () => {
         developmentGoal: values.developmentGoal,
         actionStep: values.actionStep,
         nextActionStep: values.nextActionStep,
+        selectedActionStepText: values.selectedActionStepText,
         selectedActionStepId: values.selectedActionStepId,
         createdAt: new Date().toISOString(),
       };
