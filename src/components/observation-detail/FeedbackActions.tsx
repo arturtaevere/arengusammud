@@ -55,7 +55,7 @@ const FeedbackActions = ({
           <Button 
             onClick={handleFeedbackProvided}
             disabled={feedbackProvided}
-            className="gap-2"
+            className="gap-2 bg-pink-500 hover:bg-pink-600 text-white"
           >
             <CalendarCheck className="h-4 w-4" />
             {feedbackProvided 

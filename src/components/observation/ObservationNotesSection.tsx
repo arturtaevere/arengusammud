@@ -53,7 +53,7 @@ const ObservationNotesSection = ({ form, isSubmitting }: ObservationNotesSection
           disabled={isSubmitting}
         >
           <Save className="mr-2 h-4 w-4" />
-          {isSubmitting ? "Salvestamine..." : "Salvesta vaatlus"}
+          {isSubmitting ? "Salvestamine..." : "Salvesta märkmed"}
         </Button>
       </CardFooter>
 
