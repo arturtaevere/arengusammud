@@ -27,9 +27,21 @@ const ObservationTabs = ({ observations, onFeedbackGiven }: ObservationTabsProps
       try {
         // Get all stored observations
         const storedObservations = await getStoredObservations();
+        console.log('Loaded stored observations:', storedObservations);
+        
+        if (!Array.isArray(storedObservations)) {
+          console.error('storedObservations is not an array:', storedObservations);
+          return;
+        }
+        
+        if (!user) {
+          console.log('No user logged in, cannot filter observations');
+          return;
+        }
         
         // Use user's name or email as fallback to match with teacher field
         const teacherName = user?.name || user?.email?.split('@')[0] || '';
+        console.log('Current user name for matching:', teacherName);
         
         // The observations where the current user is the teacher
         const received = observations.filter(obs => 
@@ -38,10 +50,16 @@ const ObservationTabs = ({ observations, onFeedbackGiven }: ObservationTabsProps
           obs.hasFeedback
         );
         
-        // The observations that the current user conducted (i.e., not where they are the teacher)
-        const conducted = observations.filter(obs => 
-          !obs.teacher.toLowerCase().includes(teacherName.toLowerCase())
-        );
+        // The observations that the current user conducted (i.e., as the coach)
+        // Include user_id check to make sure we only show observations created by this user
+        const conducted = observations.filter(obs => {
+          const isCoach = !obs.teacher.toLowerCase().includes(teacherName.toLowerCase());
+          console.log(`Observation ${obs.id} created by ${obs.teacher}, isCoach: ${isCoach}`);
+          return isCoach;
+        });
+        
+        console.log('Filtered received observations:', received);
+        console.log('Filtered conducted observations:', conducted);
         
         // Get teacher reflections
         const reflections = storedObservations.filter(obs => 
@@ -56,9 +74,6 @@ const ObservationTabs = ({ observations, onFeedbackGiven }: ObservationTabsProps
         const teacherFeedbackItems: CombinedFeedbackItem[] = received.map(obs => {
           // Find the full observation data to get the action step
           const fullObsData = storedObservations.find(storedObs => storedObs.id === obs.id);
-          
-          // Make sure we're explicitly logging this to debug
-          console.log('Coach for observation:', obs.id, obs.coach, fullObsData?.coachName);
           
           return {
             id: obs.id,

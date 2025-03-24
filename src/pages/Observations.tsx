@@ -30,15 +30,23 @@ const Observations = () => {
     }
   }, [location]);
   
-  // Load observations from Supabase on component mount
+  // Load observations from Supabase on component mount and when showing form changes
   useEffect(() => {
     loadObservations();
-  }, []);
+  }, [showForm]);
 
   const loadObservations = async () => {
     setIsLoading(true);
     try {
+      console.log('Loading observations...');
       const storedObservations = await getStoredObservations();
+      console.log('Loaded observations from storage:', storedObservations);
+      
+      if (!Array.isArray(storedObservations)) {
+        console.error('Observations is not an array:', storedObservations);
+        setObservations([]);
+        return;
+      }
       
       // Map stored observations to the format expected by the UI
       const formattedObservations = storedObservations.map(obs => ({
@@ -52,6 +60,7 @@ const Observations = () => {
         coach: obs.coachName
       }));
       
+      console.log('Formatted observations for UI:', formattedObservations);
       setObservations(formattedObservations);
     } catch (error) {
       console.error('Error loading observations:', error);

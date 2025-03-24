@@ -1,4 +1,3 @@
-
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
@@ -11,7 +10,6 @@ import {
   saveObservation 
 } from './storage';
 import { useAuth } from '@/context/AuthContext';
-import { supabase } from '@/integrations/supabase/client';
 
 export const useObservationForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -58,7 +56,7 @@ export const useObservationForm = () => {
     setIsSubmitting(true);
     
     try {
-      // Create observation object
+      // Create observation object with UUID
       const newObservation = {
         id: generateObservationId(),
         teacher: values.teacherName,
@@ -66,7 +64,7 @@ export const useObservationForm = () => {
         date: values.date,
         status: 'Vaadeldud',
         hasFeedback: feedbackProvided, // Use the feedback toggle state
-        coachName: values.coachName,
+        coachName: values.coachName || user.name, // Ensure coach name is set
         competences: [],
         teacherNotes: values.combinedNotes, // Map combined notes to teacherNotes for compatibility
         studentNotes: '', // Leave empty since we're not using it anymore
@@ -79,6 +77,8 @@ export const useObservationForm = () => {
         createdAt: new Date().toISOString(),
         user_id: user.id, // Add the user ID for Supabase
       };
+      
+      console.log('Saving new observation:', newObservation);
       
       // Save to Supabase
       await saveObservation(newObservation);

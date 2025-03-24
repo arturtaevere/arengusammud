@@ -4,7 +4,8 @@ import { StoredObservation } from './types';
 
 // Generate a unique ID for new observations
 export const generateObservationId = (): string => {
-  return `obs_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+  // Generate a UUID format that works with Supabase
+  return crypto.randomUUID();
 };
 
 // Fallback to localStorage if Supabase fails
