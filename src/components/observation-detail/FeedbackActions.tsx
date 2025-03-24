@@ -59,8 +59,8 @@ const FeedbackActions = ({
           >
             <CalendarCheck className="h-4 w-4" />
             {feedbackProvided 
-              ? "Tagasisidekohtumine toimunud" 
-              : "Märgi tagasisidekohtumine toimunuks"}
+              ? "Tagasisidekohtumine on toimunud" 
+              : "Tagasisidekohtumine on toimunud"}
           </Button>
         </div>
       )}
