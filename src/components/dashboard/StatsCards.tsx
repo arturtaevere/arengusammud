@@ -18,6 +18,9 @@ interface StatsCardsProps {
 }
 
 const StatsCards = ({ stats }: StatsCardsProps) => {
+  // Generate an array of the length of completed steps to render hearts
+  const completedHearts = Array.from({ length: stats.actionStepsCompleted }, (_, i) => i);
+  
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-10">
       <Card className="hover:shadow-md transition-all">
@@ -33,13 +36,14 @@ const StatsCards = ({ stats }: StatsCardsProps) => {
               <h4 className="text-xs text-muted-foreground mb-1">Arengusamme saavutatud</h4>
               <div className="flex items-center gap-2">
                 <span className="text-xl font-bold">{stats.actionStepsCompleted}</span>
-                <Heart className="h-5 w-5 fill-orange-500 text-orange-500" />
-              </div>
-              <div className="mt-2 h-2 bg-gray-100 rounded-full">
-                <div 
-                  className="h-2 bg-orange-500 rounded-full" 
-                  style={{ width: `${(stats.actionStepsCompleted / stats.actionStepsAssigned) * 100}%` }}
-                ></div>
+                <div className="flex">
+                  {completedHearts.map((_, index) => (
+                    <Heart 
+                      key={index} 
+                      className="h-5 w-5 fill-orange-500 text-orange-500" 
+                    />
+                  ))}
+                </div>
               </div>
             </div>
             
