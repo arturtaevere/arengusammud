@@ -17,6 +17,7 @@ import Observations from "./pages/Observations";
 import VerifyEmail from "./pages/VerifyEmail";
 import StudyCircles from "./pages/StudyCircles";
 import StudyCircleSession from "./pages/StudyCircleSession";
+import Admin from "./pages/Admin"; // Import the Admin page
 import { AuthProvider } from "./context/auth";
 import ObservationDetail from './pages/ObservationDetail';
 
@@ -48,6 +49,7 @@ const App = () => (
             <Route path="/observations/new" element={<Observations />} />
             <Route path="/feedback/new" element={<Observations />} />
             <Route path="/feedback/:id" element={<Dashboard />} />
+            <Route path="/admin" element={<Admin />} /> {/* Add the Admin route */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
