@@ -53,7 +53,7 @@ const StatsCards = ({ stats }: StatsCardsProps) => {
             </div>
             
             <div>
-              <h4 className="text-xs text-muted-foreground mb-1">Minu arengueesmärk</h4>
+              <h4 className="text-xs text-muted-foreground mb-1">Minu eesmärk</h4>
               <p className="text-sm font-medium">Õpilaste individuaalse arengu toetamine</p>
             </div>
             
