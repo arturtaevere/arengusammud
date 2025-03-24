@@ -24,7 +24,8 @@ export interface AuthContextType {
   signup: (name: string, email: string, password: string, role: 'juht' | 'õpetaja', school?: string) => Promise<void>;
   logout: () => void;
   updateProfileImage: (imageUrl: string) => void;
-  getAllUsers: () => User[];
+  // Change the return type to Promise<User[]> to match implementation
+  getAllUsers: () => Promise<User[]>;
   deleteUserByEmail: (email: string) => Promise<boolean>;
   
   // Adding these stub properties to fix type errors
