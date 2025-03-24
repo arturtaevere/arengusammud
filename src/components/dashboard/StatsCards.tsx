@@ -8,7 +8,9 @@ import {
   Plus,
   Heart,
   ArrowRight,
-  PenLine
+  PenLine,
+  MessageSquare,
+  GraduationCap
 } from 'lucide-react';
 import { getStoredObservations } from '@/components/observation/storage';
 import { useEffect, useState } from 'react';
@@ -62,7 +64,7 @@ const StatsCards = ({ stats }: StatsCardsProps) => {
       <Card className="hover:shadow-md transition-all">
         <CardHeader className="pb-2">
           <CardTitle className="text-lg font-medium flex items-center">
-            <ClipboardList className="mr-2 h-5 w-5 text-primary" />
+            <GraduationCap className="mr-2 h-5 w-5 text-primary" />
             Õpetajana
           </CardTitle>
         </CardHeader>
@@ -119,7 +121,7 @@ const StatsCards = ({ stats }: StatsCardsProps) => {
       <Card className="hover:shadow-md transition-all">
         <CardHeader className="pb-2">
           <CardTitle className="text-lg font-medium flex items-center">
-            <UserCheck className="mr-2 h-5 w-5 text-primary" />
+            <MessageSquare className="mr-2 h-5 w-5 text-primary" />
             Õpipartnerina
           </CardTitle>
         </CardHeader>
