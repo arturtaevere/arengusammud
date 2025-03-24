@@ -49,7 +49,7 @@ const Observations = () => {
         status: obs.status,
         hasFeedback: obs.hasFeedback,
         competences: obs.competences || [],
-        coachName: obs.coachName
+        coach: obs.coachName
       }));
       
       setObservations(formattedObservations);
@@ -82,6 +82,15 @@ const Observations = () => {
   };
 
   const handleFeedbackGiven = async (id: string) => {
+    if (!user) {
+      toast({
+        title: "Viga",
+        description: "Pead olema sisse logitud, et tagasisidet märkida",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     try {
       // Get the observation from Supabase
       const storedObservations = await getStoredObservations();
@@ -91,7 +100,8 @@ const Observations = () => {
         const updatedObs: StoredObservation = {
           ...storedObs,
           hasFeedback: true,
-          status: 'Lõpetatud'
+          status: 'Lõpetatud',
+          user_id: user.id // Make sure user_id is set
         };
         
         // Update in Supabase

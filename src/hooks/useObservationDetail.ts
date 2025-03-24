@@ -19,41 +19,46 @@ export const useObservationDetail = () => {
 
   useEffect(() => {
     const loadObservation = async () => {
-      const observations = await getStoredObservations();
-      const found = observations.find(obs => obs.id === id);
-      
-      if (found) {
-        console.log('Loaded observation:', found);
-        setObservation(found);
-        setEditedObservation(found);
-        setFeedbackProvided(found.hasFeedback);
+      try {
+        const observations = await getStoredObservations();
+        const found = observations.find(obs => obs.id === id);
         
-        // Check if current user is the observed teacher
-        const teacherName = user?.name || user?.email?.split('@')[0] || '';
-        const isUserObserved = found.teacher.toLowerCase().includes(teacherName.toLowerCase());
-        setIsObserved(isUserObserved);
-        
-        console.log('Setting isObserved:', isUserObserved);
-        console.log('Setting feedbackProvided:', found.hasFeedback);
-      } else {
-        console.log('Observation not found with id:', id);
+        if (found) {
+          console.log('Loaded observation:', found);
+          setObservation(found);
+          setEditedObservation(found);
+          setFeedbackProvided(found.hasFeedback);
+          
+          // Check if current user is the observed teacher
+          const teacherName = user?.name || user?.email?.split('@')[0] || '';
+          const isUserObserved = found.teacher.toLowerCase().includes(teacherName.toLowerCase());
+          setIsObserved(isUserObserved);
+          
+          console.log('Setting isObserved:', isUserObserved);
+          console.log('Setting feedbackProvided:', found.hasFeedback);
+        } else {
+          console.log('Observation not found with id:', id);
+        }
+      } catch (error) {
+        console.error('Error loading observation:', error);
+      } finally {
+        setLoading(false);
       }
-      
-      setLoading(false);
     };
     
     loadObservation();
   }, [id, user]);
 
   const handleFeedbackProvided = async () => {
-    if (!observation) return;
+    if (!observation || !user) return;
     
     console.log('handleFeedbackProvided called');
     
     const updatedObservation = {
       ...observation,
       hasFeedback: true,
-      status: 'Lõpetatud'
+      status: 'Lõpetatud',
+      user_id: user.id // Ensure user_id is set
     };
     
     await updateObservation(updatedObservation);
@@ -81,11 +86,12 @@ export const useObservationDetail = () => {
 
   // Save edited observation
   const saveChanges = async () => {
-    if (!observation || !editedObservation) return;
+    if (!observation || !editedObservation || !user) return;
     
     const updatedObservation = {
       ...observation,
-      ...editedObservation
+      ...editedObservation,
+      user_id: user.id // Ensure user_id is set
     };
     
     await updateObservation(updatedObservation);

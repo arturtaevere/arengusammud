@@ -74,6 +74,7 @@ export const useObservationForm = () => {
         selectedActionStepText: values.selectedActionStepText,
         selectedActionStepId: values.selectedActionStepId,
         createdAt: new Date().toISOString(),
+        user_id: user.id, // Add the user ID for Supabase
       };
       
       // Save to Supabase

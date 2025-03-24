@@ -1,6 +1,4 @@
 
-// Utility functions for storing and retrieving observation data from Supabase
-
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/context/AuthContext';
 
@@ -24,6 +22,7 @@ export interface StoredObservation {
   selectedActionStepText?: string;
   createdAt: string;
   coachName?: string;
+  user_id?: string; // Add user_id for Supabase
   teacherReflection?: {
     reflection: string;
     submittedAt: string;
@@ -53,7 +52,8 @@ export const getStoredObservations = async (): Promise<StoredObservation[]> => {
         selected_action_step_id,
         selected_action_step_text,
         coach_name,
-        created_at
+        created_at,
+        user_id
       `);
 
     if (error) {
@@ -93,6 +93,7 @@ export const getStoredObservations = async (): Promise<StoredObservation[]> => {
         selectedActionStepText: obs.selected_action_step_text || '',
         coachName: obs.coach_name || undefined,
         createdAt: new Date(obs.created_at).toISOString(),
+        user_id: obs.user_id,
         teacherReflection: reflection ? {
           reflection: reflection.reflection,
           submittedAt: new Date(reflection.submitted_at).toISOString()
@@ -124,6 +125,11 @@ const getFallbackObservations = (): StoredObservation[] => {
 // Save a new observation
 export const saveObservation = async (observation: StoredObservation): Promise<void> => {
   try {
+    if (!observation.user_id) {
+      console.error('Cannot save observation without user_id');
+      throw new Error('Missing user_id in observation');
+    }
+    
     // Format the data for Supabase
     const { data, error } = await supabase
       .from('observations')
@@ -144,7 +150,8 @@ export const saveObservation = async (observation: StoredObservation): Promise<v
         selected_action_step_id: observation.selectedActionStepId,
         selected_action_step_text: observation.selectedActionStepText,
         coach_name: observation.coachName,
-        created_at: new Date(observation.createdAt).toISOString()
+        created_at: new Date(observation.createdAt).toISOString(),
+        user_id: observation.user_id
       })
       .select();
 
@@ -176,6 +183,11 @@ const saveToLocalStorageFallback = (observation: StoredObservation): void => {
 // Update an existing observation
 export const updateObservation = async (updatedObservation: StoredObservation): Promise<void> => {
   try {
+    if (!updatedObservation.user_id) {
+      console.error('Cannot update observation without user_id');
+      throw new Error('Missing user_id in observation');
+    }
+    
     // Format the data for Supabase
     const { error } = await supabase
       .from('observations')
@@ -194,7 +206,8 @@ export const updateObservation = async (updatedObservation: StoredObservation): 
         next_action_step: updatedObservation.nextActionStep,
         selected_action_step_id: updatedObservation.selectedActionStepId,
         selected_action_step_text: updatedObservation.selectedActionStepText,
-        coach_name: updatedObservation.coachName
+        coach_name: updatedObservation.coachName,
+        user_id: updatedObservation.user_id
       })
       .eq('id', updatedObservation.id);
 
@@ -206,6 +219,8 @@ export const updateObservation = async (updatedObservation: StoredObservation): 
 
     // If there's a teacher reflection, update or insert it
     if (updatedObservation.teacherReflection) {
+      const user_id = updatedObservation.user_id;
+      
       // Check if reflection already exists
       const { data: existingReflection, error: fetchError } = await supabase
         .from('reflections')
@@ -223,7 +238,8 @@ export const updateObservation = async (updatedObservation: StoredObservation): 
           .from('reflections')
           .update({
             reflection: updatedObservation.teacherReflection.reflection,
-            submitted_at: new Date(updatedObservation.teacherReflection.submittedAt).toISOString()
+            submitted_at: new Date(updatedObservation.teacherReflection.submittedAt).toISOString(),
+            user_id: user_id
           })
           .eq('id', existingReflection.id);
 
@@ -237,7 +253,8 @@ export const updateObservation = async (updatedObservation: StoredObservation): 
           .insert({
             observation_id: updatedObservation.id,
             reflection: updatedObservation.teacherReflection.reflection,
-            submitted_at: new Date(updatedObservation.teacherReflection.submittedAt).toISOString()
+            submitted_at: new Date(updatedObservation.teacherReflection.submittedAt).toISOString(),
+            user_id: user_id
           });
 
         if (insertError) {
@@ -308,6 +325,14 @@ export const generateObservationId = (): string => {
 
 // Generate sample observations for teacher feedback form demo
 export const generateSampleObservations = async (teacherName: string): Promise<void> => {
+  // Get the current authenticated user
+  const { data: { user } } = await supabase.auth.getUser();
+  
+  if (!user) {
+    console.error('Cannot generate sample observations without authenticated user');
+    return;
+  }
+  
   // Check if we already have observations for this teacher in Supabase
   const { data: existingObservations, error: fetchError } = await supabase
     .from('observations')
@@ -354,7 +379,8 @@ export const generateSampleObservations = async (teacherName: string): Promise<v
       selectedActionStepId: "step10",
       selectedActionStepText: "Klassis liikumine: Liigu tunni jooksul teadlikult klassiruumis ringi, et jõuda kõigi õpilasteni.",
       coachName: "Mari Mets",
-      createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString() // 1 week ago
+      createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(), // 1 week ago
+      user_id: user.id
     },
     {
       id: generateObservationId(),
@@ -374,6 +400,7 @@ export const generateSampleObservations = async (teacherName: string): Promise<v
       selectedActionStepText: "Tunni alguses reeglite meeldetuletus: Tuleta tunni alguses meelde klassi reeglid, et luua toetav õpikeskkond.",
       coachName: "Jaan Tamm",
       createdAt: new Date(Date.now() - 21 * 24 * 60 * 60 * 1000).toISOString(), // 3 weeks ago
+      user_id: user.id,
       teacherReflection: {
         reflection: "Märkasin, et õpilased hakkasid oma töid põhjalikumalt üle vaatama enne esitamist. Eriti oli näha arengut nõrgemate õpilaste puhul, kes varem ei osanud oma vigu märgata.",
         submittedAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString() // 10 days ago
@@ -392,7 +419,8 @@ export const generateSampleObservations = async (teacherName: string): Promise<v
         .insert({
           observation_id: observation.id,
           reflection: observation.teacherReflection.reflection,
-          submitted_at: new Date(observation.teacherReflection.submittedAt).toISOString()
+          submitted_at: new Date(observation.teacherReflection.submittedAt).toISOString(),
+          user_id: user.id
         });
     }
   }

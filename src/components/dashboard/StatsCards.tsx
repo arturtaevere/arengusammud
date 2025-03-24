@@ -31,13 +31,22 @@ const StatsCards = ({ stats }: StatsCardsProps) => {
   // Count completed feedback meetings for the current user
   useEffect(() => {
     if (user) {
-      const observations = getStoredObservations();
-      const completed = observations.filter(obs => 
-        obs.coachName === user.name && 
-        obs.hasFeedback === true
-      ).length;
+      const fetchCompletedFeedback = async () => {
+        try {
+          const observations = await getStoredObservations();
+          const completed = observations.filter(obs => 
+            obs.coachName === user.name && 
+            obs.hasFeedback === true
+          ).length;
+          
+          setCompletedFeedbackCount(completed);
+        } catch (error) {
+          console.error('Error fetching completed feedback count:', error);
+          setCompletedFeedbackCount(0);
+        }
+      };
       
-      setCompletedFeedbackCount(completed);
+      fetchCompletedFeedback();
     }
   }, [user]);
   
