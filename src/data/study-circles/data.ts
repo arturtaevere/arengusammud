@@ -15,58 +15,6 @@ export interface StudyCircle {
   sessions: StudyCircleSession[];
 }
 
-// Session data for the first learning circle
-export const circle1Sessions: StudyCircleSession[] = [
-  {
-    id: "c1s1",
-    session: 1,
-    title: "Õppimise neuropsühholoogia",
-    description: "Selles sessioonis uurime, kuidas toimub õppimine ajus ja millised protsessid selles osalevad. Neuroteaduse uuringud on andnud palju uusi teadmisi selle kohta, kuidas aju õpib ja mäletab."
-  },
-  {
-    id: "c1s2",
-    session: 2,
-    title: "Kasvav mõtteviis vs. fikseeritud mõtteviis",
-    description: "Uurime Carol Dwecki kasvava ja fikseeritud mõtteviisi teooriat ning selle mõju õppimisele. Kuidas mõtteviis mõjutab õpilaste motivatsiooni, pingutust ja tulemusi."
-  },
-  {
-    id: "c1s3",
-    session: 3,
-    title: "Õpimotivatsioon ja õpikeskkond",
-    description: "Käsitleme motivatsiooni rolli õppimisel ja kuidas kujundada motivatsiooni toetavat õpikeskkonda. Uurime nii sisemise kui välise motivatsiooni mõjusid."
-  },
-  {
-    id: "c1s4",
-    session: 4,
-    title: "Tähelepanu, töömälu ja õppimine",
-    description: "Vaatleme tähelepanu ja töömälu rolli õppimisprotsessis. Kuidas saame aidata õpilastel paremini keskenduda ja informatsiooni töödelda."
-  },
-  {
-    id: "c1s5",
-    session: 5,
-    title: "Mälu ja pikaajaline õppimine",
-    description: "Uurime, kuidas toimub mälusüsteemides informatsiooni salvestamine ja kuidas soodustada pikaajalist mälu. Milliseid strateegiaid kasutada, et õppimine jääks kestma."
-  },
-  {
-    id: "c1s6",
-    session: 6,
-    title: "Õppimise sotsiaalne dimensioon",
-    description: "Käsitleme õppimise sotsiaalset olemust ja koostöise õppimise eeliseid. Kuidas sotsiaalne interaktsioon aitab kaasa teadmiste omandamisele ja oskuste arendamisele."
-  },
-  {
-    id: "c1s7",
-    session: 7,
-    title: "Metakognitsioon ja õpistrateegiad",
-    description: "Uurime metakognitsiooni rolli õppimisel ja erinevaid õpistrateegiad. Kuidas aidata õpilastel oma õppimist jälgida, hinnata ja reguleerida."
-  },
-  {
-    id: "c1s8",
-    session: 8,
-    title: "Õppija individuaalsed eripärad",
-    description: "Vaatleme õppijate individuaalseid erinevusi, sealhulgas õpistiilid, -eelistused ja -vajadused. Kuidas diferentseerida õpetamist, et arvestada iga õppija eripäradega."
-  },
-];
-
 // Session data for the second learning circle
 export const circle2Sessions: StudyCircleSession[] = [
   {
@@ -120,12 +68,6 @@ export const circle2Sessions: StudyCircleSession[] = [
 ];
 
 export const studyCircles: StudyCircle[] = [
-  {
-    id: "circle1",
-    title: "Mis on õppimine?",
-    description: "Õpiringi eesmärk on uurida õppimise olemust ning kuidas õppimine aju ja psühholoogia tasandil toimub.",
-    sessions: circle1Sessions
-  },
   {
     id: "circle2",
     title: "Kuidas toetada ennastjuhtiva õppija kujunemist?",
