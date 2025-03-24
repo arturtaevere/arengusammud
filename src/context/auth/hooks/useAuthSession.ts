@@ -9,14 +9,14 @@ export const useAuthSession = () => {
 
   // Initialize auth state from Supabase
   useEffect(() => {
-    let subscription: { data: { subscription: any } };
+    let subscription: any;
 
     const initAuth = async () => {
       setIsLoading(true);
       
       try {
         // First set up auth listener to catch any auth state changes during initialization
-        subscription = supabase.auth.onAuthStateChange(
+        const { data } = supabase.auth.onAuthStateChange(
           async (event, session) => {
             console.log('Auth state changed:', event, session?.user?.id);
             
@@ -33,7 +33,7 @@ export const useAuthSession = () => {
                   .from('profiles')
                   .select('*')
                   .eq('id', session.user.id)
-                  .single();
+                  .maybeSingle(); // Changed from single() to maybeSingle() to handle missing profiles
                   
                 if (error) {
                   console.error('Error fetching user profile on auth change:', error);
@@ -62,6 +62,8 @@ export const useAuthSession = () => {
           }
         );
         
+        subscription = data.subscription;
+        
         // Then get the current session
         const { data: { session } } = await supabase.auth.getSession();
         
@@ -72,7 +74,7 @@ export const useAuthSession = () => {
             .from('profiles')
             .select('*')
             .eq('id', session.user.id)
-            .single();
+            .maybeSingle(); // Changed from single() to maybeSingle()
             
           if (error) {
             console.error('Error fetching user profile during init:', error);
@@ -91,8 +93,8 @@ export const useAuthSession = () => {
             console.log('Setting user from session check:', userProfile);
             setUser(userProfile);
           } else {
-            // Profile not found, logout
-            await supabase.auth.signOut();
+            console.log('No profile found for user, not logging out');
+            // Don't force logout if profile not found
             setUser(null);
           }
         } else {
@@ -111,8 +113,8 @@ export const useAuthSession = () => {
     
     // Return function to clean up subscription
     return () => {
-      if (subscription?.data?.subscription?.unsubscribe) {
-        subscription.data.subscription.unsubscribe();
+      if (subscription?.unsubscribe) {
+        subscription.unsubscribe();
       }
     };
   }, []);

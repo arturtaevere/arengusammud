@@ -34,13 +34,17 @@ const LoginForm = () => {
     
     try {
       await login(values.email, values.password);
-      console.log('Login successful, navigating to dashboard');
-      navigate('/dashboard');
+      console.log('Login successful, redirecting to dashboard');
+      // Add a small delay before navigating to ensure state updates are processed
+      setTimeout(() => {
+        navigate('/dashboard');
+      }, 100);
     } catch (error) {
-      console.error('Login error:', error);
+      console.error('Login error details:', error);
       let errorMessage = 'Midagi läks valesti';
       
       if (error instanceof Error) {
+        console.log('Error message:', error.message);
         // Handle Supabase error messages
         if (error.message.includes('Invalid login credentials')) {
           errorMessage = 'Vale e-post või parool';
