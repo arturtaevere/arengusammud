@@ -45,7 +45,9 @@ const FeedbackCard = ({
               placeholder="Kirjuta siia tunnustus ja küsimus"
             />
           ) : (
-            <p className="mt-1 whitespace-pre-wrap">{observation.specificPraise}</p>
+            <div className="p-4 rounded-md bg-secondary/50 border border-border min-h-[100px] whitespace-pre-wrap">
+              {observation.specificPraise}
+            </div>
           )}
         </div>
         
@@ -64,8 +66,8 @@ const FeedbackCard = ({
               />
               {observation.selectedActionStepId && (
                 <Textarea
-                  value={editedObservation.nextActionStep || ''}
-                  onChange={(e) => handleInputChange('nextActionStep', e.target.value)}
+                  value={editedObservation.selectedActionStepText || ''}
+                  onChange={(e) => handleInputChange('selectedActionStepText', e.target.value)}
                   className="mt-3"
                   placeholder="Sammu sõnastust saad vajadusel muuta"
                 />
@@ -73,18 +75,25 @@ const FeedbackCard = ({
             </>
           ) : (
             <>
-              <p className="mt-1 whitespace-pre-wrap">{observation.nextActionStep}</p>
+              <div className="p-4 rounded-md bg-secondary/50 border border-border min-h-[100px] whitespace-pre-wrap">
+                {observation.nextActionStep}
+              </div>
               {observation.selectedActionStepId && (
-                <Button
-                  type="button"
-                  variant="link"
-                  size="sm"
-                  className="px-0 h-auto text-xs mt-2 text-primary"
-                  onClick={() => setDialogOpen(true)}
-                >
-                  <ExternalLink className="h-3 w-3 mr-1" />
-                  Vaata sammu põhjendust, edukriteeriume ja näiteid
-                </Button>
+                <>
+                  <div className="p-4 mt-3 rounded-md bg-secondary/50 border border-border min-h-[80px] whitespace-pre-wrap">
+                    {observation.selectedActionStepText}
+                  </div>
+                  <Button
+                    type="button"
+                    variant="link"
+                    size="sm"
+                    className="px-0 h-auto text-xs mt-2 text-primary"
+                    onClick={() => setDialogOpen(true)}
+                  >
+                    <ExternalLink className="h-3 w-3 mr-1" />
+                    Vaata sammu põhjendust, edukriteeriume ja näiteid
+                  </Button>
+                </>
               )}
             </>
           )}
