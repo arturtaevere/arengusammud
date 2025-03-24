@@ -9,6 +9,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { CardContent, CardFooter } from '@/components/ui/card';
 import { LoginFormValues, loginSchema } from './schemas';
 import { useState } from 'react';
+import { Loader2 } from 'lucide-react';
 
 const LoginForm = () => {
   const { login } = useAuth();
@@ -24,10 +25,14 @@ const LoginForm = () => {
   });
 
   const handleLogin = async (values: LoginFormValues) => {
+    if (isLoading) return; // Prevent multiple submissions
+    
     setIsLoading(true);
+    console.log('Login attempt with email:', values.email);
     
     try {
       await login(values.email, values.password);
+      console.log('Login successful');
     } catch (error) {
       console.error('Login error:', error);
       let errorMessage = 'Midagi läks valesti';
@@ -67,6 +72,7 @@ const LoginForm = () => {
                   <Input 
                     placeholder="sinu.email@näide.ee" 
                     type="email"
+                    disabled={isLoading}
                     {...field}
                   />
                 </FormControl>
@@ -84,6 +90,7 @@ const LoginForm = () => {
                 <FormControl>
                   <Input 
                     type="password"
+                    disabled={isLoading}
                     {...field}
                   />
                 </FormControl>
@@ -98,7 +105,12 @@ const LoginForm = () => {
             className="w-full transition-all" 
             disabled={isLoading}
           >
-            {isLoading ? "Sisselogimine..." : "Logi sisse"}
+            {isLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Sisselogimine...
+              </>
+            ) : "Logi sisse"}
           </Button>
         </CardFooter>
       </form>
