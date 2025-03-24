@@ -46,13 +46,9 @@ const TeacherFeedbackItem = ({ item }: TeacherFeedbackItemProps) => {
             )}
           </p>
         ) : (
-          <div className="flex flex-wrap gap-1 text-xs">
-            {item.competences?.map((competence, i) => (
-              <span key={i} className="bg-gray-100 px-2 py-1 rounded-full">
-                {competence}
-              </span>
-            ))}
-          </div>
+          <p className="text-sm text-gray-700 line-clamp-2">
+            Tagasiside
+          </p>
         )}
       </div>
       
