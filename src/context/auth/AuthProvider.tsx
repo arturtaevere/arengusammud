@@ -11,8 +11,8 @@ export const AuthContext = createContext<AuthContextType>({
   user: null,
   isAuthenticated: false,
   isLoading: true,
-  login: async () => { throw new Error('Not implemented'); }, // Updated return type
-  signup: async () => { throw new Error('Not implemented'); }, // Updated return type
+  login: async () => { throw new Error('Not implemented'); },
+  signup: async () => { throw new Error('Not implemented'); },
   logout: () => {},
   updateProfileImage: () => {},
   getAllUsers: async () => Promise.resolve([]),
@@ -30,8 +30,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isLoading, setIsLoading] = useState(true);
   // Add state for pendingVerificationEmail
   const [pendingVerificationEmail, setPendingVerificationEmail] = useState<string | null>(null);
+  const [error, setError] = useState<Error | null>(null);
   
-  // Custom hooks for auth functionality
+  // Wrap hooks in try/catch to prevent fatal rendering errors
+  let authActions: any = {};
+  try {
+    // Custom hooks for auth functionality
+    authActions = useAuthActions();
+  } catch (err) {
+    console.error('Error initializing auth actions:', err);
+    setError(err instanceof Error ? err : new Error(String(err)));
+  }
+  
   const {
     users,
     saveUsers,
@@ -40,13 +50,114 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     updateProfileImage,
     getAllUsers,
     deleteUserByEmail
-  } = useAuthActions();
+  } = authActions;
 
   // Initialize auth state
-  useAuthInit(
-    setUser,
-    setIsLoading
-  );
+  useEffect(() => {
+    try {
+      const initAuth = async () => {
+        setIsLoading(true);
+        try {
+          // Get session from Supabase
+          const { data: { session }, error } = await supabase.auth.getSession();
+          
+          if (error) {
+            console.error("Error getting session:", error);
+            return;
+          }
+          
+          if (session?.user) {
+            // Get user profile from profiles table
+            const { data: profile, error: profileError } = await supabase
+              .from('profiles')
+              .select('*')
+              .eq('id', session.user.id)
+              .maybeSingle();
+            
+            if (profileError) {
+              console.error("Error fetching profile:", profileError);
+              return;
+            }
+            
+            if (profile) {
+              const userData: User = {
+                id: profile.id,
+                name: profile.name,
+                email: profile.email,
+                role: profile.role as 'juht' | 'õpetaja',
+                school: profile.school,
+                createdAt: profile.created_at,
+                emailVerified: profile.email_verified,
+                profileImage: profile.profile_image
+              };
+              
+              setUser(userData);
+              localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(userData));
+              console.log('User logged in:', userData.name);
+            }
+          }
+        } catch (error) {
+          console.error("Error during auth initialization:", error);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+      
+      // Check initial user state
+      initAuth();
+      
+      // Set up auth state change listener
+      const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
+        console.log("Auth state change:", event);
+        
+        if (event === 'SIGNED_IN' && session) {
+          try {
+            // Get user profile
+            const { data: profile, error: profileError } = await supabase
+              .from('profiles')
+              .select('*')
+              .eq('id', session.user.id)
+              .maybeSingle();
+            
+            if (profileError) {
+              console.error("Error fetching profile on auth change:", profileError);
+              return;
+            }
+            
+            if (profile) {
+              const userData: User = {
+                id: profile.id,
+                name: profile.name,
+                email: profile.email,
+                role: profile.role as 'juht' | 'õpetaja',
+                school: profile.school,
+                createdAt: profile.created_at,
+                emailVerified: profile.email_verified,
+                profileImage: profile.profile_image
+              };
+              
+              setUser(userData);
+              localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(userData));
+            }
+          } catch (err) {
+            console.error("Error processing auth state change:", err);
+          }
+        } else if (event === 'SIGNED_OUT') {
+          setUser(null);
+          localStorage.removeItem(USER_STORAGE_KEY);
+        }
+      });
+      
+      // Clean up the listener on unmount
+      return () => {
+        authListener.subscription.unsubscribe();
+      };
+    } catch (err) {
+      console.error("Fatal error in auth setup:", err);
+      setError(err instanceof Error ? err : new Error(String(err)));
+      setIsLoading(false);
+    }
+  }, []);
 
   // Handle user login
   const handleLogin = async (email: string, password: string) => {
@@ -117,6 +228,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     console.log("Email verification is using Supabase's built-in verification");
     return false;
   };
+
+  // If there was a fatal error during initialization, show error message
+  if (error) {
+    console.error("Fatal auth error - rendering fallback UI:", error);
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-background">
+        <div className="p-6 rounded-lg shadow-lg bg-background border border-red-500 max-w-md">
+          <h2 className="text-xl font-semibold text-red-600 mb-4">Authentication Error</h2>
+          <p className="mb-4 text-foreground">{error.message}</p>
+          <p className="text-sm text-muted-foreground">
+            Please try refreshing the page or contact support if the problem persists.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <AuthContext.Provider
