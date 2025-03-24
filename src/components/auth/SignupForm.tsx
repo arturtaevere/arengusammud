@@ -1,3 +1,4 @@
+
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuth } from '@/context/AuthContext';
@@ -31,9 +32,6 @@ const SignupForm = () => {
       school: '',
     },
   });
-
-  // Watch role to conditionally display school selection
-  const role = form.watch('role');
 
   const handleSignup = async (values: SignupFormValues) => {
     if (isLoading) return; // Prevent multiple submissions
@@ -166,36 +164,34 @@ const SignupForm = () => {
             )}
           />
 
-          {role === 'õpetaja' && (
-            <FormField
-              control={form.control}
-              name="school"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Kool</FormLabel>
-                  <FormControl>
-                    <Select 
-                      onValueChange={field.onChange}
-                      value={field.value}
-                      disabled={isLoading}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Vali oma kool" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {SCHOOLS.map((school) => (
-                          <SelectItem key={school} value={school}>
-                            {school}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          )}
+          <FormField
+            control={form.control}
+            name="school"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Kool</FormLabel>
+                <FormControl>
+                  <Select 
+                    onValueChange={field.onChange}
+                    value={field.value}
+                    disabled={isLoading}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Vali oma kool" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {SCHOOLS.map((school) => (
+                        <SelectItem key={school} value={school}>
+                          {school}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </CardContent>
         <CardFooter>
           <Button 

@@ -1,4 +1,3 @@
-
 import { useToast } from '@/components/ui/use-toast';
 import { User, UserWithPassword } from './types';
 import { USER_STORAGE_KEY, USERS_STORAGE_KEY } from './constants';
@@ -69,8 +68,8 @@ export const useUserAuthentication = (
       throw new Error('Selle e-posti aadressiga kasutaja on juba olemas');
     }
 
-    if (role === 'õpetaja' && !school) {
-      throw new Error('Õpetaja peab valima kooli');
+    if (!school) {
+      throw new Error('Kooli valimine on kohustuslik');
     }
 
     const userId = Math.random().toString(36).substr(2, 9);
@@ -121,4 +120,3 @@ export const useUserAuthentication = (
     signup
   };
 };
-
