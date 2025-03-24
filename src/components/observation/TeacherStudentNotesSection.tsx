@@ -20,7 +20,7 @@ const TeacherStudentNotesSection = ({ form }: TeacherStudentNotesSectionProps) =
           <FormItem>
             <FormLabel>
               <span className="flex items-center">
-                <MessageSquare className="h-4 w-4 mr-2" />
+                <MessageSquare className="h-6 w-6 mr-2" />
                 Konkreetsed, mõõdetavad, neutraalsed andmed õpetaja ja õpilaste tegude, sõnade, reaktsioonide, liikumise, ajakasutuse kohta, nt tegevuse kirjeldus, tsitaat, mõõdetud aeg (kui pikk oli paus), numbrid (mitu õpilast vastas)
               </span>
             </FormLabel>
