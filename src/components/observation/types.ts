@@ -43,6 +43,7 @@ export interface ObservationFormValues {
   nextActionStep: string; // Coach's notes about the next action step
   selectedActionStepText: string; // The actual text of the selected action step
   selectedActionStepId: string | null; // ID of the selected action step
+  actionPlan: string; // New field for the action plan
 }
 
 // Also export the mock teachers used in ObservationForm

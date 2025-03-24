@@ -1,3 +1,4 @@
+
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
@@ -31,6 +32,7 @@ export const useObservationForm = () => {
       nextActionStep: '',
       selectedActionStepText: '',
       selectedActionStepId: null, // Add this to track the selected action step
+      actionPlan: '',
     }
   });
   
@@ -74,6 +76,7 @@ export const useObservationForm = () => {
         nextActionStep: values.nextActionStep,
         selectedActionStepText: values.selectedActionStepText,
         selectedActionStepId: values.selectedActionStepId,
+        actionPlan: values.actionPlan, // Add the new action plan field
         createdAt: new Date().toISOString(),
         user_id: user.id, // Add the user ID for Supabase
       };

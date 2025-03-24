@@ -11,6 +11,7 @@ import { useState } from 'react';
 import CombinedNotesSection from './CombinedNotesSection';
 import FeedbackNotesSection from './FeedbackNotesSection';
 import NextActionStepSection from './NextActionStepSection';
+import ActionPlanSection from './ActionPlanSection';
 
 interface ObservationNotesSectionProps {
   form: UseFormReturn<ObservationFormValues>;
@@ -37,6 +38,10 @@ const ObservationNotesSection = ({ form, isSubmitting }: ObservationNotesSection
           form={form}
           onOpenActionStepSelector={() => setSheetOpen(true)}
         />
+
+        <Separator className="my-6" />
+        
+        <ActionPlanSection form={form} />
       </CardContent>
       <CardFooter className="flex justify-between">
         <Button

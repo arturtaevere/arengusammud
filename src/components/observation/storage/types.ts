@@ -16,6 +16,7 @@ export interface StoredObservation {
   nextActionStep: string;
   selectedActionStepId?: string | null;
   selectedActionStepText?: string;
+  actionPlan?: string;
   createdAt: string;
   coachName?: string;
   user_id?: string;

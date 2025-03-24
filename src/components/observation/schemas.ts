@@ -13,6 +13,7 @@ export const observationFormSchema = z.object({
   nextActionStep: z.string().min(10, { message: "Järgmine arengusamm peab olema vähemalt 10 tähemärki" }),
   selectedActionStepText: z.string().optional(),
   selectedActionStepId: z.string().nullable().optional(),
+  actionPlan: z.string().min(10, { message: "Tegevusplaan peab olema vähemalt 10 tähemärki" }),
 });
 
 export type ObservationFormValues = z.infer<typeof observationFormSchema>;
