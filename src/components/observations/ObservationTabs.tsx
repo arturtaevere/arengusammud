@@ -58,6 +58,7 @@ const ObservationTabs = ({ observations, onFeedbackGiven }: ObservationTabsProps
       status: obs.status,
       hasFeedback: obs.hasFeedback,
       competences: obs.competences,
+      coach: obs.coach, // Ensure coach is mapped from observations to feedbackItems
       createdAt: obs.date // Use date as createdAt for sorting
     }));
     

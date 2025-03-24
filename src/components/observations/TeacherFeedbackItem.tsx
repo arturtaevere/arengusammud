@@ -2,6 +2,7 @@
 import React from 'react';
 import { Card } from '@/components/ui/card';
 import { CombinedFeedbackItem } from './types';
+import { UserCircle } from 'lucide-react';
 
 interface TeacherFeedbackItemProps {
   item: CombinedFeedbackItem;
@@ -34,7 +35,8 @@ const TeacherFeedbackItem = ({ item }: TeacherFeedbackItemProps) => {
           {formatDate(item.date)}
         </div>
         {item.type === 'feedback' && item.coach && (
-          <div className="text-sm text-gray-500 mt-1">
+          <div className="flex items-center text-xs text-gray-500 mt-1">
+            <UserCircle className="mr-1 h-3 w-3" />
             Õpipartner: {item.coach}
           </div>
         )}
