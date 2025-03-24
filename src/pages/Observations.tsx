@@ -120,7 +120,7 @@ const Observations = () => {
             <div className="flex justify-end mt-4">
               <Button onClick={handleSubmitForm} className="bg-green-600 hover:bg-green-700">
                 <Check className="mr-2 h-4 w-4" />
-                Salvesta vaatlus
+                Salvesta märkmed
               </Button>
             </div>
           </div>
