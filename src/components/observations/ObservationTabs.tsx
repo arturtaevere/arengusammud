@@ -56,13 +56,13 @@ const ObservationTabs = ({ observations, onFeedbackGiven }: ObservationTabsProps
         <TabsList className="grid w-full grid-cols-2 mb-4">
           <TabsTrigger value="conducted" className="flex items-center justify-center gap-2">
             <UserCheck className="h-4 w-4" />
-            <span className="hidden sm:inline">Vaatlused, mille olen läbi viinud</span>
-            <span className="sm:hidden">Läbi viidud</span>
+            <span className="hidden sm:inline">Mina õpipartnerina</span>
+            <span className="sm:hidden">Õpipartner</span>
           </TabsTrigger>
           <TabsTrigger value="received" className="flex items-center justify-center gap-2">
             <UserCog className="h-4 w-4" />
-            <span className="hidden sm:inline">Tagasiside minule</span>
-            <span className="sm:hidden">Saadud</span>
+            <span className="hidden sm:inline">Mina õpetajana</span>
+            <span className="sm:hidden">Õpetaja</span>
           </TabsTrigger>
         </TabsList>
         
