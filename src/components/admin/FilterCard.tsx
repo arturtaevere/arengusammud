@@ -10,7 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { SCHOOLS } from '@/context/AuthContext';
+import { SCHOOLS } from '@/context/auth/constants';
 
 interface FilterCardProps {
   searchTerm: string;
