@@ -8,6 +8,7 @@ import { StoredObservation, updateObservation } from '@/components/observation/s
 import { useToast } from '@/hooks/use-toast';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
+import { useAuth } from '@/context/AuthContext';
 
 interface FeedbackActionsProps {
   isObserved: boolean;
@@ -26,8 +27,12 @@ const FeedbackActions = ({
 }: FeedbackActionsProps) => {
   const [reflectionOpen, setReflectionOpen] = useState(false);
   const { toast } = useToast();
+  const { user } = useAuth();
 
   const hasReflection = !!observation.teacherReflection;
+  
+  // Determine if current user is a coach (not the observed teacher)
+  const isCoach = !isObserved;
 
   const saveReflection = (reflection: {
     reflection: string;
@@ -49,12 +54,12 @@ const FeedbackActions = ({
     });
   };
 
-  console.log("FeedbackActions rendering:", { isObserved, feedbackProvided });
+  console.log("FeedbackActions rendering:", { isObserved, feedbackProvided, isCoach });
 
   return (
     <>
       {/* Feedback Meeting Toggle - only visible to coaches */}
-      {!isObserved && (
+      {isCoach && (
         <div className="flex justify-end mt-8">
           <div className="flex items-center gap-4 p-4 border rounded-md bg-gray-50">
             <div className="flex flex-col">
