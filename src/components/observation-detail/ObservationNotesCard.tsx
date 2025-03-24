@@ -23,7 +23,10 @@ const ObservationNotesCard = ({
       </CardHeader>
       <CardContent className="space-y-4">
         <div>
-          <h3 className="text-sm font-medium text-gray-500">Tunnivaatluse märkmed</h3>
+          <h3 className="text-sm font-medium">Tunnivaatlus</h3>
+          <p className="text-sm text-gray-500 mb-2">
+            Konkreetsed, mõõdetavad, neutraalsed andmed õpetaja ja õpilaste tegude, sõnade, reaktsioonide, liikumise, ajakasutuse kohta, nt tegevuse kirjeldus, tsitaat, mõõdetud aeg (kui pikk oli paus), numbrid (mitu õpilast vastas)
+          </p>
           {isEditing ? (
             <Textarea
               value={editedObservation.teacherNotes || ''}

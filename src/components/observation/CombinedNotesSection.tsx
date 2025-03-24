@@ -19,9 +19,12 @@ const CombinedNotesSection = ({ form }: CombinedNotesSectionProps) => {
           <FormLabel>
             <span className="flex items-center mb-1">
               <MessageSquare className="h-6 w-6 mr-2" />
-              Konkreetsed, mõõdetavad, neutraalsed andmed õpetaja ja õpilaste tegude, sõnade, reaktsioonide, liikumise, ajakasutuse kohta, nt tegevuse kirjeldus, tsitaat, mõõdetud aeg (kui pikk oli paus), numbrid (mitu õpilast vastas)
+              Tunnivaatlus
             </span>
           </FormLabel>
+          <p className="text-sm text-gray-500 mb-2">
+            Konkreetsed, mõõdetavad, neutraalsed andmed õpetaja ja õpilaste tegude, sõnade, reaktsioonide, liikumise, ajakasutuse kohta, nt tegevuse kirjeldus, tsitaat, mõõdetud aeg (kui pikk oli paus), numbrid (mitu õpilast vastas)
+          </p>
           <FormControl>
             <Textarea 
               placeholder="Kirjeldage oma märkamisi..." 
