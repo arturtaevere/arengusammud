@@ -22,9 +22,9 @@ export interface AuthContextType {
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
   signup: (name: string, email: string, password: string, role: 'juht' | 'õpetaja', school?: string) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<boolean>; // Updated return type to match implementation
   updateProfileImage: (imageUrl: string) => void;
-  getAllUsers: () => Promise<User[]>; // Changed to return Promise<User[]>
+  getAllUsers: () => Promise<User[]>;
   deleteUserByEmail: (email: string) => Promise<boolean>;
   
   // Adding these stub properties to fix type errors
