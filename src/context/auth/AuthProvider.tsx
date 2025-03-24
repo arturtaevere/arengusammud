@@ -1,9 +1,9 @@
 
 import React, { createContext, useState, useEffect } from 'react';
-import { AuthContextType, User, UserWithPassword } from './types';
-import { USER_STORAGE_KEY, USERS_STORAGE_KEY } from './constants';
+import { AuthContextType, User } from './types';
 import { useAuthInit } from './useAuthInit';
 import { useAuthActions } from './useAuthActions';
+import { supabase } from '@/integrations/supabase/client';
 
 // Create the context with default values
 export const AuthContext = createContext<AuthContextType>({
@@ -17,7 +17,7 @@ export const AuthContext = createContext<AuthContextType>({
   getAllUsers: () => [],
   deleteUserByEmail: async () => false,
   
-  // Add the stub verification functions
+  // Verification functions
   verifyEmail: async () => false,
   resendVerificationEmail: async () => false,
   pendingVerificationEmail: null,
@@ -27,13 +27,10 @@ export const AuthContext = createContext<AuthContextType>({
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  // Add state for pendingVerificationEmail
   const [pendingVerificationEmail, setPendingVerificationEmail] = useState<string | null>(null);
   
   // Custom hooks for auth functionality
   const {
-    users,
-    saveUsers,
     login,
     signup,
     updateProfileImage,
@@ -47,21 +44,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoading
   );
 
-  // Immediately trigger a users-updated event when the component mounts
-  useEffect(() => {
-    // Dispatch an event to notify listeners that AuthProvider has mounted
-    console.log('AuthProvider mounted, dispatching users-updated event');
-    setTimeout(() => {
-      window.dispatchEvent(new CustomEvent('users-updated'));
-    }, 500); // Small delay to ensure other components are ready
-  }, []);
-
   // Handle user login
   const handleLogin = async (email: string, password: string) => {
     setIsLoading(true);
     try {
-      const loggedInUser = await login(email, password);
-      setUser(loggedInUser);
+      await login(email, password);
     } finally {
       setIsLoading(false);
     }
@@ -72,39 +59,55 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoading(true);
     try {
       await signup(name, email, password, role, school);
-      // Force-refresh users list after signup
-      console.log('Signup successful, dispatching users-updated event');
-      window.dispatchEvent(new CustomEvent('users-updated'));
     } finally {
       setIsLoading(false);
     }
   };
 
   // Handle user logout
-  const handleLogout = () => {
-    setUser(null);
-    localStorage.removeItem(USER_STORAGE_KEY);
+  const handleLogout = async () => {
+    try {
+      await supabase.auth.signOut();
+      // Auth state change listener will handle the rest
+    } catch (error) {
+      console.error('Error during logout:', error);
+    }
   };
 
   // Handle profile image update
   const handleUpdateProfileImage = (imageUrl: string) => {
     if (user) {
-      const updatedUser = { ...user, profileImage: imageUrl };
-      setUser(updatedUser);
-      localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(updatedUser));
       updateProfileImage(user.id, imageUrl);
     }
   };
 
   // Stub implementations for verification functions
-  const verifyEmail = async () => {
-    console.log("Email verification is disabled");
-    return false;
+  const verifyEmail = async (id: string, token: string) => {
+    try {
+      const { error } = await supabase.auth.verifyOtp({
+        token_hash: token,
+        type: 'email'
+      });
+      
+      return !error;
+    } catch (error) {
+      console.error("Email verification error:", error);
+      return false;
+    }
   };
 
-  const resendVerificationEmail = async () => {
-    console.log("Email verification is disabled");
-    return false;
+  const resendVerificationEmail = async (email: string) => {
+    try {
+      const { error } = await supabase.auth.resend({
+        type: 'signup',
+        email: email
+      });
+      
+      return !error;
+    } catch (error) {
+      console.error("Error resending verification email:", error);
+      return false;
+    }
   };
 
   return (
@@ -119,7 +122,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         updateProfileImage: handleUpdateProfileImage,
         getAllUsers,
         deleteUserByEmail,
-        // Add the verification-related values
+        // Verification-related values
         verifyEmail,
         resendVerificationEmail,
         pendingVerificationEmail,
