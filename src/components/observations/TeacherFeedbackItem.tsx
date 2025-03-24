@@ -29,15 +29,6 @@ const TeacherFeedbackItem = ({ item }: TeacherFeedbackItemProps) => {
           <div className="text-lg font-medium">
             {item.subject || 'Tund'}
           </div>
-          <span className={`text-xs px-2 py-1 rounded-full ${
-            item.type === 'reflection' 
-              ? 'bg-green-100 text-green-800' 
-              : item.status === 'Lõpetatud' 
-                ? 'bg-blue-100 text-blue-800'
-                : 'bg-orange-100 text-orange-800'
-          }`}>
-            {item.type === 'reflection' ? 'Reflektsioon' : item.status}
-          </span>
         </div>
         <div className="text-sm text-gray-500 mt-1">
           {formatDate(item.date)}
