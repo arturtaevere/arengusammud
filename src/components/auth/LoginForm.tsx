@@ -1,4 +1,3 @@
-
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuth } from '@/context/AuthContext';
@@ -34,13 +33,8 @@ const LoginForm = () => {
     
     try {
       await login(values.email, values.password);
-      console.log('Login successful');
-      
-      // Add a slight delay before redirecting to ensure auth state is updated
-      setTimeout(() => {
-        navigate('/dashboard');
-      }, 500);
-      
+      console.log('Login successful, navigating to dashboard');
+      navigate('/dashboard');
     } catch (error) {
       console.error('Login error:', error);
       let errorMessage = 'Midagi läks valesti';

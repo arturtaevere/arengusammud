@@ -1,4 +1,3 @@
-
 import React, { createContext, useState, useEffect } from 'react';
 import { AuthContextType, User } from './types';
 import { supabase } from '@/integrations/supabase/client';
@@ -44,7 +43,54 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setIsLoading(true);
       
       try {
-        // Get the current session
+        // First set up auth listener to catch any auth state changes during initialization
+        const { data: { subscription } } = supabase.auth.onAuthStateChange(
+          async (event, session) => {
+            console.log('Auth state changed:', event, session?.user?.id);
+            
+            if (!session) {
+              setUser(null);
+              setIsLoading(false);
+              return;
+            }
+            
+            if (event === 'SIGNED_IN' || event === 'USER_UPDATED') {
+              try {
+                // Get user profile on sign in or update
+                const { data: profile, error } = await supabase
+                  .from('profiles')
+                  .select('*')
+                  .eq('id', session.user.id)
+                  .single();
+                  
+                if (error) {
+                  console.error('Error fetching user profile on auth change:', error);
+                  setUser(null);
+                } else if (profile) {
+                  const userProfile: User = {
+                    id: profile.id,
+                    name: profile.name,
+                    email: profile.email,
+                    role: profile.role as 'juht' | 'õpetaja',
+                    school: profile.school || undefined,
+                    createdAt: profile.created_at,
+                    emailVerified: profile.email_verified || false,
+                    profileImage: profile.profile_image || undefined
+                  };
+                  console.log('Setting user from auth listener:', userProfile);
+                  setUser(userProfile);
+                }
+              } finally {
+                setIsLoading(false);
+              }
+            } else if (event === 'SIGNED_OUT') {
+              setUser(null);
+              setIsLoading(false);
+            }
+          }
+        );
+        
+        // Then get the current session
         const { data: { session } } = await supabase.auth.getSession();
         
         // If we have a session, get the user profile
@@ -56,19 +102,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             .single();
             
           if (error) {
-            console.error('Error fetching user profile:', error);
+            console.error('Error fetching user profile during init:', error);
             setUser(null);
           } else if (profile) {
             const userProfile: User = {
               id: profile.id,
               name: profile.name,
               email: profile.email,
-              role: profile.role as 'juht' | 'õpetaja', // Cast the role to the expected union type
+              role: profile.role as 'juht' | 'õpetaja', 
               school: profile.school || undefined,
               createdAt: profile.created_at,
               emailVerified: profile.email_verified || false,
               profileImage: profile.profile_image || undefined
             };
+            console.log('Setting user from session check:', userProfile);
             setUser(userProfile);
           } else {
             // Profile not found, logout
@@ -88,48 +135,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     
     initAuth();
     
-    // Listen for auth state changes
-    const { data: authListener } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        console.log('Auth state changed:', event, session?.user?.id);
-        
-        if (!session) {
-          setUser(null);
-          return;
-        }
-        
-        if (event === 'SIGNED_IN' || event === 'USER_UPDATED') {
-          // Get user profile on sign in or update
-          const { data: profile, error } = await supabase
-            .from('profiles')
-            .select('*')
-            .eq('id', session.user.id)
-            .single();
-            
-          if (error) {
-            console.error('Error fetching user profile on auth change:', error);
-            setUser(null);
-          } else if (profile) {
-            const userProfile: User = {
-              id: profile.id,
-              name: profile.name,
-              email: profile.email,
-              role: profile.role as 'juht' | 'õpetaja', // Cast the role to the expected union type
-              school: profile.school || undefined,
-              createdAt: profile.created_at,
-              emailVerified: profile.email_verified || false,
-              profileImage: profile.profile_image || undefined
-            };
-            setUser(userProfile);
-          }
-        } else if (event === 'SIGNED_OUT') {
-          setUser(null);
-        }
-      }
-    );
-    
+    // Return function to clean up subscription
     return () => {
-      authListener.subscription.unsubscribe();
+      // Cleanup handled in the initAuth function
     };
   }, []);
 
