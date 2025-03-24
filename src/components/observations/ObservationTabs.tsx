@@ -7,6 +7,7 @@ import { Card } from '@/components/ui/card';
 import { UserCheck, UserCog } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { getStoredObservations, StoredObservation } from '../observation/storage';
+import TeacherReflections from './TeacherReflections';
 
 interface ObservationTabsProps {
   observations: Observation[];
