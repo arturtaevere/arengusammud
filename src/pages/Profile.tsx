@@ -10,6 +10,8 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { format } from 'date-fns';
 import { et } from 'date-fns/locale';
 import Navbar from '@/components/Navbar';
+import { useToast } from '@/components/ui/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
 const Profile = () => {
   const { user, updateProfileImage } = useAuth();
@@ -18,6 +20,7 @@ const Profile = () => {
   const [isUploading, setIsUploading] = useState(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [showUploadDialog, setShowUploadDialog] = useState(false);
+  const { toast } = useToast();
 
   // Get initials for avatar fallback
   const getInitials = (name: string) => {
@@ -58,18 +61,53 @@ const Profile = () => {
     fileInputRef.current?.click();
   };
 
-  const confirmUpload = () => {
-    if (imagePreview) {
-      setIsUploading(true);
+  const confirmUpload = async () => {
+    if (!imagePreview || !user) return;
+    
+    setIsUploading(true);
+    
+    try {
+      // Upload image to Storage
+      const filePath = `avatars/${user.id}_${Date.now()}`;
+      const { data: uploadData, error: uploadError } = await supabase.storage
+        .from('avatars')
+        .upload(filePath, 
+          // Convert base64 to blob
+          await fetch(imagePreview).then(res => res.blob()), 
+          { upsert: true }
+        );
       
-      // In a real app, we would upload the file to a server here
-      // For demo purposes, we'll just simulate a delay and use the preview as the image
-      setTimeout(() => {
-        updateProfileImage(imagePreview);
-        setIsUploading(false);
-        setShowUploadDialog(false);
-        setImagePreview(null);
-      }, 800);
+      if (uploadError) {
+        throw uploadError;
+      }
+      
+      // Get public URL
+      const { data: publicUrlData } = supabase.storage
+        .from('avatars')
+        .getPublicUrl(filePath);
+        
+      const imageUrl = publicUrlData.publicUrl;
+      
+      // Update user profile with the image URL
+      updateProfileImage(imageUrl);
+      
+      toast({
+        title: "Profiilipilt uuendatud",
+        description: "Sinu profiilipilt on edukalt uuendatud.",
+      });
+      
+      setIsUploading(false);
+      setShowUploadDialog(false);
+      setImagePreview(null);
+      
+    } catch (error) {
+      console.error('Error uploading profile image:', error);
+      toast({
+        variant: "destructive",
+        title: "Profiilipildi uuendamine ebaõnnestus",
+        description: "Midagi läks valesti. Proovi hiljem uuesti.",
+      });
+      setIsUploading(false);
     }
   };
 

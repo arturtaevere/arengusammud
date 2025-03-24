@@ -1,4 +1,3 @@
-
 import React, { createContext, useState, useEffect } from 'react';
 import { AuthContextType, User } from './types';
 import { useAuthInit } from './useAuthInit';
@@ -12,9 +11,9 @@ export const AuthContext = createContext<AuthContextType>({
   isLoading: true,
   login: async () => {},
   signup: async () => {},
-  logout: async () => false, // Update return type to Promise<boolean>
+  logout: async () => false,
   updateProfileImage: () => {},
-  getAllUsers: async () => [], // Updated to return a Promise
+  getAllUsers: async () => [],
   deleteUserByEmail: async () => false,
   
   // Verification functions
@@ -86,9 +85,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   // Handle profile image update
-  const handleUpdateProfileImage = (imageUrl: string) => {
+  const handleUpdateProfileImage = async (imageUrl: string) => {
     if (user) {
-      updateProfileImage(user.id, imageUrl);
+      try {
+        const updatedUser = await updateProfileImage(user.id, imageUrl);
+        if (updatedUser) {
+          // Update the user state with the new profile image
+          setUser({
+            ...user,
+            profileImage: imageUrl
+          });
+        }
+      } catch (error) {
+        console.error('Error updating profile image in AuthProvider:', error);
+      }
     }
   };
 

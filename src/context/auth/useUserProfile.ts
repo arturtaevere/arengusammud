@@ -9,20 +9,54 @@ export const useUserProfile = () => {
 
   const updateProfileImage = async (userId: string, imageUrl: string) => {
     try {
-      const { data, error } = await supabase
+      // First, verify the user exists by checking the ID
+      const { data: userData, error: userError } = await supabase
         .from('profiles')
-        .update({ profile_image: imageUrl })
+        .select('id')
         .eq('id', userId)
-        .select()
         .single();
         
-      if (error) {
+      if (userError) {
+        console.error('Error finding user:', userError);
         toast({
           variant: "destructive",
           title: "Profiilipildi uuendamine ebaõnnestus",
-          description: error.message || "Proovi hiljem uuesti",
+          description: "Kasutajat ei leitud. Proovi hiljem uuesti.",
         });
-        throw error;
+        throw userError;
+      }
+      
+      // Use the update API with simpler structure to avoid recursion issues
+      const { error: updateError } = await supabase
+        .from('profiles')
+        .update({ profile_image: imageUrl })
+        .eq('id', userId);
+        
+      if (updateError) {
+        console.error('Error updating profile image:', updateError);
+        toast({
+          variant: "destructive",
+          title: "Profiilipildi uuendamine ebaõnnestus",
+          description: updateError.message || "Proovi hiljem uuesti",
+        });
+        throw updateError;
+      }
+      
+      // Get the updated profile data
+      const { data: updatedProfile, error: profileError } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .single();
+        
+      if (profileError) {
+        console.error('Error fetching updated profile:', profileError);
+        // Still toast success since the update succeeded
+        toast({
+          title: "Profiilipilt uuendatud",
+          description: "Sinu profiilipilt on edukalt uuendatud.",
+        });
+        return null;
       }
       
       toast({
@@ -32,14 +66,14 @@ export const useUserProfile = () => {
       
       // Convert supabase profile to our User type
       return {
-        id: data.id,
-        name: data.name,
-        email: data.email,
-        role: data.role,
-        school: data.school,
-        createdAt: data.created_at,
-        emailVerified: data.email_verified,
-        profileImage: data.profile_image,
+        id: updatedProfile.id,
+        name: updatedProfile.name,
+        email: updatedProfile.email,
+        role: updatedProfile.role,
+        school: updatedProfile.school,
+        createdAt: updatedProfile.created_at,
+        emailVerified: updatedProfile.email_verified,
+        profileImage: updatedProfile.profile_image,
       };
     } catch (error) {
       console.error('Error updating profile image:', error);
