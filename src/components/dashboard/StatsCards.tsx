@@ -33,13 +33,13 @@ const StatsCards = ({ stats }: StatsCardsProps) => {
               <p className="text-sm text-muted-foreground">Valitud</p>
             </div>
             <div className="text-right">
-              <p className="text-3xl font-bold text-green-500">{stats.actionStepsCompleted}</p>
+              <p className="text-3xl font-bold text-orange-500">{stats.actionStepsCompleted}</p>
               <p className="text-sm text-muted-foreground">Saavutatud</p>
             </div>
           </div>
           <div className="mt-4 h-2 bg-gray-100 rounded-full">
             <div 
-              className="h-2 bg-primary rounded-full" 
+              className="h-2 bg-orange-500 rounded-full" 
               style={{ width: `${(stats.actionStepsCompleted / stats.actionStepsAssigned) * 100}%` }}
             ></div>
           </div>
