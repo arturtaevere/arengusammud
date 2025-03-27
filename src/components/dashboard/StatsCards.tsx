@@ -101,7 +101,7 @@ const StatsCards = ({ stats }: StatsCardsProps) => {
               </Link>
             </div>
             
-            {/* New reflection link */}
+            {/* Fixed typo in reflection link */}
             <div>
               <Link 
                 to="/observations/new?type=reflection" 
@@ -109,7 +109,7 @@ const StatsCards = ({ stats }: StatsCardsProps) => {
               >
                 <span className="flex items-center">
                   <PenLine className="h-4 w-4 mr-2" />
-                  Lisa reflektsioon
+                  Lisa refleksioon
                 </span>
                 <ArrowRight className="h-4 w-4 text-orange-500" />
               </Link>
