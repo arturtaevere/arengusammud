@@ -18,8 +18,16 @@ const Observations = () => {
   const [showForm, setShowForm] = useState(false);
   const [observations, setObservations] = useState<Observation[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<string>('received');
   
   useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const tabParam = queryParams.get('tab');
+    
+    if (tabParam === 'conducted' || tabParam === 'received') {
+      setActiveTab(tabParam);
+    }
+    
     if (location.pathname.includes('/new')) {
       setShowForm(true);
     } else {
@@ -195,7 +203,8 @@ const Observations = () => {
             ) : (
               <ObservationTabs 
                 observations={observations} 
-                onFeedbackGiven={handleFeedbackGiven} 
+                onFeedbackGiven={handleFeedbackGiven}
+                activeTab={activeTab}
               />
             )}
           </>

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import ObservationsList from './ObservationsList';
@@ -13,27 +12,15 @@ import { useLocation } from 'react-router-dom';
 interface ObservationTabsProps {
   observations: Observation[];
   onFeedbackGiven: (id: string) => void;
+  activeTab?: string;
 }
 
-const ObservationTabs = ({ observations, onFeedbackGiven }: ObservationTabsProps) => {
+const ObservationTabs = ({ observations, onFeedbackGiven, activeTab = 'received' }: ObservationTabsProps) => {
   const { user } = useAuth();
-  const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  const tabParam = queryParams.get('tab');
-  const [defaultTab, setDefaultTab] = useState('received');
   const [receivedFeedback, setReceivedFeedback] = useState<Observation[]>([]);
   const [conductedObservations, setConductedObservations] = useState<Observation[]>([]);
   const [teacherCombinedItems, setTeacherCombinedItems] = useState<CombinedFeedbackItem[]>([]);
   const [coachCombinedItems, setCoachCombinedItems] = useState<CombinedFeedbackItem[]>([]);
-  
-  // Set default tab based on URL parameter
-  useEffect(() => {
-    if (tabParam === 'conducted') {
-      setDefaultTab('conducted');
-    } else if (tabParam === 'received') {
-      setDefaultTab('received');
-    }
-  }, [tabParam]);
   
   useEffect(() => {
     // Asynchronously load stored observations
@@ -174,7 +161,7 @@ const ObservationTabs = ({ observations, onFeedbackGiven }: ObservationTabsProps
 
   return (
     <Card className="p-4">
-      <Tabs defaultValue={defaultTab} className="w-full">
+      <Tabs defaultValue={activeTab} className="w-full">
         <TabsList className="grid w-full grid-cols-2 mb-4">
           <TabsTrigger value="conducted" className="flex items-center justify-center gap-2">
             <UserCheck className="h-4 w-4" />
