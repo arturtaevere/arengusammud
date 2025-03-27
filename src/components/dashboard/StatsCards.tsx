@@ -101,10 +101,10 @@ const StatsCards = ({ stats }: StatsCardsProps) => {
               </Link>
             </div>
             
-            {/* Fixed typo in reflection link */}
+            {/* Update reflection link to point to the new page */}
             <div>
               <Link 
-                to="/observations/new?type=reflection" 
+                to="/reflections/new" 
                 className="flex items-center justify-between text-sm font-medium text-orange-500 hover:text-orange-600 transition-colors"
               >
                 <span className="flex items-center">

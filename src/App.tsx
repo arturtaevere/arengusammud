@@ -20,6 +20,9 @@ import StudyCircleSession from "./pages/StudyCircleSession";
 import Admin from "./pages/Admin";
 import { AuthProvider } from "./context/auth";
 import ObservationDetail from './pages/ObservationDetail';
+import Reflections from './pages/Reflections';
+import ReflectionDetail from './pages/ReflectionDetail';
+import ReflectionForm from './components/reflection/ReflectionForm';
 
 const queryClient = new QueryClient();
 
@@ -48,6 +51,11 @@ const App = () => (
           <Route path="/observations/new" element={<Observations />} />
           <Route path="/feedback/new" element={<Observations />} />
           <Route path="/feedback/:id" element={<Dashboard />} />
+          {/* Add new routes for reflections */}
+          <Route path="/reflections" element={<Reflections />} />
+          <Route path="/reflections/:id" element={<ReflectionDetail />} />
+          <Route path="/reflections/new" element={<ReflectionForm />} />
+          <Route path="/reflections/edit/:id" element={<ReflectionForm isEditing />} />
           <Route path="/admin" element={<Admin />} /> {/* Add the Admin route */}
           <Route path="*" element={<NotFound />} />
         </Routes>
