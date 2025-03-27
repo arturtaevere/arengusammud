@@ -19,7 +19,7 @@ const CompetencyList = ({ competencies, onSelect }: CompetencyListProps) => {
         <Button
           key={comp.id}
           variant="ghost"
-          className="w-full text-left h-auto py-2 px-3 text-sm hover:bg-muted flex items-start justify-start"
+          className="w-full text-left h-auto py-2 px-3 text-sm hover:bg-primary/20 hover:text-foreground flex items-start justify-start"
           onClick={() => onSelect(comp.id)}
         >
           <span className="font-medium block whitespace-normal text-left w-full">
