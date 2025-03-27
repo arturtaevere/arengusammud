@@ -1,6 +1,6 @@
 
 import { format } from 'date-fns';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ChevronRight, Edit, Trash2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -19,10 +19,7 @@ const ReflectionCard = ({ reflection, onDelete }: ReflectionCardProps) => {
   return (
     <Card className="transition-all hover:shadow-md">
       <CardHeader className="pb-2">
-        <div className="flex justify-between">
-          <CardTitle className="text-lg">
-            {reflection.title || 'Refleksioon'}
-          </CardTitle>
+        <div className="flex justify-end">
           <span className="text-xs px-2 py-1 rounded-full bg-green-100 text-green-800">
             {formattedDate}
           </span>

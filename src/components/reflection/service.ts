@@ -1,7 +1,6 @@
 
 import { supabase } from '@/integrations/supabase/client';
 import { StandaloneReflection } from './types';
-import { useToast } from '@/hooks/use-toast';
 
 // Get all reflections for the current user
 export const getReflections = async (): Promise<StandaloneReflection[]> => {
@@ -25,7 +24,7 @@ export const getReflections = async (): Promise<StandaloneReflection[]> => {
 
 // Create a new reflection
 export const createReflection = async (
-  reflectionData: Pick<StandaloneReflection, 'title' | 'reflection'>
+  reflectionData: Pick<StandaloneReflection, 'reflection'>
 ): Promise<StandaloneReflection | null> => {
   try {
     // Get the current user

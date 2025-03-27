@@ -4,7 +4,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ArrowLeft, Save } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
@@ -23,7 +22,6 @@ const ReflectionForm = ({ isEditing = false }: ReflectionFormProps) => {
   
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
-    title: '',
     reflection: '',
   });
 
@@ -35,7 +33,6 @@ const ReflectionForm = ({ isEditing = false }: ReflectionFormProps) => {
           const reflection = await getReflectionById(id);
           if (reflection) {
             setFormData({
-              title: reflection.title,
               reflection: reflection.reflection,
             });
           } else {
@@ -62,7 +59,7 @@ const ReflectionForm = ({ isEditing = false }: ReflectionFormProps) => {
     loadReflection();
   }, [id, isEditing, navigate, toast]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
@@ -139,16 +136,6 @@ const ReflectionForm = ({ isEditing = false }: ReflectionFormProps) => {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="title">Pealkiri</Label>
-              <Input
-                id="title"
-                name="title"
-                value={formData.title}
-                onChange={handleInputChange}
-                placeholder="Refleksiooni pealkiri"
-              />
-            </div>
             <div className="space-y-2">
               <Label htmlFor="reflection">
                 Minu refleksioon

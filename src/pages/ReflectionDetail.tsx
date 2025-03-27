@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { ArrowLeft, Edit, Calendar } from 'lucide-react';
 import { format } from 'date-fns';
 import Navbar from '@/components/Navbar';
@@ -103,8 +103,7 @@ const ReflectionDetail = () => {
 
           <Card>
             <CardHeader>
-              <div className="flex justify-between items-center">
-                <CardTitle className="text-2xl">{reflection.title || 'Refleksioon'}</CardTitle>
+              <div className="flex justify-end items-center">
                 <div className="flex items-center text-muted-foreground text-sm">
                   <Calendar className="h-4 w-4 mr-1" />
                   {formattedDate}
