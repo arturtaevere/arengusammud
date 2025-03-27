@@ -8,6 +8,7 @@ import { UserCheck, UserCog } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { getStoredObservations } from '../observation/storage';
 import TeacherFeedbackList from './TeacherFeedbackList';
+import { useLocation } from 'react-router-dom';
 
 interface ObservationTabsProps {
   observations: Observation[];
@@ -16,10 +17,23 @@ interface ObservationTabsProps {
 
 const ObservationTabs = ({ observations, onFeedbackGiven }: ObservationTabsProps) => {
   const { user } = useAuth();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const tabParam = queryParams.get('tab');
+  const [defaultTab, setDefaultTab] = useState('received');
   const [receivedFeedback, setReceivedFeedback] = useState<Observation[]>([]);
   const [conductedObservations, setConductedObservations] = useState<Observation[]>([]);
   const [teacherCombinedItems, setTeacherCombinedItems] = useState<CombinedFeedbackItem[]>([]);
   const [coachCombinedItems, setCoachCombinedItems] = useState<CombinedFeedbackItem[]>([]);
+  
+  // Set default tab based on URL parameter
+  useEffect(() => {
+    if (tabParam === 'conducted') {
+      setDefaultTab('conducted');
+    } else if (tabParam === 'received') {
+      setDefaultTab('received');
+    }
+  }, [tabParam]);
   
   useEffect(() => {
     // Asynchronously load stored observations
@@ -160,7 +174,7 @@ const ObservationTabs = ({ observations, onFeedbackGiven }: ObservationTabsProps
 
   return (
     <Card className="p-4">
-      <Tabs defaultValue="received" className="w-full">
+      <Tabs defaultValue={defaultTab} className="w-full">
         <TabsList className="grid w-full grid-cols-2 mb-4">
           <TabsTrigger value="conducted" className="flex items-center justify-center gap-2">
             <UserCheck className="h-4 w-4" />

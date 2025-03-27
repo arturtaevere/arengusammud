@@ -92,8 +92,8 @@ export const useObservationForm = () => {
         description: "Tunnivaatlus on edukalt salvestatud",
       });
       
-      // Redirect to observations list
-      navigate('/observations');
+      // Redirect to observations list with tab=conducted query parameter to open the "Mina õpipartnerina" tab
+      navigate('/observations?tab=conducted');
     } catch (error) {
       console.error('Error saving observation:', error);
       toast({
