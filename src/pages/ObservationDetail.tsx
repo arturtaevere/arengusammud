@@ -71,23 +71,14 @@ const ObservationDetail = () => {
     <div className="min-h-screen bg-gray-50">
       <Navbar />
       <div className="container mx-auto pt-20 pb-12 px-4 max-w-4xl fade-in">
-        <div className="mb-8 flex items-center">
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            className="mr-4"
-            onClick={() => navigate('/observations')}
-          >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Tagasi
-          </Button>
-        </div>
+        {/* Removing this duplicate back button */}
         
         <ObservationDetailHeader 
           canEdit={canEdit} 
           isEditing={isEditing}
           toggleEdit={toggleEdit}
           saveChanges={saveChanges}
+          navigate={navigate}
         />
 
         <div className="space-y-6 mt-6">
