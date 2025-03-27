@@ -25,12 +25,26 @@ export const getReflections = async (): Promise<StandaloneReflection[]> => {
 
 // Create a new reflection
 export const createReflection = async (
-  reflectionData: Omit<StandaloneReflection, 'id' | 'created_at' | 'updated_at' | 'user_id'>
+  reflectionData: Pick<StandaloneReflection, 'title' | 'reflection'>
 ): Promise<StandaloneReflection | null> => {
   try {
+    // Get the current user
+    const { data: { user } } = await supabase.auth.getUser();
+    
+    if (!user) {
+      console.error('No user found');
+      return null;
+    }
+    
+    // Add the user_id to the reflection data
+    const completeData = {
+      ...reflectionData,
+      user_id: user.id
+    };
+    
     const { data, error } = await supabase
       .from('standalone_reflections')
-      .insert(reflectionData)
+      .insert(completeData)
       .select()
       .single();
 
