@@ -15,6 +15,7 @@ import { useAuth } from '@/context/AuthContext';
 export const useObservationForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [feedbackProvided, setFeedbackProvided] = useState(false);
+  const [previousStepCompleted, setPreviousStepCompleted] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user } = useAuth();
@@ -33,6 +34,7 @@ export const useObservationForm = () => {
       selectedActionStepText: '',
       selectedActionStepId: null, // Add this to track the selected action step
       actionPlan: '',
+      previousStepCompleted: false,
     }
   });
   
@@ -43,6 +45,11 @@ export const useObservationForm = () => {
       title: "Tagasiside märgitud",
       description: "Tagasisidekohtumine on märgitud toimunuks",
     });
+  };
+
+  const handlePreviousStepCompletionChange = (completed: boolean) => {
+    setPreviousStepCompleted(completed);
+    form.setValue('previousStepCompleted', completed);
   };
   
   const onSubmit = async (values: ObservationFormValues) => {
@@ -77,6 +84,7 @@ export const useObservationForm = () => {
         selectedActionStepText: values.selectedActionStepText,
         selectedActionStepId: values.selectedActionStepId,
         actionPlan: values.actionPlan, // Add the new action plan field
+        previousStepCompleted: values.previousStepCompleted, // Add the previous step completion status
         createdAt: new Date().toISOString(),
         user_id: user.id, // Add the user ID for Supabase
       };
@@ -113,5 +121,7 @@ export const useObservationForm = () => {
     onSubmit,
     feedbackProvided,
     handleFeedbackProvided,
+    previousStepCompleted,
+    handlePreviousStepCompletionChange,
   };
 };

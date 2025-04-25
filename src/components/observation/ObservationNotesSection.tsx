@@ -17,12 +17,28 @@ import CompetencyActionStepSelector from './CompetencyActionStepSelector';
 interface ObservationNotesSectionProps {
   form: UseFormReturn<ObservationFormValues>;
   isSubmitting: boolean;
+  previousStepCompleted?: boolean;
+  onPreviousStepCompletionChange?: (completed: boolean) => void;
 }
 
-const ObservationNotesSection = ({ form, isSubmitting }: ObservationNotesSectionProps) => {
+const ObservationNotesSection = ({ 
+  form, 
+  isSubmitting, 
+  previousStepCompleted = false,
+  onPreviousStepCompletionChange 
+}: ObservationNotesSectionProps) => {
   const navigate = useNavigate();
   const [sheetOpen, setSheetOpen] = useState(false);
-  const [previousStepCompleted, setPreviousStepCompleted] = useState(false);
+  
+  const selectedActionStepText = form.getValues().selectedActionStepText;
+  const hasActionStep = !!selectedActionStepText && selectedActionStepText.trim() !== '';
+  
+  const handleCompletionChange = (completed: boolean) => {
+    if (onPreviousStepCompletionChange) {
+      onPreviousStepCompletionChange(completed);
+    }
+    form.setValue('previousStepCompleted', completed);
+  };
   
   return (
     <Card>
@@ -36,11 +52,18 @@ const ObservationNotesSection = ({ form, isSubmitting }: ObservationNotesSection
         
         <FeedbackNotesSection form={form} />
 
-        <PreviousActionStepSection
-          previousActionStep={form.getValues().selectedActionStepText}
-          completed={previousStepCompleted}
-          onCompletionChange={setPreviousStepCompleted}
-        />
+        {/* Only show previous action step if there is one */}
+        {hasActionStep && (
+          <>
+            <PreviousActionStepSection
+              previousActionStep={selectedActionStepText}
+              completed={previousStepCompleted}
+              onCompletionChange={handleCompletionChange}
+            />
+            
+            <Separator className="my-6" />
+          </>
+        )}
         
         <NextActionStepSection 
           form={form}

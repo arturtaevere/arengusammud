@@ -18,7 +18,16 @@ interface ObservationFormProps {
 const ObservationForm = ({ onSubmit }: ObservationFormProps) => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { form, isSubmitting, onSubmit: handleFormSubmit, feedbackProvided, handleFeedbackProvided } = useObservationForm();
+  const { 
+    form, 
+    isSubmitting, 
+    onSubmit: handleFormSubmit, 
+    feedbackProvided, 
+    handleFeedbackProvided,
+    previousStepCompleted,
+    handlePreviousStepCompletionChange
+  } = useObservationForm();
+  
   const [teachersInSchool, setTeachersInSchool] = useState<Array<{ id: string, name: string, developmentGoal: string, actionStep?: string }>>([]);
   
   // Get teachers for the user's school
@@ -65,7 +74,12 @@ const ObservationForm = ({ onSubmit }: ObservationFormProps) => {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
           <GeneralInfoSection form={form} teachersInSchool={teachersInSchool} />
-          <ObservationNotesSection form={form} isSubmitting={isSubmitting} />
+          <ObservationNotesSection 
+            form={form} 
+            isSubmitting={isSubmitting} 
+            previousStepCompleted={previousStepCompleted}
+            onPreviousStepCompletionChange={handlePreviousStepCompletionChange}
+          />
           
           {/* Feedback Meeting Toggle */}
           <div className="p-6 bg-secondary rounded-lg border border-border mt-8">
