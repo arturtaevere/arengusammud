@@ -1,3 +1,4 @@
+
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Save } from 'lucide-react';
@@ -11,6 +12,7 @@ import FeedbackNotesSection from './FeedbackNotesSection';
 import NextActionStepSection from './NextActionStepSection';
 import ActionPlanSection from './ActionPlanSection';
 import PreviousActionStepSection from './PreviousActionStepSection';
+import CompetencyActionStepSelector from './CompetencyActionStepSelector';
 
 interface ObservationNotesSectionProps {
   form: UseFormReturn<ObservationFormValues>;
