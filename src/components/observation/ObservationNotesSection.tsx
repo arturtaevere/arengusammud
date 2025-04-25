@@ -1,4 +1,3 @@
-
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Save } from 'lucide-react';
@@ -6,12 +5,12 @@ import { Button } from '@/components/ui/button';
 import { UseFormReturn } from 'react-hook-form';
 import { ObservationFormValues } from './types';
 import { useNavigate } from 'react-router-dom';
-import CompetencyActionStepSelector from './CompetencyActionStepSelector';
 import { useState } from 'react';
 import CombinedNotesSection from './CombinedNotesSection';
 import FeedbackNotesSection from './FeedbackNotesSection';
 import NextActionStepSection from './NextActionStepSection';
 import ActionPlanSection from './ActionPlanSection';
+import PreviousActionStepSection from './PreviousActionStepSection';
 
 interface ObservationNotesSectionProps {
   form: UseFormReturn<ObservationFormValues>;
@@ -21,6 +20,7 @@ interface ObservationNotesSectionProps {
 const ObservationNotesSection = ({ form, isSubmitting }: ObservationNotesSectionProps) => {
   const navigate = useNavigate();
   const [sheetOpen, setSheetOpen] = useState(false);
+  const [previousStepCompleted, setPreviousStepCompleted] = useState(false);
   
   return (
     <Card>
@@ -33,6 +33,12 @@ const ObservationNotesSection = ({ form, isSubmitting }: ObservationNotesSection
         <Separator className="my-6" />
         
         <FeedbackNotesSection form={form} />
+
+        <PreviousActionStepSection
+          previousActionStep={form.getValues().selectedActionStepText}
+          completed={previousStepCompleted}
+          onCompletionChange={setPreviousStepCompleted}
+        />
         
         <NextActionStepSection 
           form={form}

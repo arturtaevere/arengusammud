@@ -1,4 +1,3 @@
-
 import { ActionStep } from '@/data/action-steps/types';
 import { competencies } from './data/competenciesData';
 import { classroomPositioningSteps } from '@/data/action-steps/classroom-environment/classroom-positioning';
@@ -38,12 +37,13 @@ export interface ObservationFormValues {
   coachName: string;
   actionStep: string;
   developmentGoal: string;
-  combinedNotes: string;  // Only using combined notes now
+  combinedNotes: string;
   specificPraise: string;
-  nextActionStep: string; // Coach's notes about the next action step
-  selectedActionStepText: string; // The actual text of the selected action step
-  selectedActionStepId: string | null; // ID of the selected action step
-  actionPlan: string; // New field for the action plan
+  nextActionStep: string;
+  selectedActionStepText: string;
+  selectedActionStepId: string | null;
+  actionPlan: string;
+  previousStepCompleted?: boolean;
 }
 
 // Also export the mock teachers used in ObservationForm
