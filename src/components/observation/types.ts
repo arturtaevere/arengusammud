@@ -1,3 +1,4 @@
+
 import { ActionStep } from '@/data/action-steps/types';
 import { competencies } from './data/competenciesData';
 import { classroomPositioningSteps } from '@/data/action-steps/classroom-environment/classroom-positioning';
@@ -43,7 +44,7 @@ export interface ObservationFormValues {
   selectedActionStepText: string;
   selectedActionStepId: string | null;
   actionPlan: string;
-  previousStepCompleted?: boolean;
+  previousStepCompleted: boolean;
 }
 
 // Also export the mock teachers used in ObservationForm

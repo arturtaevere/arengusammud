@@ -30,7 +30,8 @@ const ObservationNotesSection = ({
   const navigate = useNavigate();
   const [sheetOpen, setSheetOpen] = useState(false);
   
-  const selectedActionStepText = form.getValues().selectedActionStepText;
+  // Get the action step directly from form field
+  const selectedActionStepText = form.watch('selectedActionStepText');
   const hasActionStep = !!selectedActionStepText && selectedActionStepText.trim() !== '';
   
   const handleCompletionChange = (completed: boolean) => {
@@ -55,15 +56,17 @@ const ObservationNotesSection = ({
         {/* Only show previous action step if there is one */}
         {hasActionStep && (
           <>
+            <Separator className="my-6" />
+            
             <PreviousActionStepSection
               previousActionStep={selectedActionStepText}
               completed={previousStepCompleted}
               onCompletionChange={handleCompletionChange}
             />
-            
-            <Separator className="my-6" />
           </>
         )}
+        
+        <Separator className="my-6" />
         
         <NextActionStepSection 
           form={form}
